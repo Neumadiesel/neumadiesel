@@ -1,15 +1,21 @@
-
+import ListaAlertas from "@/components/main/ListaAlertas";
+import ListaMaquinaria from "@/components/main/ListaMaquinaria";
+import ListaNeumaticos from "@/components/main/ListaNeumaticos";
 export default function Page() {
+
   return (
     <div className="flex justify-center items-center h-screen bg-[#F1F1F1] text-black relative shadow-sm font-mono">
 
-      <section className="flex flex-col items-center justify-center w-full h-full">
+      <section className="flex flex-col items-center justify-center w-full h-full p-3.5">
+        <ListaMaquinaria />
+        <ListaNeumaticos />
       </section>
-      <aside className="flex flex-col items-center justify-center w-full bg-amber-300 h-full">
-        <a href="/">a</a>
-        <h1 className="text-4xl font-bold">Neumadiesel</h1>
-        <h2 className="text-2xl font-bold">About</h2>
-        <h3 className="text-xl font-bold">Home</h3>
+      {/* Zona de alertas */}
+      <aside className="flex flex-col items-center bg-[#212121] m-10 p-5 w-[40%] h-[90%] rounded-lg">
+        <div className="w-full" >
+          <h2 className="text-4xl font-bold text-white">Alertas</h2>
+          <ListaAlertas />
+        </div>
       </aside>
     </div>
   );
