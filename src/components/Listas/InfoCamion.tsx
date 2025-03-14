@@ -1,81 +1,27 @@
 'use client'
 import Link from "next/link"
 import Image from "next/image"
-import data from "@/mocks/mocks.json"
+import { Camiones } from "@/mocks/Camiones.json"
+import { Neumaticos } from "@/mocks/neumaticos.json"
 import { useParams } from "next/navigation"
-
-interface neumaticoInterface {
-    id: number;
-    id_vehiculo: number;
-    id_rueda: number;
-    mediciones: {
-        id: number;
-        id_neumatico: number;
-        id_vehiculo: number;
-        posicion: number;
-        horas_utilizadas: number;
-        km_utilizados: number;
-        medicion_externa: number;
-        medicion_interna: number;
-        presion: number;
-        temperatura: number;
-    }[];
-}
 
 export default function ListaMaquinaria() {
 
     const params = useParams<{ id: string }>();
-    const id = parseInt(params.id);
+    const id = params.id
+
+    const camion = Camiones.find(camion => camion.Codigo === id);
+
+    const neumaticos = Neumaticos.filter(neumatico => neumatico.Codigo_Camion === id);
 
 
-    const neumaticos: neumaticoInterface[] = data.RuedasPorVehiculo.filter(rueda => rueda.id_vehiculo === id).map(rueda => {
-        const mediciones = data.MedicionPorRueda.filter(medicion => medicion.id_neumatico === rueda.id)
-        return {
-            ...rueda,
-            mediciones: mediciones.length > 0 ? mediciones : [{
-                id: 0,
-                id_neumatico: 0,
-                id_vehiculo: 0,
-                posicion: 0,
-                horas_utilizadas: 0,
-                km_utilizados: 0,
-                medicion_externa: 0,
-                medicion_interna: 0,
-                presion: 0,
-                temperatura: 0
-            }]
-        }
-    })
 
-    const maquinas = data.Vehiculo;
-    const faenas = data.Faena;
-    const circuitos = data.Circuito;
-    const vehiculosPorFlota = data.VehiculosPorFlota
-
-    const obtenerInfoVehiculo = () => {
-        const vehiculo = maquinas.find((vehiculo) => vehiculo.id === id);
-        if (!vehiculo) return null;
-
-        const relacion = vehiculosPorFlota.find((vpf) => vpf.id_vehiculo === vehiculo.id);
-        const faena = faenas.find((f) => f.id === relacion?.id_faena);
-        const circuito = circuitos.find((c) => c.id_faena === faena?.id);
-
-        return {
-            ...vehiculo,
-            faena: faena?.compania || "Desconocida",
-            circuito: circuito?.nombre || "No asignado",
-        };
-    };
-
-    const vehiculoInfo = obtenerInfoVehiculo();
-
-    console.log("Neumaticos", neumaticos)
     return (
         <div className=" p-4 h-screen w-full mb-4 rounded-md bg-white text-white relative shadow-md font-mono">
             <div className=" text-black flex flex-col">
                 {/* Info del camion */}
                 <div className="flex justify-between">
-                    <h2 className="text-2xl font-bold text-black">Camion {vehiculoInfo?.marca} {vehiculoInfo?.modelo} - Faena {vehiculoInfo?.faena}</h2>
+                    <h2 className="text-2xl font-bold text-black">Camion {id} {camion?.Marca} {camion?.Modelo} - Faena {camion?.Faena}</h2>
                     <div className="flex justify-between items-center">
                         <Link href={`/mantenimiento/${id}`} className="text-black text-lg bg-amber-300 p-2 rounded-md border border-black">Realizar Mantencion</Link>
                     </div>
@@ -135,40 +81,41 @@ export default function ListaMaquinaria() {
 
                 {/* Info del neumatico */}
                 <h2 className="text-2xl font-bold text-black">Neumáticos</h2>
-                <table className="table-auto w-full">
-                    <thead>
-                        <tr>
-                            <th className="px-4 py-2">ID Rueda</th>
-                            <th className="px-4 py-2">ID Vehiculo</th>
-                            <th className="px-4 py-2">Horas Utilizadas</th>
-                            <th className="px-4 py-2">Km Utilizados</th>
-                            <th className="px-4 py-2">Medicion Externa</th>
-                            <th className="px-4 py-2">Medicion Interna</th>
-                            <th className="px-4 py-2">Presion</th>
-                            <th className="px-4 py-2">Temperatura</th>
-                            <th className="px-4 py-2">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {neumaticos.map((neumatico) => (
-                            <tr key={neumatico.id}>
-                                <td className="border px-4 py-2">{neumatico.id_rueda}</td>
-                                <td className="border px-4 py-2">{neumatico.id_vehiculo}</td>
-                                <td className="border px-4 py-2">{neumatico.mediciones[0].horas_utilizadas}</td>
-                                <td className="border px-4 py-2">{neumatico.mediciones[0].km_utilizados}</td>
-                                <td className="border px-4 py-2">{neumatico.mediciones[0].medicion_externa}</td>
-                                <td className="border px-4 py-2">{neumatico.mediciones[0].medicion_interna}</td>
-                                <td className="border px-4 py-2">{neumatico.mediciones[0].presion}</td>
-                                <td className="border px-4 py-2">{neumatico.mediciones[0].temperatura}</td>
-
-                                <td className="border px-4 py-2">
-                                    <Link href={`/neumaticos/${neumatico.id}`} className="text-black text-lg"> Info. Detallada</Link>
-                                </td>
+                <div className="relative overflow-x-auto h-[80%] my-2">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-md rounded-t-md overflow-hidden">
+                        <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center sticky top-0">
+                            <tr>
+                                <th className="px-4 py-2">Codigo</th>
+                                <th className="px-4 py-2">Camion</th>
+                                <th className="px-4 py-2">Horas Utilizadas</th>
+                                <th className="px-4 py-2">Km Utilizados</th>
+                                <th className="px-4 py-2">Posicion</th>
+                                <th className="px-4 py-2">Medicion Externa</th>
+                                <th className="px-4 py-2">Medicion Interna</th>
+                                <th className="px-4 py-2">Acciones</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {neumaticos.map((neumatico) => (
+                                <tr key={neumatico.Codigo}>
+                                    <td className="border px-4 py-2">{neumatico.Codigo}</td>
+                                    <td className="border px-4 py-2">{neumatico.Codigo_Camion}</td>
+                                    <td className="border px-4 py-2">{neumatico.META_HORAS}</td>
+                                    <td className="border px-4 py-2">{neumatico.META_KMS}</td>
+                                    <td className="border px-4 py-2">{neumatico.Posicion}</td>
+                                    <td className="border px-4 py-2">{neumatico.Profundidad}</td>
+                                    <td className="border px-4 py-2">{neumatico.Profundidad}</td>
+
+                                    <td className="border px-4 py-2">
+                                        <Link href={`/neumaticos/${neumatico.Codigo}`} className="text-black text-lg"> Info. Detallada</Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
         </div>
     )
 }

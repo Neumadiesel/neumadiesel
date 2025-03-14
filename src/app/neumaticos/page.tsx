@@ -1,4 +1,5 @@
 'use client'
+import { useEffect } from "react";
 import { Neumaticos } from "@/mocks/neumaticos.json";
 import Link from "next/link";
 import { FaRegCopy } from "react-icons/fa";
@@ -10,14 +11,14 @@ export default function Page() {
     const [estado, setEstado] = useState('');
     const [filteredNeumaticos, setFilteredNeumaticos] = useState(Neumaticos);
 
-    const handleSearch = () => {
+    useEffect(() => {
         const filtered = Neumaticos.filter(neumatico =>
-            (codigo === '' || neumatico.Codigo.includes(codigo)) &&
-            (camion === '' || neumatico.Codigo_Camion.includes(camion))
-
+            (codigo.toLowerCase() === '' || neumatico.Codigo.toLowerCase().includes(codigo.toLowerCase())) &&
+            (camion.toLowerCase() === '' || neumatico.Codigo_Camion.toLowerCase().includes(camion.toLowerCase()))
         );
         setFilteredNeumaticos(filtered);
-    };
+    }, [codigo, camion, estado]);
+
     return (
         <div className=" p-4 bg-[#f1f1f1] h-screen relative shadow-sm font-mono">
             <div>
@@ -25,25 +26,27 @@ export default function Page() {
             </div>
             {/* Busqueda por codigo, camion, y filtro selector por estado*/}
             <div className="flex justify-between items-center">
-                <div className="flex items-center justify-between w-[70%]">
+                <div className="flex items-center justify-between w-full mx-auto">
                     <input
                         type="text"
                         placeholder="Buscar por codigo"
-                        className="border p-2 rounded-md"
+                        className="border-2 p-2 rounded-md bg-white font-bold border-amber-300"
                         value={codigo}
                         onChange={(e) => setCodigo(e.target.value)}
                     />
                     <input
                         type="text"
                         placeholder="Buscar por camion"
-                        className="border p-2 rounded-md"
+                        className="border-2 p-2 text-black rounded-md bg-white font-bold border-amber-300"
+
                         value={camion}
                         onChange={(e) => setCamion(e.target.value)}
                     />
                     <select
                         name="estado"
                         id="estado"
-                        className="border p-2 rounded-md"
+                        className="border-2 p-2 text-black rounded-md bg-white font-bold border-amber-300"
+
                         value={estado}
                         onChange={(e) => setEstado(e.target.value)}
                     >
@@ -51,21 +54,20 @@ export default function Page() {
                         <option value="bueno">Bueno</option>
                         <option value="desgastado">Desgastado</option>
                     </select>
-                </div>
-                <div>
-                    <button
-                        className="bg-blue-500 text-white p-2 rounded-md"
-                        onClick={handleSearch}
-                    >
-                        Buscar
-                    </button>
+                    {/* Crear neumatico */}
+                    <Link href="/neumaticos/crear">
+                        <button className="bg-amber-300 hover:bg-amber-700 border-2 border-black px-6 font-bold py-2  rounded">
+                            Crear
+                        </button>
+                    </Link>
+
                 </div>
             </div>
 
-
+            {/* Tabla de neumaticos */}
             <div className="relative overflow-x-auto h-[80%] my-2">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-md rounded-t-md overflow-hidden">
-                    <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center">
+                    <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center sticky top-0">
                         <tr>
                             <th scope="col" className="px-6 py-3">
                                 Codigo

@@ -1,64 +1,88 @@
 import Link from "next/link"
-import data from "../../mocks/mocks.json";
+import { Camiones } from "@/mocks/Camiones.json"
+import { Neumaticos } from "@/mocks/neumaticos.json"
+import { FaRegCopy } from "react-icons/fa";
 
 export default function ListaMaquinaria() {
-    const maquinas = data.Vehiculo;
-    const faenas = data.Faena;
-    const circuitos = data.Circuito;
-    const vehiculosPorFlota = data.VehiculosPorFlota
+    const camionesConNeumaticos = Camiones.map((camion) => {
+        const neumaticosDelCamion = Neumaticos.filter(neumatico => neumatico.Codigo_Camion === camion.Codigo);
+        return { ...camion, Neumaticos: neumaticosDelCamion };
+    });
 
-    const obtenerInfoVehiculos = () => {
-        return maquinas.map((vehiculo) => {
-            const relacion = vehiculosPorFlota.find((vpf) => vpf.id_vehiculo === vehiculo.id);
-            const faena = faenas.find((f) => f.id === relacion?.id_faena);
-            const circuito = circuitos.find((c) => c.id_faena === faena?.id);
-
-            return {
-                ...vehiculo,
-                faena: faena?.compania || "Desconocida",
-                circuito: circuito?.nombre || "No asignado",
-            };
-        });
-    };
-
+    console.log(camionesConNeumaticos);
     return (
         <div className=" p-4 h-screen w-full mb-4 rounded-md bg-white text-white relative shadow-md font-mono">
             {/* Titulo y acceso a ver mas */}
             <div className="flex items-center justify-between">
                 <h2 className="text-black text-2xl font-bold">Lista Maquinaria</h2>
             </div>
-            <div className=" text-black">
-                <table className="table-auto w-full">
-                    <thead>
+            {/* Tabla de neumaticos */}
+            <div className="relative overflow-x-auto h-[80%] my-2">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-md rounded-t-md overflow-hidden">
+                    <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center sticky top-0">
                         <tr>
-                            <th className="px-4 py-2">ID</th>
-                            <th className="px-4 py-2">Modelo</th>
-                            <th className="px-4 py-2">Faena</th>
-                            <th className="px-4 py-2">Circuito</th>
-                            <th className="px-4 py-2">Ruedas</th>
-                            <th className="px-4 py-2">Horometro</th>
-                            <th className="px-4 py-2">Aro</th>
-                            <th className="px-4 py-2">Acciones</th>
+                            <th scope="col" className="px-6 py-3">
+                                Codigo
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Marca
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Modelo
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Faena
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Ultima Revision
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Profundidad Neumaticos
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Acciones
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {obtenerInfoVehiculos().map(maquina => (
-                            <tr key={maquina.id}>
-                                <td className="border px-4 py-2">{maquina.id}</td>
-                                <td className="border px-4 py-2">{maquina.modelo}</td>
-                                <td className="border px-4 py-2">{maquina.faena}</td>
-                                <td className="border px-4 py-2">{maquina.circuito}</td>
-                                <td className="border px-4 py-2">{maquina.cant_ruedas}</td>
-                                <td className="border px-4 py-2">{maquina.horometro}</td>
-                                <td className="border px-4 py-2">{maquina.aro}</td>
-                                <td className="border px-4 py-2">
-                                    <Link href={`/maquinaria/${maquina.id}`} className="text-black text-lg"> Info. Detallada</Link>
+                        {camionesConNeumaticos.map((maquina) => (
+
+                            <tr key={maquina.Codigo} className="bg-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {maquina.Codigo}
+                                </th>
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {maquina.Marca}
+                                </th>
+                                <td className="px-6 py-4">
+                                    {maquina.Modelo}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {maquina.Faena}
+                                </td>
+                                <td className="px-6 py-4">
+                                    10/03/2025
+                                </td>
+                                <td className="px-6 py-4 flex gap-x-2 items-center justify-center">
+                                    {
+                                        maquina.Neumaticos.map(neumatico =>
+                                            <p key={neumatico.Id} className="bg-emerald-200 font-bold rounded-lg p-1 px-2 border-2 border-emerald-500">
+                                                {neumatico.Profundidad}
+                                            </p>
+                                        )
+                                    }
+                                </td>
+                                <td className="px-6 py-4 ">
+                                    <Link href={`/maquinaria/${maquina.Codigo}`} className="text-black">
+                                        <FaRegCopy size={20} />
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
         </div>
     )
 }
