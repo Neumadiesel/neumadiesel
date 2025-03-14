@@ -40,7 +40,9 @@ export default function NavBar() {
                 ))}
             </div>
             <div className='w-[20%] flex justify-center'>
-                <FaRegUserCircle size={40} />
+                <Link href="/usuario">
+                    <FaRegUserCircle size={40} />
+                </Link>
             </div>
         </div>
 

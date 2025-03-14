@@ -1,0 +1,841 @@
+{
+    "Faena": [
+        {
+            "id": 1,
+            "ubicacion": "Antofagasta",
+            "compania": "Minera Zaldivar"
+        }
+    ],
+    "Flota": [
+        {
+            "id": 1,
+            "id_faena": 1,
+            "proveedor": "Komatusu",
+            "tipo": "Camiones de extracción"
+        }
+    ],
+    "Circuito": [
+        {
+            "id": 1,
+            "id_faena": 1,
+            "nombre": "Ruta 1",
+            "distance": 5000,
+            "TKPH": 250
+        }
+    ],
+    "FlotaPorCircuito": [
+        {
+            "id": 1,
+            "id_flota": 1,
+            "id_circuito": 1
+        }
+    ],
+    "Trabajador": [
+        {
+            "id": 1,
+            "nombre_completo": "Juan Perez",
+            "correo": "juan.perez@example.com",
+            "contrasena": "password123",
+            "faena_minera": "",
+            "rol": "Administrador"
+        },
+        {
+            "id": 2,
+            "nombre_completo": "Maria Gonzalez",
+            "correo": "maria.gonzalez@example.com",
+            "contrasena": "password456",
+            "faena_minera": "Minera Zaldivar",
+            "rol": "Supervisor"
+        },
+        {
+            "id": 3,
+            "nombre_completo": "Pedro Rojas",
+            "correo": "pedro.rojas@example.com",
+            "contrasena": "password789",
+            "faena_minera": "Minera Zaldivar",
+            "rol": "Planificador"
+        },
+        {
+            "id": 4,
+            "nombre_completo": "Carlos Ramirez",
+            "correo": "carlos.ramirez@example.com",
+            "contrasena": "password789",
+            "faena_minera": "Minera Zaldivar",
+            "rol": "Operador"
+        }
+    ],
+    "Vehiculo": [
+        {
+            "id": 1,
+            "cant_ruedas": 6,
+            "modelo": "CAT 793F",
+            "marca": "Komatusu",
+            "Año": 2020,
+            "Serie": "123456",
+            "horometro": 12000,
+            "aro": 49
+        },
+        {
+            "id": 2,
+            "cant_ruedas": 6,
+            "modelo": "CAT 793F",
+            "marca": "Komatusu",
+            "Año": 2020,
+            "Serie": "123456",
+            "horometro": 10000,
+            "aro": 49
+        },
+        {
+            "id": 3,
+            "cant_ruedas": 6,
+            "modelo": "CAT 793F",
+            "marca": "Komatusu",
+            "Año": 2020,
+            "Serie": "123456",
+            "horometro": 8000,
+            "aro": 49
+        },
+        {
+            "id": 4,
+            "cant_ruedas": 6,
+            "modelo": "CAT 793F",
+            "marca": "Komatusu",
+            "Año": 2020,
+            "Serie": "123456",
+            "horometro": 6000,
+            "aro": 49
+        },
+        {
+            "id": 5,
+            "cant_ruedas": 6,
+            "modelo": "CAT 793F",
+            "marca": "Komatusu",
+            "Año": 2020,
+            "Serie": "123456",
+            "horometro": 4000,
+            "aro": 49
+        },
+        {
+            "id": 6,
+            "cant_ruedas": 6,
+            "modelo": "CAT 793F",
+            "marca": "Komatusu",
+            "Año": 2020,
+            "Serie": "123456",
+            "horometro": 2000,
+            "aro": 49
+        }
+    ],
+    "VehiculosPorFlota": [
+        {
+            "id": 1,
+            "id_vehiculo": 1,
+            "id_faena": 1
+        },
+        {
+            "id": 2,
+            "id_vehiculo": 2,
+            "id_faena": 1
+        },
+        {
+            "id": 3,
+            "id_vehiculo": 3,
+            "id_faena": 1
+        },
+        {
+            "id": 4,
+            "id_vehiculo": 4,
+            "id_faena": 1
+        },
+        {
+            "id": 5,
+            "id_vehiculo": 5,
+            "id_faena": 1
+        },
+        {
+            "id": 6,
+            "id_vehiculo": 6,
+            "id_faena": 1
+        }
+    ],
+    "Tyre": [
+        {
+            "id": 1,
+            "fabricante": "Michelin",
+            "modelo": "XDR3",
+            "codigo_tra": "TRA1234",
+            "tyre_size": "59/80R63",
+            "compuesto": "A2",
+            "horas_nominales": 5000,
+            "km_nominales": 10000,
+            "TKPH_nominal": 300
+        }
+    ],
+    "Record": [
+        {
+            "id": 1,
+            "id_maintance": 1
+        }
+    ],
+    "Mantencion": [
+        {
+            "id": 1,
+            "id_motivo": 1,
+            "id_trabajador": 1,
+            "date_maintance": "2025-03-10",
+            "id_vehiculo": 1
+        }
+    ],
+    "Reason_mantencion": [
+        {
+            "id": 2,
+            "reason": "Daño imprevisto"
+        },
+        {
+            "id": 3,
+            "reason": "Rotación"
+        },
+        {
+            "id": 4,
+            "reason": "Inversión"
+        }
+    ],
+    "OperatorPorFaena": [
+        {
+            "id": 1,
+            "id_trabajador": 1,
+            "id_faena": 1
+        },
+        {
+            "id": 2,
+            "id_trabajador": 2,
+            "id_faena": 1
+        },
+        {
+            "id": 3,
+            "id_trabajador": 3,
+            "id_faena": 1
+        },
+        {
+            "id": 4,
+            "id_trabajador": 4,
+            "id_faena": 1
+        }
+    ],
+    "RuedasPorVehiculo": [
+        {
+            "id": 1,
+            "id_vehiculo": 1,
+            "id_rueda": 1
+        },
+        {
+            "id": 2,
+            "id_vehiculo": 1,
+            "id_rueda": 2
+        },
+        {
+            "id": 3,
+            "id_vehiculo": 1,
+            "id_rueda": 3
+        },
+        {
+            "id": 4,
+            "id_vehiculo": 1,
+            "id_rueda": 4
+        },
+        {
+            "id": 5,
+            "id_vehiculo": 1,
+            "id_rueda": 5
+        },
+        {
+            "id": 6,
+            "id_vehiculo": 1,
+            "id_rueda": 6
+        },
+        {
+            "id": 7,
+            "id_vehiculo": 2,
+            "id_rueda": 7
+        },
+        {
+            "id": 8,
+            "id_vehiculo": 2,
+            "id_rueda": 8
+        },
+        {
+            "id": 9,
+            "id_vehiculo": 2,
+            "id_rueda": 9
+        },
+        {
+            "id": 10,
+            "id_vehiculo": 2,
+            "id_rueda": 10
+        },
+        {
+            "id": 11,
+            "id_vehiculo": 2,
+            "id_rueda": 11
+        },
+        {
+            "id": 12,
+            "id_vehiculo": 2,
+            "id_rueda": 12
+        },
+        {
+            "id": 13,
+            "id_vehiculo": 3,
+            "id_rueda": 13
+        },
+        {
+            "id": 14,
+            "id_vehiculo": 3,
+            "id_rueda": 14
+        },
+        {
+            "id": 15,
+            "id_vehiculo": 3,
+            "id_rueda": 15
+        },
+        {
+            "id": 16,
+            "id_vehiculo": 3,
+            "id_rueda": 16
+        },
+        {
+            "id": 17,
+            "id_vehiculo": 3,
+            "id_rueda": 17
+        },
+        {
+            "id": 18,
+            "id_vehiculo": 3,
+            "id_rueda": 18
+        },
+        {
+            "id": 19,
+            "id_vehiculo": 4,
+            "id_rueda": 19
+        },
+        {
+            "id": 20,
+            "id_vehiculo": 4,
+            "id_rueda": 20
+        },
+        {
+            "id": 21,
+            "id_vehiculo": 4,
+            "id_rueda": 21
+        },
+        {
+            "id": 22,
+            "id_vehiculo": 4,
+            "id_rueda": 22
+        },
+        {
+            "id": 23,
+            "id_vehiculo": 4,
+            "id_rueda": 23
+        },
+        {
+            "id": 24,
+            "id_vehiculo": 4,
+            "id_rueda": 24
+        },
+        {
+            "id": 25,
+            "id_vehiculo": 5,
+            "id_rueda": 25
+        },
+        {
+            "id": 26,
+            "id_vehiculo": 5,
+            "id_rueda": 26
+        },
+        {
+            "id": 27,
+            "id_vehiculo": 5,
+            "id_rueda": 27
+        },
+        {
+            "id": 28,
+            "id_vehiculo": 5,
+            "id_rueda": 28
+        },
+        {
+            "id": 29,
+            "id_vehiculo": 5,
+            "id_rueda": 29
+        },
+        {
+            "id": 30,
+            "id_vehiculo": 5,
+            "id_rueda": 30
+        },
+        {
+            "id": 31,
+            "id_vehiculo": 6,
+            "id_rueda": 31
+        },
+        {
+            "id": 32,
+            "id_vehiculo": 6,
+            "id_rueda": 32
+        },
+        {
+            "id": 33,
+            "id_vehiculo": 6,
+            "id_rueda": 33
+        },
+        {
+            "id": 34,
+            "id_vehiculo": 6,
+            "id_rueda": 34
+        },
+        {
+            "id": 35,
+            "id_vehiculo": 6,
+            "id_rueda": 35
+        },
+        {
+            "id": 36,
+            "id_vehiculo": 6,
+            "id_rueda": 36
+        }
+    ],
+    "MedicionPorRueda": [
+        {
+            "id": 1,
+            "id_neumatico": 1,
+            "id_vehiculo": 1,
+            "posicion": 1,
+            "horas_utilizadas": 2000,
+            "km_utilizados": 4000,
+            "medicion_externa": 80,
+            "medicion_interna": 75,
+            "presion": 110,
+            "temperatura": 90
+        },
+        {
+            "id": 2,
+            "id_neumatico": 2,
+            "id_vehiculo": 1,
+            "posicion": 2,
+            "horas_utilizadas": 2000,
+            "km_utilizados": 4000,
+            "medicion_externa": 80,
+            "medicion_interna": 75,
+            "presion": 110,
+            "temperatura": 90
+        },
+        {
+            "id": 3,
+            "id_neumatico": 3,
+            "id_vehiculo": 1,
+            "posicion": 3,
+            "horas_utilizadas": 2000,
+            "km_utilizados": 4000,
+            "medicion_externa": 80,
+            "medicion_interna": 75,
+            "presion": 110,
+            "temperatura": 90
+        },
+        {
+            "id": 4,
+            "id_neumatico": 4,
+            "id_vehiculo": 1,
+            "posicion": 4,
+            "horas_utilizadas": 2000,
+            "km_utilizados": 4000,
+            "medicion_externa": 80,
+            "medicion_interna": 75,
+            "presion": 110,
+            "temperatura": 90
+        },
+        {
+            "id": 5,
+            "id_neumatico": 5,
+            "id_vehiculo": 1,
+            "posicion": 5,
+            "horas_utilizadas": 2000,
+            "km_utilizados": 4000,
+            "medicion_externa": 80,
+            "medicion_interna": 75,
+            "presion": 110,
+            "temperatura": 90
+        },
+        {
+            "id": 6,
+            "id_neumatico": 6,
+            "id_vehiculo": 1,
+            "posicion": 6,
+            "horas_utilizadas": 2000,
+            "km_utilizados": 4000,
+            "medicion_externa": 80,
+            "medicion_interna": 75,
+            "presion": 110,
+            "temperatura": 90
+        },
+        {
+            "id": 7,
+            "id_neumatico": 7,
+            "id_vehiculo": 2,
+            "posicion": 1,
+            "horas_utilizadas": 1500,
+            "km_utilizados": 3000,
+            "medicion_externa": 85,
+            "medicion_interna": 80,
+            "presion": 115,
+            "temperatura": 85
+        },
+        {
+            "id": 8,
+            "id_neumatico": 8,
+            "id_vehiculo": 2,
+            "posicion": 2,
+            "horas_utilizadas": 1500,
+            "km_utilizados": 3000,
+            "medicion_externa": 85,
+            "medicion_interna": 80,
+            "presion": 115,
+            "temperatura": 85
+        },
+        {
+            "id": 9,
+            "id_neumatico": 9,
+            "id_vehiculo": 2,
+            "posicion": 3,
+            "horas_utilizadas": 1500,
+            "km_utilizados": 3000,
+            "medicion_externa": 85,
+            "medicion_interna": 80,
+            "presion": 115,
+            "temperatura": 85
+        },
+        {
+            "id": 10,
+            "id_neumatico": 10,
+            "id_vehiculo": 2,
+            "posicion": 4,
+            "horas_utilizadas": 1500,
+            "km_utilizados": 3000,
+            "medicion_externa": 85,
+            "medicion_interna": 80,
+            "presion": 115,
+            "temperatura": 85
+        },
+        {
+            "id": 11,
+            "id_neumatico": 11,
+            "id_vehiculo": 2,
+            "posicion": 5,
+            "horas_utilizadas": 1500,
+            "km_utilizados": 3000,
+            "medicion_externa": 85,
+            "medicion_interna": 80,
+            "presion": 115,
+            "temperatura": 85
+        },
+        {
+            "id": 12,
+            "id_neumatico": 12,
+            "id_vehiculo": 2,
+            "posicion": 6,
+            "horas_utilizadas": 1500,
+            "km_utilizados": 3000,
+            "medicion_externa": 85,
+            "medicion_interna": 80,
+            "presion": 115,
+            "temperatura": 85
+        },
+        {
+            "id": 13,
+            "id_neumatico": 13,
+            "id_vehiculo": 3,
+            "posicion": 1,
+            "horas_utilizadas": 1000,
+            "km_utilizados": 2000,
+            "medicion_externa": 90,
+            "medicion_interna": 85,
+            "presion": 120,
+            "temperatura": 80
+        },
+        {
+            "id": 14,
+            "id_neumatico": 14,
+            "id_vehiculo": 3,
+            "posicion": 2,
+            "horas_utilizadas": 1000,
+            "km_utilizados": 2000,
+            "medicion_externa": 90,
+            "medicion_interna": 85,
+            "presion": 120,
+            "temperatura": 80
+        },
+        {
+            "id": 15,
+            "id_neumatico": 15,
+            "id_vehiculo": 3,
+            "posicion": 3,
+            "horas_utilizadas": 1000,
+            "km_utilizados": 2000,
+            "medicion_externa": 90,
+            "medicion_interna": 85,
+            "presion": 120,
+            "temperatura": 80
+        },
+        {
+            "id": 16,
+            "id_neumatico": 16,
+            "id_vehiculo": 3,
+            "posicion": 4,
+            "horas_utilizadas": 1000,
+            "km_utilizados": 2000,
+            "medicion_externa": 90,
+            "medicion_interna": 85,
+            "presion": 120,
+            "temperatura": 80
+        },
+        {
+            "id": 17,
+            "id_neumatico": 17,
+            "id_vehiculo": 3,
+            "posicion": 5,
+            "horas_utilizadas": 1000,
+            "km_utilizados": 2000,
+            "medicion_externa": 90,
+            "medicion_interna": 85,
+            "presion": 120,
+            "temperatura": 80
+        },
+        {
+            "id": 18,
+            "id_neumatico": 18,
+            "id_vehiculo": 3,
+            "posicion": 6,
+            "horas_utilizadas": 1000,
+            "km_utilizados": 2000,
+            "medicion_externa": 90,
+            "medicion_interna": 85,
+            "presion": 120,
+            "temperatura": 80
+        },
+        {
+            "id": 19,
+            "id_neumatico": 19,
+            "id_vehiculo": 4,
+            "posicion": 1,
+            "horas_utilizadas": 800,
+            "km_utilizados": 1600,
+            "medicion_externa": 95,
+            "medicion_interna": 90,
+            "presion": 125,
+            "temperatura": 75
+        },
+        {
+            "id": 20,
+            "id_neumatico": 20,
+            "id_vehiculo": 4,
+            "posicion": 2,
+            "horas_utilizadas": 800,
+            "km_utilizados": 1600,
+            "medicion_externa": 95,
+            "medicion_interna": 90,
+            "presion": 125,
+            "temperatura": 75
+        },
+        {
+            "id": 21,
+            "id_neumatico": 21,
+            "id_vehiculo": 4,
+            "posicion": 3,
+            "horas_utilizadas": 800,
+            "km_utilizados": 1600,
+            "medicion_externa": 95,
+            "medicion_interna": 90,
+            "presion": 125,
+            "temperatura": 75
+        },
+        {
+            "id": 22,
+            "id_neumatico": 22,
+            "id_vehiculo": 4,
+            "posicion": 4,
+            "horas_utilizadas": 800,
+            "km_utilizados": 1600,
+            "medicion_externa": 95,
+            "medicion_interna": 90,
+            "presion": 125,
+            "temperatura": 75
+        },
+        {
+            "id": 23,
+            "id_neumatico": 23,
+            "id_vehiculo": 4,
+            "posicion": 5,
+            "horas_utilizadas": 800,
+            "km_utilizados": 1600,
+            "medicion_externa": 95,
+            "medicion_interna": 90,
+            "presion": 125,
+            "temperatura": 75
+        },
+        {
+            "id": 24,
+            "id_neumatico": 24,
+            "id_vehiculo": 4,
+            "posicion": 6,
+            "horas_utilizadas": 800,
+            "km_utilizados": 1600,
+            "medicion_externa": 95,
+            "medicion_interna": 90,
+            "presion": 125,
+            "temperatura": 75
+        },
+        {
+            "id": 25,
+            "id_neumatico": 25,
+            "id_vehiculo": 5,
+            "posicion": 1,
+            "horas_utilizadas": 600,
+            "km_utilizados": 1200,
+            "medicion_externa": 100,
+            "medicion_interna": 95,
+            "presion": 130,
+            "temperatura": 70
+        },
+        {
+            "id": 26,
+            "id_neumatico": 26,
+            "id_vehiculo": 5,
+            "posicion": 2,
+            "horas_utilizadas": 600,
+            "km_utilizados": 1200,
+            "medicion_externa": 100,
+            "medicion_interna": 95,
+            "presion": 130,
+            "temperatura": 70
+        },
+        {
+            "id": 27,
+            "id_neumatico": 27,
+            "id_vehiculo": 5,
+            "posicion": 3,
+            "horas_utilizadas": 600,
+            "km_utilizados": 1200,
+            "medicion_externa": 100,
+            "medicion_interna": 95,
+            "presion": 130,
+            "temperatura": 70
+        },
+        {
+            "id": 28,
+            "id_neumatico": 28,
+            "id_vehiculo": 5,
+            "posicion": 4,
+            "horas_utilizadas": 600,
+            "km_utilizados": 1200,
+            "medicion_externa": 100,
+            "medicion_interna": 95,
+            "presion": 130,
+            "temperatura": 70
+        },
+        {
+            "id": 29,
+            "id_neumatico": 29,
+            "id_vehiculo": 5,
+            "posicion": 5,
+            "horas_utilizadas": 600,
+            "km_utilizados": 1200,
+            "medicion_externa": 100,
+            "medicion_interna": 95,
+            "presion": 130,
+            "temperatura": 70
+        },
+        {
+            "id": 30,
+            "id_neumatico": 30,
+            "id_vehiculo": 5,
+            "posicion": 6,
+            "horas_utilizadas": 600,
+            "km_utilizados": 1200,
+            "medicion_externa": 100,
+            "medicion_interna": 95,
+            "presion": 130,
+            "temperatura": 70
+        },
+        {
+            "id": 31,
+            "id_neumatico": 31,
+            "id_vehiculo": 6,
+            "posicion": 1,
+            "horas_utilizadas": 400,
+            "km_utilizados": 800,
+            "medicion_externa": 105,
+            "medicion_interna": 100,
+            "presion": 135,
+            "temperatura": 65
+        },
+        {
+            "id": 32,
+            "id_neumatico": 32,
+            "id_vehiculo": 6,
+            "posicion": 2,
+            "horas_utilizadas": 400,
+            "km_utilizados": 800,
+            "medicion_externa": 105,
+            "medicion_interna": 100,
+            "presion": 135,
+            "temperatura": 65
+        },
+        {
+            "id": 33,
+            "id_neumatico": 33,
+            "id_vehiculo": 6,
+            "posicion": 3,
+            "horas_utilizadas": 400,
+            "km_utilizados": 800,
+            "medicion_externa": 105,
+            "medicion_interna": 100,
+            "presion": 135,
+            "temperatura": 65
+        },
+        {
+            "id": 34,
+            "id_neumatico": 34,
+            "id_vehiculo": 6,
+            "posicion": 4,
+            "horas_utilizadas": 400,
+            "km_utilizados": 800,
+            "medicion_externa": 105,
+            "medicion_interna": 100,
+            "presion": 135,
+            "temperatura": 65
+        },
+        {
+            "id": 35,
+            "id_neumatico": 35,
+            "id_vehiculo": 6,
+            "posicion": 5,
+            "horas_utilizadas": 400,
+            "km_utilizados": 800,
+            "medicion_externa": 105,
+            "medicion_interna": 100,
+            "presion": 135,
+            "temperatura": 65
+        },
+        {
+            "id": 36,
+            "id_neumatico": 36,
+            "id_vehiculo": 6,
+            "posicion": 6,
+            "horas_utilizadas": 400,
+            "km_utilizados": 800,
+            "medicion_externa": 105,
+            "medicion_interna": 100,
+            "presion": 135,
+            "temperatura": 65
+        }
+    ]
+}

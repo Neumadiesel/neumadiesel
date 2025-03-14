@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "nombre_completo": "Juan Perez",
+        "correo": "juan.perez@example.com",
+        "contrasena": "password123",
+        "faena_minera": "",
+        "rol": "Administrador"
+    },
+    {
+        "id": 2,
+        "nombre_completo": "Maria Gonzalez",
+        "correo": "maria.gonzalez@example.com",
+        "contrasena": "password456",
+        "faena_minera": "Minera Zaldivar",
+        "rol": "Supervisor"
+    },
+    {
+        "id": 3,
+        "nombre_completo": "Pedro Rojas",
+        "correo": "pedro.rojas@example.com",
+        "contrasena": "password789",
+        "faena_minera": "Minera Zaldivar",
+        "rol": "Planificador"
+    },
+    {
+        "id": 4,
+        "nombre_completo": "Carlos Ramirez",
+        "correo": "carlos.ramirez@example.com",
+        "contrasena": "password789",
+        "faena_minera": "Minera Zaldivar",
+        "rol": "Operador"
+    }
+]
