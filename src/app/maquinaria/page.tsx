@@ -3,8 +3,6 @@ import data from "../../mocks/mocks.json";
 
 export default function ListaMaquinaria() {
     const maquinas = data.Vehiculo;
-    const flotas = data.FlotaPorCircuito;
-    const flotaPorCircuito = data.FlotaPorCircuito;
     const faenas = data.Faena;
     const circuitos = data.Circuito;
     const vehiculosPorFlota = data.VehiculosPorFlota

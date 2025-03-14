@@ -4,17 +4,6 @@ import Link from "next/link";
 import { FaRegCopy } from "react-icons/fa";
 import { useState } from "react";
 
-interface NeumaticoProps {
-    Id: string,
-    Codigo: string,
-    Serie: string,
-    Codigo_Camion: string,
-    Profundidad: number,
-    META_HORAS: number,
-    META_KMS: number,
-    Costo: number,
-    Posicion: number
-}
 export default function Page() {
     const [codigo, setCodigo] = useState('');
     const [camion, setCamion] = useState('');
@@ -114,7 +103,7 @@ export default function Page() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredNeumaticos.map((neumatico, index) => (
+                        {filteredNeumaticos.map((neumatico) => (
 
                             <tr key={neumatico.Id} className="bg-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">

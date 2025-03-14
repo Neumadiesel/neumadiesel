@@ -1,7 +1,6 @@
 'use client'
 import Link from "next/link"
 import Image from "next/image"
-import { GiMineTruck } from "react-icons/gi"
 import data from "@/mocks/mocks.json"
 import { useParams } from "next/navigation"
 

@@ -1,7 +1,6 @@
 import { MdOutlineLibraryBooks } from "react-icons/md";
 import { FaInfoCircle } from "react-icons/fa";
 import Link from "next/link";
-import usuarios from "../../mocks/usuarios.json";
 import fs from 'fs';
 import path from 'path';
 
