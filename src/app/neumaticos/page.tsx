@@ -20,24 +20,24 @@ export default function Page() {
     }, [codigo, camion, estado]);
 
     return (
-        <div className=" p-4 bg-[#f1f1f1] h-screen relative shadow-sm font-mono">
+        <div className=" p-4 bg-[#f1f1f1] dark:bg-[#212121] h-screen relative shadow-sm font-mono">
             <div>
                 <h1 className="font-mono text-3xl font-bold">Lista de Neumaticos</h1>
             </div>
             {/* Busqueda por codigo, camion, y filtro selector por estado*/}
             <div className="flex justify-between items-center">
-                <div className="flex items-center justify-between w-full mx-auto">
+                <div className="flex items-center justify-between w-full mx-auto my-2">
                     <input
                         type="text"
                         placeholder="Buscar por codigo"
-                        className="border-2 p-2 rounded-md bg-white font-bold border-amber-300"
+                        className="border-2 p-2 rounded-md bg-white text-black dark:bg-[#212121] dark:text-white font-bold border-amber-300"
                         value={codigo}
                         onChange={(e) => setCodigo(e.target.value)}
                     />
                     <input
                         type="text"
                         placeholder="Buscar por camion"
-                        className="border-2 p-2 text-black rounded-md bg-white font-bold border-amber-300"
+                        className="border-2 p-2 text-black rounded-md bg-white dark:bg-[#212121] dark:text-white font-bold border-amber-300"
 
                         value={camion}
                         onChange={(e) => setCamion(e.target.value)}
@@ -45,7 +45,7 @@ export default function Page() {
                     <select
                         name="estado"
                         id="estado"
-                        className="border-2 p-2 text-black rounded-md bg-white font-bold border-amber-300"
+                        className="border-2 p-2 text-black rounded-md bg-white dark:bg-amber-300 font-bold border-amber-300"
 
                         value={estado}
                         onChange={(e) => setEstado(e.target.value)}
@@ -56,7 +56,7 @@ export default function Page() {
                     </select>
                     {/* Crear neumatico */}
                     <Link href="/neumaticos/crear">
-                        <button className="bg-amber-300 hover:bg-amber-700 border-2 border-black px-6 font-bold py-2  rounded">
+                        <button className="bg-amber-300 text-black hover:bg-amber-700 border-2 border-black px-6 font-bold py-2  rounded">
                             Crear
                         </button>
                     </Link>
@@ -107,8 +107,8 @@ export default function Page() {
                     <tbody>
                         {filteredNeumaticos.map((neumatico) => (
 
-                            <tr key={neumatico.Id} className="bg-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            <tr key={neumatico.Id} className="bg-white dark:bg-[#0b0a0a]  dark:text-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
+                                <th scope="row" className="px-6 py-4 font-medium text-black dark:text-white whitespace-nowrap">
                                     {neumatico.Codigo}
                                 </th>
                                 <td className="px-6 py-4">
@@ -124,7 +124,7 @@ export default function Page() {
                                     10/03/2025
                                 </td>
                                 <td className="px-6 py-4">
-                                    <p className="bg-emerald-200 font-bold rounded-lg p-1 px-2 border-2 border-emerald-500">
+                                    <p className="bg-emerald-200 text-black font-bold rounded-lg p-1 px-2 border-2 border-emerald-500">
                                         {neumatico.Profundidad < 5 ? 'Desgastado' : 'Bueno'}
                                     </p>
                                 </td>
@@ -141,7 +141,7 @@ export default function Page() {
                                     {neumatico.META_KMS}
                                 </td>
                                 <td className="px-6 py-4 flex items-center justify-center">
-                                    <Link href={`/neumaticos/${neumatico.Id}`} className="text-black">
+                                    <Link href={`/neumaticos/${neumatico.Id}`} className="">
                                         <FaRegCopy size={20} />
                                     </Link>
                                 </td>
