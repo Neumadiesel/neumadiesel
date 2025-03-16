@@ -1,20 +1,32 @@
 'use client'
 import { useEffect } from "react";
-import { Neumaticos } from "@/mocks/neumaticos.json";
+import { DB_Relacion_Numaticos_Camion } from "@/mocks/DB_Relacion_Neumaticos_Camion.json";
 import Link from "next/link";
 import { FaRegCopy } from "react-icons/fa";
 import { useState } from "react";
 
 export default function Page() {
+    const neumaticos = DB_Relacion_Numaticos_Camion.map(neumatico => {
+        const diferencia = Math.abs(neumatico.medicion_exterior - neumatico.medicion_interior);
+        let estado = 'Bueno';
+        if (diferencia > 4) {
+            estado = 'Desgastado';
+        } else if (diferencia > 2) {
+            estado = 'Mantención';
+        }
+        return { ...neumatico, estado };
+    });
+
     const [codigo, setCodigo] = useState('');
     const [camion, setCamion] = useState('');
     const [estado, setEstado] = useState('');
-    const [filteredNeumaticos, setFilteredNeumaticos] = useState(Neumaticos);
+    const [filteredNeumaticos, setFilteredNeumaticos] = useState(neumaticos);
 
     useEffect(() => {
-        const filtered = Neumaticos.filter(neumatico =>
-            (codigo.toLowerCase() === '' || neumatico.Codigo.toLowerCase().includes(codigo.toLowerCase())) &&
-            (camion.toLowerCase() === '' || neumatico.Codigo_Camion.toLowerCase().includes(camion.toLowerCase()))
+        const filtered = neumaticos.filter(neumatico =>
+            (codigo.toLowerCase() === '' || neumatico.id_neumatico.toLowerCase().includes(codigo.toLowerCase())) &&
+            (camion.toLowerCase() === '' || neumatico.Codigo_camion.toLowerCase().includes(camion.toLowerCase())) &&
+            (estado === '' || neumatico.estado.toLowerCase() === estado.toLowerCase())
         );
         setFilteredNeumaticos(filtered);
     }, [codigo, camion, estado]);
@@ -45,14 +57,14 @@ export default function Page() {
                     <select
                         name="estado"
                         id="estado"
-                        className="border-2 p-2 text-black rounded-md bg-white dark:bg-amber-300 font-bold border-amber-300"
-
+                        className="border-2 p-2 text-black rounded-md bg-white dark:bg-[#212121] dark:text-white font-bold border-amber-300"
                         value={estado}
                         onChange={(e) => setEstado(e.target.value)}
                     >
                         <option value="">Todos</option>
-                        <option value="bueno">Bueno</option>
-                        <option value="desgastado">Desgastado</option>
+                        <option value="Bueno">Bueno</option>
+                        <option value="Mantención">Mantención</option>
+                        <option value="Desgastado">Desgastado</option>
                     </select>
                     {/* Crear neumatico */}
                     <Link href="/neumaticos/crear">
@@ -107,41 +119,41 @@ export default function Page() {
                     <tbody>
                         {filteredNeumaticos.map((neumatico) => (
 
-                            <tr key={neumatico.Id} className="bg-white dark:bg-[#0b0a0a]  dark:text-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
+                            <tr key={neumatico.id} className="bg-white dark:bg-[#0b0a0a]  dark:text-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
                                 <th scope="row" className="px-6 py-4 font-medium text-black dark:text-white whitespace-nowrap">
-                                    {neumatico.Codigo}
+                                    {neumatico.id_neumatico}
                                 </th>
                                 <td className="px-6 py-4">
-                                    {neumatico.Serie}
+                                    {neumatico.id_neumatico}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {neumatico.Codigo_Camion}
+                                    {neumatico.Codigo_camion}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {neumatico.Posicion}
+                                    {neumatico.Posición}
                                 </td>
                                 <td className="px-6 py-4">
                                     10/03/2025
                                 </td>
                                 <td className="px-6 py-4">
-                                    <p className="bg-emerald-200 text-black font-bold rounded-lg p-1 px-2 border-2 border-emerald-500">
-                                        {neumatico.Profundidad < 5 ? 'Desgastado' : 'Bueno'}
+                                    <p className={`font-bold rounded-lg p-1 px-2 border-2 ${neumatico.estado === 'Desgastado' ? 'bg-red-200 text-black border-red-500' : neumatico.estado === 'Mantención' ? 'bg-yellow-200 text-black border-yellow-500' : 'bg-emerald-200 text-black border-emerald-500'}`}>
+                                        {neumatico.estado}
                                     </p>
                                 </td>
                                 <td className="px-6 py-4">
-                                    {neumatico.Profundidad}
+                                    {neumatico.medicion_exterior}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {neumatico.Profundidad}
+                                    {neumatico.medicion_interior}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {neumatico.META_HORAS}
+                                    {neumatico.Horas_utilizados}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {neumatico.META_KMS}
+                                    {neumatico.km_utilizados}
                                 </td>
                                 <td className="px-6 py-4 flex items-center justify-center">
-                                    <Link href={`/neumaticos/${neumatico.Id}`} className="">
+                                    <Link href={`/neumaticos/${neumatico.id}`} className="">
                                         <FaRegCopy size={20} />
                                     </Link>
                                 </td>
