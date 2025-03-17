@@ -1,34 +1,23 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
+import CardChart from '@/components/ui/CardChart';
+import ExampleChart from '@/components/charts/ExampleChart';
 
 export default function Page() {
 
-
-    const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-    const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-    const xLabels = [
-        'Page A',
-        'Page B',
-        'Page C',
-        'Page D',
-        'Page E',
-        'Page F',
-        'Page G',
-    ];
     return (
-        <div className="flex justify-center items-center h-screen bg-amber-300 text-white relative shadow-sm font-mono">
-            <div>Neumadiesel</div>
-            <BarChart
-                width={500}
-                height={300}
-                colors={['#8884d8', '#82ca9d']}
-
-                series={[
-                    { data: pData, label: 'pv', id: 'pvId' },
-                    { data: uData, label: 'uv', id: 'uvId' },
-                ]}
-                xAxis={[{ data: xLabels, scaleType: 'band' }]}
-            />
+        <div className="flex flex-col  h-screen bg-[#EEF0F2]  text-white md:w-[70%] mx-auto shadow-sm font-mono p-3">
+            <h1 className='text-3xl font-mono font- text-black'>Dashboard</h1>
+            {/* Resumenes */}
+            <div className='grid grid-cols-2 w-full gap-2 py-2'>
+                <CardChart backgroundColor='bg-red-200' titulo='Maquinas funcionando' estadistica='31' />
+                <CardChart backgroundColor='bg-yellow-200' titulo='Neumaticos en bodega' estadistica='87' />
+                <CardChart backgroundColor='bg-yellow-200' titulo='Maquinas en mantencion' estadistica='2' />
+                <CardChart backgroundColor='bg-red-200' titulo='Neumaticos criticos' estadistica='13' />
+            </div>
+            <div className='bg-red-600 h-[100%] w-[100%] flex justify-center items-center'>
+                <ExampleChart />
+            </div>
         </div>
     );
 }
