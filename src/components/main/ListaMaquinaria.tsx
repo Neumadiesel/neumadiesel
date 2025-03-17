@@ -25,7 +25,7 @@ export default function ListaMaquinaria() {
     return (
         <div className=" p-4 h-screen w-full mb-4 rounded-md bg-white text-white relative shadow-md font-mono">
             {/* Titulo y acceso a ver mas */}
-            <div className="flex items-center justify-between">
+            <div className="hidden md:flex items-center justify-between">
                 <h2 className="text-black text-2xl font-bold">Lista Maquinaria</h2>
                 <Link href="/maquinaria" className="text-black text-xl"> Ver mas {">"} </Link>
             </div>

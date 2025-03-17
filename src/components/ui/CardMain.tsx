@@ -9,7 +9,7 @@ interface CardMainProps {
 export default function CardMain({ link, titulo, children }: CardMainProps) {
     return (
 
-        <Link href={`/${link}`} className="w-full h-32 rounded-xl flex flex-col justify-center items-center bg-white border border-amber-200 shadow-amber-300 shadow-sm">
+        <Link href={`/${link}`} className="w-full h-32 rounded-xl flex flex-col justify-center items-center bg-white hover:bg-amber-100 transition-all ease-in-out border border-amber-200 shadow-amber-300 shadow-sm">
             {children}
             <p className="text-black font-semibold text-lg">{titulo}</p>
         </Link>
