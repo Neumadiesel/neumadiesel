@@ -10,10 +10,10 @@ export default function ListaMaquinaria() {
     });
 
     return (
-        <div className=" p-4 h-screen w-full mb-4 rounded-md bg-white text-white relative shadow-md font-mono">
+        <div className=" p-4 h-screen w-full mb-4  bg-white dark:bg-[#212121] text-white relative shadow-md font-mono">
             {/* Titulo y acceso a ver mas */}
             <div className="flex items-center justify-between">
-                <h2 className="text-black text-2xl font-bold">Lista Maquinaria</h2>
+                <h2 className="text-black dark:text-white text-2xl font-bold">Lista Maquinaria</h2>
             </div>
             {/* Tabla de neumaticos */}
             <div className="relative overflow-x-auto h-[80%] my-2">
@@ -46,11 +46,11 @@ export default function ListaMaquinaria() {
                     <tbody>
                         {camionesConNeumaticos.map((maquina) => (
 
-                            <tr key={maquina.Codigo} className="bg-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            <tr key={maquina.Codigo} className="bg-white dark:bg-black dark:text-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {maquina.Codigo}
                                 </th>
-                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
                                     {maquina.Marca}
                                 </th>
                                 <td className="px-6 py-4">
@@ -65,14 +65,14 @@ export default function ListaMaquinaria() {
                                 <td className="px-6 py-4 flex gap-x-2 items-center justify-center">
                                     {
                                         maquina.Neumaticos.map(neumatico =>
-                                            <p key={neumatico.Id} className="bg-emerald-200 font-bold rounded-lg p-1 px-2 border-2 border-emerald-500">
+                                            <p key={neumatico.Id} className="bg-emerald-200 text-black dark:text-black font-bold rounded-lg p-1 px-2 border-2 border-emerald-500">
                                                 {neumatico.Profundidad}
                                             </p>
                                         )
                                     }
                                 </td>
                                 <td className="px-6 py-4 ">
-                                    <Link href={`/maquinaria/${maquina.Codigo}`} className="text-black">
+                                    <Link href={`/maquinaria/${maquina.Codigo}`} className="text-black dark:text-white">
                                         <FaRegCopy size={20} />
                                     </Link>
                                 </td>
