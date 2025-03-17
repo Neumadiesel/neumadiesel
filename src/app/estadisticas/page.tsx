@@ -16,7 +16,7 @@ export default function Page() {
         'Page G',
     ];
     return (
-        <div className="flex justify-center items-center h-screen bg-[#212121] text-white relative shadow-sm font-mono">
+        <div className="flex justify-center items-center h-screen bg-amber-300 text-white relative shadow-sm font-mono">
             <div>Neumadiesel</div>
             <BarChart
                 width={500}

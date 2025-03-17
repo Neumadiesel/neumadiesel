@@ -9,7 +9,6 @@ export default function ListaMaquinaria() {
         return { ...camion, Neumaticos: neumaticosDelCamion };
     });
 
-    console.log(camionesConNeumaticos);
     return (
         <div className=" p-4 h-screen w-full mb-4 rounded-md bg-white text-white relative shadow-md font-mono">
             {/* Titulo y acceso a ver mas */}

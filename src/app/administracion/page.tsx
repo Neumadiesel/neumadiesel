@@ -18,7 +18,6 @@ export default function Page() {
     const usuariosFilePath = path.join(process.cwd(), 'src', 'mocks', 'usuarios.json');
     const usuarios = JSON.parse(fs.readFileSync(usuariosFilePath, 'utf8'));
 
-    console.log("Lista de usuarios", usuarios);
     return (
         <div className="block h-screen p-4 relative shadow-sm font-mono">
             <h1 className="text-3xl">Administracion de usuarios</h1>

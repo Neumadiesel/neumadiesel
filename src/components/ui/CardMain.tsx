@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { GiMineTruck } from 'react-icons/gi';
 
 interface CardMainProps {
     link: string;
