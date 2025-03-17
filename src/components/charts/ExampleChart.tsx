@@ -93,7 +93,9 @@ export default function ExampleChart() {
         if (canvas) {
             const ctx = canvas.getContext("2d");
             if (ctx) {
-                // @ts-expect-error
+                // @ts-expect-error Chart constructor expects a different config type
+
+
                 new Chart(ctx, config);
             }
         }
