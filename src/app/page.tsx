@@ -60,14 +60,14 @@ export default function Page() {
         <h3 className="text-3xl font-semibold">Alertas</h3>
         <main className="grid  grid-cols-1 gap-y-5 md:flex items-center justify-between gap-x-3 pr-4 h-[80%]">
           <div className="md:w-[60%]">
-            <table className="w-full text-center gap-x-2">
+            <table className="w-full text-center gap-x-2 border-collapse">
               <thead className="">
                 <tr>
                   <th className="w-24  rounded-md text-black"><p className="bg-amber-300 m-2 rounded-md">Neumatico</p></th>
                   <th className="w-24  rounded-md text-black"><p className="bg-amber-300 m-2 rounded-md">Maquinaria</p></th>
                   <th className="w-24  rounded-md text-black"><p className="bg-amber-300 m-2 rounded-md">Remanente</p></th>
-                  <th className="w-24 hidden md:block rounded-md text-black"><p className="bg-amber-300 m-2 rounded-md">Horas</p></th>
-                  <th className="w-24 hidden md:block rounded-md text-black"><p className="bg-amber-300 m-2 rounded-md">Kilometro</p></th>
+                  <th className="w-24 hidden md:table-cell  rounded-md text-black"><p className="bg-amber-300 m-2 rounded-md">Horas</p></th>
+                  <th className="w-24 hidden md:table-cell  rounded-md text-black"><p className="bg-amber-300 m-2 rounded-md">Kilometro</p></th>
                 </tr>
               </thead>
               <tbody>
