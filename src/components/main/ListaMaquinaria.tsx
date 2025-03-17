@@ -34,7 +34,7 @@ export default function ListaMaquinaria() {
                 <div className="bg-amber-300 w-full rounded-xl h-48">
 
                 </div>
-                <section className="grid grid-cols-3 gap-x-2 py-3">
+                <section className="grid grid-cols-3 gap-x-2 ">
                     <CardMain titulo="Maquinaria" link="maquinaria">
                         <GiMineTruck size={50} color="black" />
                     </CardMain>
