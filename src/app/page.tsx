@@ -58,7 +58,7 @@ export default function Page() {
       {/* Zona inferior neumaticos con alertas */}
       <section className="h-[50vh]">
         <h3 className="text-3xl font-semibold">Alertas</h3>
-        <main className="grid  grid-cols-1 gap-y-5 md:flex items-center justify-between gap-x-3 pr-4 h-[80%]">
+        <main className="grid  grid-cols-1 gap-y-5 md:flex py-5 justify-between gap-x-3 pr-4 h-[80%]">
           <div className="md:w-[60%]">
             <table className="w-full text-center gap-x-2 border-collapse">
               <thead className="">
@@ -118,8 +118,8 @@ export default function Page() {
             </table>
           </div>
           {/* Logo empresa */}
-          <div className="flex justify-center items-center h-[10vh] md:w-[30%]">
-            <Image src="/logo-amsa.png" width={400} height={300} alt="Logo empresa" />
+          <div className="flex justify-center mt-4 items-center h-[50%] md:w-[30%]">
+            <Image className="drop-shadow-xl" src="/logo-amsa.png" width={400} height={300} alt="Logo empresa" />
           </div>
         </main>
       </section>
