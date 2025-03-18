@@ -4,7 +4,7 @@ import Chart from "chart.js";
 
 export default function BarChart() {
     React.useEffect(() => {
-        let config = {
+        const config = {
             type: "bar",
             data: {
                 labels: [
