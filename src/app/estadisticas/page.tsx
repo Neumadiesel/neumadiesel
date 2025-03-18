@@ -1,11 +1,12 @@
 import * as React from 'react';
 import CardChart from '@/components/ui/CardChart';
 import ExampleChart from '@/components/charts/ExampleChart';
+import BarChart from '@/components/charts/BarChart';
 
 export default function Page() {
 
     return (
-        <div className="flex flex-col  h-screen bg-white dark:bg-[#212121]   text-white w-full mx-auto shadow-sm font-mono p-3">
+        <div className="flex flex-col h-full bg-white dark:bg-[#212121]   text-white w-full mx-auto shadow-sm font-mono p-3">
             <h1 className='text-3xl font-mono dark:text-white text-black'>Dashboard</h1>
             {/* Resumenes */}
             <div className='grid grid-cols-2 md:grid-cols-4 w-full x-auto gap-2 py-2 justify-items-center'>
@@ -16,6 +17,9 @@ export default function Page() {
             </div>
             <div className=' w-[100%] h-[60vh] flex justify-center items-center'>
                 <ExampleChart />
+            </div>
+            <div className=' w-[100%] h-[60vh] flex justify-center items-center'>
+                <BarChart />
             </div>
         </div>
     );
