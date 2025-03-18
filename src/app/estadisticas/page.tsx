@@ -14,7 +14,7 @@ export default function Page() {
                 <CardChart backgroundColor='bg-yellow-200' titulo='Maquinas en mantencion' estadistica='2' />
                 <CardChart backgroundColor='bg-red-200' titulo='Neumaticos criticos' estadistica='13' />
             </div>
-            <div className='bg-red-600 h-[100%] w-[100%] flex justify-center items-center'>
+            <div className=' w-[100%] h-[60vh] flex justify-center items-center'>
                 <ExampleChart />
             </div>
         </div>
