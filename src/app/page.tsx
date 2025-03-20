@@ -75,37 +75,37 @@ export default function Page() {
                   neumaticos
                     .filter((neumatico) => neumatico.estado === 'Desgastado')
                     .map((neumatico) => (
-                      <tr key={neumatico.id}>
+                      <tr key={neumatico.id} className="dark:text-white ">
                         <td>
-                          <p className="bg-slate-100 mx-2 mb-2 rounded-md">
+                          <p className="bg-slate-100 dark:bg-black mx-2 mb-2 rounded-md">
 
                             {neumatico.id_neumatico}
                           </p>
 
                         </td>
                         <td>
-                          <p className="bg-slate-100 mx-2 mb-2 rounded-md">
+                          <p className="bg-slate-100 dark:bg-black mx-2 mb-2 rounded-md">
 
                             {neumatico.Codigo_camion}
                           </p>
 
                         </td>
                         <td>
-                          <p className="bg-slate-100 mx-2 mb-2 rounded-md">
+                          <p className="bg-slate-100 dark:bg-black mx-2 mb-2 rounded-md">
 
                             {neumatico.medicion_exterior}
                           </p>
 
                         </td>
                         <td>
-                          <p className="bg-slate-100 hidden md:block mx-2 mb-2 rounded-md">
+                          <p className="bg-slate-100 dark:bg-black hidden md:block mx-2 mb-2 rounded-md">
 
                             {neumatico.Horas_utilizados}
                           </p>
 
                         </td>
                         <td>
-                          <p className="bg-slate-100 hidden md:block mx-2 mb-2 rounded-md">
+                          <p className="bg-slate-100 dark:bg-black hidden md:block mx-2 mb-2 rounded-md">
 
                             {neumatico.km_utilizados}
                           </p>
