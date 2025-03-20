@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Camiones } from "@/mocks/Camiones.json"
 import { Neumaticos } from "@/mocks/neumaticos.json"
 import { useParams } from "next/navigation"
-import CardNeumatico from "../ui/CardNeumatico"
+import { FaInfoCircle } from "react-icons/fa"
 
 interface NeumaticoInt {
     Id: string;
@@ -29,74 +29,71 @@ export default function ListaMaquinaria() {
     const neumaticos: NeumaticoInt[] = Neumaticos.filter((neumatico: NeumaticoInt) => neumatico.Codigo_Camion === id);
 
     return (
-        <div className="p-4 h-screen w-full mb-4 rounded-md bg-white text-white relative shadow-md font-mono">
-            <div className="text-black flex flex-col">
+        <div className="p-4 h-screen w-full mb-4 rounded-md bg-white text-white dark:bg-black relative shadow-md font-mono">
+            <div className="text-black dark:text-white flex flex-col">
                 {/* Info del camión */}
                 <div className="flex justify-between mb-2">
-                    <h2 className="text-2xl font-bold text-black">
-                        Camión {id} {camion?.Marca} {camion?.Modelo} - Faena {camion?.Faena}
+                    <h2 className="text-2xl font-bold ">
+                        Camión {id} - Faena {camion?.Faena}
                     </h2>
-                    <div className="flex justify-between items-center gap-x-4">
-                        <Link href={`/mantenimiento/${id}`} className="text-black text-lg bg-amber-300 p-2 rounded-md border border-black">Historial</Link>
-                        <Link href={`/mantenimiento/${id}`} className="text-black text-lg bg-amber-300 p-2 rounded-md border border-black">Realizar Mantención</Link>
+                    <div className="flex flex-col gap-y-1 justify-between w-[40%] items-end gap-x-4">
+                        <Link href={`/mantenimiento/${id}`} className="text-black text-lg bg-amber-300 w-52 text-center p-2 rounded-md border border-black">Historial</Link>
+                        <Link href={`/mantenimiento/${id}`} className="text-black text-lg w-52 text-center bg-amber-300 p-2 rounded-md border border-black">Mantenimiento</Link>
                     </div>
                 </div>
+                {/* Seccion de informacion */}
+                <div className="flex ">
+                    {/* Esquema de neumaticos*/}
+                    <section className="min-w-[35%]   p-2 flex justify-center items-center">
+                        <Image src="/Axle_gray.png" className="drop-shadow-xl" alt="Esquema" width={300} height={200} />
+                    </section>
+                    {/* <CardNeumatico neumatico={neumaticos[5]} /> */}
 
-                {/* Sección superior */}
-                <section className="h-[40%] w-full flex">
-                    {/* Foto referencial */}
-                    <Image src="/caex.webp" className="mr-4" height={300} width={400} alt="Camión" objectFit="cover" />
+                    {/* Lista de neumaticos */}
+                    <div className="w-[65%] h-full">
+                        <h2 className="text-2xl font-bold text-black dark:text-white">Neumáticos</h2>
+                        <div className="relative overflow-x-auto h-[80%] my-2">
+                            <div className="flex flex-col gap-y-2">
+                                {/* Table head */}
+                                <div className="w-full border-b-[1px] border-b-gray-300 dark:border-b-gray-600 shadow-sm bg-slate-300 dark:bg-[#212121] rounded-md p-2 h-12 transition-all flex items-center justify-between ">
+                                    <div className="flex flex-col">
+                                        <p>Datos del neumatico:</p>
+                                    </div>
+                                    <div>
+                                        <p className=" font-mono font-semibold">Mediciones</p>
+                                    </div>
+                                    <div>
+                                        <p className=" font-mono font-semibold">Metas</p>
+                                    </div>
+                                    <div className="flex justify-center items-center">
+                                        <p>Acciones</p>
+                                    </div>
+                                </div>
+                                {neumaticos.map((neumatico: NeumaticoInt) => (
+                                    <div key={neumatico.Codigo} className="w-full border-b-[1px] hover:bg-amber-100 h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
+                                        <div className="flex flex-col">
+                                            <p>Codigo: {neumatico.Codigo}</p>
+                                            <p>Posicion: {neumatico.Posicion}</p>
+                                        </div>
+                                        <div>
+                                            <p>Interna: {neumatico.Profundidad}</p>
+                                            <p>Externa: {neumatico.Profundidad}</p>
+                                        </div>
+                                        <div>
+                                            <p>Horas: {neumatico.META_HORAS}</p>
+                                            <p>Km: {neumatico.META_KMS}</p>
+                                        </div>
+                                        <div className="flex justify-center items-center">
 
-                    {/* Esquema de neumáticos */}
-                    <div className="w-[70%] flex justify-center items-center">
-                        <section className="grid grid-cols-5 gap-y-4 gap-x-2">
-                            <div className="w-[50px] h-[100px]"></div>
-                            <CardNeumatico neumatico={neumaticos[0]} />
-                            <div className="w-[50px] h-[100px]"></div>
-                            <CardNeumatico neumatico={neumaticos[1]} />
-                            <div className="w-[50px] h-[100px]"></div>
-                            <CardNeumatico neumatico={neumaticos[2]} />
-                            <CardNeumatico neumatico={neumaticos[3]} />
-                            <div className="w-[50px] h-[100px]"></div>
-                            <CardNeumatico neumatico={neumaticos[4]} />
-                            <CardNeumatico neumatico={neumaticos[5]} />
-                        </section>
+                                            <Link href={`/neumaticos/${neumatico.Codigo}`} className="flex justify-center items-center h-12 w-12  text-lg ">
+                                                <FaInfoCircle size={20} />
+                                            </Link>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                </section>
-
-                {/* Info del neumático */}
-                <h2 className="text-2xl font-bold text-black">Neumáticos</h2>
-                <div className="relative overflow-x-auto h-[80%] my-2">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-md rounded-t-md overflow-hidden">
-                        <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center sticky top-0">
-                            <tr>
-                                <th className="px-4 py-2">Código</th>
-                                <th className="px-4 py-2">Camión</th>
-                                <th className="px-4 py-2">Horas Utilizadas</th>
-                                <th className="px-4 py-2">Km Utilizados</th>
-                                <th className="px-4 py-2">Posición</th>
-                                <th className="px-4 py-2">Medición Externa</th>
-                                <th className="px-4 py-2">Medición Interna</th>
-                                <th className="px-4 py-2">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {neumaticos.map((neumatico: NeumaticoInt) => (
-                                <tr key={neumatico.Codigo}>
-                                    <td className="border px-4 py-2">{neumatico.Codigo}</td>
-                                    <td className="border px-4 py-2">{neumatico.Codigo_Camion}</td>
-                                    <td className="border px-4 py-2">{neumatico.META_HORAS}</td>
-                                    <td className="border px-4 py-2">{neumatico.META_KMS}</td>
-                                    <td className="border px-4 py-2">{neumatico.Posicion}</td>
-                                    <td className="border px-4 py-2">{neumatico.Profundidad}</td>
-                                    <td className="border px-4 py-2">{neumatico.Profundidad}</td>
-                                    <td className="border px-4 py-2">
-                                        <Link href={`/neumaticos/${neumatico.Codigo}`} className="text-black text-lg"> Info. Detallada</Link>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
