@@ -20,7 +20,7 @@ export default function Page() {
   });
 
   return (
-    <div className=" bg-white dark:bg-[#212121] text-black dark:text-white font-mono h-full p-3">
+    <div className=" bg-white dark:bg-[#212121] text-black dark:text-white font-mono h-full p-3 w-[80%] mx-auto max-w-[1720px]">
 
       {/* Zona superior tarjetas */}
       <div className="md:flex h-[70%] md:h-[50%]">
