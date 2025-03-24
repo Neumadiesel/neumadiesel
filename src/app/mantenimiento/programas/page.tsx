@@ -25,8 +25,7 @@ export default function programas() {
         XLSX.utils.sheet_add_aoa(worksheet, [["Programa Semana"]], { origin: "A1" });
 
         // Aplicar estilo a la primera fila (Encabezados)
-        //@ts-ignore
-        const range = XLSX.utils.decode_range(worksheet["!ref"]);
+        const range = XLSX.utils.decode_range(worksheet["!ref"] ?? "");
         for (let C = range.s.c; C <= range.e.c; C++) {
             const cellAddress = XLSX.utils.encode_cell({ r: 1, c: C });
             if (!worksheet[cellAddress]) continue;
@@ -57,9 +56,9 @@ export default function programas() {
                                 motivo: "Nuevo Motivo",
                                 dia: "Lunes",
                                 fecha: "2023-01-01",
-                                duracion: "2 horas"
+                                duracion: 2 // Changed to a number
                             };
-                            // @ts-ignore
+
                             programa_mantenimiento.push(nuevoPrograma);
                             alert("Nuevo programa agregado");
                         }}
