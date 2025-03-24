@@ -3,7 +3,8 @@ import { useState } from "react";
 import { programa_mantenimiento } from "@/mocks/programa.json";
 import { FaAngleLeft, FaAngleRight, FaFileExcel } from "react-icons/fa";
 import * as XLSX from "xlsx";
-export default function programas() {
+
+export default function Programas() {
 
     const exportToExcel = () => {
         const table = document.querySelector("table");
@@ -38,6 +39,7 @@ export default function programas() {
         XLSX.utils.book_append_sheet(workbook, worksheet, "Programa");
         XLSX.writeFile(workbook, "programa_mantenimiento.xlsx");
     };
+
 
 
 
