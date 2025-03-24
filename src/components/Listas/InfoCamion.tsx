@@ -49,7 +49,7 @@ export default function ListaMaquinaria() {
                     </section>
 
                     {/* Lista de neumaticos */}
-                    <div className="w-full md:w-[65%] h-screen">
+                    <div className="w-full md:w-[65%] h-full">
                         <h2 className="text-2xl font-bold text-black dark:text-white">Neumáticos</h2>
                         <div className="relative overflow-x-auto md:h-[80%] my-2">
                             <div className="flex flex-col gap-y-2">
