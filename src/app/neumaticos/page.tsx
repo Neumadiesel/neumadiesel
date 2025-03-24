@@ -164,7 +164,7 @@ export default function Page() {
                                     {neumatico.km_utilizados}
                                 </td>
                                 <td className="px-6 py-4 flex items-center justify-center">
-                                    <Link href={`/neumaticos/${neumatico.id}`} className="">
+                                    <Link href={`/mantenimiento/Historial`} className="">
                                         <FaRegCopy size={20} />
                                     </Link>
                                 </td>

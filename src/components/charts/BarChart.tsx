@@ -8,17 +8,17 @@ export default function BarChart() {
             type: "bar",
             data: {
                 labels: [
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre",
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dic",
+                    "Ene",
+                    "Feb",
+                    "Mar",
                 ],
                 datasets: [
                     {
-                        label: new Date().getFullYear(),
+                        label: "budget",
                         backgroundColor: "#212121",
                         borderColor: "#212121",
                         data: [30, 78, 56, 34, 100, 45, 13],
@@ -26,7 +26,7 @@ export default function BarChart() {
                         barThickness: 20,
                     },
                     {
-                        label: new Date().getFullYear() - 1,
+                        label: "usado",
                         fill: false,
                         backgroundColor: "#FFBF08",
                         borderColor: "#FFBF08",
@@ -36,10 +36,13 @@ export default function BarChart() {
 
                     {
                         label: 'Line Dataset',
-                        data: [79, 80, 80, 80, 80, 80, 80],
+                        data: [80, 80, 80, 80, 80, 80, 80],
                         type: 'line',
                         // this dataset is drawn on top
-                        order: 2
+                        order: 2,
+                        borderColor: 'rgb(255, 207, 0)',
+                        backgroundColor: "rgba(255, 207, 0, 0.24)",
+
                     }
                 ],
             },
@@ -117,16 +120,13 @@ export default function BarChart() {
         }
     }, []);
     return (
-        <div className="h-[100%] w-[100%] bg-white dark:bg-[#212121] flex justify-center items-center">
-            <div className="relative bg-[#fef3c6] flex flex-col min-w-0 break-words w-[100vh] h-[80%] mb-6 shadow-lg rounded bg-blueGray-700">
+        <div className="w-full h-[47vh] flex justify-center items-center">
+            <div className="relative bg-white border border-slate-600 flex flex-col min-w-0 break-words w-[100vh] h-[80%] mb-6 shadow-lg rounded bg-blueGray-700">
                 <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
                     <div className="flex flex-wrap items-center">
                         <div className="relative w-full max-w-full flex-grow flex-1">
-                            <h6 className="uppercase text-black mb-1 text-xs font-semibold">
-                                Performance
-                            </h6>
                             <h2 className="text-black text-xl font-semibold">
-                                Total orders
+                                Neumaticos utilizados
                             </h2>
                         </div>
                     </div>

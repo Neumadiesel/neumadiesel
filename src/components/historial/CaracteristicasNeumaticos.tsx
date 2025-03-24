@@ -4,7 +4,7 @@ export default function CaracteristicasNeumatico() {
     return (
         <div className="w-[100%] p-2 flex">
             <section className=" h-[100%] p-2  w-[30%] ">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2">
                     <div>
                         <label className="font-bold">Marca:</label>
                         <p className="text-gray-500">Bridgeston</p>

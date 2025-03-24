@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Camiones } from "@/mocks/Camiones.json"
 import { Neumaticos } from "@/mocks/neumaticos.json"
 import { useParams } from "next/navigation"
-import { FaInfoCircle } from "react-icons/fa"
+import { FaClock, FaInfoCircle } from "react-icons/fa"
 
 interface NeumaticoInt {
     Id: string;
@@ -37,7 +37,6 @@ export default function ListaMaquinaria() {
                         Camión {id} - Faena {camion?.Faena}
                     </h2>
                     <div className="flex md:flex-col gap-y-1 justify-between w-[100%] md:w-[40%] items-end gap-x-4">
-                        <Link href={`/mantenimiento/${id}`} className="text-black text-lg bg-amber-300 w-52 text-center p-2 rounded-md border border-black">Historial</Link>
                         <Link href={`/mantenimiento/${id}`} className="text-black text-lg w-52 text-center bg-amber-300 p-2 rounded-md border border-black">Mantenimiento</Link>
                     </div>
                 </div>
@@ -84,8 +83,12 @@ export default function ListaMaquinaria() {
                                         </div>
                                         <div className="flex justify-center items-center">
 
-                                            <Link href={`/neumaticos/${neumatico.Codigo}`} className="flex justify-center items-center h-12 w-12  text-lg ">
+                                            <Link href={`/neumaticos/${neumatico.Codigo}`} className="flex justify-between items-center h-12 w-12  text-lg ">
                                                 <FaInfoCircle size={20} />
+
+                                            </Link>
+                                            <Link href={`/mantenimiento/Historial`} className="flex justify-between items-center h-12 w-12  text-lg ">
+                                                <FaClock size={20} />
                                             </Link>
                                         </div>
                                     </div>

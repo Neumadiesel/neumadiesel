@@ -102,8 +102,8 @@ export default function ExampleChart() {
     }, []);
 
     return (
-        <div className="h-[100%] w-[100%] bg-white dark:bg-[#212121] flex justify-center items-center">
-            <div className="relative bg-[#fef3c6] flex flex-col min-w-0 break-words w-[100vh] h-3/4 mb-6 shadow-lg rounded bg-blueGray-700">
+        <div className="w-full h-[50vh] flex justify-center items-center">
+            <div className="relative bg-white  border border-slate-600 flex flex-col min-w-0 break-words w-[100vh] h-3/4 mb-6 shadow-lg rounded bg-blueGray-700">
                 <div className="rounded-t mb-0 px-4 py-3 ">
                     <div className="flex flex-wrap items-center">
                         <div className="relative w-full max-w-full flex-grow flex-1">
