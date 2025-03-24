@@ -1,0 +1,144 @@
+{
+    "programa_mantenimiento": [
+        {
+            "equipo": "CAEX",
+            "motivo": "Desarme y armado de neumáticos gigantes",
+            "dia": "Lunes",
+            "fecha": "17-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "WT05",
+            "motivo": "Armado de neumático pos 1 y 2",
+            "dia": "Martes",
+            "fecha": "18-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "WT06",
+            "motivo": "Cambio de neumático pos 1 por rotación",
+            "dia": "Martes",
+            "fecha": "18-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "WT05",
+            "motivo": "Cambio de neumático pos 2 por rotación",
+            "dia": "Martes",
+            "fecha": "18-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "WT06",
+            "motivo": "Verificación de torque",
+            "dia": "Martes",
+            "fecha": "18-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H57",
+            "motivo": "Armado de neumático pos 3 y 4",
+            "dia": "Miércoles",
+            "fecha": "19-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "H57",
+            "motivo": "Cambio de neumático pos 3 por desgaste irregular",
+            "dia": "Miércoles",
+            "fecha": "19-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H51",
+            "motivo": "Cambio de neumático pos 4 por desgaste irregular",
+            "dia": "Miércoles",
+            "fecha": "19-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "H.57",
+            "motivo": "Verificación de torque",
+            "dia": "Miércoles",
+            "fecha": "19-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H36",
+            "motivo": "Armado de neumático pos 3 y 4",
+            "dia": "Miércoles",
+            "fecha": "19-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "H36",
+            "motivo": "Cambio de neumático pos 3 por desgaste irregular",
+            "dia": "Miércoles",
+            "fecha": "19-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H36",
+            "motivo": "Cambio de neumático pos 4 por paralelismo",
+            "dia": "Miércoles",
+            "fecha": "19-07-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "H36",
+            "motivo": "Verificación de torque",
+            "dia": "Miércoles",
+            "fecha": "19-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H54",
+            "motivo": "Armado de neumático pos 3 y 4",
+            "dia": "Jueves",
+            "fecha": "20-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "H54",
+            "motivo": "Cambio de neumático pos 3 por desgaste irregular",
+            "dia": "Jueves",
+            "fecha": "20-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H54",
+            "motivo": "Cambio de neumático pos 4 por desgaste irregular",
+            "dia": "Jueves",
+            "fecha": "20-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "H54",
+            "motivo": "Verificación de torque",
+            "dia": "Jueves",
+            "fecha": "20-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H31",
+            "motivo": "Armado de neumático pos 3 y 4",
+            "dia": "Jueves",
+            "fecha": "20-03-2025",
+            "duracion": 1
+        },
+        {
+            "equipo": "H31",
+            "motivo": "Cambio de neumático pos 3 por desgaste irregular",
+            "dia": "Jueves",
+            "fecha": "20-03-2025",
+            "duracion": 1.5
+        },
+        {
+            "equipo": "H31",
+            "motivo": "Cambio de neumático pos 4 por paralelismo",
+            "dia": "Jueves",
+            "fecha": "20-03-2025",
+            "duracion": 1
+        }
+    ]
+}
