@@ -1,4 +1,3 @@
-import { FaCross } from "react-icons/fa"
 import { FaCircleMinus } from "react-icons/fa6"
 
 export default function page() {

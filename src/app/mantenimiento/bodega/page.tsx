@@ -1,11 +1,12 @@
 'use client'
-import { useEffect } from "react";
-import { DB_Relacion_Numaticos_Camion } from "@/mocks/DB_Relacion_Neumaticos_Camion.json";
-import Link from "next/link";
-import { FaRegCopy } from "react-icons/fa";
-import { useState } from "react";
+import Link from "next/link"
+import { FaRegCopy } from "react-icons/fa"
+import { useState } from "react"
+import { useEffect } from "react"
 
-export default function Page() {
+import { DB_Relacion_Numaticos_Camion } from "@/mocks/DB_Relacion_Neumaticos_Camion.json";
+
+export default function page() {
     const neumaticos = DB_Relacion_Numaticos_Camion.map(neumatico => {
         const diferencia = Math.abs(neumatico.medicion_exterior - neumatico.medicion_interior);
         let estado = 'Bueno';
@@ -41,51 +42,18 @@ export default function Page() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-
     return (
-        <div className=" p-4 bg-[#f1f1f1] h-[110vh] dark:bg-[#212121] relative shadow-sm font-mono">
-            <div>
-                <h1 className="font-mono text-3xl font-bold">Lista de Neumaticos</h1>
+        <div className="bg-white m-3 p-3 rounded-md shadow-lg h-[95%] font-mono">
+            <div className="flex items-center justify-between">
+                <h2 className="font-bold text-3xl">Neumaticos en bodega</h2>
+                <select className="bg-amber-50 w-[20%] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" >
+                    <option value="volvo">Bodega</option>
+                    <option value="saab">Baja</option>
+                    <option value="mercedes">Recuperados</option>
+                    <option value="audi">Reparacion</option>
+                </select>
             </div>
-            {/* Busqueda por codigo, camion, y filtro selector por estado*/}
-            <div className="flex justify-between h-[10%] items-center">
-                <div className="flex items-center justify-between w-full mx-auto my-2">
-                    <input
-                        type="text"
-                        placeholder="Buscar por codigo"
-                        className="border-2 p-2 rounded-md bg-white text-black dark:bg-[#212121] dark:text-white font-bold border-amber-300"
-                        value={codigo}
-                        onChange={(e) => setCodigo(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Buscar por camion"
-                        className="border-2 p-2 text-black rounded-md bg-white dark:bg-[#212121] dark:text-white font-bold border-amber-300"
 
-                        value={camion}
-                        onChange={(e) => setCamion(e.target.value)}
-                    />
-                    <select
-                        name="estado"
-                        id="estado"
-                        className="border-2 p-2 text-black rounded-md bg-white dark:bg-[#212121] dark:text-white font-bold border-amber-300"
-                        value={estado}
-                        onChange={(e) => setEstado(e.target.value)}
-                    >
-                        <option value="">Todos</option>
-                        <option value="Bueno" className="bg-emerald-400">Optimo</option>
-                        <option value="Mantención">Precaucion</option>
-                        <option value="Desgastado">Alerta</option>
-                    </select>
-                    {/* Crear neumatico */}
-                    <Link href="/neumaticos/crear">
-                        <button className="bg-amber-300 text-black hover:bg-amber-700 border-2 border-black px-6 font-bold py-2  rounded">
-                            Crear
-                        </button>
-                    </Link>
-
-                </div>
-            </div>
 
             {/* Tabla de neumaticos */}
             <div className="relative overflow-x-auto h-[75%] my-2">
@@ -97,12 +65,6 @@ export default function Page() {
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Serie
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Camion
-                            </th>
-                            <th scope="col" className="px-2 py-3">
-                                Posicion
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Ultima Revision
@@ -136,12 +98,6 @@ export default function Page() {
                                 </th>
                                 <td className="px-6 py-4">
                                     {neumatico.id_neumatico}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {neumatico.Codigo_camion}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {neumatico.Posición}
                                 </td>
                                 <td className="px-6 py-4">
                                     10/03/2025
@@ -194,5 +150,5 @@ export default function Page() {
                 </button>
             </div>
         </div>
-    );
+    )
 }

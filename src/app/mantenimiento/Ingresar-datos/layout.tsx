@@ -1,6 +1,8 @@
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { FaClipboardCheck } from "react-icons/fa";
+import FormSkeleton from "../loading";
 export default function LayoutIngresarDatos({
     children,
 }: Readonly<{
@@ -20,6 +22,10 @@ export default function LayoutIngresarDatos({
             title: 'Registrar Maquinaria',
             href: '/mantenimiento/Ingresar-datos/crear-maquinaria',
         },
+        {
+            title: 'Programar Mantenimiento',
+            href: '/mantenimiento/Ingresar-datos/programar-mantenimiento',
+        },
     ]
 
     return (
@@ -37,7 +43,10 @@ export default function LayoutIngresarDatos({
 
                 </div>
             </aside>
-            {children}
+            <Suspense fallback={<FormSkeleton />} >
+
+                {children}
+            </Suspense>
         </div>
     )
 }

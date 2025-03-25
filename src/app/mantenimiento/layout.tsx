@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FaClock, FaDatabase, FaFileAlt, FaLink, FaPodcast, FaRing } from "react-icons/fa";
+import { FaCircleDot } from "react-icons/fa6";
 
 export default function LayoutMantencion({
     children,
@@ -38,6 +39,11 @@ export default function LayoutMantencion({
             label: "Programas",
             icon: <FaFileAlt className="text-2xl text-amber-300" />,
         },
+        {
+            href: "/mantenimiento/bodega",
+            label: "Bodega",
+            icon: <FaCircleDot className="text-2xl text-amber-300" />,
+        }
     ];
 
     return (
