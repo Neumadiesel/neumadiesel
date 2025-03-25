@@ -4,7 +4,7 @@ import { useState } from "react";
 import ListaNeumaticos from "@/components/Listas/ListaNeumaticos";
 
 
-export default function page() {
+export default function Page() {
 
     const [tipo, setTipo] = useState("bodega");
     return (
