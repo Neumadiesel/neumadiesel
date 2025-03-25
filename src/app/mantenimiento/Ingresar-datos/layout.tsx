@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { FaClipboardCheck } from "react-icons/fa";
-import FormSkeleton from "../loading";
+import FormSkeleton from "./loading";
 export default function LayoutIngresarDatos({
     children,
 }: Readonly<{

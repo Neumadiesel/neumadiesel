@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { FaClock, FaDatabase, FaFileAlt, FaLink, FaPodcast, FaRing } from "react-icons/fa";
 import { FaCircleDot } from "react-icons/fa6";
+import MantenimientoSkeleton from "./Loading";
 
 export default function LayoutMantencion({
     children,
@@ -65,7 +67,9 @@ export default function LayoutMantencion({
             </aside>
             {/* Contenido */}
             <div className="w-[100%] h-screen bg-[#f1f1f1]">
-                {children}
+                <Suspense fallback={<MantenimientoSkeleton />}>
+                    {children}
+                </Suspense>
 
             </div>
         </div>
