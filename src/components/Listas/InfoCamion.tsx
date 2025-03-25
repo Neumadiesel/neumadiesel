@@ -1,10 +1,10 @@
 'use client'
-import Link from "next/link"
-import Image from "next/image"
 import { Camiones } from "@/mocks/Camiones.json"
 import { Neumaticos } from "@/mocks/neumaticos.json"
+import Image from "next/image"
+import Link from "next/link"
 import { useParams } from "next/navigation"
-import { FaClock, FaInfoCircle } from "react-icons/fa"
+import { FaClock, FaInfoCircle, FaPodcast } from "react-icons/fa"
 
 interface NeumaticoInt {
     Id: string;
@@ -37,6 +37,7 @@ export default function ListaMaquinaria() {
                         Camión {id} - Faena {camion?.Faena}
                     </h2>
                     <div className="flex md:flex-col gap-y-1 justify-between w-[100%] md:w-[40%] items-end gap-x-4">
+                        <Link href={`/maquinaria/${id}/sensor`} className="text-black text-lg w-52 text-center flex justify-center gap-x-4 items-center bg-amber-300 p-2 rounded-md border border-black"><FaPodcast className="text-2xl text-black " /> Sensores</Link>
                         <Link href={`/mantenimiento/${id}`} className="text-black text-lg w-52 text-center bg-amber-300 p-2 rounded-md border border-black">Mantenimiento</Link>
                     </div>
                 </div>
@@ -78,8 +79,8 @@ export default function ListaMaquinaria() {
                                             <p>Externa: {neumatico.Profundidad}</p>
                                         </div>
                                         <div>
-                                            <p>Hr: {neumatico.META_HORAS}</p>
-                                            <p>Km: {neumatico.META_KMS}</p>
+                                            <p>Hr:  {neumatico.META_HORAS}</p>
+                                            <p>Km:  {neumatico.META_KMS}</p>
                                         </div>
                                         <div className="flex justify-center items-center">
 

@@ -45,7 +45,7 @@ export default function Programas() {
 
     const [semana, setSemana] = useState(12);
     return (
-        <div className="bg-[#f1f1f1] dark:bg-[#313131] p-4">
+        <div className="bg-[#f1f1f1] dark:bg-[#313131] p-4 h-screen">
             <div className=" p-4 bg-white dark:bg-[#212121] rounded-md shadow-lg h-[95%]" >
 
                 <div className="flex justify-between items-center">
@@ -92,7 +92,7 @@ export default function Programas() {
 
                 </div>
                 {/* Programa semanal */}
-                <div className="relative overflow-x-auto h-[75%] my-2">
+                <div className="relative overflow-x-auto h-[85%] my-2">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-lg rounded-t-md overflow-hidden">
                         <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center sticky top-0 z-50">
                             <tr>
