@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useState } from "react"
-import { FaClock, FaInfoCircle, FaPodcast } from "react-icons/fa"
+import { FaClock, FaPodcast } from "react-icons/fa"
 import { FaCircleDot } from "react-icons/fa6"
 
 interface NeumaticoInt {
