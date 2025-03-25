@@ -1,7 +1,5 @@
 import Image from "next/image";
-import { Camiones } from "@/mocks/Camiones.json";
 import Link from "next/link";
-import { Card } from "@mui/material";
 import CardSensor from "@/components/ui/CardSensor";
 
 export default function Page() {
