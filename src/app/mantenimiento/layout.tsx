@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { FaClock, FaDatabase, FaFileAlt, FaLink, FaPodcast, FaRing } from "react-icons/fa";
 import { FaCircleDot } from "react-icons/fa6";
-import MantenimientoSkeleton from "./Loading";
+import MantenimientoSkeleton from "@/app/mantenimiento/Loading";
 
 export default function LayoutMantencion({
     children,
