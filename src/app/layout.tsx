@@ -35,7 +35,7 @@ export default function RootLayout({
 
           <NavBar />
         </aside>
-        <main className="w-[100%] md:w-[85%] h-[screen] overflow-y-scroll ">
+        <main className="w-[100%] md:w-[85%] h-[105%] md:h-screen overflow-y-scroll ">
           <Suspense fallback={<LoadingSkeleton />}>
             {children}
           </Suspense>

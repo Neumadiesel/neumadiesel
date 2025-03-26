@@ -1,6 +1,6 @@
 export default function MainDescription() {
     return (
-        <div className="bg-amber-300 w-[100%] px-10 h-[40vh] p-4 flex flex-col justify-center items-center gap-y-4">
+        <div className="bg-amber-300 w-[100%] px-10 h-[50%] md:h-[40vh] p-4 flex flex-col justify-center items-center gap-y-4">
             <h2 className="font-bold text-black text-5xl text-center">
                 Sistema de Gestión de Mantenimiento de Neumáticos
             </h2>

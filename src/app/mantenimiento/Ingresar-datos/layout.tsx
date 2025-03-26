@@ -11,8 +11,12 @@ export default function LayoutIngresarDatos({
 
     const links = [
         {
-            title: 'Crear Neumatico Nuevo',
+            title: 'Ingresar mediciones',
             href: '/mantenimiento/Ingresar-datos/',
+        },
+        {
+            title: 'Crear Neumatico Nuevo',
+            href: '/mantenimiento/Ingresar-datos/crear-neumatico',
         },
         {
             title: 'Crear Modelo Neumatico',
