@@ -43,6 +43,7 @@ export default function Page() {
                     }
                     setData(jsonData);
                 } catch (error) {
+                    console.error(error);
                     setError('Error al procesar el archivo. Asegúrese de que sea un Excel válido.');
                 }
             };
