@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/layout/NavBar";
+import { Suspense } from "react";
+import LoadingSkeleton from "./Loading";
 // import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
@@ -34,8 +36,9 @@ export default function RootLayout({
           <NavBar />
         </aside>
         <main className="w-[85%] h-screen overflow-y-scroll ">
-
-          {children}
+          <Suspense fallback={<LoadingSkeleton />}>
+            {children}
+          </Suspense>
         </main>
         {/* <Footer /> */}
       </body>

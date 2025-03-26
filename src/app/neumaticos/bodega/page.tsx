@@ -8,7 +8,7 @@ export default function Page() {
 
     const [tipo, setTipo] = useState("bodega");
     return (
-        <div className="bg-white m-3 p-3 rounded-md shadow-lg h-[95%] font-mono">
+        <div className="bg-white m-4 p-3 rounded-md shadow-lg h-[95%] font-mono">
             <div className="flex items-center justify-between">
                 <h2 className="font-bold text-3xl">Neumaticos en {tipo}</h2>
                 <select

@@ -44,7 +44,7 @@ export default function ListaMaquinaria() {
     const neumaticos: NeumaticoInt[] = Neumaticos.filter((neumatico: NeumaticoInt) => neumatico.Codigo_Camion === id);
 
     return (
-        <div className="p-4 h-full w-full mb-4 rounded-md bg-white text-white dark:bg-black relative shadow-md font-mono">
+        <div className="p-4 h-full w-full rounded-md bg-white text-white dark:bg-black relative shadow-md font-mono">
             <div className="text-black dark:text-white flex flex-col">
                 {/* Info del camión */}
                 <div className="md:flex justify-between mb-2">

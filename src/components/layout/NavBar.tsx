@@ -29,7 +29,7 @@ export default function NavBar() {
     const menuItems = [
         {
             title: 'Reportabilidad',
-            path: '/',
+            path: '/estadisticas',
         },
         {
             title: 'Maquinaria',
@@ -38,8 +38,8 @@ export default function NavBar() {
         {
             title: 'Neumáticos',
             children: [
-                { title: 'Operación', path: '/neumaticos/operacion' },
-                { title: 'Bodega', path: '/neumaticos/baja' },
+                { title: 'Operación', path: '/neumaticos/' },
+                { title: 'Bodega', path: '/neumaticos/bodega' },
             ],
         },
         {
@@ -52,11 +52,11 @@ export default function NavBar() {
         {
             title: 'Mantenimiento',
             children: [
-                { title: 'Ingresar datos', path: '/mantenimiento/ingresar-datos' },
-                { title: 'Historial', path: '/mantenimiento/historial' },
+                { title: 'Ingresar datos', path: '/mantenimiento/Ingresar-datos' },
+                { title: 'Historial', path: '/mantenimiento/Historial' },
                 { title: 'Aros de camion', path: '/mantenimiento/aros-camion' },
                 { title: 'Sensores', path: '/mantenimiento/sensores' },
-                { title: 'Progama', path: '/mantenimiento/programa' },
+                { title: 'Progama', path: '/mantenimiento/programas' },
             ],
         },
     ]
