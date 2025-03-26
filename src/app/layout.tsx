@@ -29,13 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-cols-1 md:flex`}
       >
-        <aside className="w-[15%]">
+        <aside className="w-[100%] md:w-[15%]">
 
           <NavBar />
         </aside>
-        <main className="w-[85%] h-screen overflow-y-scroll ">
+        <main className="w-[100%] md:w-[85%] h-[screen] overflow-y-scroll ">
           <Suspense fallback={<LoadingSkeleton />}>
             {children}
           </Suspense>

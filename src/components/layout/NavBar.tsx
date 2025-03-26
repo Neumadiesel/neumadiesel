@@ -73,13 +73,13 @@ export default function NavBar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     return (
-        <div className="flex flex-col gap-y-4 items-center h-screen bg-[#212121] text-white  shadow-sm font-mono pt-5 overflow-y-hidden">
+        <div className="flex md:flex-col p-3  gap-y-4 items-center md:h-screen bg-[#212121] text-white  shadow-sm font-mono pt-5 overflow-y-hidden">
             <div className='w-[90%]'>
                 <Link href="/">
-                    <Image src="/logo-light.svg" alt="logo" width={250} height={180} />
+                    <Image onClick={() => setMenuOpen(false)} src="/logo-light.svg" alt="logo" width={250} height={180} />
                 </Link>
             </div>
-            <div className=' h-[90%] hidden md:flex md:flex-col w-[100%] '>
+            <div className='hidden h-[90%]  md:flex md:flex-col w-[100%] '>
                 <ul>
                     {menuItems.map((item, index) => (
                         <li key={index} className="mb-2">
@@ -126,7 +126,7 @@ export default function NavBar() {
             <div className='w-[100%] p-3'>
                 <Link href="/usuario" className='flex items-center justify-around'>
                     <FaRegUserCircle size={40} />
-                    <p>Cerrar sesion</p>
+                    <p className='hidden md:block'>Cerrar sesion</p>
                 </Link>
             </div>
             <div className='md:hidden flex items-center'>
@@ -137,12 +137,51 @@ export default function NavBar() {
                 </button>
             </div>
             {menuOpen && (
-                <div className='absolute w-full h-72 top-24 left-0 bg-[#212121] text-white flex flex-col items-center z-50 md:hidden'>
-                    {links.map((link, index) => (
-                        <Link href={link.url} key={index}>
-                            <p className='py-2' onClick={() => setMenuOpen(false)}>{link.name}</p>
-                        </Link>
-                    ))}
+                <div className='absolute w-[100%] h-[100%] top-24 left-0 bg-[#212121] text-white flex flex-col items-center z-50 md:hidden'>
+                    <ul>
+                        {menuItems.map((item, index) => (
+                            <li key={index} className="mb-2">
+                                {item.children ? (
+                                    <div>
+                                        <button
+                                            className="flex items-center justify-between w-full text-2xl p-2 text-left hover:bg-gray-700 rounded"
+                                            onClick={() => toggleCategory(item.title)}
+                                        >
+                                            <span >{item.title}</span>
+                                            {openCategories[item.title] ? (
+                                                <FaAngleDown size={16} />
+                                            ) : (
+                                                <FaAngleUp size={16} />
+                                            )}
+                                        </button>
+                                        {openCategories[item.title] && (
+                                            <ul className="ml-4 mt-1">
+                                                {item.children.map((subItem, subIndex) => (
+                                                    <li key={subIndex}>
+                                                        <Link
+                                                            href={subItem.path}
+                                                            className="block p-2 hover:bg-gray-700 rounded"
+                                                        >
+                                                            {subItem.title}
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <Link
+                                        href={item.path}
+                                        className="block p-2 text-2xl hover:bg-gray-700 rounded"
+                                    >
+                                        <p onClick={() => setMenuOpen(false)}>
+                                            {item.title}
+                                        </p>
+                                    </Link>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </div>
