@@ -7,25 +7,6 @@ import Link from 'next/link';
 
 export default function NavBar() {
 
-    const links = [
-        {
-            name: 'Neumáticos',
-            url: '/neumaticos'
-        },
-        {
-            name: 'Maquinaria',
-            url: '/maquinaria'
-        },
-        {
-            name: 'Mantenimiento',
-            url: '/mantenimiento'
-        },
-        {
-            name: 'Estadisticas',
-            url: '/estadisticas'
-        }
-    ];
-
     const menuItems = [
         {
             title: 'Reportabilidad',
