@@ -42,7 +42,7 @@ export default function Page() {
                         setHeaders(Object.keys(jsonData[0]));
                     }
                     setData(jsonData);
-                } catch (err) {
+                } catch (error) {
                     setError('Error al procesar el archivo. Asegúrese de que sea un Excel válido.');
                 }
             };
