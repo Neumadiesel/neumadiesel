@@ -56,7 +56,7 @@ export default function NavBar() {
                 { title: 'Historial', path: '/mantenimiento/Historial' },
                 { title: 'Aros de camion', path: '/mantenimiento/aros-camion' },
                 { title: 'Sensores', path: '/mantenimiento/sensores' },
-                { title: 'Progama', path: '/mantenimiento/programas' },
+                { title: 'Progama semanal', path: '/mantenimiento/programas' },
             ],
         },
     ]
