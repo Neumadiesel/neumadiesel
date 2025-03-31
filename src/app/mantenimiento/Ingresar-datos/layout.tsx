@@ -26,10 +26,6 @@ export default function LayoutIngresarDatos({
             title: 'Registrar Maquinaria',
             href: '/mantenimiento/Ingresar-datos/crear-maquinaria',
         },
-        {
-            title: 'Programar Mantenimiento',
-            href: '/mantenimiento/Ingresar-datos/programar-mantenimiento',
-        },
     ]
 
     return (

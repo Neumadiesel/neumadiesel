@@ -36,7 +36,7 @@ export default function NavBar() {
                 { title: 'Ingresar datos', path: '/mantenimiento/Ingresar-datos' },
                 { title: 'Historial', path: '/mantenimiento/Historial' },
                 { title: 'Aros de camion', path: '/mantenimiento/aros-camion' },
-                { title: 'Sensores', path: '/mantenimiento/sensores' },
+                { title: 'Programar mantenimiento', path: '/mantenimiento/programar-mantenimiento' },
                 { title: 'Progama semanal', path: '/mantenimiento/programas' },
             ],
         },

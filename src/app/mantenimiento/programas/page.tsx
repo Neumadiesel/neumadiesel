@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { programa_mantenimiento } from "@/mocks/programa.json";
 import { FaAngleLeft, FaAngleRight, FaFileAlt, FaFileExcel } from "react-icons/fa";
+import Link from "next/link";
 import * as XLSX from "xlsx";
 import { FaCircleMinus } from "react-icons/fa6";
 import Modal from "@/components/ui/modal/customModal";
@@ -55,23 +56,10 @@ export default function Programas() {
 
                 <div className="flex justify-between items-center">
 
-                    <button
-                        className="bg-amber-100 w-[25%] text-black border-2 border-amber-500 text-lg font-bold h-12 px-4 rounded-md hover:bg-amber-200 transition-all"
-                        onClick={() => {
-                            const nuevoPrograma = {
-                                equipo: "Nuevo Equipo",
-                                motivo: "Nuevo Motivo",
-                                dia: "Lunes",
-                                fecha: "2023-01-01",
-                                duracion: 2 // Changed to a number
-                            };
-
-                            programa_mantenimiento.push(nuevoPrograma);
-                            alert("Nuevo programa agregado");
-                        }}
+                    <Link href="/mantenimiento/programar-mantenimiento" className="bg-amber-100 w-[25%] text-black border-2 border-amber-500 text-lg font-bold h-12 px-4 rounded-md hover:bg-amber-200 transition-all flex justify-center items-center"
                     >
                         Agregar Mantenimiento
-                    </button>
+                    </Link>
                     <section>
                         <h1 className="text-3xl font-mono text-center font-semibold">Programa neumaticos</h1>
 
