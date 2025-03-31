@@ -2,6 +2,7 @@ import * as React from 'react';
 import CardChart from '@/components/ui/CardChart';
 import ExampleChart from '@/components/charts/ExampleChart';
 import BarChart from '@/components/charts/BarChart';
+import PieChart from '@/components/charts/PieChart';
 
 export default function Page() {
 
@@ -17,8 +18,9 @@ export default function Page() {
                     <div className=" bg-white shadow-md rounded-md py-3 row-start-3">camionenes opeartivos</div>
                     <div className=" bg-white shadow-md rounded-md py-3 row-start-3">7</div>
                     <div className=" bg-white shadow-md rounded-md py-3 row-start-3">8</div>
-                    <div className=" bg-white shadow-md rounded-md py-3 row-span-3 row-start-4">9</div>
-                    <div className=" bg-white shadow-md rounded-md py-3 row-span-3 row-start-4">10</div>
+                    <div className=" bg-white shadow-md rounded-md py-3 col-span-2  row-span-3 row-start-4">
+                        <PieChart />
+                    </div>
                     <div className=" bg-white shadow-md rounded-md py-3 col-span-2 row-span-3 row-start-4">
                         <BarChart />
                     </div>

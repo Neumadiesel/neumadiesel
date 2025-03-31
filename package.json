@@ -11,9 +11,9 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/material": "^6.4.7",
+    "@mui/material": "^6.4.9",
     "@mui/styled-engine-sc": "^6.4.6",
-    "@mui/x-charts": "^7.27.1",
+    "@mui/x-charts": "^7.28.0",
     "chart.js": "2.9.3",
     "next": "15.2.1",
     "postcss": "^8.5.3",
