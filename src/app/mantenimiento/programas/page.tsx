@@ -1,11 +1,14 @@
 'use client'
 import { useState } from "react";
 import { programa_mantenimiento } from "@/mocks/programa.json";
-import { FaAngleLeft, FaAngleRight, FaFileExcel } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaFileAlt, FaFileExcel } from "react-icons/fa";
 import * as XLSX from "xlsx";
+import { FaCircleMinus } from "react-icons/fa6";
+import Modal from "@/components/ui/modal/customModal";
 
 export default function Programas() {
 
+    const [isOpen, setIsOpen] = useState(false);
     const exportToExcel = () => {
         const table = document.querySelector("table");
         if (!table) return;
@@ -40,7 +43,9 @@ export default function Programas() {
         XLSX.writeFile(workbook, "programa_mantenimiento.xlsx");
     };
 
-
+    const handleConfirm = () => {
+        setIsOpen(false); // Cerrar modal después de la acción
+    };
 
 
     const [semana, setSemana] = useState(12);
@@ -51,7 +56,7 @@ export default function Programas() {
                 <div className="flex justify-between items-center">
 
                     <button
-                        className="bg-amber-300 text-black text-lg font-bold h-12 px-4 rounded-md hover:bg-blue-600 transition-all"
+                        className="bg-amber-100 w-[25%] text-black border-2 border-amber-500 text-lg font-bold h-12 px-4 rounded-md hover:bg-amber-200 transition-all"
                         onClick={() => {
                             const nuevoPrograma = {
                                 equipo: "Nuevo Equipo",
@@ -67,8 +72,8 @@ export default function Programas() {
                     >
                         Agregar Mantenimiento
                     </button>
-                    <section className=" ">
-                        <h1 className=" text-3xl font-mono text-center font-semibold">Programa neumaticos</h1>
+                    <section>
+                        <h1 className="text-3xl font-mono text-center font-semibold">Programa neumaticos</h1>
 
                         {/* Agrega un selector de semana, donde salga al medio semana {actual} y al lado 2 botones para cambiar entre semanas */}
                         <div className="flex justify-center items-center gap-4">
@@ -81,12 +86,12 @@ export default function Programas() {
                             </button>
                         </div>
                     </section>
-                    <div className="flex justify-end my-4">
+                    <div className="flex justify-end my-4 w-[25%]">
                         <button
-                            className="bg-emerald-500 flex justify-center items-center h-12 gap-x-2 text-white font-bold py-4 px-4 rounded-md hover:bg-green-600 transition-all"
+                            className="bg-amber-100 border-2 border-amber-600 flex w-[100%] justify-center items-center h-12 gap-x-2 text-black font-bold py-4 px-4 rounded-md hover:bg-amber-200 transition-all"
                             onClick={exportToExcel}
                         >
-                            Descargar <FaFileExcel className="text-2xl text-white" />
+                            Descargar <FaFileExcel className="text-2xl" />
                         </button>
                     </div>
 
@@ -94,7 +99,7 @@ export default function Programas() {
                 {/* Programa semanal */}
                 <div className="relative overflow-x-auto h-[85%] my-2">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-lg rounded-t-md overflow-hidden">
-                        <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center sticky top-0 z-50">
+                        <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center ">
                             <tr>
                                 <th scope="col" className="px-6 py-3">
                                     Equipo
@@ -111,9 +116,28 @@ export default function Programas() {
                                 <th scope="col" className="px-6 py-3">
                                     Duracion
                                 </th>
+                                <th scope="col" className="px-6 py-3">
+                                    Acciones
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
+                            {
+                                programa_mantenimiento.length === 0 && (
+                                    <tr className="text-center">
+                                        <td colSpan={6} className="py-4 h-[60vh] ">
+                                            <div className="flex flex-col items-center justify-center gap-y-4">
+
+                                                <FaFileAlt size={96} />
+                                                <p className="text-lg">
+
+                                                    No hay mantenimientos programados para esta semana.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            }
                             {
                                 programa_mantenimiento.map((programa, index) => (
                                     <tr key={index} className="bg-[#f1f1f1] dark:bg-[#0b0a0a] h-16 dark:text-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
@@ -135,6 +159,27 @@ export default function Programas() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm ">{programa.duracion}</div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm ">
+                                                <button
+                                                    className=" text-red-500 hover:text-red-600 font-bold  rounded-full p-1  transition-all"
+                                                    onClick={() => {
+                                                        setIsOpen(true);
+                                                    }}
+                                                >
+                                                    <FaCircleMinus size={25} />
+
+                                                </button>
+                                                <Modal
+                                                    isOpen={isOpen}
+                                                    onClose={() => setIsOpen(false)}
+                                                    onConfirm={handleConfirm}
+                                                    title="¿Estás seguro?"
+                                                >
+                                                    <p>¿Quieres confirmar esta acción?</p>
+                                                </Modal>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
