@@ -8,42 +8,36 @@ export default function BarChart() {
             type: "bar",
             data: {
                 labels: [
+                    "Ene",
+                    "Feb",
+                    "Mar",
+                    "Abr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Ago",
                     "Sep",
                     "Oct",
                     "Nov",
                     "Dic",
-                    "Ene",
-                    "Feb",
-                    "Mar",
                 ],
                 datasets: [
                     {
-                        label: "budget",
+                        label: "Budget",
                         backgroundColor: "#212121",
                         borderColor: "#212121",
-                        data: [30, 78, 56, 34, 100, 45, 13],
+                        data: [34, 36, 28, 16, 14, 10, 14, 12, 14, 14, 16, 16],
                         fill: false,
-                        barThickness: 20,
+                        barThickness: 10,
                     },
                     {
-                        label: "usado",
+                        label: "Consumo",
                         fill: false,
                         backgroundColor: "#FFBF08",
                         borderColor: "#FFBF08",
-                        data: [27, 68, 86, 74, 10, 4, 87],
-                        barThickness: 20,
+                        data: [34, 43, 7],
+                        barThickness: 10,
                     },
-
-                    {
-                        label: 'Line Dataset',
-                        data: [80, 80, 80, 80, 80, 80, 80],
-                        type: 'line',
-                        // this dataset is drawn on top
-                        order: 2,
-                        borderColor: 'rgb(255, 207, 0)',
-                        backgroundColor: "rgba(255, 207, 0, 0.24)",
-
-                    }
                 ],
             },
             options: {
@@ -120,8 +114,8 @@ export default function BarChart() {
         }
     }, []);
     return (
-        <div className="w-full h-[47vh] flex justify-center items-center">
-            <div className="relative bg-white border border-slate-600 flex flex-col min-w-0 break-words w-[100vh] h-[80%] mb-6 shadow-lg rounded bg-blueGray-700">
+        <div className="h-[100%]  flex justify-center items-center">
+            <div className="relative w-[100%]  bg-white  flex flex-col min-w-0 break-words h-[100%] mb-6 ">
                 <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
                     <div className="flex flex-wrap items-center">
                         <div className="relative w-full max-w-full flex-grow flex-1">
