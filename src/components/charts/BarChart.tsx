@@ -24,8 +24,8 @@ export default function BarChart() {
                 datasets: [
                     {
                         label: "Budget",
-                        backgroundColor: "#212121",
-                        borderColor: "#212121",
+                        backgroundColor: "#0871FF",
+                        borderColor: "#0871FF",
                         data: [34, 36, 28, 16, 14, 10, 14, 12, 14, 14, 16, 16],
                         fill: false,
                         barThickness: 10,

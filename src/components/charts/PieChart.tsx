@@ -6,7 +6,7 @@ import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 export default function PieArcLabel() {
     return (
         <div className="w-[100%]">
-            <h2>Motivos de Baja</h2>
+            <h2 className="font-semibold text-lg">Motivos de Baja</h2>
             <PieChart
                 series={[{
                     arcLabel: (item) => `${item.value}%`,
@@ -15,8 +15,8 @@ export default function PieArcLabel() {
                     data: [
                         { id: 0, value: 69, label: "Desgaste", color: "#FFBF08" },
                         { id: 1, value: 11.5, label: "Corte", color: "#0871FF" },
-                        { id: 2, value: 11.5, label: "Separación", color: "#FF6B6C" },
-                        { id: 3, value: 10, label: "Desgaste Anormal", color: "#FFE4FA" },
+                        { id: 2, value: 11.5, label: "Separación", color: "#fad876" },
+                        { id: 3, value: 10, label: "Desgaste Anormal", color: "#71abf8" },
                     ],
                 }]}
                 sx={{
