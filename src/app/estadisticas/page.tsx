@@ -1,12 +1,7 @@
 import * as React from 'react';
 import BarChart from '@/components/charts/BarChart';
 import PieChart from '@/components/charts/PieChart';
-import { FaClock } from 'react-icons/fa';
-import { PiTireBold } from 'react-icons/pi';
-import { programa_mantenimiento } from "@/mocks/programa.json";
 import Image from 'next/image';
-import { GiFlatTire, GiMineTruck } from 'react-icons/gi';
-import Link from 'next/link';
 import ScatterPlot from '@/components/charts/ScatterPlot';
 import StackBars from '@/components/charts/BarOverview';
 
