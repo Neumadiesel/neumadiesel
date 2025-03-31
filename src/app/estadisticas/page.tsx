@@ -14,7 +14,7 @@ export default function Page() {
         <div className="flex flex-col  h-full bg-[#f1f1f1] dark:bg-[#212121]   text-black text-center w-full mx-auto font-mono p-3">
             <main className='w-[100%] rounded-md mx-auto p-4 h-[95%] '>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-11 gap-4">
+                <div className="flex flex-col md:grid md:grid-cols-4 grid-rows-11 gap-4">
                     <div className="  shadow-md rounded-md py-3 col-span-2 row-span-2 flex items-center justify-center flex-col bg-amber-300">
                         <h1 className='text-3xl font-bold font-mono'>Sistema de Reportabilidad NeumaDiesel</h1>
                         <Image src="/logo.svg" alt="Logo" width={500} height={100} />
