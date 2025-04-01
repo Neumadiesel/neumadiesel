@@ -169,7 +169,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                 {
                                     tipo === "operacion" &&
                                     <td className="px-6 py-4">
-                                        <div className={`font-bold  py-3 rounded-full border-2 ${neumatico.estado === 'Desgastado' ? 'bg-red-200 text-black border-red-500' : neumatico.estado === 'Mantención' ? 'bg-yellow-200 text-black border-yellow-500' : 'bg-emerald-200 text-black border-emerald-500'}`}>
+                                        <div className={`font-bold  w-5 h-5 rounded-full border-2 ${neumatico.estado === 'Desgastado' ? 'bg-red-200 text-black border-red-500' : neumatico.estado === 'Mantención' ? 'bg-yellow-200 text-black border-yellow-500' : 'bg-emerald-200 text-black border-emerald-500'}`}>
 
                                         </div>
                                     </td>
