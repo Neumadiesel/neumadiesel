@@ -57,7 +57,7 @@ export default function NavBar() {
         <div className="flex md:flex-col p-3  gap-y-4 items-center md:h-screen bg-[#212121] text-white  shadow-sm font-mono pt-5 overflow-y-hidden">
             <div className='w-[90%]'>
                 <Link href="/">
-                    <Image onClick={() => setMenuOpen(false)} src="/logo-light.svg" alt="logo" width={250} height={180} />
+                    <Image onClick={() => setMenuOpen(false)} src="/NEUMASYSTEM.png" className='px-1 bg-white hover:bg-amber-50 rounded-full' alt="logo" width={250} height={180} />
                 </Link>
             </div>
             <div className='hidden h-[90%]  md:flex md:flex-col w-[100%] '>

@@ -187,7 +187,7 @@ export default function ScatterPlot() {
 
             <div ref={chartRef}>
                 <ScatterChart
-                    width={500}
+                    width={450}
                     height={280}
                     series={[
                         {
@@ -204,7 +204,7 @@ export default function ScatterPlot() {
             </div>
             <button
                 onClick={() => exportToImage(chartRef)}
-                className="mb-4 px-4 py-2 bg-blue-500 font-semibold flex justify-between items-center text-white rounded"
+                className="mb-4 px-4 py-2 bg-blue-500 font-semibold flex justify-between items-center text-white dark:black rounded"
             >
                 Descargar grafico
                 <FaDownload className="ml-2" />

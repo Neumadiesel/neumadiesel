@@ -41,13 +41,29 @@ export default function BarChartComponent() {
             <h2>Neumáticos Utilizados</h2>
             <div ref={chartRef}>
                 <BarChart
-                    xAxis={[{ scaleType: "band", data: labels }]}
+                    xAxis={[
+                        {
+                            scaleType: "band",
+                            data: labels,
+                            labelStyle: { fill: "white" }, // Color de labels en eje X
+                        },
+                    ]}
+                    yAxis={[
+                        {
+                            labelStyle: { fill: "white" }, // Color de labels en eje Y
+                        },
+                    ]}
                     series={datasets.map(ds => ({ data: ds.data, label: ds.label, color: ds.color }))}
-                    width={500}
+                    width={450}
                     height={300}
+                    sx={{
+                        "& .MuiChartsAxis-tickLabel": { fill: "white" }, // Aplica color blanco a todos los labels
+                        "& .MuiChartsAxis-line, & .MuiChartsGrid-root": { stroke: "white" },
+
+                    }}
                 />
             </div>
-            <button onClick={() => exportToImage(chartRef)} className="bg-amber-300 flex justify-between p-2 items-center rounded-md font-semibold">
+            <button onClick={() => exportToImage(chartRef)} className="bg-amber-300 text-black flex justify-between p-2 items-center rounded-md font-semibold">
                 Descargar grafico
                 <FaDownload className="ml-2" />
 

@@ -78,11 +78,11 @@ export default function StackBars() {
                     ])}
                     xAxis={[{ scaleType: "band", dataKey: "year" }]}
                     slotProps={{ legend: { hidden: false } }}
-                    width={500}
+                    width={450}
                     height={330}
                 />
             </div>
-            <button onClick={() => exportToImage(chartRef)} className="bg-amber-300 flex justify-between items-center p-2 rounded-sm mx-auto font-semibold">
+            <button onClick={() => exportToImage(chartRef)} className="bg-amber-300 flex text-black justify-between items-center p-2 rounded-sm mx-auto font-semibold">
                 Descargar grafico
                 <FaDownload style={{ marginLeft: "5px" }} />
             </button>

@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Neumadisesel",
   description: "Neumadisesel",
+  icons: "/icon.png",
 };
 
 export default function RootLayout({

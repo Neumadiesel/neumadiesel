@@ -27,6 +27,7 @@ export default function PieArcLabel() {
                         arcLabel: (item) => `${item.value}%`,
                         arcLabelMinAngle: 35,
                         arcLabelRadius: "60%",
+
                         data: [
                             { id: 0, value: 69, label: "Desgaste", color: "#FFBF08" },
                             { id: 1, value: 11.5, label: "Corte", color: "#0871FF" },

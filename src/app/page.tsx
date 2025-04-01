@@ -11,15 +11,15 @@ import Link from 'next/link';
 export default function Page() {
 
   return (
-    <div className="flex flex-col overflow-x-hidden  h-full bg-[#f1f1f1] dark:bg-[#212121]   text-black text-center w-full mx-auto font-mono md:p-3">
+    <div className="flex flex-col overflow-x-hidden  h-full bg-[#f1f1f1] dark:bg-black  text-black text-center w-full mx-auto font-mono md:p-3">
       <main className='w-[100%] md:rounded-md mx-auto md:p-4 h-[95%] '>
 
         <div className="flex flex-col md:grid md:grid-cols-4 grid-rows-9 pb-4 gap-2 md:gap-4">
           <div className="  shadow-md md:rounded-md py-3 col-span-2 row-span-2 flex items-center justify-center flex-col bg-amber-300">
-            <h1 className='text-3xl font-bold font-mono'>Sistema de Reportabilidad NeumaDiesel</h1>
-            <Image src="/logo.svg" alt="Logo" width={500} height={100} />
+            <Image src="/NEUMASYSTEM.png" alt="Logo" width={500} height={100} />
+            <p className='text-xl font-semibold w-[60%] '>Sistema de reportabilidad para neumaticos OTR</p>
           </div>
-          <Link href={"/maquinaria"} className=" bg-white shadow-md rounded-md py-3 row-span-2 col-start-3 flex flex-col justify-center items-center px-2">
+          <Link href={"/maquinaria"} className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-span-2 col-start-3 flex flex-col justify-center items-center px-2">
             <GiMineTruck size={75} className=" text-blue-500" />
             <p className='font-semibold'>Flota Operativa</p>
             <p className='text-3xl font-bold'>48</p>
@@ -28,7 +28,7 @@ export default function Page() {
             </small>
           </Link>
           {/* mantenciones programadas */}
-          <div className=" bg-white shadow-md rounded-md py-3 row-span-2 col-start-4 flex flex-col justify-center items-center px-2">
+          <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-span-2 col-start-4 flex flex-col justify-center items-center px-2">
             <GiFlatTire size={75} className=" text-amber-400 md:text-blue-500" />
             <p className='font-semibold'>Mantenciones Programadas</p>
             <p className='text-3xl font-bold'>12</p>
@@ -37,7 +37,7 @@ export default function Page() {
             </small>
           </div>
           {/* Neumaticos en operacion */}
-          <div className=" bg-white shadow-md rounded-md py-3 row-start-3 grid grid-cols-1 md:flex">
+          <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-start-3 grid grid-cols-1 md:flex">
             <div className='md:w-[80%] flex flex-col justify-center items-center md:justify-start'>
 
               <p className='font-semibold'>Neumaticos Operativos</p>
@@ -49,7 +49,7 @@ export default function Page() {
             </div>
           </div>
           {/* Horas trabajadas de los neumaticos */}
-          <div className=" bg-white shadow-md rounded-md py-3 row-start-3 grid grid-cols-1 md:flex">
+          <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-start-3 grid grid-cols-1 md:flex">
             <div className='md:w-[80%] flex flex-col justify-center items-center md:justify-start'>
 
               <p className='font-semibold'>Horas registradas</p>
@@ -61,16 +61,16 @@ export default function Page() {
             </div>
           </div>
 
-          <div className=" bg-white shadow-md rounded-md py-3 col-span-2  row-span-3 row-start-4">
+          <div className=" bg-white dark:bg-slate-500 dark:text-white shadow-md rounded-md py-3 col-span-2  row-span-3 row-start-4">
             <PieChart />
           </div>
-          <div className=" bg-white shadow-md rounded-md py-3 col-span-2 row-span-3 row-start-3">
+          <div className=" bg-white dark:bg-slate-500 dark:text-white shadow-md rounded-md py-3 col-span-2 row-span-3 row-start-3">
             <BarChart />
           </div>
-          <div className=" bg-white shadow-md rounded-md py-3 row-start-6 flex flex-col justify-center items-center ">
+          <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-start-6 flex flex-col justify-center items-center ">
             <p>Casilla disponible</p>
           </div>
-          <div className=" bg-white shadow-md rounded-md py-3 row-start-6 flex flex-col justify-center items-center ">
+          <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-start-6 flex flex-col justify-center items-center ">
             <p>Casilla disponible</p>
           </div>
           <div className=" bg-amber-300 shadow-md rounded-md py-3 col-span-4 row-span-3 row-start-7">
@@ -86,11 +86,11 @@ export default function Page() {
               </thead>
               <tbody>
                 {programa_mantenimiento.slice(0, 7).map((item, index) => (
-                  <tr key={index} className='border-b bg-white border-b-slate-200 h-12'>
-                    <td className='bg-amber-100'>{item.equipo}</td>
+                  <tr key={index} className='border-b bg-white dark:bg-[#212121] dark:text-white border-b-slate-200 h-12'>
+                    <td className='bg-amber-100 dark:bg-gray-800'>{item.equipo}</td>
                     <td>{item.fecha}</td>
                     <td className='text-start px-2 py-1'>{item.motivo}</td>
-                    <td className='bg-amber-100'>{item.duracion}</td>
+                    <td className='bg-amber-100 dark:bg-gray-800'>{item.duracion}</td>
                   </tr>
                 ))}
               </tbody>
