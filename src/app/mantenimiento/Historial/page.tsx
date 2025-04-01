@@ -7,7 +7,7 @@ export default function MantenimientoPage() {
     return (
         <div className="p-4 h-[100%] w-[100%]  ">
             {/* selecter que cargue los datos del neumatico */}
-            <div className="flex w-[100%] bg-white  rounded-md shadow-md px-2 items-center gap-x-2 p-2 py-3">
+            <div className="flex w-[100%] bg-white dark:bg-[#212121]  rounded-md shadow-md px-2 items-center gap-x-2 p-2 py-3">
                 <label className="font-bold">Codigo neumatico: </label>
                 <input className=" border border-gray-300 text-md focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-amber-500 p-1 rounded-lg bg-[#f1f1f1]  shadow-sm " type="text" value={neumaticoId} onChange={(e) => setNeumaticoId(e.target.value)} />
                 <button onClick={() => console.log("onclick")} className="bg-amber-300 text-black cursor-pointer p-2 rounded-md shadow-md hover:bg-amber-600 transition-all ease-in-out">
@@ -15,14 +15,14 @@ export default function MantenimientoPage() {
                 </button>
             </div>
             {/* Contenido */}
-            <main className="bg-white h-[30%] mt-4 p-2 rounded-md shadow-md w-[100%]">
+            <main className="bg-white dark:bg-[#212121] h-[30%] mt-4 p-2 rounded-md shadow-md w-[100%]">
                 <CaracteristicasNeumatico />
             </main>
 
             {/* Lista de historial */}
-            <section className="bg-white h-[50%] overflow-y-scroll mt-4 p-2 rounded-md shadow-md w-[100%]">
+            <section className="bg-white dark:bg-[#212121] h-[50%] overflow-y-scroll mt-4 p-2 rounded-md shadow-md w-[100%]">
                 <table className="table-auto w-full text-left border-collapse border border-gray-300">
-                    <thead className="bg-gray-200">
+                    <thead className="bg-gray-200 dark:bg-amber-300 text-black">
                         <tr>
                             <th className="border border-gray-300 px-4 py-2">Fecha</th>
                             <th className="border border-gray-300 px-4 py-2">Código de Acción</th>

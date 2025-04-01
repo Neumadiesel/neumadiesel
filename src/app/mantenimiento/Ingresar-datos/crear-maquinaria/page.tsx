@@ -47,12 +47,12 @@ export default function page() {
 
     ]
     return (
-        <main className=" flex gap-x-4">
-            <div className="font-mono p-5 gap-y-5">
-                <h1 className="text-2xl font-bold mb-4 border-b border-b-amber-200">Registrar Maquinaria</h1>
+        <main className=" flex gap-x-4 justify-between  w-[100%]">
+            <div className="font-mono p-5 gap-y-5 ">
+                <h1 className="text-2xl font-bold mb-4 border-b border-b-amber-200">Registrar Equipo</h1>
                 <div className="flex flex-col">
                     <label htmlFor="" className="font-semibold">Tipo de Maquinaria:</label>
-                    <select className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" >
+                    <select className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" >
                         <option value="volvo">Camion Extractor</option>
                         <option value="saab">Camion Aljibe </option>
                         <option value="mercedes">Wheeldozer</option>
@@ -61,7 +61,7 @@ export default function page() {
                 </div>
                 <div className="flex flex-col my-2">
                     <label htmlFor="" className="font-semibold">Modelo del neumatico:</label>
-                    <select className="bg-amber-50 border-amber-300 border rounded-md w-full outline-amber-400 py-2 px-4" >
+                    <select className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md w-full outline-amber-400 py-2 px-4" >
                         <option value="volvo">Volvo</option>
                         <option value="saab">Saab</option>
                         <option value="mercedes">Mercedes</option>
@@ -72,17 +72,17 @@ export default function page() {
 
                     <div className=" flex flex-col">
                         <label htmlFor="" className="font-semibold">Codigo:</label>
-                        <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
+                        <input type="text" className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
                     </div>
                     <div className=" flex flex-col">
                         <label htmlFor="" className="font-semibold">Faena:</label>
-                        <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
+                        <input type="text" className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
                     </div>
                 </section>
                 <section className="flex gap-x-4 my-4">
                     <div className=" flex flex-col">
                         <label htmlFor="" className="font-semibold">Codigo Nuematico: </label>
-                        <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
+                        <input type="text" className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
                     </div>
                     <div className=" flex flex-col w-[100%]">
                         <label htmlFor="" className="font-semibold"><small>Agregue Neumaticos</small></label>
@@ -94,14 +94,13 @@ export default function page() {
                 </div>
             </div>
             {/* Lista de neumaticos */}
-            <aside className="bg-amber-50 border border-amber-200 h-[60%] rounded-lg p-3 shadow-sm w-[50vh] mt-10 mr-4">
+            <aside className="bg-amber-50 dark:bg-[#212121] border border-amber-200 h-[60%] rounded-lg p-3 shadow-sm w-[50%] mt-10 mr-4">
                 <h1 className="font-mono font-bold text-xl">Neumaticos</h1>
-                <div className="flex  flex-col justify-around items-center h-[80%] mt-5 bg-white">
+                <div className="flex  flex-col justify-around items-center h-[75%] mt-5 bg-white">
                     {
                         neumaticos.map((neumatico, index) => (
-                            <div key={index} className="bg-white border-b border-b-amber-200 flex justify-between p-2 h-24 w-[100%] gap-x-2 items-center ">
+                            <div key={index} className="bg-white dark:bg-[#313131] border-b border-b-amber-200 flex justify-between p-2 h-20 w-[100%] gap-x-2 items-center ">
                                 <p className="text-md font-bold font-mono ">{neumatico.serie}</p>
-                                <p className="text-md font-bold font-mono ">{neumatico.marca}</p>
                                 <p className="text-md font-bold font-mono ">{neumatico.modelo}</p>
                                 <p className="text-md font-bold font-mono ">{neumatico.remanente}</p>
                                 <button>

@@ -48,7 +48,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
 
             {/* Busqueda por codigo, camion, y filtro selector por estado*/}
             <div className="flex justify-between h-[10%] items-center">
-                <div className="flex items-center justify-between w-full mx-auto my-2">
+                <div className="grid gap-y-2 md:flex items-center justify-between w-full mx-auto my-2">
                     {
                         tipo === 'operacion' &&
                         <h1 className="font-mono text-3xl font-bold">Lista de Neumaticos</h1>

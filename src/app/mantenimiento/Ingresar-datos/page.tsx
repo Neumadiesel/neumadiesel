@@ -64,13 +64,13 @@ export default function Page() {
         <div className="font-mono h-[100%] gap-y-2">
             <h1 className="text-2xl font-bold mb-2 border-b border-b-amber-200">Registrar Mediciones</h1>
             <div className='w-[120vh] h-[25%]'>
-                <div className="w-full py-9 bg-gray-50 rounded-2xl border border-gray-300 gap-3 grid border-dashed">
+                <div className="w-full py-9 bg-gray-50 dark:bg-[#414141] rounded-2xl border border-gray-300 gap-3 grid border-dashed">
                     <div className="grid gap-1">
-                        <FaFileExcel className="mx-auto text-4xl text-gray-400" />
+                        <FaFileExcel className="mx-auto text-4xl text-gray-500 dark:text-gray-300 " />
                     </div>
                     <div className="grid gap-2">
-                        <div className="flex flex-col items-center justify-center">
-                            <label className="text-xs mb-1 text-gray-400">Seleccione un archivo de Excel</label>
+                        <div className="flex flex-col items-center justify-center ">
+                            <label className="text-xs mb-1 text-gray-400 dark:text-gray-300 ">Seleccione un archivo de Excel</label>
                             <label>
                                 <input type="file" hidden onChange={handleFileUpload} />
                                 <div className="flex w-40 h-9 px-2 flex-col bg-amber-300 rounded-full shadow text-black text-xs font-semibold leading-4 items-center text-center justify-center cursor-pointer focus:outline-none">

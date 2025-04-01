@@ -29,9 +29,9 @@ export default function LayoutIngresarDatos({
     ]
 
     return (
-        <div className="bg-white h-[95%] flex  m-4 rounded-md shadow-xl">
-            <aside className="bg-amber-100 h-[100%] shadow-sm w-[30vh] mr-4 pt-6">
-                <Link href={"/mantenimiento/Ingresar-datos/"} className="font-mono p-3 font-bold text-xl">Ingresar Datos</Link>
+        <div className="bg-white dark:bg-[#212121] h-[95%] flex  m-4 rounded-md shadow-xl">
+            <aside className="bg-amber-100 dark:bg-amber-300 text-black h-[100%] shadow-sm w-[30vh] mr-4 pt-6">
+                <Link href={"/mantenimiento/Ingresar-datos/"} className="font-mono p-3 font-bold text-lg">Ingresar Datos</Link>
                 <div className="flex  flex-col justify-around items-center h-[40%] gap-y-3 mt-5">
 
                     {links.map((link, index) => (

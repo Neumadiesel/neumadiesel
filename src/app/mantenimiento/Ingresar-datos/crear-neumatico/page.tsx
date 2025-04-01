@@ -4,7 +4,7 @@ export default function page() {
             <h1 className="text-2xl font-bold mb-4 border-b border-b-amber-200">Crear Neumatico nuevo</h1>
             <div className="flex flex-col">
                 <label htmlFor="" className="font-semibold">Modelo del neumatico:</label>
-                <select className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" >
+                <select className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" >
                     <option value="volvo">Volvo</option>
                     <option value="saab">Saab</option>
                     <option value="mercedes">Mercedes</option>
@@ -15,21 +15,21 @@ export default function page() {
 
                 <div className=" flex flex-col">
                     <label htmlFor="" className="font-semibold">Serie:</label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
+                    <input type="text" className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
                 </div>
                 <div className=" flex flex-col">
                     <label htmlFor="" className="font-semibold">Codigo:</label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
+                    <input type="text" className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
                 </div>
             </section>
             <section className="flex gap-x-4 my-4">
                 <div className=" flex flex-col">
                     <label htmlFor="" className="font-semibold">Codigo Camion: <small>(opcional)</small></label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
+                    <input type="text" className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
                 </div>
                 <div className=" flex flex-col">
                     <label htmlFor="" className="font-semibold">Remanente Original:</label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
+                    <input type="text" className="bg-amber-50 dark:bg-[#212121] border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
                 </div>
             </section>
             {/* Posicion */}

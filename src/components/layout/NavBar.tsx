@@ -82,6 +82,7 @@ export default function NavBar() {
                                             {item.children.map((subItem, subIndex) => (
                                                 <li key={subIndex}>
                                                     <Link
+
                                                         href={subItem.path}
                                                         className="block p-2 hover:bg-gray-700 rounded"
                                                     >
@@ -140,6 +141,7 @@ export default function NavBar() {
                                                 {item.children.map((subItem, subIndex) => (
                                                     <li key={subIndex}>
                                                         <Link
+                                                            onClick={() => setMenuOpen(false)}
                                                             href={subItem.path}
                                                             className="block p-2 hover:bg-gray-700 rounded"
                                                         >

@@ -16,17 +16,17 @@ export default function Page() {
                         <Image src="/NEUMASYSTEM.png" alt="Logo" width={500} height={100} />
                     </div>
                     {/* Grafico de barras */}
-                    <div className=" bg-white dark:bg-slate-500 shadow-md rounded-md py-3 col-span-2 row-span-2 row-start-2">
+                    <div className=" bg-white dark:bg-gray-700 shadow-md rounded-md py-3 col-span-2 row-span-2 row-start-2">
                         <BarChart />
                     </div>
-                    <div className=" bg-white dark:bg-slate-500 shadow-md rounded-md py-3 col-span-2  row-span-2 row-start-2">
+                    <div className=" bg-white dark:bg-slate-600 shadow-md rounded-md py-3 col-span-2  row-span-2 row-start-2">
                         <ScatterPlot />
                     </div>
 
-                    <div className=" bg-white dark:bg-slate-500 shadow-md rounded-md py-3 col-span-2  row-span-2 row-start-4">
+                    <div className=" bg-white dark:bg-slate-600 shadow-md rounded-md py-3 col-span-2  row-span-2 row-start-4">
                         <PieChart />
                     </div>
-                    <div className=" bg-white dark:bg-slate-500 shadow-md rounded-md py-3 col-span-2  row-span-2 row-start-4">
+                    <div className=" bg-white dark:bg-slate-600 shadow-md rounded-md py-3 col-span-2  row-span-2 row-start-4">
                         <StackBars />
                     </div>
 
