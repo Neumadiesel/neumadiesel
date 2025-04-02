@@ -8,8 +8,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="bg-[#f1f1f2] dark:bg-[#212121] block md:flex  min-h-screen m-4">
-            <main className="w-full md:w-[40%] md:h-screen h-[45vh]  flex justify-center items-center">
+        <div className="bg-[#f1f1f2] dark:bg-[#212121] block lg:flex  min-h-screen m-4">
+            <main className="w-full lg:w-[40%] lg:h-screen h-[45vh]  flex justify-center items-center">
                 <div className="bg-white dark:bg-black shadow-md rounded-lg w-[100%] h-[100%] pt-3 ">
                     <h2 className="dark:text-amber-300 text-2xl font-bold p-2">Lista de Camiones</h2>
                     <div className="grid grid-cols-3 h-[85%] overflow-scroll gap-x-4 gap-y-2 px-6">
@@ -23,7 +23,7 @@ export default function RootLayout({
                     </div>
                 </div>
             </main>
-            <section className="w-full md:w-[60%] h-[100%] md:p-3">
+            <section className="w-full lg:w-[60%] h-[100%] lg:p-3">
                 {children}
             </section>
         </div>

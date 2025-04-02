@@ -62,7 +62,7 @@ export default function Page() {
     };
 
     return (
-        <div className="font-mono h-screen md:h-[100%] gap-y-2">
+        <div className="font-mono h-screen lg:h-[100%] gap-y-2">
             <h1 className="text-2xl font-bold mb-2 border-b border-b-amber-200">Registrar Mediciones</h1>
             {/* Input de archivos excel */}
             <div className='  w-[100%] h-[25%]'>

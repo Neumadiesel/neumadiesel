@@ -40,7 +40,7 @@ export default function LayoutIngresarDatos({
     return (
         <div className="bg-white dark:bg-[#212121] h-full lg:h-[95%] block lg:flex  lg:m-4 rounded-md shadow-xl">
             {/* Navegacion latearl */}
-            <aside className="bg-amber-300  text-black h-[10%] lg:h-[100%] shadow-sm w-[100%] lg:w-[30vh] mr-4 pt-1 md:pt-6">
+            <aside className="bg-amber-300  text-black h-[10%] lg:h-[100%] shadow-sm w-[100%] lg:w-[30vh] mr-4 pt-1 lg:pt-6">
                 {/* Vista desde escritorio */}
                 <Link href={"/mantenimiento/Ingresar-datos/"} className="hidden lg:block font-mono p-3 font-bold text-lg">Ingresar Datos</Link>
                 <div className="hidden lg:flex  flex-col justify-around items-center h-[40%] gap-y-3 mt-5">

@@ -3,8 +3,8 @@ import CardMain from "../CardMain";
 
 export default function CardSection() {
     return (
-        <div className="bg-blue-500 w-[100%] h-[60vh] md:h-[40vh]">
-            <section className="md:flex grid py-5 gap-y-4 justify-center items-center h-[80%] gap-x-5">
+        <div className="bg-blue-500 w-[100%] h-[60vh] lg:h-[40vh]">
+            <section className="lg:flex grid py-5 gap-y-4 justify-center items-center h-[80%] gap-x-5">
 
                 <CardMain titulo="Maquinaria" cantidad={43} link="maquinaria" descripcion="Total de maquinas operando en faena">
                     <GiMineTruck size={50} color="black" />

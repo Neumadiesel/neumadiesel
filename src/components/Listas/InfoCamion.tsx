@@ -47,11 +47,11 @@ export default function ListaMaquinaria() {
         <div className="p-4 h-full w-full rounded-md bg-white text-white dark:bg-black relative shadow-md font-mono">
             <div className="text-black dark:text-white flex flex-col">
                 {/* Info del camión */}
-                <div className="md:flex justify-between mb-2">
+                <div className="lg:flex justify-between mb-2">
                     <h2 className="text-2xl font-bold mb-2">
                         Camión {id} - Faena {camion?.Faena}
                     </h2>
-                    <div className="flex md:flex-col gap-y-1 justify-between w-[100%] md:w-[40%] items-end gap-x-4">
+                    <div className="flex lg:flex-col gap-y-1 justify-between w-[100%] lg:w-[40%] items-end gap-x-4">
                         <button disabled={id === undefined} onClick={() => setIsSensorActive(!isSensorActive)} className="text-black text-lg w-52 text-center flex justify-center gap-x-4 items-center bg-amber-300 p-2 rounded-md border border-black">
                             {
                                 isSensorActive
@@ -73,16 +73,16 @@ export default function ListaMaquinaria() {
                     </div>
                 </div>
                 {/* Seccion de informacion */}
-                <div className="block md:flex ">
+                <div className="block lg:flex ">
                     {/* Esquema de neumaticos*/}
                     <section className="min-w-[35%]   p-2 flex justify-center items-center">
                         <Image src="/Axle_gray.png" className="drop-shadow-xl" alt="Esquema" width={300} height={200} />
                     </section>
 
                     {/* Lista de neumaticos */}
-                    <div className="w-full md:w-[65%] h-full">
+                    <div className="w-full lg:w-[65%] h-full">
                         <h2 className="text-2xl font-bold text-black dark:text-white">Neumáticos</h2>
-                        <div className="relative overflow-x-auto md:h-[80%] my-2">
+                        <div className="relative overflow-x-auto lg:h-[80%] my-2">
                             <div className="flex flex-col gap-y-2">
                                 {/* Table head */}
                                 <div className="w-full border-b-[1px] border-b-gray-300 dark:border-b-gray-600 shadow-sm bg-slate-300 dark:bg-[#212121] rounded-md p-2 h-12 transition-all flex items-center justify-between ">
@@ -105,7 +105,7 @@ export default function ListaMaquinaria() {
                                 </div>
                                 {
                                     id === undefined && Array.from({ length: 6 }).map((_, index) => (
-                                        <div key={index} className="w-full border-b-[1px] hover:bg-amber-100 h-32 md:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
+                                        <div key={index} className="w-full border-b-[1px] hover:bg-amber-100 h-32 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
                                             <div className="flex flex-col gap-y-1 w-[20%]">
                                                 <div className="bg-slate-200  p-2 rounded-md"></div>
                                                 <div className="bg-slate-200 p-2 rounded-md"></div>
@@ -127,7 +127,7 @@ export default function ListaMaquinaria() {
                                 {
                                     isSensorActive ? (
                                         sensores.map((sensor) => (
-                                            <div key={sensor.posicion} className="w-full border-b-[1px] hover:bg-amber-100 h-32 md:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
+                                            <div key={sensor.posicion} className="w-full border-b-[1px] hover:bg-amber-100 h-32 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
                                                 <div className="flex flex-col w-[20%] ">
 
                                                     <p>{sensor.sensor}</p>
@@ -146,7 +146,7 @@ export default function ListaMaquinaria() {
                                         ))
                                     ) : (
                                         neumaticos.map((neumatico: NeumaticoInt) => (
-                                            <div key={neumatico.Codigo} className="w-full border-b-[1px] hover:bg-amber-100 h-32 md:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
+                                            <div key={neumatico.Codigo} className="w-full border-b-[1px] hover:bg-amber-100 h-32 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
                                                 <div className="flex flex-col w-[20%]">
                                                     <p>{neumatico.Codigo}</p>
                                                     <p><small className="">Pos:</small> {neumatico.Posicion}</p>
