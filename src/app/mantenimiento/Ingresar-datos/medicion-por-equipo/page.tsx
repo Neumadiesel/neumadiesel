@@ -66,43 +66,59 @@ export default function Page() {
                     </div>
                     <small className="text-gray-700 dark:text-white text-xs">*Datos erróneos no serán aceptados por el sistema, <span className='font-bold'>Verifique sus datos</span></small>
                     <table className="w-full shadow-md rounded-lg h-[50%]">
-                        <thead>
+                        <thead >
                             <tr className="bg-amber-200 text-black">
                                 <th className="px-2 py-2 text-left">Pos</th>
-                                <th className="px-2 py-2 text-left">Ext</th>
-                                <th className="px-2 py-2 text-left">Int</th>
-                                <th className="px-2 py-2 text-left">Pre.</th>
-                                <th className="px-2 py-2 text-left">Tem.</th>
-                                <th className="px-2 py-2 text-left">Res.</th>
+                                <th className="px-2 py-2 text-center">Ext</th>
+                                <th className="px-2 py-2 text-center">Int</th>
+                                <th className="px-2 py-2 text-center">Pre.</th>
+                                <th className="px-2 py-2 text-center">Tem.</th>
+                                <th className="px-2 py-2 text-center">Res.</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {nuevasMedidas.map((neumatico, index) => (
+                                <tr key={index} className="border-b border-gray-300">
+                                    <td className="px-2 py-2 text-center">{neumatico.pos}</td>
+                                    {["ext", "int", "pre", "tem"].map((field) => (
+                                        <td key={field} className="px-1 py-2 text-center">
+                                            <div className="inline-flex items-center justify-center gap-1">
+                                                {/* Botón de disminuir */}
+                                                <button
+                                                    onClick={() => handleInputChange(index, field, neumatico[field as keyof typeof neumatico] - 1)}
+                                                    className="bg-amber-100 border-2 border-amber-500 text-black p-2 rounded-lg text-sm"
+                                                >
+                                                    -
+                                                </button>
 
-                            {
-                                nuevasMedidas.map((neumatico, index) => (
-                                    <tr key={index}>
-                                        <td className="px-1 py-2">{neumatico.pos}</td>
-                                        {["ext", "int", "pre", "tem"].map((field) => (
-                                            <td key={field} className="px-1 py-2">
+                                                {/* Input numérico */}
                                                 <input
                                                     type="number"
                                                     value={neumatico[field as keyof typeof neumatico]}
                                                     onChange={(e) => handleInputChange(index, field, parseFloat(e.target.value) || 0)}
-                                                    className="w-full bg-gray-50 dark:bg-[#414141] rounded-lg border p-2"
+                                                    className="w-16 text-center bg-gray-50 dark:bg-[#414141] rounded-lg border p-2"
                                                 />
-                                            </td>
-                                        ))}
-                                        <td className="px-1 py-2 flex justify-center items-center">
-                                            <button
-                                                onClick={() => handleResetRow(index)}
-                                                className="bg-red-500 text-white px-2 py-1 rounded-lg text-sm flex items-center gap-1"
-                                            >
-                                                <FaRedo /> Reset
-                                            </button>
+
+                                                {/* Botón de aumentar */}
+                                                <button
+                                                    onClick={() => handleInputChange(index, field, neumatico[field as keyof typeof neumatico] + 1)}
+                                                    className="bg-amber-300 text-black p-2 rounded-lg text-sm"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
                                         </td>
-                                    </tr>
-                                ))
-                            }
+                                    ))}
+                                    <td className="px-2 py-2 text-center">
+                                        <button
+                                            onClick={() => handleResetRow(index)}
+                                            className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm flex items-center gap-1 mx-auto"
+                                        >
+                                            <FaRedo /> Reset
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

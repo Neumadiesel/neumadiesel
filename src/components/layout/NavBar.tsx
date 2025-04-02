@@ -54,13 +54,13 @@ export default function NavBar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     return (
-        <div className="flex md:flex-col p-3  gap-y-4 items-center md:h-screen bg-[#212121] text-white  shadow-sm font-mono pt-5 overflow-y-hidden">
+        <div className="flex lg:flex-col p-3  gap-y-4 items-center lg:h-screen bg-[#212121] text-white  shadow-sm font-mono pt-5 overflow-y-hidden">
             <div className='w-[90%]'>
                 <Link href="/">
                     <Image onClick={() => setMenuOpen(false)} src="/NEUMASYSTEM.png" className='px-1 bg-white hover:bg-amber-50 rounded-full' alt="logo" width={250} height={180} />
                 </Link>
             </div>
-            <div className='hidden h-[90%]  md:flex md:flex-col w-[100%] '>
+            <div className='hidden h-[90%]  lg:flex lg:flex-col w-[100%] '>
                 <ul>
                     {menuItems.map((item, index) => (
                         <li key={index} className="mb-2">
@@ -108,10 +108,10 @@ export default function NavBar() {
             <div className='w-[100%] p-3'>
                 <Link href="/usuario" className='flex items-center justify-around'>
                     <FaRegUserCircle size={40} />
-                    <p className='hidden md:block'>Cerrar sesion</p>
+                    <p className='hidden lg:block'>Cerrar sesion</p>
                 </Link>
             </div>
-            <div className='md:hidden flex items-center'>
+            <div className='lg:hidden flex items-center'>
                 <button onClick={() => setMenuOpen(!menuOpen)} className={` text-white focus:outline-none`}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
@@ -119,7 +119,7 @@ export default function NavBar() {
                 </button>
             </div>
             {menuOpen && (
-                <div className='absolute w-[100%] h-[100%] top-24 left-0 bg-[#212121] text-white flex flex-col items-center z-50 md:hidden'>
+                <div className='absolute w-[100%] h-[100%] top-24 left-0 bg-[#212121] text-white flex flex-col items-center z-50 lg:hidden'>
                     <ul className='h-[50%] w-[80%]'>
                         {menuItems.map((item, index) => (
                             <li key={index} className="mb-2">
