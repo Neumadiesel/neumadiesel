@@ -82,7 +82,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                             value={estado}
                             onChange={(e) => setEstado(e.target.value)}
                         >
-                            <option value="">Todos</option>
+                            <option value="">Estado</option>
                             <option value="Bueno" className="bg-emerald-400">Optimo</option>
                             <option value="Mantención">Precaucion</option>
                             <option value="Desgastado">Alerta</option>
@@ -121,7 +121,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                             {
                                 tipo === "operacion" &&
                                 <th scope="col" className="px-6 py-3">
-
+                                    Estado
                                 </th>
                             }
                             <th scope="col" className="px-2 py-3">
@@ -137,7 +137,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                 Kms
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Acciones
+                                Historial
                             </th>
                         </tr>
                     </thead>

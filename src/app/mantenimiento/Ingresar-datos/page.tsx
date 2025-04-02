@@ -61,7 +61,7 @@ export default function Page() {
     };
 
     return (
-        <div className="font-mono h-[100%] gap-y-2">
+        <div className="font-mono h-screen gap-y-2">
             <h1 className="text-2xl font-bold mb-2 border-b border-b-amber-200">Registrar Mediciones</h1>
             <div className='w-[120vh] h-[25%]'>
                 <div className="w-full py-9 bg-gray-50 dark:bg-[#414141] rounded-2xl border border-gray-300 gap-3 grid border-dashed">
