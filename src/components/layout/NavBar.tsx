@@ -72,9 +72,9 @@ export default function NavBar() {
                                     >
                                         <span>{item.title}</span>
                                         {openCategories[item.title] ? (
-                                            <FaAngleDown size={16} />
-                                        ) : (
                                             <FaAngleUp size={16} />
+                                        ) : (
+                                            <FaAngleDown size={16} />
                                         )}
                                     </button>
                                     {openCategories[item.title] && (
@@ -120,7 +120,7 @@ export default function NavBar() {
             </div>
             {menuOpen && (
                 <div className='absolute w-[100%] h-[100%] top-24 left-0 bg-[#212121] text-white flex flex-col items-center z-50 md:hidden'>
-                    <ul>
+                    <ul className='h-[50%] w-[80%]'>
                         {menuItems.map((item, index) => (
                             <li key={index} className="mb-2">
                                 {item.children ? (
@@ -131,9 +131,9 @@ export default function NavBar() {
                                         >
                                             <span >{item.title}</span>
                                             {openCategories[item.title] ? (
-                                                <FaAngleDown size={16} />
-                                            ) : (
                                                 <FaAngleUp size={16} />
+                                            ) : (
+                                                <FaAngleDown size={16} />
                                             )}
                                         </button>
                                         {openCategories[item.title] && (
