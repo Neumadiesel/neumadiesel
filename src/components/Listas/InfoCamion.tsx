@@ -44,7 +44,7 @@ export default function ListaMaquinaria() {
     const neumaticos: NeumaticoInt[] = Neumaticos.filter((neumatico: NeumaticoInt) => neumatico.Codigo_Camion === id);
 
     return (
-        <div className="p-4 h-full w-full rounded-md bg-white text-white dark:bg-black relative shadow-md font-mono">
+        <div className="p-2 h-full w-full rounded-md bg-white text-white dark:bg-black relative shadow-md font-mono">
             <div className="text-black dark:text-white flex flex-col">
                 {/* Info del camión */}
                 <div className="lg:flex justify-between mb-2">
@@ -100,12 +100,12 @@ export default function ListaMaquinaria() {
                                         </p>
                                     </div>
                                     <div className="flex font-mono font-semibold justify-center items-center">
-                                        <p>Acciones</p>
+                                        <p>Hist.</p>
                                     </div>
                                 </div>
                                 {
                                     id === undefined && Array.from({ length: 6 }).map((_, index) => (
-                                        <div key={index} className="w-full border-b-[1px] hover:bg-amber-100 h-32 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
+                                        <div key={index} className="w-full border-b-[1px] hover:bg-amber-100 h-36 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
                                             <div className="flex flex-col gap-y-1 w-[20%]">
                                                 <div className="bg-slate-200  p-2 rounded-md"></div>
                                                 <div className="bg-slate-200 p-2 rounded-md"></div>
@@ -127,16 +127,16 @@ export default function ListaMaquinaria() {
                                 {
                                     isSensorActive ? (
                                         sensores.map((sensor) => (
-                                            <div key={sensor.posicion} className="w-full border-b-[1px] hover:bg-amber-100 h-32 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
+                                            <div key={sensor.posicion} className="w-full border-b-[1px] hover:bg-amber-100 h-36 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
                                                 <div className="flex flex-col w-[20%] ">
 
                                                     <p>{sensor.sensor}</p>
+                                                    <p>pos: {sensor.posicion}</p>
                                                 </div>
                                                 <div>
                                                     <p>PSI: {sensor.psi}</p>
                                                     <p>Temp °C: {sensor.temp}</p>
                                                 </div>
-                                                <p>Posicion: {sensor.posicion}</p>
                                                 <div className="flex justify-center items-center">
                                                     <Link href={`/mantenimiento/Historial`} className="flex justify-between items-center h-12 w-12 text-lg">
                                                         <FaClock size={20} />
@@ -146,14 +146,14 @@ export default function ListaMaquinaria() {
                                         ))
                                     ) : (
                                         neumaticos.map((neumatico: NeumaticoInt) => (
-                                            <div key={neumatico.Codigo} className="w-full border-b-[1px] hover:bg-amber-100 h-32 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
+                                            <div key={neumatico.Codigo} className="w-full border-b-[1px] hover:bg-amber-100 h-36 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
                                                 <div className="flex flex-col w-[20%]">
                                                     <p>{neumatico.Codigo}</p>
                                                     <p><small className="">Pos:</small> {neumatico.Posicion}</p>
                                                 </div>
                                                 <div>
-                                                    <p>Interna: {neumatico.Profundidad}</p>
-                                                    <p>Externa: {neumatico.Profundidad}</p>
+                                                    <p>Int: {neumatico.Profundidad}</p>
+                                                    <p>Ext: {neumatico.Profundidad}</p>
                                                 </div>
                                                 <div>
                                                     <p>Hr: {neumatico.META_HORAS}</p>

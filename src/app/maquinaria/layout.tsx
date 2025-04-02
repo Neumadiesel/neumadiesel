@@ -23,7 +23,7 @@ export default function RootLayout({
                     </div>
                 </div>
             </main>
-            <section className="w-full lg:w-[60%] h-[100%] lg:p-3">
+            <section className="w-full lg:w-[60%] h-[100%] lg:p-2">
                 {children}
             </section>
         </div>
