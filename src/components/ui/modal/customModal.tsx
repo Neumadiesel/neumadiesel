@@ -15,10 +15,10 @@ export default function Modal({ isOpen, onClose, onConfirm, title, children }: M
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             {/* Fondo oscuro con opacidad */}
-            <div className="absolute inset-0 bg-gray-400 opacity-80" onClick={onClose}></div>
+            <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
 
             {/* Contenido del modal */}
-            <div className="relative bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full">
                 {title && <h2 className="text-lg font-bold">{title}</h2>}
                 <div className="mt-2">{children}</div>
                 <div className="mt-4 flex space-x-4">

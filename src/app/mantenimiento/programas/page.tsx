@@ -1,10 +1,10 @@
 'use client'
 import { useState } from "react";
 import { programa_mantenimiento } from "@/mocks/programa.json";
-import { FaAngleLeft, FaAngleRight, FaFileAlt, FaFileExcel } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaFileAlt, FaFileExcel, FaPen } from "react-icons/fa";
 import Link from "next/link";
 import * as XLSX from "xlsx";
-import { FaCircleMinus } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 import Modal from "@/components/ui/modal/customModal";
 
 export default function Programas() {
@@ -128,7 +128,7 @@ export default function Programas() {
                             }
                             {
                                 programa_mantenimiento.map((programa, index) => (
-                                    <tr key={index} className="bg-[#f1f1f1] dark:bg-[#0b0a0a] h-16 dark:text-white border-b text-center hover:bg-slate-100 ease-in transition-all border-gray-200">
+                                    <tr key={index} className="bg-[#f1f1f1] dark:bg-[#0b0a0a] h-16 dark:text-white border-b text-center hover:bg-slate-100 dark:hover:bg-gray-800 ease-in transition-all border-gray-200">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="ml-4">
@@ -149,24 +149,23 @@ export default function Programas() {
                                             <div className="text-sm ">{programa.duracion}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm ">
+                                            <div className="text-sm flex justify-between items-center ">
                                                 <button
                                                     className=" text-red-500 hover:text-red-600 font-bold  rounded-full p-1  transition-all"
                                                     onClick={() => {
                                                         setIsOpen(true);
                                                     }}
                                                 >
-                                                    <FaCircleMinus size={25} />
+                                                    <FaCircleXmark size={25} />
 
                                                 </button>
-                                                <Modal
-                                                    isOpen={isOpen}
-                                                    onClose={() => setIsOpen(false)}
-                                                    onConfirm={handleConfirm}
-                                                    title="¿Estás seguro?"
+                                                <Link href={"/mantenimiento/programar-mantenimiento"}
+                                                    className=" text-amber-300 hover:text-amber-400 font-bold  rounded-full p-1  transition-all"
+
                                                 >
-                                                    <p>¿Quieres confirmar esta acción?</p>
-                                                </Modal>
+                                                    <FaPen size={25} />
+
+                                                </Link>
                                             </div>
                                         </td>
                                     </tr>
@@ -175,6 +174,9 @@ export default function Programas() {
                         </tbody>
                     </table>
                 </div>
+                <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} title="¿Estás seguro?">
+                    <p>¿Quieres confirmar esta acción?</p>
+                </Modal>
             </div>
         </div>
     )
