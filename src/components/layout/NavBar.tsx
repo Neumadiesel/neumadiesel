@@ -26,8 +26,8 @@ export default function NavBar() {
         {
             title: 'Administración',
             children: [
-                { title: 'Usuarios', path: '/admin/users' },
-                { title: 'Roles', path: '/admin/roles' },
+                { title: 'Usuarios', path: '/administracion/usuarios' },
+                { title: 'Roles', path: '/administracion/roles' },
             ],
         },
         {
