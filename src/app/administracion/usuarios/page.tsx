@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { usuarios } from "@/lib/constants/usuarios";
 import { FaEyeSlash, FaPen, FaRegCopy } from "react-icons/fa";
 import Modal from "@/components/ui/modal/customModal";
