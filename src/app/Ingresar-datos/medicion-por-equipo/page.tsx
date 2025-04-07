@@ -50,7 +50,7 @@ export default function Page() {
 
     return (
         <div className="font-mono py-5 gap-y-2">
-            <h1 className='text-3xl mb-2 font-bold'>Ingresar datos de Equipo</h1>
+            <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Ingresar datos de Equipo</h1>
             <section className=''>
                 <div className='flex items-center gap-x-2 border-b border-b-amber-300 pb-3'>
                     <label className="text-lg mb-1 text-black font-semibold dark:text-white ">Ingrese código del equipo:</label>

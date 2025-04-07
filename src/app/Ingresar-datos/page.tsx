@@ -62,7 +62,7 @@ export default function Page() {
     };
 
     return (
-        <div className="font-mono h-screen lg:h-[100%] gap-y-2">
+        <div className="font-mono h-full gap-y-2">
             <h1 className="text-2xl font-bold mb-2 border-b border-b-amber-200">Registrar Mediciones</h1>
             {/* Input de archivos excel */}
             <div className='  w-[100%] h-[25%]'>
@@ -84,7 +84,7 @@ export default function Page() {
                 </div>
             </div>
             {/* Lista de datos extraidos del excel */}
-            <div className='h-[50%]  block overflow-y-scroll'>
+            <div className='max-h-[50vh] min-h-[35vh] w-full rounded-lg   block overflow-y-scroll'>
                 {data.length === 0 && (
                     <div className="text-center flex pt-10 flex-col justify-center items-center text-gray-400">
                         <FaRegFile className="text-5xl text-gray-500" />
@@ -92,7 +92,7 @@ export default function Page() {
                     </div>
                 )}
                 {data.length > 0 && (
-                    <div className="overflow-x-auto mt-4 w-[120vh]">
+                    <div className="overflow-x-auto mt-4 w-full ">
                         <table className="w-full  shadow-md rounded-lg h-[60%]">
                             <thead>
                                 <tr className="bg-amber-200 text-black">
