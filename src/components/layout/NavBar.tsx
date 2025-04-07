@@ -33,13 +33,22 @@ export default function NavBar() {
         {
             title: 'Mantenimiento',
             children: [
-                { title: 'Ingresar datos', path: '/mantenimiento/Ingresar-datos' },
                 { title: 'Historial', path: '/mantenimiento/Historial' },
                 { title: 'Aros de camion', path: '/mantenimiento/aros-camion' },
                 { title: 'Programar mantenimiento', path: '/mantenimiento/programar-mantenimiento' },
                 { title: 'Progama semanal', path: '/mantenimiento/programas' },
             ],
         },
+        {
+            title: 'Ingresar datos',
+            children: [
+                { title: 'Ingresar Mediciones', path: '/Ingresar-datos/' },
+                { title: 'Ingresar Medición por Equipo', path: '/Ingresar-datos/medicion-por-equipo' },
+                { title: 'Crear Neumatico Nuevo', path: '/Ingresar-datos/crear-neumatico' },
+                { title: 'Crear Modelo Neumatico', path: '/Ingresar-datos/crear-modelo' },
+                { title: 'Registrar Maquinaria', path: '/Ingresar-datos/crear-maquinaria' },
+            ],
+        }
     ]
 
     const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
