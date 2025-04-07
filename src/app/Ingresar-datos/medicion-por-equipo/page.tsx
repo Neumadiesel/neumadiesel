@@ -49,9 +49,9 @@ export default function Page() {
     };
 
     return (
-        <div className="font-mono h-screen lg:h-[100%] gap-y-2">
+        <div className="font-mono py-5 gap-y-2">
             <h1 className='text-3xl mb-2 font-bold'>Ingresar datos de Equipo</h1>
-            <section className='h-screen'>
+            <section className=''>
                 <div className='flex items-center gap-x-2 border-b border-b-amber-300 pb-3'>
                     <label className="text-lg mb-1 text-black font-semibold dark:text-white ">Ingrese código del equipo:</label>
                     <input type="text" className="w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2" />

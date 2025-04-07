@@ -10,7 +10,7 @@ export default function LayoutIngresarDatos({
 
 
     return (
-        <div className="bg-white dark:bg-[#212121] h-full lg:h-[95%] block lg:flex  lg:m-4 rounded-md shadow-xl">
+        <div className="bg-white dark:bg-[#212121]  block lg:flex  lg:m-4 rounded-md shadow-xl">
             {/* Navegacion latearl */}
             <Suspense fallback={<FormSkeleton />} >
                 <div className="p-3 w-[100%]">
