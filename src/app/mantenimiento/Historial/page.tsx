@@ -15,7 +15,7 @@ export default function MantenimientoPage() {
                 </button>
             </div>
             {/* Contenido */}
-            <main className="bg-white dark:bg-[#212121] h-[30%] mt-4 p-2 rounded-md shadow-md w-[100%]">
+            <main className="bg-white dark:bg-[#212121] h-[50%] lg:h-[30%] mt-4 p-2 rounded-md shadow-md w-[100%]">
                 <CaracteristicasNeumatico />
             </main>
 
