@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import { usuarios } from "@/lib/constants/usuarios";
-import { FaEyeSlash, FaPen, FaRegCopy } from "react-icons/fa";
+import { FaEllipsisV, FaEyeSlash, FaPen, FaRegCopy } from "react-icons/fa";
 import Modal from "@/components/ui/modal/customModal";
 import ModalFormularioUsuario from "@/components/ui/modal/ModalFormularioUsuario";
 import { Usuario } from "@/types/Usuario";
@@ -68,19 +68,26 @@ export default function Page() {
         setMostrarEditar(true);
     };
 
+    // Menu desplegable movil
+
+    const [menuAbierto, setMenuAbierto] = useState<number | null>(null);
+
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold">Lista de usuarios</h1>
-            <p>Esta es la página de administración de usuarios.</p>
+        <div className="lg:p-4">
+            <div className="p-2 lg:p-0">
+
+                <h1 className="text-2xl font-bold">Lista de usuarios</h1>
+                <p>Esta es la página de administración de usuarios.</p>
+            </div>
 
             {/* Sección de botones y filtros */}
-            <section className="flex flex-wrap justify-between items-center my-4 gap-2">
-                <button onClick={() => setMostrarModal(true)} className="bg-amber-300 hover:bg-amber-400 text-black font-bold py-2 px-4 rounded">
+            <section className="flex flex-wrap justify-between items-center my-4 gap-2 p-2 lg:p-0">
+                <button onClick={() => setMostrarModal(true)} className="bg-amber-300 w-44 h-10 hover:bg-amber-400 text-black font-bold py-2 px-4 rounded">
                     Agregar Usuario
                 </button>
 
                 <select
-                    className="border border-amber-500 rounded-md bg-amber-50 dark:bg-[#212121] py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="border w-44 border-amber-500 rounded-md h-10 bg-amber-50 dark:bg-[#212121] py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={filtroRol}
                     onChange={(e) => setFiltroRol(e.target.value)}
                 >
@@ -91,13 +98,13 @@ export default function Page() {
                     <option value="operador">Operadores</option>
                 </select>
 
-                <div className="flex items-center">
+                <div className="flex items-center ">
                     <input
                         type="text"
                         placeholder="Buscar..."
                         value={busqueda}
                         onChange={(e) => setBusqueda(e.target.value)}
-                        className="border border-amber-500 rounded-md bg-amber-50 dark:bg-[#212121] py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border w-44 h-10 border-amber-500 rounded-md bg-amber-50 dark:bg-[#212121] py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
             </section>
@@ -107,7 +114,7 @@ export default function Page() {
                 <thead className="bg-amber-300 text-black">
                     <tr>
                         <th className="p-2 w-[20%]">Nombre</th>
-                        <th className="p-2 w-[20%]">Email</th>
+                        <th className="p-2 w-[20%] hidden lg:block">Email</th>
                         <th className="p-2">Rol</th>
                         <th className="p-2">Faena</th>
                         <th className="p-2 w-[20%]">Acciones</th>
@@ -126,23 +133,41 @@ export default function Page() {
                     }
                     {usuariosPagina.map((usuario, index) => (
                         <tr key={inicio + index} className="">
-                            <td className="p-2">{usuario.nombre}</td>
-                            <td className="p-2">{usuario.correo}</td>
+                            <td className="px-4 p-2">{usuario.nombre}</td>
+                            <td className="p-2 hidden lg:block">{usuario.correo}</td>
                             <td className="p-2 text-center">{usuario.rol}</td>
-                            <td className="p-2">{usuario.faena}</td>
-                            <td className="p-2 flex justify-center gap-2">
-                                <button onClick={() => abrirEditor(usuario as Usuario)} className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-200 text-black border border-amber-500 font-bold py-2 px-4 rounded">
-                                    <FaPen className="inline-block" />
-                                </button>
-                                {/* Boton para ver el historial */}
-                                <button onClick={() => { abrirHistorial(usuario as Usuario) }} className="bg-emerald-50 dark:bg-[#212121] dark:text-emerald-300 hover:bg-emeral-200 text-black border font-bold py-2 px-4 rounded ml-2">
-                                    <FaRegCopy className="inline-block" />
-                                </button>
-                                {/* Boton de desactivar usuario */}
-                                <button onClick={() => { setIsOpen(true) }} className="bg-red-50 hover:bg-red-200 dark:bg-[#212121] dark:text-red-300 text-black border font-bold py-2 px-4 rounded ml-2">
-                                    <FaEyeSlash className="inline-block" />
-                                </button>
+                            <td className="p-2 text-center">{usuario.faena}</td>
 
+                            <td className="p-2 relative text-center">
+                                {/* Botones en escritorio */}
+                                <div className="hidden md:flex justify-center gap-2">
+                                    <button onClick={() => abrirEditor(usuario as Usuario)} className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-200 text-black border border-amber-500 font-bold py-2 px-4 rounded">
+                                        <FaPen className="inline-block" />
+                                    </button>
+                                    <button onClick={() => abrirHistorial(usuario as Usuario)} className="bg-emerald-50 dark:bg-[#212121] dark:text-emerald-300 hover:bg-emeral-200 text-black border font-bold py-2 px-4 rounded ml-2">
+                                        <FaRegCopy className="inline-block" />
+                                    </button>
+                                    <button onClick={() => setIsOpen(true)} className="bg-red-50 hover:bg-red-200 dark:bg-[#212121] dark:text-red-300 text-black border font-bold py-2 px-4 rounded ml-2">
+                                        <FaEyeSlash className="inline-block" />
+                                    </button>
+                                </div>
+
+                                {/* Botón de 3 puntos en móvil */}
+                                <div className="md:hidden flex justify-center">
+                                    <button
+                                        onClick={() => setMenuAbierto(menuAbierto === index ? null : index)}
+                                        className="p-2 bg-gray-200 dark:bg-[#333] rounded-full"
+                                    >
+                                        <FaEllipsisV />
+                                    </button>
+                                    {menuAbierto === index && (
+                                        <div className="absolute top-[calc(100%-2px)] right-0 w-40 bg-white dark:bg-[#1f1f1f] border border-gray-300 dark:border-gray-600 rounded shadow-lg z-50">
+                                            <button onClick={() => { abrirEditor(usuario as Usuario); setMenuAbierto(null); }} className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Editar</button>
+                                            <button onClick={() => { abrirHistorial(usuario as Usuario); setMenuAbierto(null); }} className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Ver historial</button>
+                                            <button onClick={() => { setIsOpen(true); setMenuAbierto(null); }} className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700">Desactivar</button>
+                                        </div>
+                                    )}
+                                </div>
                             </td>
                         </tr>
                     ))}

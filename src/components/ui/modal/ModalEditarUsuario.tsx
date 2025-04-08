@@ -78,10 +78,10 @@ export default function ModalEditarUsuario({
                 </div>
 
                 <div className="flex justify-end gap-2 mt-6">
-                    <button onClick={onClose} className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]">Cancelar</button>
                     <button onClick={handleSubmit} className="px-4 py-2 bg-amber-400 text-black font-bold rounded hover:bg-amber-500">
                         Guardar Cambios
                     </button>
+                    <button onClick={onClose} className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]">Cancelar</button>
                 </div>
             </div>
         </div>
