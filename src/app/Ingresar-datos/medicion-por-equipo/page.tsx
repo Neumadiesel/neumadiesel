@@ -9,12 +9,12 @@ export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
 
     const medidasNeumaticosIniciales = [
-        { pos: 1, ext: 78, int: 78, pre: 78, tem: 78 },
-        { pos: 2, ext: 78, int: 78, pre: 78, tem: 78 },
-        { pos: 3, ext: 78, int: 78, pre: 78, tem: 78 },
-        { pos: 4, ext: 78, int: 78, pre: 78, tem: 78 },
-        { pos: 5, ext: 78, int: 78, pre: 78, tem: 78 },
-        { pos: 6, ext: 78, int: 78, pre: 78, tem: 78 },
+        { pos: 1, ext: 95, int: 93, pre: 78, tem: 78 },
+        { pos: 2, ext: 90, int: 88, pre: 78, tem: 78 },
+        { pos: 3, ext: 85, int: 83, pre: 78, tem: 78 },
+        { pos: 4, ext: 80, int: 78, pre: 78, tem: 78 },
+        { pos: 5, ext: 75, int: 73, pre: 78, tem: 78 },
+        { pos: 6, ext: 70, int: 68, pre: 78, tem: 78 },
     ];
 
     const [nuevasMedidas, setNuevasMedidas] = useState([...medidasNeumaticosIniciales]);
@@ -57,130 +57,128 @@ export default function Page() {
                     <input type="text" className="w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2" />
                 </div>
 
+                {/* Fecha medicion anterior */}
+                <div className='flex justify-between my-2'>
+                    <p className="text-sm text-gray-700 dark:text-white">Ultima medición del equipo <span className='font-semibold'>29/03/2025</span></p>
+                </div>
                 <div className="overflow-x-auto mt-4 w-[100%]">
-                    {/* Fecha medicion anterior */}
-                    <div className='flex justify-between mb-2'>
-                        <p className="text-sm text-gray-700 dark:text-white">Ultima medición del equipo <span className='font-semibold'>29/03/2025</span></p>
+                    <div className='flex gap-x-2 justify-between mb-2'>
+                        {
+                            nuevasMedidas.map((neumatico, index) => (
+
+
+                                <section key={index} className='border bg-gray-50 border-amber-300 rounded-lg p-2 my-2 py-4 lg:hidden'>
+                                    <p className='text-xl font-bold'>Posición {neumatico.pos}</p>
+                                    <p className='font-semibold'>Codigo del neumatico: WHE393</p>
+                                    <p>Remanente de la goma</p>
+                                    {/* Medicion exterior */}
+                                    <div className='flex flex-col'>
+                                        <div className="flex items-center mt-2 ">
+                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Exterior:</label>
+                                            {/* Botón de disminuir */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "ext", neumatico.ext - 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                            >
+                                                -
+                                            </button>
+
+                                            {/* Input numérico */}
+                                            <input
+                                                type="number"
+                                                value={neumatico.ext}
+                                                onChange={(e) => handleInputChange(0, "ext", parseFloat(e.target.value) || 0)}
+                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                            />
+
+                                            {/* Botón de aumentar */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "ext", neumatico.ext + 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        {/* Medicion interior */}
+                                        <div className="flex items-center mt-2">
+                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Interior:</label>
+                                            {/* Botón de disminuir */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "int", neumatico.int - 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                            >
+                                                -
+                                            </button>
+                                            {/* Input numérico */}
+                                            <input
+                                                type="number"
+                                                value={neumatico.int}
+                                                onChange={(e) => handleInputChange(0, "int", parseFloat(e.target.value) || 0)}
+                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                            />
+                                            {/* Botón de aumentar */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "int", neumatico.int + 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        {/* medicion presion */}
+                                        <div className="flex items-center mt-2">
+                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Presión:</label>
+                                            {/* Botón de disminuir */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "pre", neumatico.pre - 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                            >
+                                                -
+                                            </button>
+                                            {/* Input numérico */}
+                                            <input
+                                                type="number"
+                                                value={neumatico.pre}
+                                                onChange={(e) => handleInputChange(0, "pre", parseFloat(e.target.value) || 0)}
+                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                            />
+                                            {/* Botón de aumentar */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "pre", nuevasMedidas[0].pre + 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        {/* medicion temperatura */}
+                                        <div className="flex items-center mt-2">
+                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Temperatura:</label>
+                                            {/* Botón de disminuir */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "tem", nuevasMedidas[0].tem - 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                            >
+                                                -
+                                            </button>
+                                            {/* Input numérico */}
+                                            <input
+                                                type="number"
+                                                value={nuevasMedidas[0].tem}
+                                                onChange={(e) => handleInputChange(0, "tem", parseFloat(e.target.value) || 0)}
+                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                            />
+                                            {/* Botón de aumentar */}
+                                            <button
+                                                onClick={() => handleInputChange(0, "tem", nuevasMedidas[0].tem + 1)}
+                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
+                            ))
+                        }
                     </div>
-                    {/* Ingresar datos por neumatico */}
-                    <select className="w-full bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2 mt-2 lg:hidden">
-                        <option value="">Seleccione el neumatico</option>
-                        {medidasNeumaticosIniciales.map((neumatico, index) => (
-                            <option key={index} value={index}>
-                                Posición {neumatico.pos}
-                            </option>
-                        ))}
-                    </select>
-
-                    <div className='border bg-gray-50 border-amber-300 rounded-lg p-2 my-2 py-4 lg:hidden'>
-                        <p className='font-semibold'>Codigo del neumatico: WHE393</p>
-                        <p>Remanente de la goma</p>
-                        {/* Medicion exterior */}
-                        <div className='flex flex-col'>
-                            <div className="flex items-center mt-2 ">
-                                <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Exterior:</label>
-                                {/* Botón de disminuir */}
-                                <button
-                                    onClick={() => handleInputChange(0, "ext", nuevasMedidas[0].ext - 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-l-lg text-sm"
-                                >
-                                    -
-                                </button>
-
-                                {/* Input numérico */}
-                                <input
-                                    type="number"
-                                    value={nuevasMedidas[0].ext}
-                                    onChange={(e) => handleInputChange(0, "ext", parseFloat(e.target.value) || 0)}
-                                    className="w-full text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                />
-
-                                {/* Botón de aumentar */}
-                                <button
-                                    onClick={() => handleInputChange(0, "ext", nuevasMedidas[0].ext + 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-r-lg text-sm"
-                                >
-                                    +
-                                </button>
-                            </div>
-                            {/* Medicion interior */}
-                            <div className="flex items-center mt-2">
-                                <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Interior:</label>
-                                {/* Botón de disminuir */}
-                                <button
-                                    onClick={() => handleInputChange(0, "int", nuevasMedidas[0].int - 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-l-lg text-sm"
-                                >
-                                    -
-                                </button>
-                                {/* Input numérico */}
-                                <input
-                                    type="number"
-                                    value={nuevasMedidas[0].int}
-                                    onChange={(e) => handleInputChange(0, "int", parseFloat(e.target.value) || 0)}
-                                    className="w-full text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                />
-                                {/* Botón de aumentar */}
-                                <button
-                                    onClick={() => handleInputChange(0, "int", nuevasMedidas[0].int + 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-r-lg text-sm"
-                                >
-                                    +
-                                </button>
-                            </div>
-                            {/* medicion presion */}
-                            <div className="flex items-center mt-2">
-                                <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Presión:</label>
-                                {/* Botón de disminuir */}
-                                <button
-                                    onClick={() => handleInputChange(0, "pre", nuevasMedidas[0].pre - 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-l-lg text-sm"
-                                >
-                                    -
-                                </button>
-                                {/* Input numérico */}
-                                <input
-                                    type="number"
-                                    value={nuevasMedidas[0].pre}
-                                    onChange={(e) => handleInputChange(0, "pre", parseFloat(e.target.value) || 0)}
-                                    className="w-full text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                />
-                                {/* Botón de aumentar */}
-                                <button
-                                    onClick={() => handleInputChange(0, "pre", nuevasMedidas[0].pre + 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-r-lg text-sm"
-                                >
-                                    +
-                                </button>
-                            </div>
-                            {/* medicion temperatura */}
-                            <div className="flex items-center mt-2">
-                                <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Temperatura:</label>
-                                {/* Botón de disminuir */}
-                                <button
-                                    onClick={() => handleInputChange(0, "tem", nuevasMedidas[0].tem - 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-l-lg text-sm"
-                                >
-                                    -
-                                </button>
-                                {/* Input numérico */}
-                                <input
-                                    type="number"
-                                    value={nuevasMedidas[0].tem}
-                                    onChange={(e) => handleInputChange(0, "tem", parseFloat(e.target.value) || 0)}
-                                    className="w-full text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                />
-                                {/* Botón de aumentar */}
-                                <button
-                                    onClick={() => handleInputChange(0, "tem", nuevasMedidas[0].tem + 1)}
-                                    className="bg-amber-50 border border-amber-500 text-black h-10 p-2 rounded-r-lg text-sm"
-                                >
-                                    +
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
                     {/* Tabla version escritorio */}
                     <div className='hidden lg:block w-[100%]'>
                         <table className="w-full shadow-md rounded-lg h-[50%] ">
