@@ -6,7 +6,6 @@ import { PiTireBold } from 'react-icons/pi';
 import { programa_mantenimiento } from "@/mocks/programa.json";
 import Image from 'next/image';
 import { GiFlatTire, GiMineTruck } from 'react-icons/gi';
-import Link from 'next/link';
 import CardMain from '@/components/ui/cards/CardMain';
 
 export default function Page() {
