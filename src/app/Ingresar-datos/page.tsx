@@ -120,9 +120,9 @@ export default function Page() {
             </div>
 
             <div className='flex w-[100%] justify-center items-center flex-col'>
-                <div className='flex gap-x-4'>
-                    <button onClick={() => setIsOpen(true)} className="bg-amber-300 text-black w-48 px-4 font-bold py-2 rounded-lg mt-4">Confirmar Datos</button>
-                    <button onClick={handleCancel} className="bg-amber-50 border border-black font-bold text-black w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
+                <div className='lg:flex gap-x-4 w-[100%] lg:justify-center'>
+                    <button onClick={() => setIsOpen(true)} className="bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4">Confirmar Datos</button>
+                    <button onClick={handleCancel} className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
                 </div>
                 <Modal
                     isOpen={isOpen}

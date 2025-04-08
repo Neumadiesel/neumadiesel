@@ -7,6 +7,7 @@ import { programa_mantenimiento } from "@/mocks/programa.json";
 import Image from 'next/image';
 import { GiFlatTire, GiMineTruck } from 'react-icons/gi';
 import Link from 'next/link';
+import CardMain from '@/components/ui/cards/CardMain';
 
 export default function Page() {
 
@@ -19,46 +20,38 @@ export default function Page() {
             <Image src="/NEUMASYSTEM.png" alt="Logo" width={500} height={100} />
             <p className='text-xl font-semibold w-[60%] '>Sistema de reportabilidad para neumaticos OTR</p>
           </div>
-          <Link href={"/maquinaria"} className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-span-2 col-start-3 flex flex-col justify-center items-center px-2">
-            <GiMineTruck size={75} className=" text-blue-500" />
-            <p className='font-semibold'>Flota Operativa</p>
-            <p className='text-3xl font-bold'>48</p>
-            <small>
-              Presione <span className='text-amber-600 font-semibold p-2'>aqui</span>  para ver mas detalles
-            </small>
-          </Link>
-          {/* mantenciones programadas */}
-          <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-span-2 col-start-4 flex flex-col justify-center items-center px-2">
-            <GiFlatTire size={75} className=" text-amber-400 lg:text-blue-500" />
-            <p className='font-semibold'>Mantenciones Programadas</p>
-            <p className='text-3xl font-bold'>12</p>
-            <small>
-              Presione <span className='text-amber-600 font-semibold p-2'>aqui</span>  para ver mas detalles
-            </small>
-          </div>
-          {/* Neumaticos en operacion */}
+          {/* Flota operativa */}
+          <CardMain
+            title="Flota Operativa"
+            icon={<GiMineTruck size={75} className="text-blue-500" />}
+            count={48}
+            link="/maquinaria"
+          />
+          {/* Mantenciones programadas */}
+          <CardMain
+            title="Mantenciones Programadas"
+            icon={<GiFlatTire size={75} className="text-amber-400 lg:text-blue-500" />}
+            count={12}
+            link="/mantenimiento/programas"
+          />
 
-          <Link href={"/neumaticos"} className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-start-3 grid grid-cols-1 row-span-2 lg:flex flex-col justify-center items-center px-2">
-            <PiTireBold size={75} className=" text-blue-500" />
-            <p className='font-semibold'>Neumaticos Operativos</p>
-            <p className='text-3xl font-bold'>258</p>
-            <small>
-              Presione <span className='text-amber-600 font-semibold p-2'>aqui</span>  para ver mas detalles
-            </small>
-          </Link>
-          {/* Horas trabajadas de los neumaticos */}
-          {/* <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-start-3 grid row-span-2 grid-cols-1 lg:flex">
+          {/* Neumaticos operativos */}
+          <CardMain
+            title="Neumaticos Operativos"
+            icon={<PiTireBold size={75} className="text-blue-500" />}
+            count={258}
+            link="/neumaticos"
+          />
 
-          </div> */}
+          {/* Horas registradas */}
+          <CardMain
+            title="Horas registradas"
+            icon={<FaClock size={75} className="text-amber-400" />}
+            count={12304}
+            link="/estadisticas"
+          />
 
-          <div className=" bg-white dark:bg-[#212121] dark:text-white shadow-md rounded-md py-3 row-start-3 grid row-span-2 grid-cols-1 lg:flex flex-col justify-center items-center px-2">
-            <FaClock size={75} className="text-amber-400" />
-            <p className='font-semibold'>Horas registradas</p>
-            <p className='text-3xl font-bold'>12.304</p>
-            <small>
-              Presione <span className='text-amber-600 font-semibold p-2'>aqui</span>  para ver mas detalles
-            </small>
-          </div>
+
 
           <div className=" bg-white dark:bg-slate-500 dark:text-white shadow-md rounded-md py-3 col-span-2  row-span-3 row-start-5">
             <PieChart />

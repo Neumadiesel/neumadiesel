@@ -115,7 +115,7 @@ export default function NavBar() {
                 </ul>
             </div>
             <div className='w-[100%] p-3'>
-                <Link href="/usuario" className='flex items-center justify-around'>
+                <Link href="/usuario" onClick={() => setMenuOpen(false)} className='flex items-center justify-around'>
                     <FaRegUserCircle size={40} />
                     <p className='hidden lg:block'>Cerrar sesion</p>
                 </Link>
