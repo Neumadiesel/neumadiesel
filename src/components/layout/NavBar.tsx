@@ -1,8 +1,9 @@
 'use client'
 import React from 'react';
 import Image from 'next/image';
-import { FaAngleDown, FaAngleUp, FaBars, FaRegUserCircle } from "react-icons/fa";
+import { FaAngleDown, FaAngleUp, FaBars, FaChartBar, FaFile, FaRegUserCircle, FaTruck, FaUsersCog, FaWrench } from "react-icons/fa";
 import Link from 'next/link';
+import { FaCircleDot } from 'react-icons/fa6';
 
 
 export default function NavBar() {
@@ -10,14 +11,17 @@ export default function NavBar() {
     const menuItems = [
         {
             title: 'Reportabilidad',
+            icon: <FaChartBar className='text-2xl'/>,
             path: '/estadisticas',
         },
         {
-            title: 'Maquinaria',
+            title: 'Equipos',
+            icon: <FaTruck className='text-2xl'/>,
             path: '/maquinaria'
         },
         {
             title: 'Neumáticos',
+            icon: <FaCircleDot className='text-2xl'/>,
             children: [
                 { title: 'Operación', path: '/neumaticos/' },
                 { title: 'Bodega', path: '/neumaticos/bodega' },
@@ -25,6 +29,7 @@ export default function NavBar() {
         },
         {
             title: 'Administración',
+            icon: <FaUsersCog className='text-2xl'/>,
             children: [
                 { title: 'Usuarios', path: '/administracion/usuarios' },
                 { title: 'Roles', path: '/administracion/roles' },
@@ -32,6 +37,7 @@ export default function NavBar() {
         },
         {
             title: 'Mantenimiento',
+            icon: <FaWrench className='text-2xl'/>,
             children: [
                 { title: 'Historial', path: '/mantenimiento/Historial' },
                 { title: 'Aros de camion', path: '/mantenimiento/aros-camion' },
@@ -41,6 +47,7 @@ export default function NavBar() {
         },
         {
             title: 'Ingresar datos',
+            icon: <FaFile className='text-2xl'/>,
             children: [
                 { title: 'Ingresar Mediciones', path: '/Ingresar-datos/' },
                 { title: 'Ingresar Medición por Equipo', path: '/Ingresar-datos/medicion-por-equipo' },
@@ -54,22 +61,22 @@ export default function NavBar() {
     const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
 
     const toggleCategory = (title: string) => {
-        setOpenCategories((prev) => ({
-            ...prev,
-            [title]: !prev[title],
-        }));
+        setOpenCategories((prev) => {
+            const isCurrentlyOpen = prev[title];
+            // Si ya está abierta, la cerramos. Si no, cerramos todas y abrimos esta.
+            return isCurrentlyOpen ? {} : { [title]: true };
+        });
     };
+    
 
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     return (
-        <div className="flex lg:flex-col p-3  gap-y-4 items-center lg:h-screen bg-[#212121] text-white  shadow-sm font-mono pt-5 overflow-y-hidden">
-            <div className='w-[90%]'>
-                <Link href="/">
-                    <Image onClick={() => setMenuOpen(false)} src="/NEUMASYSTEM.png" className='px-1 bg-white hover:bg-amber-50 rounded-full' alt="logo" width={250} height={180} />
-                </Link>
-            </div>
-            <div className='hidden h-[90%]  lg:flex lg:flex-col w-[100%] '>
+        <div className="flex lg:flex-col   gap-y-4 items-center lg:h-screen bg-[#212121] text-neutral-300  shadow-sm font-semibold overflow-y-hidden min-w-[200px]">
+            <Link href={'/'} className='w-[100%] bg-amber-300 p-2'>
+                    <Image onClick={() => setMenuOpen(false)} src="/NEUMASYSTEM.png" alt="logo" width={250} height={180} />
+            </Link>
+            <div className='hidden h-[90%] p-3 lg:flex lg:flex-col w-[100%] '>
                 <ul>
                     {menuItems.map((item, index) => (
                         <li key={index} className="mb-2">
@@ -79,7 +86,10 @@ export default function NavBar() {
                                         className="flex items-center justify-between w-full p-2 text-left hover:bg-gray-700 rounded"
                                         onClick={() => toggleCategory(item.title)}
                                     >
+                                        <div className='flex items-center gap-x-2'>
+                                        {item.icon}
                                         <span>{item.title}</span>
+                                        </div>
                                         {openCategories[item.title] ? (
                                             <FaAngleUp size={16} />
                                         ) : (
@@ -87,7 +97,9 @@ export default function NavBar() {
                                         )}
                                     </button>
                                     {openCategories[item.title] && (
-                                        <ul className="ml-4 mt-1">
+                                        <ul  className={`ml-4 mt-1 overflow-hidden transition-all duration-300 ease-in-out ${
+                                            openCategories[item.title] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                                          }`}>
                                             {item.children.map((subItem, subIndex) => (
                                                 <li key={subIndex}>
                                                     <Link
@@ -105,8 +117,9 @@ export default function NavBar() {
                             ) : (
                                 <Link
                                     href={item.path}
-                                    className="block p-2 hover:bg-gray-700 rounded"
+                                    className=" flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
                                 >
+                                    {item.icon}
                                     {item.title}
                                 </Link>
                             )}
@@ -115,7 +128,7 @@ export default function NavBar() {
                 </ul>
             </div>
             <div className='w-[100%] p-3'>
-                <Link href="/usuario" onClick={() => setMenuOpen(false)} className='flex items-center justify-around'>
+                <Link href="/login" onClick={() => setMenuOpen(false)} className='flex items-center justify-around'>
                     <FaRegUserCircle size={40} />
                     <p className='hidden lg:block'>Cerrar sesion</p>
                 </Link>
