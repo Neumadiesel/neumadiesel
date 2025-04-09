@@ -1,6 +1,6 @@
 
 
-import ListaNeumaticos from "@/components/Listas/ListaNeumaticos";
+import ListaNeumaticos from "@/components/features/neumatico/ListaNeumaticos";
 
 
 export default function Page() {

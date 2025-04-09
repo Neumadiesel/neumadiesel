@@ -1,9 +1,9 @@
 import * as React from 'react';
-import BarChart from '@/components/charts/BarChart';
-import PieChart from '@/components/charts/PieChart';
+import BarChart from '@/components/common/charts/BarChart';
+import PieChart from '@/components/common/charts/PieChart';
 import Image from 'next/image';
-import ScatterPlot from '@/components/charts/ScatterPlot';
-import StackBars from '@/components/charts/BarOverview';
+import ScatterPlot from '@/components/common/charts/ScatterPlot';
+import StackBars from '@/components/common/charts/BarOverview';
 
 export default function Page() {
 

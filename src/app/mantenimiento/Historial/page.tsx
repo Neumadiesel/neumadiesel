@@ -1,5 +1,5 @@
 'use client'
-import CaracteristicasNeumatico from "@/components/historial/CaracteristicasNeumaticos";
+import CaracteristicasNeumatico from "@/components/features/historial/CaracteristicasNeumaticos";
 import { useState } from "react"
 import { FaSearch } from "react-icons/fa";
 export default function MantenimientoPage() {

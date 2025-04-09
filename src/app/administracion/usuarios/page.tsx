@@ -2,12 +2,12 @@
 import { useState, useEffect } from "react";
 import { usuarios } from "@/lib/constants/usuarios";
 import { FaEllipsisV, FaEyeSlash, FaPen, FaRegCopy } from "react-icons/fa";
-import Modal from "@/components/ui/modal/customModal";
-import ModalFormularioUsuario from "@/components/ui/modal/ModalFormularioUsuario";
+import Modal from "@/components/common/modal/CustomModal";
+import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
 import { Usuario } from "@/types/Usuario";
 import { AccionUsuario } from "@/types/Historial";
-import ModalHistorialUsuario from "@/components/ui/modal/ModalHistorialUsuario";
-import ModalEditarUsuario from "@/components/ui/modal/ModalEditarUsuario";
+import ModalHistorialUsuario from "@/components/features/usuario/ModalHistorialUsuario";
+import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
 
 
 export default function Page() {

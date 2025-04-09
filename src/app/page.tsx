@@ -1,12 +1,12 @@
 import * as React from 'react';
-import BarChart from '@/components/charts/BarChart';
-import PieChart from '@/components/charts/PieChart';
+import BarChart from '@/components/common/charts/BarChart';
+import PieChart from '@/components/common/charts/PieChart';
 import { FaClock } from 'react-icons/fa';
 import { PiTireBold } from 'react-icons/pi';
 import { programa_mantenimiento } from "@/mocks/programa.json";
 import Image from 'next/image';
 import { GiFlatTire, GiMineTruck } from 'react-icons/gi';
-import CardMain from '@/components/ui/cards/CardMain';
+import CardMainFeaturing from '@/components/features/main/CardMainFeaturing';
 
 export default function Page() {
 
@@ -20,14 +20,14 @@ export default function Page() {
             <p className='text-xl font-semibold w-[60%] '>Sistema de reportabilidad para neumaticos OTR</p>
           </div>
           {/* Flota operativa */}
-          <CardMain
+          <CardMainFeaturing
             title="Flota Operativa"
             icon={<GiMineTruck size={75} className="text-blue-500" />}
             count={48}
             link="/maquinaria"
           />
           {/* Mantenciones programadas */}
-          <CardMain
+          <CardMainFeaturing
             title="Mantenciones Programadas"
             icon={<GiFlatTire size={75} className="text-amber-400 lg:text-blue-500" />}
             count={12}
@@ -35,7 +35,7 @@ export default function Page() {
           />
 
           {/* Neumaticos operativos */}
-          <CardMain
+          <CardMainFeaturing
             title="Neumaticos Operativos"
             icon={<PiTireBold size={75} className="text-blue-500" />}
             count={258}
@@ -43,7 +43,7 @@ export default function Page() {
           />
 
           {/* Horas registradas */}
-          <CardMain
+          <CardMainFeaturing
             title="Horas registradas"
             icon={<FaClock size={75} className="text-amber-400" />}
             count={12304}

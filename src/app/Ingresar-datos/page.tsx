@@ -2,8 +2,8 @@
 import * as XLSX from 'xlsx';
 import { useState } from 'react';
 import { FaFileExcel, FaRegFile } from 'react-icons/fa';
-import CustomModal from "@/components/ui/alerts/alert";
-import Modal from "@/components/ui/modal/customModal";
+import CustomModal from "@/components/common/alerts/alert";
+import Modal from "@/components/common/modal/CustomModal";
 
 type RowData = {
     [key: string]: string | number;

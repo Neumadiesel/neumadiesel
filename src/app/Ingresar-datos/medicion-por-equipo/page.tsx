@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { FaRedo } from 'react-icons/fa';
-import CustomModal from "@/components/ui/alerts/alert";
-import Modal from "@/components/ui/modal/customModal";
+import CustomModal from "@/components/common/alerts/alert";
+import Modal from "@/components/common/modal/CustomModal";
 
 export default function Page() {
     const [error, setError] = useState<string | null>(null);

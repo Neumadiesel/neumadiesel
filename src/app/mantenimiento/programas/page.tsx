@@ -5,7 +5,7 @@ import { FaAngleLeft, FaAngleRight, FaFileAlt, FaFileDownload, FaPen, FaPlusCirc
 import Link from "next/link";
 import * as XLSX from "xlsx";
 import { FaCircleXmark } from "react-icons/fa6";
-import Modal from "@/components/ui/modal/customModal";
+import Modal from "@/components/common/modal/CustomModal";
 
 export default function Programas() {
 
