@@ -47,7 +47,7 @@ export default function StylingChart() {
     
             
   return (
-    <Card className="shadow-none border-none p-0">
+    <Card className="shadow-none border-none p-0 dark:bg-neutral-900">
       <CardHeader>
         <CardTitle>Area Chart - Stacked</CardTitle>
         <CardDescription>

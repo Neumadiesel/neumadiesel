@@ -37,7 +37,7 @@ const chartConfig = {
 
 export default function StylingToolTip() {
   return (
-    <Card className="shadow-none border-none">
+    <Card className="shadow-none border-none dark:bg-neutral-900">
       <CardHeader>
         <CardTitle>Tooltip - Advanced</CardTitle>
         <CardDescription>

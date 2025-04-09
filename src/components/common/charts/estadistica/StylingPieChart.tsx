@@ -58,7 +58,7 @@ export default function StylingPieChart() {
   }, [])
 
   return (
-    <Card className="flex flex-col shadow-none border-none  ">
+    <Card className="flex flex-col shadow-none border-none dark:bg-neutral-900">
       <CardHeader className="items-center pb-0">
         <CardTitle>Pie Chart - Donut with Text</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

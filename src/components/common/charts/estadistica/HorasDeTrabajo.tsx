@@ -33,7 +33,7 @@ const chartConfig = {
 export default function HorasDeDisponible() {
   const totalHours = chartData[0].Disponible + chartData[0].Indisponible
   return (
-    <Card className="flex flex-col shadow-none border-none  ">
+    <Card className="flex flex-col shadow-none border-none dark:bg-neutral-900">
       <CardHeader className="items-center pb-0">
         <CardTitle>Horas trabajadas por flota</CardTitle>
         <CardDescription>Marzo 2025</CardDescription>

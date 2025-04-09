@@ -53,7 +53,7 @@ const chartConfig = {
 
 export default function StylingBarX() {
   return (
-    <Card>
+    <Card className="dark:bg-neutral-900 shadow-none border-none">
       <CardHeader>
         <CardTitle>Bar Chart - Mixed</CardTitle>
         <CardDescription>January - June 2024</CardDescription>

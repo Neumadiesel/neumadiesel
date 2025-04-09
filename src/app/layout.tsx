@@ -28,12 +28,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-cols-1 lg:flex`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-cols-1 lg:flex dark:bg-gray-900 dark:text-white`}
       >
         <aside className="w-[100%] lg:w-[15%] min-w-[200px]">
-
           <NavBar />
         </aside>
         <main className="w-[100%]  lg:w-[80%] xl:w-[85%] h-[100%] lg:h-screen overflow-y-scroll ">
