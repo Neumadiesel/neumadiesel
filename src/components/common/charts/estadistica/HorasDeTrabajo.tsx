@@ -38,10 +38,10 @@ export default function HorasDeDisponible() {
         <CardTitle>Horas trabajadas por flota</CardTitle>
         <CardDescription>Marzo 2025</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-1 items-center pb-0 w-[100%] ">
+      <CardContent className="flex flex-1 items-center pb-0 w-[100%] pt-10 mt-10  ">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto w-full flex items-center justify-center  max-w-[350px] text-md" 
+          className="mx-auto w-full flex items-center justify-center  max-w-[350px] h-[200px] text-md" 
         >
           <RadialBarChart
             data={chartData}

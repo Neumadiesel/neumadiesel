@@ -7,6 +7,7 @@ import MainStylingChart from '@/components/common/charts/estadistica/MainStyling
 import HorasDeTrabajo from '@/components/common/charts/estadistica/HorasDeTrabajo';
 import StylingPieChart from '@/components/common/charts/estadistica/StylingPieChart';
 import StylingToolTip from '@/components/common/charts/estadistica/StylingToolTip';
+import StylingBarX from '@/components/common/charts/estadistica/StylingBarX';
 export default function Page() {
 
     return (
@@ -26,14 +27,14 @@ export default function Page() {
                     <input type="date" className="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded-r-full" />
                 </div>
                 </div>
-                <div className="flex py-4 flex-col lg:grid lg:grid-cols-4 grid-rows-5 pb-4 gap-2 lg:gap-4">
+                <div className="flex py-4 flex-col lg:grid lg:grid-cols-4 grid-rows-3 pb-4 gap-2 lg:gap-4">
 
                     {/* Grafico de Area estilizado - consumo de neumaticos */}
                     <div className=" bg-white dark:bg-gray-700 shadow-md rounded-md col-span-4 row-span-1 row-start-1">
                         <MainStylingChart />
                     </div>
                     {/* Grafico de barras estilizado */}
-                    <div className=" bg-white dark:bg-gray-700 shadow-md rounded-md py-3 col-span-2 row-span-1 row-start-2">
+                    <div className=" bg-white dark:bg-gray-700 shadow-md rounded-md py-3 col-span-1 row-span-1 row-start-2">
                         <HorasDeTrabajo />
                     </div>
 
@@ -41,11 +42,14 @@ export default function Page() {
                         <ScatterPlot />
                     </div>
 
-                    <div className=" bg-white dark:bg-slate-600 shadow-md rounded-md py-3 col-span-2  row-span-1 row-start-3">
+                    <div className=" bg-white dark:bg-slate-600 shadow-md rounded-md py-3 col-span-1  row-span-1 row-start-2 col-start-4">
                         <StylingPieChart />
                     </div>
                     <div className=" bg-white dark:bg-slate-600 shadow-md rounded-md py-3 col-span-2  row-span-1 row-start-3">
                         <StylingToolTip />
+                    </div>
+                    <div className=" bg-white dark:bg-slate-600 shadow-md rounded-md py-3 col-span-2  row-span-1 row-start-3">
+                        <StylingBarX />
                     </div>
 
                 </div>
