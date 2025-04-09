@@ -46,6 +46,7 @@ export default function Page() {
           <CardMainFeaturing
             title="Horas registradas"
             icon={<FaClock size={75} className="text-amber-400" />}
+            
             count={12304}
             link="/estadisticas"
           />
