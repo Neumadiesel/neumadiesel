@@ -34,10 +34,10 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} bg-[#f1f1f1] dark:bg-[#212121] antialiased grid grid-cols-1 lg:flex`}
             >
                 <AuthProvider>
-                    <aside className="w-[100%] lg:w-[15%] min-w-[200px]">
+                    <aside className="">
                         <NavBar />
                     </aside>
-                    <main className="w-[100%]  lg:w-[80%] xl:w-[85%] h-[100%] lg:h-screen overflow-y-scroll ">
+                    <main className="w-[100%]  lg:w-full xl:w-full h-[100%] lg:h-screen overflow-y-scroll ">
                         <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>
                     </main>
                 </AuthProvider>

@@ -14,8 +14,8 @@ import {
     FaSignOutAlt,
 } from "react-icons/fa";
 import Link from "next/link";
-import { FaCircleDot } from "react-icons/fa6";
 import { useAuth } from "@/contexts/AuthContext";
+import { FaCircleDot } from "react-icons/fa6";
 
 export default function NavBar() {
     const { user, logout } = useAuth();
@@ -89,7 +89,11 @@ export default function NavBar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     return (
-        <div className="flex lg:flex-col   gap-y-4 items-center lg:h-screen bg-[#212121] text-neutral-300  shadow-sm font-semibold overflow-y-hidden min-w-[200px]">
+        <div
+            className={` ${
+                user ? "flex" : "hidden"
+            } lg:flex-col   gap-y-4 items-center lg:h-screen bg-[#212121] text-neutral-300  shadow-sm font-semibold overflow-y-hidden min-w-[200px] `}
+        >
             <Link href={"/"} className="w-[100%] bg-amber-300 p-2">
                 <Image
                     onClick={() => setMenuOpen(false)}
