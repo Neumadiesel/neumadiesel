@@ -168,9 +168,9 @@ export default function Page() {
                     <div className="flex flex-col gap-2 bg-white w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
                         <FaQuoteRight size={40} className="text-gray-400" />
                         <p className="text-xl text-gray-600 font-bold">
-                            "La plataforma ha mejorado significativamente nuestra eficiencia de
-                            mantenimiento, reduciendo costos y aumentando la seguridad de nuestros
-                            neumáticos."
+                            &ldquo;La plataforma ha mejorado significativamente nuestra eficiencia
+                            de mantenimiento, reduciendo costos y aumentando la seguridad de
+                            nuestros neumáticos.&rdquo;
                         </p>
                         <p className="text-md text-gray-600">
                             - Juan Pérez, Gerente de Mantenimiento, Minera El Cobre
@@ -180,9 +180,9 @@ export default function Page() {
                     <div className="flex flex-col gap-2 bg-white w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
                         <FaQuoteRight size={40} className="text-gray-400" />
                         <p className="text-xl text-gray-600 font-bold">
-                            "La plataforma ha mejorado significativamente nuestra eficiencia de
-                            mantenimiento, reduciendo costos y aumentando la seguridad de nuestros
-                            neumáticos."
+                            &ldquo;La plataforma ha mejorado significativamente nuestra eficiencia
+                            de mantenimiento, reduciendo costos y aumentando la seguridad de
+                            nuestros neumáticos.&rdquo;
                         </p>
                         <p className="text-md text-gray-600">
                             - Juan Pérez, Gerente de Mantenimiento, Minera El Cobre
@@ -192,9 +192,9 @@ export default function Page() {
                     <div className="flex flex-col gap-2 bg-white w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
                         <FaQuoteRight size={40} className="text-gray-400" />
                         <p className="text-xl text-gray-600 font-bold">
-                            "La plataforma ha mejorado significativamente nuestra eficiencia de
-                            mantenimiento, reduciendo costos y aumentando la seguridad de nuestros
-                            neumáticos."
+                            &ldquo;La plataforma ha mejorado significativamente nuestra eficiencia
+                            de mantenimiento, reduciendo costos y aumentando la seguridad de
+                            nuestros neumáticos.&rdquo;
                         </p>
                         <p className="text-md text-gray-600">
                             - Juan Pérez, Gerente de Mantenimiento, Minera El Cobre
