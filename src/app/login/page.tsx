@@ -24,6 +24,7 @@ export default function Login() {
                 setSuccess(false);
             }, 3000);
         } catch (error) {
+            console.log(error);
             setError("Error al iniciar sesión. Por favor, verifica tus credenciales.");
         }
     };

@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -31,13 +32,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
 
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            const userData = localStorage.getItem("user");
-            if (userData) {
-                const parsedData = JSON.parse(userData);
-                setUser(parsedData.user);
-                setToken(parsedData.access_token);
-            }
+        const token = Cookies.get("auth-token");
+        const userData = Cookies.get("user-data");
+
+        if (token && userData) {
+            setToken(token);
+            setUser(JSON.parse(userData));
         }
         setLoading(false);
     }, []);
@@ -47,9 +47,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const response = await axios.post(`${API_URL}/auth/login`, { email, password });
             const { access_token, user } = response.data;
 
-            if (typeof window !== "undefined") {
-                localStorage.setItem("user", JSON.stringify(response.data));
-            }
+            // Guardar en cookies
+            Cookies.set("auth-token", access_token, { expires: 7 }); // Expira en 7 días
+            Cookies.set("user-data", JSON.stringify(user), { expires: 7 });
 
             setUser(user);
             setToken(access_token);
@@ -70,9 +70,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
             const { access_token, user } = response.data;
 
-            if (typeof window !== "undefined") {
-                localStorage.setItem("user", JSON.stringify(response.data));
-            }
+            // Guardar en cookies
+            Cookies.set("auth-token", access_token, { expires: 7 });
+            Cookies.set("user-data", JSON.stringify(user), { expires: 7 });
 
             setUser(user);
             setToken(access_token);
@@ -84,12 +84,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const logout = () => {
-        if (typeof window !== "undefined") {
-            localStorage.removeItem("user");
-        }
+        // Eliminar cookies
+        Cookies.remove("auth-token");
+        Cookies.remove("user-data");
+
         setUser(null);
         setToken(null);
-        router.push("/");
+        router.push("/login");
     };
 
     return (
