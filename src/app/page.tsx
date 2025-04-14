@@ -2,6 +2,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaShieldAlt, FaCoins, FaClock, FaFileContract, FaQuoteRight } from "react-icons/fa";
+
 export default function Page() {
     return (
         <div className="bg-gray-100">

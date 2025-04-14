@@ -16,6 +16,7 @@
     "@mui/x-charts": "^7.28.0",
     "@radix-ui/react-select": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.0",
+    "axios": "^1.8.4",
     "chart.js": "2.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

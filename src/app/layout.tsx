@@ -4,44 +4,45 @@ import "./globals.css";
 import NavBar from "@/components/layout/NavBar";
 import { Suspense } from "react";
 import LoadingSkeleton from "./Loading";
+import { AuthProvider } from "@/contexts/AuthContext";
 // import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Neumadisesel",
-  description: "Neumadisesel",
-  icons: "/icon.png",
+    title: "Neumadisesel",
+    description: "Neumadisesel",
+    icons: "/icon.png",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-[#f1f1f1] dark:bg-[#212121] antialiased grid grid-cols-1 lg:flex`}
-      >
-        <aside className="w-[100%] lg:w-[15%] min-w-[200px]">
-          <NavBar />
-        </aside>
-        <main className="w-[100%]  lg:w-[80%] xl:w-[85%] h-[100%] lg:h-screen overflow-y-scroll ">
-          <Suspense fallback={<LoadingSkeleton />}>
-            {children}
-          </Suspense>
-        </main>
-        {/* <Footer /> */}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} bg-[#f1f1f1] dark:bg-[#212121] antialiased grid grid-cols-1 lg:flex`}
+            >
+                <AuthProvider>
+                    <aside className="w-[100%] lg:w-[15%] min-w-[200px]">
+                        <NavBar />
+                    </aside>
+                    <main className="w-[100%]  lg:w-[80%] xl:w-[85%] h-[100%] lg:h-screen overflow-y-scroll ">
+                        <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>
+                    </main>
+                </AuthProvider>
+                {/* <Footer /> */}
+            </body>
+        </html>
+    );
 }
