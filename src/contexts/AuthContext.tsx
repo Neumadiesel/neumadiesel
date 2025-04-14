@@ -62,21 +62,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const register = async (name: string, last_name: string, email: string, password: string) => {
         try {
-            const response = await axios.post(`${API_URL}/auth/register`, {
+            await axios.post(`${API_URL}/auth/register`, {
                 name,
                 last_name,
                 email,
                 password,
             });
-            const { access_token, user } = response.data;
 
-            // Guardar en cookies
-            Cookies.set("auth-token", access_token, { expires: 7 });
-            Cookies.set("user-data", JSON.stringify(user), { expires: 7 });
-
-            setUser(user);
-            setToken(access_token);
-            router.push("/dashboard");
+            // Opcional: podrías mostrar un toast, alerta o redirigir al admin a una página específica
+            // router.push("/dashboard"); // si quieres redirigir al listado de usuarios, por ejemplo
         } catch (error) {
             console.error("Error al registrarse:", error);
             throw error;

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('auth-token')?.value;
     const isAuthenticated = !!token;
     const isPublicPath = request.nextUrl.pathname === "/" || 
                         request.nextUrl.pathname === "/login" ||
@@ -17,7 +17,9 @@ export function middleware(request: NextRequest) {
 
     // Redirigir al login si no está autenticado
     if (!isAuthenticated) {
-        return NextResponse.redirect(new URL("/login", request.url));
+        const loginUrl = new URL("/login", request.url);
+        loginUrl.searchParams.set("from", request.nextUrl.pathname);
+        return NextResponse.redirect(loginUrl);
     }
 
     return NextResponse.next();

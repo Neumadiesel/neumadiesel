@@ -44,7 +44,7 @@ export default function Page() {
                 </div>
             </main>
             {/* seccion de caracteristicas */}
-            <section className="flex flex-col items-center bg-white justify-center w-full h-full lg:h-[90vh] py-10 z-20 mx-auto">
+            <section className="flex flex-col items-center bg-white justify-center w-full h-full lg:h-[90vh] py-10 z-20 mx-auto px-4 lg:px-0">
                 <h3 className="text-3xl lg:text-5xl font-bold">Gestión Integral de Neumáticos</h3>
                 <p className="text-md lg:text-lg text-gray-600 py-4 lg:py-0 lg:px-32 text-center">
                     Nuestra plataforma ofrece todas las herramientas necesarias para administrar
