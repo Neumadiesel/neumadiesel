@@ -27,15 +27,6 @@ export default function ListaMaquinaria() {
 
     const camion = Camiones.find(camion => camion.Codigo === id);
 
-    const sensores = [
-        { posicion: 1, sensor: 39412, psi: 105, temp: 95 },
-        { posicion: 2, sensor: 39412, psi: 105, temp: 95 },
-        { posicion: 3, sensor: 39412, psi: 105, temp: 95 },
-        { posicion: 4, sensor: 39412, psi: 105, temp: 95 },
-        { posicion: 5, sensor: 39412, psi: 105, temp: 95 },
-        { posicion: 6, sensor: 39412, psi: 105, temp: 95 },
-    ];
-
     // Tipar los neumáticos correctamente
     const neumaticos: NeumaticoInt[] = Neumaticos.filter(
         (neumatico: NeumaticoInt) => neumatico.Codigo_Camion === id
@@ -105,15 +96,15 @@ export default function ListaMaquinaria() {
                                 <table className="w-full table-auto">
                                     <thead className="bg-amber-300 rounded-md">
                                         <tr>
-                                            <th className="p-2 bg-emerald-300 w-[5%]">Pos</th>
+                                            <th className="p-2 w-[5%]">Pos</th>
                                             <th className="p-2 w-[20%]">Codigo</th>
-                                            <th className="p-2 bg-purple-300 w-[15%]">
+                                            <th className="p-2 w-[15%]">
                                                 <p className="hidden lg:block">Profundidad</p>
                                                 <p className="block lg:hidden">Rem</p>
                                             </th>
-                                            <th className="p-2 bg-pink-300 w-[15%]">Meta </th>
-                                            <th className="p-2 bg-blue-300 w-[15%]">Sensor</th>
-                                            <th className="p-2 bg-red-300 w-[15%]">
+                                            <th className="p-2 w-[15%]">Meta </th>
+                                            <th className="p-2 w-[15%]">Sensor</th>
+                                            <th className="p-2 w-[15%]">
                                                 <p className="hidden lg:block">Historial</p>
                                             </th>
                                         </tr>
