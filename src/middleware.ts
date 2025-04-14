@@ -1,36 +1,23 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Lista de rutas públicas que no requieren autenticación
-const publicRoutes = ['/login', '/forgot-password'];
-
 export function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
-    
-    // Verificar si la ruta es pública
-    if (publicRoutes.includes(pathname)) {
+    const token = request.cookies.get('token')?.value;
+    const isAuthenticated = !!token;
+    const isPublicPath = request.nextUrl.pathname === "/" || 
+                        request.nextUrl.pathname === "/login" ||
+                        request.nextUrl.pathname.startsWith("/_next") ||
+                        request.nextUrl.pathname.startsWith("/api") ||
+                        request.nextUrl.pathname.includes(".");
+
+    // Permitir acceso a rutas públicas y archivos estáticos
+    if (isPublicPath) {
         return NextResponse.next();
     }
 
-    // Permitir acceso a archivos estáticos y multimedia
-    if (
-        pathname.startsWith('/_next') || // Archivos de Next.js
-        pathname.startsWith('/api') || // Rutas de API
-        pathname.startsWith('/static') || // Archivos estáticos
-        pathname.includes('.') || // Archivos con extensión (imágenes, videos, etc.)
-        pathname === '/favicon.ico' // Favicon
-    ) {
-        return NextResponse.next();
-    }
-
-    // Verificar si hay un token en las cookies
-    const token = request.cookies.get('auth-token')?.value;
-
-    // Si no hay token y no es una ruta pública, redirigir al login
-    if (!token && !publicRoutes.includes(pathname)) {
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('from', pathname);
-        return NextResponse.redirect(loginUrl);
+    // Redirigir al login si no está autenticado
+    if (!isAuthenticated) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     return NextResponse.next();

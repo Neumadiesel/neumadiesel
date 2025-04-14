@@ -44,14 +44,14 @@ export default function Page() {
                 </div>
             </main>
             {/* seccion de caracteristicas */}
-            <section className="flex flex-col items-center bg-white justify-center w-full h-[90vh] py-10 z-20 mx-auto">
-                <h3 className="text-5xl font-bold">Gestión Integral de Neumáticos</h3>
-                <p className="text-lg text-gray-600 px-32 text-center">
+            <section className="flex flex-col items-center bg-white justify-center w-full h-full lg:h-[90vh] py-10 z-20 mx-auto">
+                <h3 className="text-3xl lg:text-5xl font-bold">Gestión Integral de Neumáticos</h3>
+                <p className="text-md lg:text-lg text-gray-600 py-4 lg:py-0 lg:px-32 text-center">
                     Nuestra plataforma ofrece todas las herramientas necesarias para administrar
                     eficientemente el ciclo de vida completo de sus neumáticos mineros.
                 </p>
-                <div className="flex flex-row gap-4 w-3/4">
-                    <aside className="flex flex-col items-center justify-center w-1/2 z-20 mx-auto">
+                <div className="flex flex-row gap-4 w-full lg:w-3/4">
+                    <aside className="flex flex-col items-center justify-center w-3/4 lg:w-1/2 z-20 mx-auto">
                         {/* Card de caracteristicas */}
                         <div className="flex flex-row gap-4  p-4 rounded-sm">
                             <FaShieldAlt size={80} className=" text-black" />
@@ -98,7 +98,7 @@ export default function Page() {
                         </div>
                     </aside>
                     {/* imagen de neumatico */}
-                    <div className="w-1/2 z-20 flex items-center justify-center">
+                    <div className="w-1/2 hidden lg:flex z-20  items-center justify-center">
                         <Image
                             src="/caex.webp"
                             alt="neumatico"
@@ -110,13 +110,15 @@ export default function Page() {
                 </div>
             </section>
             {/* Seccion de caracteristicas de la plataforma */}
-            <section className="flex flex-col items-center justify-center w-full h-[80vh] gap-y-10 py-10 z-20 mx-auto">
-                <h3 className="text-5xl font-bold">Características Principales de la Plataforma</h3>
-                <p className="text-lg text-gray-600 px-32 text-center">
+            <section className="flex flex-col items-center justify-center w-full h-full lg:h-[80vh] gap-y-10 py-10 z-20 mx-auto px-4 lg:px-0">
+                <h3 className="text-3xl lg:text-5xl font-bold">
+                    Características Principales de la Plataforma
+                </h3>
+                <p className="text-md lg:text-lg text-gray-600 py-4 lg:py-0 lg:px-32 text-center">
                     Ofrecemos un conjunto integral de servicios diseñados específicamente para
                     maximizar el rendimiento de sus neumáticos en operaciones mineras.
                 </p>
-                <div className=" grid grid-cols-3 gap-4 w-3/4">
+                <div className=" grid grid-cols-1 lg:grid-cols-3 gap-4 w-3/4">
                     {/* Card de seguimiento de neumaticos */}
                     <div className="flex flex-col gap-2 bg-white w-80 h-44 p-4 rounded-sm border border-gray-300">
                         <p className="text-xl font-bold">Seguimiento de Neumaticos</p>
@@ -159,14 +161,14 @@ export default function Page() {
                 </div>
             </section>
             {/* seccion de testimonios */}
-            <section className="flex flex-col items-center justify-center bg-white w-full h-[80vh] gap-y-10 py-10 z-20 mx-auto">
-                <h3 className="text-5xl font-bold">Lo Que Dicen Nuestros Clientes</h3>
-                <p className="text-lg text-gray-600 px-32 text-center">
+            <section className="flex flex-col items-center justify-center bg-white w-full h-full lg:h-[80vh] gap-y-10 py-10 z-20 mx-auto px-4 lg:px-0">
+                <h3 className="text-3xl lg:text-5xl font-bold">Lo Que Dicen Nuestros Clientes</h3>
+                <p className="text-md lg:text-lg text-gray-600 py-4 lg:py-0 lg:px-32 text-center">
                     Empresas mineras líderes confían en nuestra plataforma para optimizar sus
                     operaciones de mantenimiento de neumáticos.
                 </p>
-                <div className="flex flex-row gap-4 w-3/4">
-                    <div className="flex flex-col gap-2 bg-white w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
+                <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-3/4">
+                    <div className="flex flex-col gap-2 bg-white w-full lg:w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
                         <FaQuoteRight size={40} className="text-gray-400" />
                         <p className="text-xl text-gray-600 font-bold">
                             La plataforma ha mejorado significativamente nuestra eficiencia de
@@ -178,7 +180,7 @@ export default function Page() {
                         </p>
                     </div>
                     {/* testimonio 2  */}
-                    <div className="flex flex-col gap-2 bg-white w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
+                    <div className="flex flex-col gap-2 bg-white w-full lg:w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
                         <FaQuoteRight size={40} className="text-gray-400" />
                         <p className="text-xl text-gray-600 font-bold">
                             La plataforma ha mejorado significativamente nuestra eficiencia de
@@ -190,7 +192,7 @@ export default function Page() {
                         </p>
                     </div>
                     {/* testimonio 3 */}
-                    <div className="flex flex-col gap-2 bg-white w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
+                    <div className="flex flex-col gap-2 bg-white w-full lg:w-80 h-72 p-4 rounded-sm border border-gray-200 shadow-sm">
                         <FaQuoteRight size={40} className="text-gray-400" />
                         <p className="text-xl text-gray-600 font-bold">
                             La plataforma ha mejorado significativamente nuestra eficiencia de
