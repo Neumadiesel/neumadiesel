@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-cols-1 lg:flex`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-[#f1f1f1] dark:bg-[#212121] antialiased grid grid-cols-1 lg:flex`}
       >
         <aside className="w-[100%] lg:w-[15%] min-w-[200px]">
           <NavBar />

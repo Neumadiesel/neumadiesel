@@ -1,12 +1,11 @@
-'use client'
-import { Camiones } from "@/mocks/Camiones.json"
-import { Neumaticos } from "@/mocks/neumaticos.json"
-import Image from "next/image"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { useState } from "react"
-import { FaClock, FaPodcast } from "react-icons/fa"
-import { FaCircleDot } from "react-icons/fa6"
+"use client";
+import { Camiones } from "@/mocks/Camiones.json";
+import { Neumaticos } from "@/mocks/neumaticos.json";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { FaClock } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
 
 interface NeumaticoInt {
     Id: string;
@@ -21,13 +20,10 @@ interface NeumaticoInt {
 }
 
 export default function ListaMaquinaria() {
-
     const params = useParams<{ id: string }>();
-    const id = params.id
+    const id = params.id;
 
-    console.log(id)
-
-    const [isSensorActive, setIsSensorActive] = useState(false);
+    console.log(id);
 
     const camion = Camiones.find(camion => camion.Codigo === id);
 
@@ -38,141 +34,134 @@ export default function ListaMaquinaria() {
         { posicion: 4, sensor: 39412, psi: 105, temp: 95 },
         { posicion: 5, sensor: 39412, psi: 105, temp: 95 },
         { posicion: 6, sensor: 39412, psi: 105, temp: 95 },
-    ]
+    ];
 
     // Tipar los neumáticos correctamente
-    const neumaticos: NeumaticoInt[] = Neumaticos.filter((neumatico: NeumaticoInt) => neumatico.Codigo_Camion === id);
+    const neumaticos: NeumaticoInt[] = Neumaticos.filter(
+        (neumatico: NeumaticoInt) => neumatico.Codigo_Camion === id
+    );
 
     return (
-        <div className="p-2 h-full w-full rounded-md bg-white text-white dark:bg-black relative shadow-md font-mono">
+        <div className="p-2 h-[100%] w-full bg-white dark:bg-black relative shadow-md font-mono">
             <div className="text-black dark:text-white flex flex-col">
                 {/* Info del camión */}
-                <div className="lg:flex justify-between mb-2">
-                    <h2 className="text-2xl font-bold mb-2">
-                        Camión {id} - Faena {camion?.Faena}
-                    </h2>
-                    <div className="flex lg:flex-col gap-y-1 justify-between w-[100%] lg:w-[40%] items-end gap-x-4">
-                        <button disabled={id === undefined} onClick={() => setIsSensorActive(!isSensorActive)} className="text-black text-lg w-52 text-center flex justify-center gap-x-4 items-center bg-amber-300 p-2 rounded-md border border-black">
-                            {
-                                isSensorActive
-                                    ? <FaCircleDot className="text-2xl text-black " />
-                                    : <FaPodcast className="text-2xl text-black " />
-                            }
-                            {
-                                isSensorActive ? "Neumaticos" : "Sensores"
-                            }
-                        </button>
-                        {
-                            id !== undefined ? (
-                                <Link href={`/mantenimiento/${id}`} className="text-black text-lg w-52 text-center bg-amber-300 p-2 rounded-md border border-black">Mantenimiento</Link>
-                            ) : (
-                                <div className="text-black text-lg w-52 text-center bg-amber-300 p-2 rounded-md border border-black">-------</div>
-                            )
-                        }
 
-                    </div>
-                </div>
                 {/* Seccion de informacion */}
-                <div className="block lg:flex ">
+                <div className="flex  flex-col justify-center items-center">
                     {/* Esquema de neumaticos*/}
-                    <section className="min-w-[35%]   p-2 flex justify-center items-center">
-                        <Image src="/Axle_gray.png" className="drop-shadow-xl" alt="Esquema" width={300} height={200} />
-                    </section>
+                    <div className="flex justify-between w-full">
+                        {/* Info del camión */}
+                        <section className="flex flex-col w-[60%]  pt-5 items-start mb-2 ">
+                            <h2 className="text-2xl font-bold mb-2">
+                                Equipo {id} - Faena {camion?.Faena}
+                            </h2>
+
+                            {/* Info del camión */}
+                            <div className="flex flex-col pt-4 bg-gray-200 rounded-md p-2 w-[100%] h-[100%] mb-2">
+                                <p>
+                                    <span className="font-bold">Marca:</span> {camion?.Marca}
+                                </p>
+                            </div>
+                            {/* Boton para cambiar entre neumaticos y sensores */}
+                            <div className="flex gap-y-1 justify-between w-[100%]  gap-x-4">
+                                {/* Boton para acceder a la pagina de mantenimiento */}
+
+                                <Link
+                                    href={`/mantenimiento/${id}`}
+                                    className={`text-lg w-52 text-center p-2 rounded-md border border-black flex justify-center items-center gap-2 ${
+                                        id
+                                            ? "text-black bg-amber-300 hover:bg-amber-400 cursor-pointer"
+                                            : "text-gray-400 bg-gray-200 cursor-not-allowed"
+                                    }`}
+                                    onClick={e => {
+                                        if (!id) {
+                                            e.preventDefault();
+                                        }
+                                    }}
+                                >
+                                    <FaCirclePlus size={20} />
+                                    Mantenimiento
+                                </Link>
+                            </div>
+                        </section>
+                        {/* Diagrama de neumaticos */}
+                        <section className="min-w-[20%] rotate-90 p-2 flex justify-center items-center ">
+                            <Image
+                                src="/Axle_gray.png"
+                                className="drop-shadow-xl"
+                                alt="Esquema"
+                                width={200}
+                                height={150}
+                            />
+                        </section>
+                    </div>
 
                     {/* Lista de neumaticos */}
-                    <div className="w-full lg:w-[65%] h-full">
-                        <h2 className="text-2xl font-bold text-black dark:text-white">Neumáticos</h2>
-                        <div className="relative overflow-x-auto lg:h-[80%] my-2">
+                    <div className="w-[100%] h-full">
+                        {/* Tabla de neumaticos */}
+                        <section className="relative overflow-x-auto lg:h-[80%] my-2">
                             <div className="flex flex-col gap-y-2">
                                 {/* Table head */}
-                                <div className="w-full border-b-[1px] border-b-gray-300 dark:border-b-gray-600 shadow-sm bg-slate-300 dark:bg-[#212121] rounded-md p-2 h-12 transition-all flex items-center justify-between ">
-                                    <div className="flex flex-col w-[20%]">
-                                        <p className="font-semibold font-mono">Codigo</p>
-                                    </div>
-                                    <div>
-                                        <p className=" font-mono font-semibold">Mediciones</p>
-                                    </div>
-                                    <div>
-                                        <p className=" font-mono font-semibold">
-                                            {
-                                                isSensorActive ? "Posicion" : "Metas"
-                                            }
-                                        </p>
-                                    </div>
-                                    <div className="flex font-mono font-semibold justify-center items-center">
-                                        <p>Hist.</p>
-                                    </div>
-                                </div>
-                                {
-                                    id === undefined && Array.from({ length: 6 }).map((_, index) => (
-                                        <div key={index} className="w-full border-b-[1px] hover:bg-amber-100 h-36 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
-                                            <div className="flex flex-col gap-y-1 w-[20%]">
-                                                <div className="bg-slate-200  p-2 rounded-md"></div>
-                                                <div className="bg-slate-200 p-2 rounded-md"></div>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1 w-[20%]">
-                                                <div className="bg-slate-200  p-2 rounded-md"></div>
-                                                <div className="bg-slate-200 p-2 rounded-md"></div>
-                                            </div>
-                                            <div className="flex flex-col gap-y-1 w-[20%]">
-                                                <div className="bg-slate-200  p-2 rounded-md"></div>
-                                                <div className="bg-slate-200 p-2 rounded-md"></div>
-                                            </div>
-                                            <div className="flex justify-center items-center">
-                                                <div className="bg-slate-200 p-2 rounded-full "></div>
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                                {
-                                    isSensorActive ? (
-                                        sensores.map((sensor) => (
-                                            <div key={sensor.posicion} className="w-full border-b-[1px] hover:bg-amber-100 h-36 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
-                                                <div className="flex flex-col w-[20%] ">
+                                <table className="w-full table-auto">
+                                    <thead className="bg-amber-300 rounded-md">
+                                        <tr>
+                                            <th className="p-2 bg-emerald-300 w-[5%]">Pos</th>
+                                            <th className="p-2 w-[20%]">Codigo</th>
+                                            <th className="p-2 bg-purple-300 w-[15%]">
+                                                <p className="hidden lg:block">Profundidad</p>
+                                                <p className="block lg:hidden">Rem</p>
+                                            </th>
+                                            <th className="p-2 bg-pink-300 w-[15%]">Meta </th>
+                                            <th className="p-2 bg-blue-300 w-[15%]">Sensor</th>
+                                            <th className="p-2 bg-red-300 w-[15%]">
+                                                <p className="hidden lg:block">Historial</p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="table-auto ">
+                                        {neumaticos.length === 0 && (
+                                            <tr>
+                                                <td colSpan={5} className="text-center p-4">
+                                                    No hay neumáticos disponibles
+                                                </td>
+                                            </tr>
+                                        )}
 
-                                                    <p>{sensor.sensor}</p>
-                                                    <p>pos: {sensor.posicion}</p>
-                                                </div>
-                                                <div>
-                                                    <p>PSI: {sensor.psi}</p>
-                                                    <p>Temp °C: {sensor.temp}</p>
-                                                </div>
-                                                <div className="flex justify-center items-center">
-                                                    <Link href={`/mantenimiento/Historial`} className="flex justify-between items-center h-12 w-12 text-lg">
+                                        {neumaticos.map(neumatico => (
+                                            <tr
+                                                key={neumatico.Codigo}
+                                                className="bg-gray-50 border-b border-b-amber-200 dark:bg-[#212121] hover:bg-gray-100 h-16 text-center dark:hover:bg-gray-700 transition-all ease-in-out  rounded-md "
+                                            >
+                                                <td className="w-[5%]">{neumatico.Posicion}</td>
+                                                <td className="w-[20%]">{neumatico.Codigo}</td>
+                                                <td>
+                                                    <div>
+                                                        <p>Int: {neumatico.Profundidad}</p>
+                                                        <p>Ext: {neumatico.Profundidad}</p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p>{neumatico.META_HORAS}</p>
+                                                    <p>{neumatico.META_KMS}</p>
+                                                </td>
+                                                <td>
+                                                    <p>PSI: 105</p>
+                                                    <p>Temp: 95</p>
+                                                </td>
+                                                <td className="flex justify-center mt-5 items-center">
+                                                    <Link href={`/mantenimiento/Historial`}>
                                                         <FaClock size={20} />
                                                     </Link>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        neumaticos.map((neumatico: NeumaticoInt) => (
-                                            <div key={neumatico.Codigo} className="w-full border-b-[1px] hover:bg-amber-100 h-36 lg:h-20 transition-all flex items-center justify-between ease-in-out border-b-amber-300 p-2">
-                                                <div className="flex flex-col w-[20%]">
-                                                    <p>{neumatico.Codigo}</p>
-                                                    <p><small className="">Pos:</small> {neumatico.Posicion}</p>
-                                                </div>
-                                                <div>
-                                                    <p>Int: {neumatico.Profundidad}</p>
-                                                    <p>Ext: {neumatico.Profundidad}</p>
-                                                </div>
-                                                <div>
-                                                    <p>Hr: {neumatico.META_HORAS}</p>
-                                                    <p>Km: {neumatico.META_KMS}</p>
-                                                </div>
-                                                <div className="flex justify-center items-center">
-                                                    <Link href={`/mantenimiento/Historial`} className="flex justify-between items-center h-12 w-12 text-lg">
-                                                        <FaClock size={20} />
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        ))
-                                    )
-                                }
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
