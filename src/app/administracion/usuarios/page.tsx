@@ -66,7 +66,7 @@ export default function Page() {
         if (token) {
             fetchData();
         }
-    }, [token]);
+    }, [token, mostrarModal]);
 
     useEffect(() => {
         const filtrados = usuarios.filter(usuario => {
@@ -315,6 +315,7 @@ export default function Page() {
                 visible={mostrarModal}
                 onClose={() => setMostrarModal(false)}
                 onGuardar={nuevoUsuario => {
+                    setMostrarModal(false);
                     console.log("Nuevo usuario agregado:", nuevoUsuario);
                 }}
             />

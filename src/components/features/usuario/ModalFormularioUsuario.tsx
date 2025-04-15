@@ -13,12 +13,14 @@ interface ModalFormularioUsuarioProps {
     visible: boolean;
     onClose: () => void;
     onGuardar: (usuario: Usuario) => void;
+    onSuccess?: () => void;
 }
 
 export default function ModalFormularioUsuario({
     visible,
     onClose,
     onGuardar,
+    onSuccess,
 }: ModalFormularioUsuarioProps) {
     const [nombre, setNombre] = useState<string>("");
     const [apellido, setApellido] = useState<string>("");
@@ -79,6 +81,11 @@ export default function ModalFormularioUsuario({
             setRol("operador");
             setFaena("");
             setPassword("");
+
+            // Llamar a onSuccess si está definido
+            if (onSuccess) {
+                onSuccess();
+            }
         } catch (err) {
             console.error("Error en handleSubmit:", err);
             if (axios.isAxiosError(err) && err.response?.data?.message) {
