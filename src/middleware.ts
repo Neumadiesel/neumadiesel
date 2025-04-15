@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('auth-token')?.value;
     const { pathname } = request.nextUrl;
 
     // Rutas públicas que no requieren autenticación
@@ -29,6 +29,7 @@ export function middleware(request: NextRequest) {
     // Si no hay token y no es una ruta pública, redirigir al login
     if (!token && !isPublicPath) {
         const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('from', pathname);
         return NextResponse.redirect(loginUrl);
     }
 
