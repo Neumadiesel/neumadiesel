@@ -2,27 +2,36 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('auth-token')?.value;
-    const isAuthenticated = !!token;
-    const isPublicPath = request.nextUrl.pathname === "/" || 
-                        request.nextUrl.pathname === "/login" ||
-                        request.nextUrl.pathname.startsWith("/_next") ||
-                        request.nextUrl.pathname.startsWith("/api") ||
-                        request.nextUrl.pathname.includes(".");
+    // Middleware temporalmente desactivado
+    return NextResponse.next();
 
-    // Permitir acceso a rutas públicas y archivos estáticos
+    /*
+    const token = request.cookies.get('token')?.value;
+    const { pathname } = request.nextUrl;
+
+    // Rutas públicas que no requieren autenticación
+    const publicPaths = ['/login', '/register', '/'];
+    const isPublicPath = publicPaths.includes(pathname);
+
+    // Si es una ruta pública, permitir el acceso
     if (isPublicPath) {
         return NextResponse.next();
     }
 
-    // Redirigir al login si no está autenticado
-    if (!isAuthenticated) {
-        const loginUrl = new URL("/login", request.url);
-        loginUrl.searchParams.set("from", request.nextUrl.pathname);
+    // Si no hay token y no es una ruta pública, redirigir al login
+    if (!token && !isPublicPath) {
+        const loginUrl = new URL('/login', request.url);
         return NextResponse.redirect(loginUrl);
     }
 
+    // Si hay token y es la ruta de login, redirigir al dashboard
+    if (token && pathname === '/login') {
+        const dashboardUrl = new URL('/dashboard', request.url);
+        return NextResponse.redirect(dashboardUrl);
+    }
+
     return NextResponse.next();
+    */
 }
 
 // Configurar las rutas que deben ser protegidas

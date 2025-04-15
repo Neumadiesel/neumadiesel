@@ -47,13 +47,15 @@ export default function Login() {
             <div className="relative z-10 flex flex-col items-center justify-center h-full">
                 <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
                     <div className="flex flex-col items-center mb-6">
-                        <Image
-                            src="/NEUMASYSTEM.png"
-                            alt="logo"
-                            width={250}
-                            height={180}
-                            className="mb-4"
-                        />
+                        <Link href="/">
+                            <Image
+                                src="/NEUMASYSTEM.png"
+                                alt="logo"
+                                width={250}
+                                height={180}
+                                className="mb-4"
+                            />
+                        </Link>
                         <h1 className="text-2xl font-bold text-gray-800 mb-2">
                             Bienvenido a Neumasystem
                         </h1>

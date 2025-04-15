@@ -25,7 +25,7 @@ export default function Page() {
                     <h2 className="text-6xl font-bold text-white">
                         Sistema de Gestion de Neumaticos
                     </h2>
-                    <p className="text-lg text-white">
+                    <p className="text-lg text-white text-center lg:px-30">
                         Optimice el mantenimiento de sus neumáticos mineros, mejore la seguridad y
                         reduzca costos operativos con nuestra plataforma especializada.
                     </p>
