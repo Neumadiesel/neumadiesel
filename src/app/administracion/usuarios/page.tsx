@@ -33,7 +33,7 @@ export default function Page() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+                const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
                 const response = await axios.get(`${API_URL}/auth/users`, {
                     headers: {
