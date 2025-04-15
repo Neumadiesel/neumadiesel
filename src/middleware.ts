@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
     // Middleware temporalmente desactivado
+    console.log("Middleware ejecutado", request.nextUrl.pathname);
     return NextResponse.next();
 
     /*
