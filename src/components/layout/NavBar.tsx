@@ -89,9 +89,10 @@ export default function NavBar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
 
     return (
+        // Recordar volver a colocar hidden en el div de la barra de navegacion
         <div
             className={` ${
-                user ? "flex" : "hidden"
+                user ? "flex" : "flex"
             } lg:flex-col   gap-y-4 items-center lg:h-screen bg-[#212121] text-neutral-300  shadow-sm font-semibold overflow-y-hidden min-w-[200px] `}
         >
             <Link href={"/"} className="w-[100%] bg-amber-300 p-2">
