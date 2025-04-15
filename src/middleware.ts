@@ -6,8 +6,20 @@ export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Rutas públicas que no requieren autenticación
-    const publicPaths = ['/login', '/register', '/'];
+    const publicPaths = ['/login', '/'];
     const isPublicPath = publicPaths.includes(pathname);
+
+    // Permitir acceso a archivos estáticos y multimedia
+    const isStaticFile = pathname.startsWith('/_next') || 
+                        pathname.startsWith('/api') || 
+                        pathname.startsWith('/public') ||
+                        pathname.includes('.') || // Para archivos con extensiones
+                        pathname.endsWith('/favicon.ico');
+
+    // Si es un archivo estático o multimedia, permitir el acceso
+    if (isStaticFile) {
+        return NextResponse.next();
+    }
 
     // Si es una ruta pública, permitir el acceso
     if (isPublicPath) {
