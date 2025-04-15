@@ -10,12 +10,17 @@ import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 
+interface Role {
+    role_id: number;
+    name: string;
+}
+
 interface UserDto {
     user_id: number;
     name: string;
     last_name: string;
     email: string;
-    role: string;
+    roles: Role[];
 }
 
 export default function Page() {
@@ -24,6 +29,8 @@ export default function Page() {
     const [paginaActual, setPaginaActual] = useState(1);
     const [usuarios, setUsuarios] = useState<UserDto[]>([]);
     const [usuariosFiltrados, setUsuariosFiltrados] = useState<UserDto[]>([]);
+    const [roles, setRoles] = useState<Role[]>([]);
+    const [loading, setLoading] = useState(true);
     const { token } = useAuth();
 
     const [mostrarModal, setMostrarModal] = useState(false);
@@ -31,31 +38,48 @@ export default function Page() {
     const usuariosPorPagina = 10;
 
     useEffect(() => {
-        const fetchUsers = async () => {
+        const fetchData = async () => {
             try {
-                const API_URL = process.env.NEXT_PUBLIC_API_URL;
+                setLoading(true);
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-                const response = await axios.get(`${API_URL}/auth/users`, {
+                // Obtener roles
+                const rolesResponse = await axios.get(`${API_URL}/roles`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setUsuarios(response.data);
-                setUsuariosFiltrados(response.data);
+                setRoles(rolesResponse.data);
+
+                // Obtener usuarios
+                const usersResponse = await axios.get(`${API_URL}/auth/users`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                console.log(usersResponse.data);
+                setUsuarios(usersResponse.data);
+                setUsuariosFiltrados(usersResponse.data);
             } catch (error) {
-                console.error("Error al obtener usuarios:", error);
+                console.error("Error al obtener datos:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         if (token) {
-            fetchUsers();
+            fetchData();
         }
     }, [token]);
 
     useEffect(() => {
         const filtrados = usuarios.filter(usuario => {
             const coincideRol =
-                filtroRol === "todos" || usuario.role.toLowerCase() === filtroRol.toLowerCase();
+                filtroRol === "todos" ||
+                (usuario.roles &&
+                    usuario.roles.some(
+                        role => role.name.toLowerCase() === filtroRol.toLowerCase()
+                    ));
             const coincideBusqueda =
                 usuario.name.toLowerCase().includes(busqueda.toLowerCase()) ||
                 usuario.email.toLowerCase().includes(busqueda.toLowerCase());
@@ -63,7 +87,7 @@ export default function Page() {
             return coincideRol && coincideBusqueda;
         });
         setUsuariosFiltrados(filtrados);
-        setPaginaActual(1); // Reinicia a la primera página al filtrar
+        setPaginaActual(1);
     }, [filtroRol, busqueda, usuarios]);
 
     const totalPaginas = Math.ceil(usuariosFiltrados.length / usuariosPorPagina);
@@ -85,7 +109,7 @@ export default function Page() {
         setUsuarioSeleccionado({
             nombre: usuario.name,
             correo: usuario.email,
-            rol: usuario.role as Usuario["rol"],
+            rol: usuario.roles[0].name as Usuario["rol"],
             faena: "Sin asignar", // Este dato no viene de la API
         });
         // Reemplaza esto por una llamada real a un backend si es necesario
@@ -105,7 +129,7 @@ export default function Page() {
         setUsuarioEditar({
             nombre: usuario.name,
             correo: usuario.email,
-            rol: usuario.role as Usuario["rol"],
+            rol: usuario.roles[0].name as Usuario["rol"],
             faena: "Sin asignar", // Este dato no viene de la API
         });
         setMostrarEditar(true);
@@ -136,10 +160,11 @@ export default function Page() {
                     onChange={e => setFiltroRol(e.target.value)}
                 >
                     <option value="todos">Todos</option>
-                    <option value="administrador">Administradores</option>
-                    <option value="planificador">Planificadores</option>
-                    <option value="supervisor">Supervisores</option>
-                    <option value="operador">Operadores</option>
+                    {roles.map(role => (
+                        <option key={role.role_id} value={role.name.toLowerCase()}>
+                            {role.name}
+                        </option>
+                    ))}
                 </select>
 
                 <div className="flex items-center ">
@@ -178,7 +203,7 @@ export default function Page() {
                                 {usuario.name} {usuario.last_name}
                             </td>
                             <td className="p-2 hidden lg:block">{usuario.email}</td>
-                            <td className="p-2 text-center">{usuario.role}</td>
+                            <td className="p-2 text-center">{usuario.roles[0]?.name}</td>
                             <td className="p-2 text-center">Sin asignar</td>
 
                             <td className="p-2 relative text-center">

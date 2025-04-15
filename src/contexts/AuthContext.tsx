@@ -18,7 +18,13 @@ interface AuthContextType {
     user: User | null;
     token: string | null;
     login: (email: string, password: string) => Promise<void>;
-    register: (name: string, last_name: string, email: string, password: string) => Promise<void>;
+    register: (
+        name: string,
+        last_name: string,
+        email: string,
+        password: string,
+        role_id: number
+    ) => Promise<void>;
     logout: () => void;
     loading: boolean;
 }
@@ -60,13 +66,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const register = async (name: string, last_name: string, email: string, password: string) => {
+    const register = async (
+        name: string,
+        last_name: string,
+        email: string,
+        password: string,
+        role_id: number
+    ) => {
         try {
             await axios.post(`${API_URL}/auth/register`, {
                 name,
                 last_name,
                 email,
                 password,
+                role_id,
             });
 
             // Opcional: podrías mostrar un toast, alerta o redirigir al admin a una página específica

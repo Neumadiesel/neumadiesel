@@ -1,7 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Usuario } from "@/types/Usuario";
 import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
+
+interface Role {
+    role_id: number;
+    name: string;
+}
 
 interface ModalFormularioUsuarioProps {
     visible: boolean;
@@ -18,10 +24,38 @@ export default function ModalFormularioUsuario({
     const [apellido, setApellido] = useState<string>("");
     const [correo, setCorreo] = useState<string>("");
     const [rol, setRol] = useState<Usuario["rol"]>("operador");
+    const [roleId, setRoleId] = useState<number>(0);
     const [faena, setFaena] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
-    const { register } = useAuth();
+    const [roles, setRoles] = useState<Role[]>([]);
+    const { register, token } = useAuth();
+
+    useEffect(() => {
+        const fetchRoles = async () => {
+            try {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+                const response = await axios.get(`${API_URL}/roles`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setRoles(response.data);
+                // Establecer el primer rol como valor por defecto
+                if (response.data.length > 0) {
+                    setRoleId(response.data[0].role_id);
+                    setRol(response.data[0].name.toLowerCase() as Usuario["rol"]);
+                }
+            } catch (error) {
+                console.error("Error al obtener roles:", error);
+                setError("Error al cargar los roles");
+            }
+        };
+
+        if (visible) {
+            fetchRoles();
+        }
+    }, [visible, token]);
 
     if (!visible) return null;
 
@@ -29,7 +63,7 @@ export default function ModalFormularioUsuario({
         try {
             setError("");
             // Primero registramos el usuario en el sistema de autenticación
-            await register(nombre, apellido, correo, password);
+            await register(nombre, apellido, correo, password, roleId);
 
             // Luego creamos el usuario en la base de datos
             const nuevoUsuario: Usuario = {
@@ -46,7 +80,12 @@ export default function ModalFormularioUsuario({
             setFaena("");
             setPassword("");
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Error al registrar el usuario");
+            console.error("Error en handleSubmit:", err);
+            if (axios.isAxiosError(err) && err.response?.data?.message) {
+                setError(err.response.data.message);
+            } else {
+                setError(err instanceof Error ? err.message : "Error al registrar el usuario");
+            }
         }
     };
 
@@ -105,13 +144,25 @@ export default function ModalFormularioUsuario({
                     </label>
                     <select
                         className="w-full p-2 border border-gray-300 rounded"
-                        value={rol}
-                        onChange={e => setRol(e.target.value as Usuario["rol"])}
+                        value={roleId}
+                        onChange={e => {
+                            const selectedRoleId = parseInt(e.target.value);
+                            setRoleId(selectedRoleId);
+                            const selectedRole = roles.find(r => r.role_id === selectedRoleId);
+                            if (selectedRole) {
+                                setRol(selectedRole.name.toLowerCase() as Usuario["rol"]);
+                            }
+                        }}
                     >
-                        <option value="administrador">Administrador</option>
-                        <option value="planificador">Planificador</option>
-                        <option value="supervisor">Supervisor</option>
-                        <option value="operador">Operador</option>
+                        {roles.length > 0 ? (
+                            roles.map(role => (
+                                <option key={role.role_id} value={role.role_id}>
+                                    {role.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">Cargando roles...</option>
+                        )}
                     </select>
                     <label className="text-sm font-semibold">
                         Faena<span className="font-bold text-lg text-red-500">*</span>
