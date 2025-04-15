@@ -1,15 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaEllipsisV, FaEyeSlash, FaPen, FaRegCopy } from "react-icons/fa";
+import { FaEllipsisV, FaEyeSlash, FaPen } from "react-icons/fa";
 import Modal from "@/components/common/modal/CustomModal";
 import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
-import { Usuario } from "@/types/Usuario";
-import { AccionUsuario } from "@/types/Historial";
-import ModalHistorialUsuario from "@/components/features/usuario/ModalHistorialUsuario";
 import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
-
 interface Role {
     role_id: number;
     name: string;
@@ -20,7 +16,10 @@ interface UserDto {
     name: string;
     last_name: string;
     email: string;
-    roles: Role[];
+    role: {
+        role_id: number;
+        name: string;
+    };
 }
 
 export default function Page() {
@@ -35,6 +34,10 @@ export default function Page() {
     const [mostrarModal, setMostrarModal] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const usuariosPorPagina = 10;
+
+    // Editar usuario
+    const [mostrarEditar, setMostrarEditar] = useState(false);
+    const [usuarioEditar, setUsuarioEditar] = useState<UserDto | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,16 +69,13 @@ export default function Page() {
         if (token) {
             fetchData();
         }
-    }, [token, mostrarModal]);
+    }, [token, mostrarModal, mostrarEditar]);
 
     useEffect(() => {
         const filtrados = usuarios.filter(usuario => {
             const coincideRol =
                 filtroRol === "todos" ||
-                (usuario.roles &&
-                    usuario.roles.some(
-                        role => role.name.toLowerCase() === filtroRol.toLowerCase()
-                    ));
+                (usuario.role && usuario.role.name.toLowerCase() === filtroRol.toLowerCase());
             const coincideBusqueda =
                 usuario.name.toLowerCase().includes(busqueda.toLowerCase()) ||
                 usuario.email.toLowerCase().includes(busqueda.toLowerCase());
@@ -96,37 +96,13 @@ export default function Page() {
         console.log("Usuario desactivado");
     };
 
-    // Historial
-    const [mostrarHistorial, setMostrarHistorial] = useState(false);
-    const [usuarioSeleccionado, setUsuarioSeleccionado] = useState<Usuario | null>(null);
-    const [acciones, setAcciones] = useState<AccionUsuario[]>([]);
-
-    const abrirHistorial = (usuario: UserDto) => {
-        setUsuarioSeleccionado({
-            nombre: usuario.name,
-            correo: usuario.email,
-            rol: usuario.roles[0].name as Usuario["rol"],
-            faena: "Sin asignar", // Este dato no viene de la API
-        });
-        // Reemplaza esto por una llamada real a un backend si es necesario
-        setAcciones([
-            { fecha: "2025-04-01", descripcion: "Inició sesión en el sistema" },
-            { fecha: "2025-04-02", descripcion: "Modificó una faena" },
-            { fecha: "2025-04-04", descripcion: "Generó un reporte PDF" },
-        ]);
-        setMostrarHistorial(true);
-    };
-
-    // Editar usuario
-    const [mostrarEditar, setMostrarEditar] = useState(false);
-    const [usuarioEditar, setUsuarioEditar] = useState<Usuario | null>(null);
-
     const abrirEditor = (usuario: UserDto) => {
         setUsuarioEditar({
-            nombre: usuario.name,
-            correo: usuario.email,
-            rol: usuario.roles[0].name as Usuario["rol"],
-            faena: "Sin asignar", // Este dato no viene de la API
+            user_id: usuario.user_id,
+            name: usuario.name,
+            last_name: usuario.last_name,
+            email: usuario.email,
+            role: usuario.role,
         });
         setMostrarEditar(true);
     };
@@ -199,7 +175,9 @@ export default function Page() {
                                 {usuario.name} {usuario.last_name}
                             </td>
                             <td className="p-2 hidden lg:block">{usuario.email}</td>
-                            <td className="p-2 text-center">{usuario.roles[0]?.name}</td>
+                            <td className="p-2 text-center">
+                                {usuario.role?.name?.toLowerCase() || "sin rol"}
+                            </td>
                             <td className="p-2 text-center">Sin asignar</td>
 
                             <td className="p-2 relative text-center">
@@ -210,12 +188,6 @@ export default function Page() {
                                         className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-200 text-black border border-amber-500 font-bold py-2 px-4 rounded"
                                     >
                                         <FaPen className="inline-block" />
-                                    </button>
-                                    <button
-                                        onClick={() => abrirHistorial(usuario)}
-                                        className="bg-emerald-50 dark:bg-[#212121] dark:text-emerald-300 hover:bg-emeral-200 text-black border font-bold py-2 px-4 rounded ml-2"
-                                    >
-                                        <FaRegCopy className="inline-block" />
                                     </button>
                                     <button
                                         onClick={() => setIsOpen(true)}
@@ -245,15 +217,6 @@ export default function Page() {
                                                 className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                                             >
                                                 Editar
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    abrirHistorial(usuario);
-                                                    setMenuAbierto(null);
-                                                }}
-                                                className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                            >
-                                                Ver historial
                                             </button>
                                             <button
                                                 onClick={() => {
@@ -320,21 +283,14 @@ export default function Page() {
                 }}
             />
 
-            {/* Modal Historial */}
-            <ModalHistorialUsuario
-                visible={mostrarHistorial}
-                onClose={() => setMostrarHistorial(false)}
-                usuario={usuarioSeleccionado}
-                historial={acciones}
-            />
-
             {/* Modal Editar */}
             <ModalEditarUsuario
                 visible={mostrarEditar}
                 onClose={() => setMostrarEditar(false)}
                 usuario={usuarioEditar}
-                onGuardar={usuarioActualizado => {
-                    console.log("Usuario actualizado:", usuarioActualizado);
+                onGuardar={() => {
+                    setMostrarEditar(false);
+                    console.log("Usuario actualizado");
                 }}
             />
         </div>

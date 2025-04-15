@@ -27,6 +27,16 @@ interface AuthContextType {
     ) => Promise<void>;
     logout: () => void;
     loading: boolean;
+    updateUser: (
+        userId: number,
+        userData: {
+            name?: string;
+            last_name?: string;
+            email?: string;
+            password?: string;
+            role_id?: number;
+        }
+    ) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -81,9 +91,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 password,
                 role_id,
             });
-
-            // Opcional: podrías mostrar un toast, alerta o redirigir al admin a una página específica
-            // router.push("/dashboard"); // si quieres redirigir al listado de usuarios, por ejemplo
         } catch (error) {
             console.error("Error al registrarse:", error);
             throw error;
@@ -100,8 +107,48 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         router.push("/login");
     };
 
+    const updateUser = async (
+        userId: number,
+        userData: {
+            name?: string;
+            last_name?: string;
+            email?: string;
+            password?: string;
+            role_id?: number;
+        }
+    ) => {
+        try {
+            const response = await axios.put(`${API_URL}/auth/users/${userId}`, userData, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 200) {
+                return response.data;
+            }
+        } catch (error) {
+            console.error("Error al actualizar usuario:", error);
+            if (axios.isAxiosError(error) && error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error("Error al actualizar el usuario");
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, token, login, register, logout, loading }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                token,
+                login,
+                logout,
+                register,
+                updateUser,
+                loading,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
