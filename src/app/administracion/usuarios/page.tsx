@@ -30,7 +30,6 @@ export default function Page() {
     const [usuarios, setUsuarios] = useState<UserDto[]>([]);
     const [usuariosFiltrados, setUsuariosFiltrados] = useState<UserDto[]>([]);
     const [roles, setRoles] = useState<Role[]>([]);
-    const [loading, setLoading] = useState(true);
     const { token } = useAuth();
 
     const [mostrarModal, setMostrarModal] = useState(false);
@@ -40,7 +39,6 @@ export default function Page() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setLoading(true);
                 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
                 // Obtener roles
@@ -62,8 +60,6 @@ export default function Page() {
                 setUsuariosFiltrados(usersResponse.data);
             } catch (error) {
                 console.error("Error al obtener datos:", error);
-            } finally {
-                setLoading(false);
             }
         };
 
