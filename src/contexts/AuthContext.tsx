@@ -12,11 +12,15 @@ interface User {
     name: string;
     last_name: string;
     email: string;
+    role: {
+        role_id: number;
+        name: string;
+    };
 }
 
 interface AuthContextType {
-    user: User | null;
     token: string | null;
+    user: User | null;
     login: (email: string, password: string) => Promise<void>;
     register: (
         name: string,
