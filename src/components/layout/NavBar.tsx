@@ -52,7 +52,7 @@ export default function NavBar() {
             title: "Equipos",
             icon: <FaTruck className="text-2xl" />,
             path: "/maquinaria",
-            allowedRoles: ["administrador", "planificador", "supervisor", "operador"],
+            allowedRoles: ["administrador", "planificador", "supervisor"],
         },
         {
             title: "Neumáticos",
@@ -89,7 +89,7 @@ export default function NavBar() {
         {
             title: "Ingresar datos",
             icon: <FaFile className="text-2xl" />,
-            allowedRoles: ["administrador", "planificador", "supervisor", "operador"],
+            allowedRoles: ["administrador", "planificador", "supervisor"],
             children: [
                 { title: "Ingresar Mediciones", path: "/Ingresar-datos/" },
                 {
@@ -100,6 +100,12 @@ export default function NavBar() {
                 { title: "Crear Modelo Neumatico", path: "/Ingresar-datos/crear-modelo" },
                 { title: "Registrar Maquinaria", path: "/Ingresar-datos/crear-maquinaria" },
             ],
+        },
+        {
+            title: "Ingresar Medición por Equipo",
+            icon: <FaFile className="text-2xl" />,
+            path: "/Ingresar-datos/medicion-por-equipo",
+            allowedRoles: ["operador"],
         },
     ];
 
