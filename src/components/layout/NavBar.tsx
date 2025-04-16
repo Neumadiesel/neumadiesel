@@ -97,7 +97,7 @@ export default function NavBar() {
         <div
             className={` ${
                 user ? "flex" : "hidden"
-            } lg:flex-col   gap-y-4 items-center lg:h-screen bg-[#212121] text-neutral-300  shadow-sm font-semibold overflow-y-hidden min-w-[200px] `}
+            } lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden min-w-[220px] `}
         >
             <Link href={"/"} className="w-[100%] bg-amber-300 p-2">
                 <Image
@@ -108,10 +108,20 @@ export default function NavBar() {
                     height={180}
                 />
             </Link>
-            <div className="hidden h-[90%] p-3 lg:flex lg:flex-col w-[100%] ">
+
+            <div className="hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%] ">
                 <ul>
+                    <li className="mb-2">
+                        <Link
+                            href={"/perfil"}
+                            className=" flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
+                        >
+                            <FaRegUserCircle className="text-3xl" />
+                            {user?.name} {user?.last_name}
+                        </Link>
+                    </li>
                     {menuItems.map((item, index) => (
-                        <li key={index} className="mb-2">
+                        <li key={index} className="mb-1">
                             {item.children ? (
                                 <div>
                                     <button
@@ -130,7 +140,7 @@ export default function NavBar() {
                                     </button>
                                     {openCategories[item.title] && (
                                         <ul
-                                            className={`ml-4 mt-1 overflow-hidden transition-all duration-300 ease-in-out ${
+                                            className={`ml-4 mt-1 overflow-hidden text-sm transition-all duration-300 ease-in-out ${
                                                 openCategories[item.title]
                                                     ? "max-h-96 opacity-100"
                                                     : "max-h-0 opacity-0"
