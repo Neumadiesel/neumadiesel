@@ -36,7 +36,7 @@ interface AuthContextType {
             password?: string;
             role_id?: number;
         }
-    ) => Promise<any>;
+    ) => Promise<User>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
