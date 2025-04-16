@@ -18,27 +18,46 @@ import { useAuth } from "@/contexts/AuthContext";
 import { FaCircleDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
 
+interface MenuItem {
+    title: string;
+    icon: React.ReactNode;
+    path?: string;
+    children?: { title: string; path: string }[];
+    allowedRoles?: string[];
+}
+
 export default function NavBar() {
     const { user, logout } = useAuth();
     const userData = Cookies.get("user-data");
     const userDataParsed = userData ? JSON.parse(userData) : null;
     const role = userDataParsed?.role;
-    console.log("role", role.name);
 
-    const menuItems = [
+    const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
+    const [menuOpen, setMenuOpen] = React.useState(false);
+
+    const hasAccess = (allowedRoles?: string[]) => {
+        if (!allowedRoles) return true;
+        if (!role?.name) return false;
+        return allowedRoles.includes(role.name.toLowerCase());
+    };
+
+    const menuItems: MenuItem[] = [
         {
             title: "Reportabilidad",
             icon: <FaChartBar className="text-2xl" />,
             path: "/estadisticas",
+            allowedRoles: ["administrador", "planificador", "supervisor", "stakeholder"],
         },
         {
             title: "Equipos",
             icon: <FaTruck className="text-2xl" />,
             path: "/maquinaria",
+            allowedRoles: ["administrador", "planificador", "supervisor", "operador"],
         },
         {
             title: "Neumáticos",
             icon: <FaCircleDot className="text-2xl" />,
+            allowedRoles: ["administrador", "planificador", "supervisor"],
             children: [
                 { title: "Operación", path: "/neumaticos/" },
                 { title: "Bodega", path: "/neumaticos/bodega" },
@@ -47,6 +66,7 @@ export default function NavBar() {
         {
             title: "Administración",
             icon: <FaUsersCog className="text-2xl" />,
+            allowedRoles: ["administrador"],
             children: [
                 { title: "Usuarios", path: "/administracion/usuarios" },
                 { title: "Roles", path: "/administracion/roles" },
@@ -55,6 +75,7 @@ export default function NavBar() {
         {
             title: "Mantenimiento",
             icon: <FaWrench className="text-2xl" />,
+            allowedRoles: ["administrador", "planificador", "supervisor"],
             children: [
                 { title: "Historial", path: "/mantenimiento/Historial" },
                 { title: "Aros de camion", path: "/mantenimiento/aros-camion" },
@@ -68,6 +89,7 @@ export default function NavBar() {
         {
             title: "Ingresar datos",
             icon: <FaFile className="text-2xl" />,
+            allowedRoles: ["administrador", "planificador", "supervisor", "operador"],
             children: [
                 { title: "Ingresar Mediciones", path: "/Ingresar-datos/" },
                 {
@@ -81,24 +103,19 @@ export default function NavBar() {
         },
     ];
 
-    const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
+    const filteredMenuItems = menuItems.filter(item => hasAccess(item.allowedRoles));
 
     const toggleCategory = (title: string) => {
         setOpenCategories(prev => {
             const isCurrentlyOpen = prev[title];
-            // Si ya está abierta, la cerramos. Si no, cerramos todas y abrimos esta.
             return isCurrentlyOpen ? {} : { [title]: true };
         });
     };
 
-    const [menuOpen, setMenuOpen] = React.useState(false);
+    if (!user) return null;
 
     return (
-        <div
-            className={` ${
-                user ? "flex" : "hidden"
-            } lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden min-w-[220px] `}
-        >
+        <div className="flex lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden min-w-[220px]">
             <Link href={"/"} className="w-[100%] bg-amber-300 p-2">
                 <Image
                     onClick={() => setMenuOpen(false)}
@@ -109,18 +126,18 @@ export default function NavBar() {
                 />
             </Link>
 
-            <div className="hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%] ">
+            <div className="hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%]">
                 <ul>
                     <li className="mb-2">
                         <Link
                             href={"/perfil"}
-                            className=" flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
+                            className="flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
                         >
                             <FaRegUserCircle className="text-3xl" />
                             {user?.name} {user?.last_name}
                         </Link>
                     </li>
-                    {menuItems.map((item, index) => (
+                    {filteredMenuItems.map((item, index) => (
                         <li key={index} className="mb-1">
                             {item.children ? (
                                 <div>
@@ -161,8 +178,8 @@ export default function NavBar() {
                                 </div>
                             ) : (
                                 <Link
-                                    href={item.path}
-                                    className=" flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
+                                    href={item.path || ""}
+                                    className="flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
                                 >
                                     {item.icon}
                                     {item.title}
@@ -172,6 +189,7 @@ export default function NavBar() {
                     ))}
                 </ul>
             </div>
+
             <div className="w-[100%] p-3">
                 <Link
                     href={user ? "#" : "/login"}
@@ -188,18 +206,20 @@ export default function NavBar() {
                     <p className="hidden lg:block">{user ? "Cerrar sesion" : "Iniciar sesion"}</p>
                 </Link>
             </div>
+
             <div className="lg:hidden flex items-center">
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className={` text-white focus:outline-none`}
+                    className="text-white focus:outline-none"
                 >
                     <FaBars size={30} />
                 </button>
             </div>
+
             {menuOpen && (
                 <div className="absolute w-[100%] h-[100%] top-24 left-0 bg-[#212121] text-white flex flex-col items-center z-50 lg:hidden">
                     <ul className="h-[50%] w-[80%]">
-                        {menuItems.map((item, index) => (
+                        {filteredMenuItems.map((item, index) => (
                             <li key={index} className="mb-2">
                                 {item.children ? (
                                     <div>
@@ -232,7 +252,7 @@ export default function NavBar() {
                                     </div>
                                 ) : (
                                     <Link
-                                        href={item.path}
+                                        href={item.path || ""}
                                         className="block p-2 text-2xl hover:bg-gray-700 rounded"
                                     >
                                         <p onClick={() => setMenuOpen(false)}>{item.title}</p>
