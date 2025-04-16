@@ -54,7 +54,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const token = Cookies.get("auth-token");
         const userData = Cookies.get("user-data");
-
         if (token && userData) {
             setToken(token);
             setUser(JSON.parse(userData));

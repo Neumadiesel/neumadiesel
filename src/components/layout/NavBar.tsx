@@ -16,10 +16,14 @@ import {
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaCircleDot } from "react-icons/fa6";
+import Cookies from "js-cookie";
 
 export default function NavBar() {
     const { user, logout } = useAuth();
-    // console.log(user?.role.name);
+    const userData = Cookies.get("user-data");
+    const userDataParsed = userData ? JSON.parse(userData) : null;
+    const role = userDataParsed?.role;
+    console.log("role", role.name);
 
     const menuItems = [
         {
