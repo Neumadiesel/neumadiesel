@@ -35,7 +35,7 @@ const routePermissions = {
     mantenimiento: [
         '/mantenimiento',
         '/mantenimiento/Historial',
-        '/mantenimiento/aros-camion',
+        '/mantenimiento/orden-de-trabajo',
         '/mantenimiento/programar-mantenimiento',
         '/mantenimiento/programas',
     ],

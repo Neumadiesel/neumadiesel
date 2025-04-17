@@ -78,7 +78,7 @@ export default function NavBar() {
             allowedRoles: ["administrador", "planificador", "supervisor"],
             children: [
                 { title: "Historial", path: "/mantenimiento/Historial" },
-                { title: "Aros de camion", path: "/mantenimiento/aros-camion" },
+                { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
                 {
                     title: "Programar mantenimiento",
                     path: "/mantenimiento/programar-mantenimiento",
