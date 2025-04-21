@@ -3,7 +3,13 @@ import { FaPen, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import Modal from "@/components/common/modal/CustomModal";
 
-const razones = [
+interface Razon {
+    id: number;
+    nombre: string;
+    estado: boolean;
+}
+
+const razones: Razon[] = [
     {
         id: 1,
         nombre: "Desgaste",
@@ -33,9 +39,9 @@ const razones = [
 
 export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
-    const [razonSeleccionada, setRazonSeleccionada] = useState(null);
+    const [razonSeleccionada, setRazonSeleccionada] = useState<Razon | null>(null);
 
-    const abrirEditor = (razon: any) => {
+    const abrirEditor = (razon: Razon) => {
         setRazonSeleccionada(razon);
         setIsOpen(true);
     };
