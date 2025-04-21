@@ -23,8 +23,6 @@ export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
     const id = params.id;
 
-    console.log(id);
-
     const camion = Camiones.find(camion => camion.Codigo === id);
 
     // Tipar los neumáticos correctamente
@@ -38,17 +36,17 @@ export default function ListaMaquinaria() {
                 {/* Info del camión */}
 
                 {/* Seccion de informacion */}
-                <div className="flex  flex-col justify-center items-center">
+                <div className="flex flex-col justify-center items-center">
                     {/* Esquema de neumaticos*/}
-                    <div className="flex justify-between w-full">
+                    <div className="flex h-[30vh] justify-between w-full">
                         {/* Info del camión */}
-                        <section className="flex flex-col w-[60%]  pt-5 items-start mb-2 ">
+                        <section className="flex flex-col w-[60%] pt-5 items-start mb-2 ">
                             <h2 className="text-2xl font-bold mb-2">
                                 Equipo {id} - Faena {camion?.Faena}
                             </h2>
 
                             {/* Info del camión */}
-                            <div className="flex flex-col pt-4 bg-gray-200 rounded-md p-2 w-[100%] h-[100%] mb-2">
+                            <div className="flex flex-col pt-4 bg-gray-200 rounded-md p-2 w-[100%] h-[50%] mb-2">
                                 <p>
                                     <span className="font-bold">Marca:</span> {camion?.Marca}
                                 </p>

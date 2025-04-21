@@ -37,15 +37,15 @@ export default function Login() {
                 autoPlay
                 muted
                 loop
-                className="absolute w-full h-full object-cover"
+                className="hidden lg:block absolute  w-full h-full object-cover"
             />
 
             {/* Overlay semi-transparente */}
             <div className="absolute w-full h-full bg-black/40" />
 
             {/* Contenido centrado */}
-            <div className="relative z-10 flex flex-col items-center justify-center h-full">
-                <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="relative z-10 bg-white md:bg-transparent flex flex-col items-center justify-center h-full">
+                <div className="bg-white p-8 rounded-lg md:shadow-xl max-w-md w-full mx-4">
                     <div className="flex flex-col items-center mb-6">
                         <Link href="/">
                             <Image
