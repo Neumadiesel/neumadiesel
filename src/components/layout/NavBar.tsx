@@ -12,6 +12,8 @@ import {
     FaUsersCog,
     FaWrench,
     FaSignOutAlt,
+    FaAngleDoubleRight,
+    FaAngleDoubleLeft,
 } from "react-icons/fa";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -34,6 +36,8 @@ export default function NavBar() {
 
     const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
     const [menuOpen, setMenuOpen] = React.useState(false);
+    const [isCollapsed, setIsCollapsed] = React.useState(false);
+    const [isHovered, setIsHovered] = React.useState(false);
 
     const hasAccess = (allowedRoles?: string[]) => {
         if (!allowedRoles) return true;
@@ -118,29 +122,83 @@ export default function NavBar() {
         });
     };
 
+    const handleItemClick = (e: React.MouseEvent, item: MenuItem) => {
+        if (isCollapsed) {
+            e.preventDefault();
+            setIsCollapsed(false);
+            if (item.children) {
+                setOpenCategories(prev => ({ ...prev, [item.title]: true }));
+            }
+        }
+    };
+
     if (!user) return null;
 
     return (
-        <div className="flex lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden min-w-[220px]">
-            <Link href={"/"} className="w-[100%] bg-amber-300 p-2">
-                <Image
-                    onClick={() => setMenuOpen(false)}
-                    src="/NEUMASYSTEM.png"
-                    alt="logo"
-                    width={250}
-                    height={180}
-                />
-            </Link>
+        <div
+            className={`flex lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden transition-all duration-300 ease-in-out ${
+                isCollapsed ? "lg:min-w-[80px]" : "lg:min-w-[220px]"
+            }`}
+            onMouseEnter={() => isCollapsed && setIsHovered(true)}
+            onMouseLeave={() => isCollapsed && setIsHovered(false)}
+        >
+            <div className="w-full flex justify-between items-center lg:flex-col">
+                <Link href={"/"} className="w-[100%] bg-amber-300 p-2">
+                    {isCollapsed ? (
+                        <Image
+                            onClick={() => setMenuOpen(false)}
+                            src="/icon.png"
+                            alt="logo"
+                            width={40}
+                            height={40}
+                            className="transition-all duration-300"
+                        />
+                    ) : (
+                        <Image
+                            onClick={() => setMenuOpen(false)}
+                            src="/NEUMASYSTEM.png"
+                            alt="logo"
+                            width={250}
+                            height={180}
+                            className="transition-all duration-300"
+                        />
+                    )}
+                </Link>
+            </div>
 
-            <div className="hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%]">
-                <ul>
+            <div
+                className={`hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%] ${
+                    isCollapsed ? "items-center" : ""
+                }`}
+            >
+                <ul className="w-full">
                     <li className="mb-2">
+                        <div
+                            className={`flex items-center ${
+                                isCollapsed ? "justify-center" : "justify-end"
+                            }`}
+                        >
+                            <button
+                                onClick={() => setIsCollapsed(!isCollapsed)}
+                                className="hidden lg:block p-2 text-white hover:bg-gray-700 rounded"
+                            >
+                                {isCollapsed ? (
+                                    <FaAngleDoubleRight size={20} />
+                                ) : (
+                                    <FaAngleDoubleLeft size={20} />
+                                )}
+                            </button>
+                        </div>
                         <Link
                             href={"/perfil"}
                             className="flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
                         >
                             <FaRegUserCircle className="text-3xl" />
-                            {user?.name} {user?.last_name}
+                            {(!isCollapsed || isHovered) && (
+                                <span>
+                                    {user?.name} {user?.last_name}
+                                </span>
+                            )}
                         </Link>
                     </li>
                     {filteredMenuItems.map((item, index) => (
@@ -148,20 +206,23 @@ export default function NavBar() {
                             {item.children ? (
                                 <div>
                                     <button
-                                        className="flex items-center justify-between w-full p-2 text-left hover:bg-gray-700 rounded"
+                                        className={`flex items-center justify-between w-full p-2 text-left hover:bg-gray-700 rounded`}
                                         onClick={() => toggleCategory(item.title)}
                                     >
                                         <div className="flex items-center gap-x-2">
                                             {item.icon}
-                                            <span>{item.title}</span>
+                                            {(!isCollapsed || isHovered) && (
+                                                <span>{item.title}</span>
+                                            )}
                                         </div>
-                                        {openCategories[item.title] ? (
-                                            <FaAngleUp size={16} />
-                                        ) : (
-                                            <FaAngleDown size={16} />
-                                        )}
+                                        {(!isCollapsed || isHovered) &&
+                                            (openCategories[item.title] ? (
+                                                <FaAngleUp size={16} />
+                                            ) : (
+                                                <FaAngleDown size={16} />
+                                            ))}
                                     </button>
-                                    {openCategories[item.title] && (
+                                    {openCategories[item.title] && (!isCollapsed || isHovered) && (
                                         <ul
                                             className={`ml-4 mt-1 overflow-hidden text-sm transition-all duration-300 ease-in-out ${
                                                 openCategories[item.title]
@@ -188,7 +249,7 @@ export default function NavBar() {
                                     className="flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
                                 >
                                     {item.icon}
-                                    {item.title}
+                                    {(!isCollapsed || isHovered) && <span>{item.title}</span>}
                                 </Link>
                             )}
                         </li>
@@ -209,7 +270,11 @@ export default function NavBar() {
                     className="flex items-center justify-around"
                 >
                     {user ? <FaSignOutAlt size={40} /> : <FaRegUserCircle size={40} />}
-                    <p className="hidden lg:block">{user ? "Cerrar sesion" : "Iniciar sesion"}</p>
+                    {(!isCollapsed || isHovered) && (
+                        <p className="hidden lg:block">
+                            {user ? "Cerrar sesion" : "Iniciar sesion"}
+                        </p>
+                    )}
                 </Link>
             </div>
 
