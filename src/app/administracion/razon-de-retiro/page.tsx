@@ -42,7 +42,7 @@ export default function Page() {
 
     const handleConfirm = () => {
         setIsOpen(false);
-        console.log("Razaon desactivado");
+        console.log("Razaon desactivado", razonSeleccionada);
     };
 
     return (
