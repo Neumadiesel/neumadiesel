@@ -7,6 +7,30 @@ export default function EditarInfo() {
     const [last_name, setLastName] = useState(user?.last_name);
     const [email, setEmail] = useState(user?.email);
     const [role, setRole] = useState(user?.role.name);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const { updateUser, token } = useAuth();
+
+    const handleSubmit = async () => {
+        setError(null);
+        setLoading(true);
+
+        try {
+            if (!user) return null;
+
+            await updateUser(user?.user_id, {
+                name: name,
+                last_name: last_name,
+                email: email,
+            });
+        } catch (error) {
+            setError(error instanceof Error ? error.message : "Error al actualizar el usuario");
+        } finally {
+            setLoading(false);
+            setSuccess("Usuario actualizado correctamente");
+        }
+    };
 
     return (
         <section className="flex flex-col">
@@ -52,7 +76,26 @@ export default function EditarInfo() {
                         onChange={e => setRole(e.target.value)}
                     />
                 </div>
+                {error && (
+                    <div className=" bg-red-50 border-2 border-dashed border-red-400 rounded-sm p-2">
+                        <p className="text-red-500 text-sm">
+                            Error al actualizar el usuario: {error}
+                        </p>
+                    </div>
+                )}
+                {success && (
+                    <div className=" bg-green-50 border-2 border-dashed border-green-400 rounded-sm p-2">
+                        <p className="text-green-700 text-sm">Usuario actualizado correctamente</p>
+                    </div>
+                )}
             </div>
+            <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="px-4 py-2 w-2/3 mt-4 bg-amber-300 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50"
+            >
+                {loading ? "Procesando..." : "Guardar Cambios"}
+            </button>
         </section>
     );
 }
