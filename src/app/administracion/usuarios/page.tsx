@@ -217,13 +217,13 @@ export default function Page() {
                                 <div className="hidden md:flex justify-center gap-2">
                                     <button
                                         onClick={() => abrirEditor(usuario)}
-                                        className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-200 text-black border border-amber-500 font-bold py-2 px-4 rounded"
+                                        className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-50 text-black border border-amber-200 font-bold py-2 px-4 rounded"
                                     >
                                         <FaPen className="inline-block" />
                                     </button>
                                     <button
                                         onClick={() => setIsOpen(true)}
-                                        className="bg-red-50 hover:bg-red-200 dark:bg-[#212121] dark:text-red-300 text-black border font-bold py-2 px-4 rounded ml-2"
+                                        className="bg-gray-50 hover:bg-red-50 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded ml-2"
                                     >
                                         <FaEyeSlash className="inline-block" />
                                     </button>

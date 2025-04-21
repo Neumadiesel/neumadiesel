@@ -73,7 +73,8 @@ export default function NavBar() {
             allowedRoles: ["administrador"],
             children: [
                 { title: "Usuarios", path: "/administracion/usuarios" },
-                { title: "Roles", path: "/administracion/roles" },
+                { title: "Faena", path: "/administracion/faena" },
+                { title: "Razon de retiro", path: "/administracion/razon-de-retiro" },
             ],
         },
         {

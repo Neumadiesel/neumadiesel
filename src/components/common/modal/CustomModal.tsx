@@ -1,5 +1,5 @@
-'use client';
-import { ReactNode } from 'react';
+"use client";
+import { ReactNode } from "react";
 
 interface ModalProps {
     isOpen: boolean;
@@ -30,7 +30,7 @@ export default function Modal({ isOpen, onClose, onConfirm, title, children }: M
                     </button>
                     <button
                         onClick={onClose}
-                        className="bg-gray-300 text-black px-4 py-2 rounded-lg w-full hover:bg-gray-400"
+                        className="bg-gray-100 font-semibold text-black px-4 py-2 rounded-lg w-full hover:bg-gray-200"
                     >
                         Cancelar
                     </button>

@@ -12,7 +12,8 @@ const routePermissions = {
     // Rutas de administración
     administrador: [
         '/administracion/usuarios',
-        '/administracion/roles',
+        '/administracion/faena',
+        '/administracion/razon-de-retiro',
     ],
     
     // Rutas de reportabilidad
