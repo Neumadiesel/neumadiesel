@@ -122,16 +122,6 @@ export default function NavBar() {
         });
     };
 
-    const handleItemClick = (e: React.MouseEvent, item: MenuItem) => {
-        if (isCollapsed) {
-            e.preventDefault();
-            setIsCollapsed(false);
-            if (item.children) {
-                setOpenCategories(prev => ({ ...prev, [item.title]: true }));
-            }
-        }
-    };
-
     if (!user) return null;
 
     return (
