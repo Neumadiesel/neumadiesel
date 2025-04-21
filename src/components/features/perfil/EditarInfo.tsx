@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 export default function EditarInfo() {
-    const { user } = useAuth();
+    const { user, updateUser, setUser } = useAuth();
     const [name, setName] = useState(user?.name);
     const [last_name, setLastName] = useState(user?.last_name);
     const [email, setEmail] = useState(user?.email);
@@ -10,7 +10,6 @@ export default function EditarInfo() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const { updateUser, token } = useAuth();
 
     const handleSubmit = async () => {
         setError(null);
@@ -19,16 +18,19 @@ export default function EditarInfo() {
         try {
             if (!user) return null;
 
-            await updateUser(user?.user_id, {
+            const updatedUser = await updateUser(user?.user_id, {
                 name: name,
                 last_name: last_name,
                 email: email,
             });
+
+            // Actualizar el estado del usuario en el contexto
+            setUser(updatedUser);
+            setSuccess("Usuario actualizado correctamente");
         } catch (error) {
             setError(error instanceof Error ? error.message : "Error al actualizar el usuario");
         } finally {
             setLoading(false);
-            setSuccess("Usuario actualizado correctamente");
         }
     };
 

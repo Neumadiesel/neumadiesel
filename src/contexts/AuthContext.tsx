@@ -19,9 +19,10 @@ interface User {
 }
 
 interface AuthContextType {
-    token: string | null;
     user: User | null;
+    token: string | null;
     login: (email: string, password: string) => Promise<void>;
+    logout: () => void;
     register: (
         name: string,
         last_name: string,
@@ -29,8 +30,6 @@ interface AuthContextType {
         password: string,
         role_id: number
     ) => Promise<void>;
-    logout: () => void;
-    loading: boolean;
     updateUser: (
         userId: number,
         userData: {
@@ -41,6 +40,8 @@ interface AuthContextType {
             role_id?: number;
         }
     ) => Promise<User>;
+    setUser: (user: User | null) => void;
+    loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -149,6 +150,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 logout,
                 register,
                 updateUser,
+                setUser,
                 loading,
             }}
         >
