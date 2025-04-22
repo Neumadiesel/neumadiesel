@@ -1,15 +1,17 @@
+import ListaCircuitos from "@/components/features/faena/ListaCircuitos";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 
 const faena = {
-    nombre: "Faena 1",
-    region: "Region 1",
+    id: 1,
+    nombre: "Zaldivar - CMZ",
+    region: "Antofagasta",
     inicio: new Date("2024-01-01"),
-    fin: new Date("2024-01-01"),
+    fin: new Date("2025-01-01"),
 };
 
 export default function Page() {
     return (
-        <div>
+        <div className="bg-white p-4 rounded-lg h-full ">
             <h1 className="text-3xl font-bold">Faena {faena.nombre}</h1>
             <div className="flex justify-between items-center border-b border-gray-300 pb-4">
                 <div className="flex flex-col gap-2">
@@ -34,6 +36,8 @@ export default function Page() {
                     </span>
                 </div>
             </div>
+            {/* Lista Circuitos */}
+            <ListaCircuitos />
         </div>
     );
 }

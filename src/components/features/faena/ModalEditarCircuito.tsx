@@ -4,56 +4,56 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 
-
-interface FaenaDTO {
+interface CircuitoDTO {
     id: number;
-    nombre: string;
-    region: string;
-    inicio: Date;
-    fin: Date;
+    nombreCircuito: string;
+    distancia: number;
+    velocidad: number;
+    TKPH: number;
 }
+
 
 interface ModalEditarFaenaProps {
     visible: boolean;
     onClose: () => void;
-    faena: FaenaDTO | null;
+    circuito: CircuitoDTO | null;
     onGuardar: () => void;
 }
 
 export default function ModalEditarFaena({
     visible,
     onClose,
-    faena,
+    circuito,
     onGuardar,
 }: ModalEditarFaenaProps) {
-    const [faenaEditada, setFaenaeditada] = useState({
-        nombre: "",
-        region: "",
-        inicio: "",
-        fin: "",
+    const [circuitoEditado, setCircuitoeditado] = useState({
+        nombreCircuito: "",
+        distancia: 0,
+        velocidad: 0,
+        TKPH: 0,
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const { token } = useAuth();
 
     useEffect(() => {
-        if (faena) {
-            setFaenaeditada({
-                nombre: faena.nombre,
-                region: faena.region,
-                inicio: faena.inicio.toString(),
-                fin: faena.fin.toString(),
+        if (circuito) {
+            setCircuitoeditado({
+                nombreCircuito: circuito.nombreCircuito,
+                distancia: circuito.distancia,
+                velocidad: circuito.velocidad,
+                TKPH: circuito.TKPH,
             });
         }
-    }, [faena]);
+    }, [circuito]);
 
 
 
-    if (!visible || !faena) return null;
+    if (!visible || !circuito) return null;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFaenaeditada(prev => ({ ...prev, [name]: value }));
+        setCircuitoeditado(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async () => {
@@ -62,12 +62,12 @@ export default function ModalEditarFaena({
 
         try {
             const response = await axios.put(
-                `${process.env.NEXT_PUBLIC_API_URL}/faena/${faena.id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/faena/${circuito.id}`,
                 {
-                    nombre: faenaEditada.nombre,
-                    region: faenaEditada.region,
-                    inicio: faenaEditada.inicio,
-                    fin: faenaEditada.fin,
+                    nombreCircuito: circuitoEditado.nombreCircuito,
+                    distancia: circuitoEditado.distancia,
+                    velocidad: circuitoEditado.velocidad,
+                    TKPH: circuitoEditado.TKPH,
                 },
                 {
                     headers: {
@@ -93,43 +93,44 @@ export default function ModalEditarFaena({
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
             <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
-                <h2 className="text-xl font-bold mb-4">Editar Faena</h2>
+                <h2 className="text-xl font-bold mb-4">Editar Circuito</h2>
 
                 {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
 
                 <div className="flex flex-col">
-                    <label className="text-sm mt-2 font-semibold mb-2">Nombre de la Faena</label>
+                    <label className="text-sm mt-2 font-semibold">Nombre Circuito:</label>
                     <input
                         name="nombre"
-                        value={faenaEditada.nombre}
+                        value={circuitoEditado.nombreCircuito}
                         onChange={handleChange}
                         placeholder="Nombre"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    <label className="text-sm mt-2 font-semibold mb-2">Región</label>
+                    <label className="text-sm mt-2 font-semibold">Distancia:</label>
                     <input
-                        name="region"
-                        value={faenaEditada.region}
+                        name="distancia"
+                        type="number"
+                        value={circuitoEditado.distancia}
                         onChange={handleChange}
-                        placeholder="Region"
+                        placeholder="Distancia"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    <label className="text-sm mt-2 font-semibold mb-2">Fechas</label>
+                    <label className="text-sm mt-2 font-semibold">Velocidad:</label>
                     <input
-                        name="inicio"
-                        type="date"
-                        value={faenaEditada.inicio}
+                        name="velocidad"
+                        type="number"
+                        value={circuitoEditado.velocidad}
                         onChange={handleChange}
-                        placeholder="Fecha Inicio"
+                        placeholder="Velocidad promedio"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    <label className="text-sm mt-2 font-semibold mb-2">Fecha Final</label>
+                    <label className="text-sm mt-2 font-semibold">TKPH:</label>
                     <input
-                        name="fin"
-                        type="date"
-                        value={faenaEditada.fin}
+                        name="TKPH"
+                        type="number"
+                        value={circuitoEditado.TKPH}
                         onChange={handleChange}
-                        placeholder="Fecha Final"
+                        placeholder="TKPH"
                         className="border border-gray-300 p-2 rounded"
                     />
                 </div>
