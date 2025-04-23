@@ -1,5 +1,7 @@
 'use client'
+import ModalCrearNeumatico from "@/components/common/modal/ModalCrearNeumatico";
 import { useState } from "react"
+import { FaArrowDown, FaPlus } from "react-icons/fa";
 import { FaCircleMinus } from "react-icons/fa6"
 interface Neumatico {
     id: number;
@@ -27,35 +29,35 @@ export default function Page() {
         {
             id: 2,
             modelo: "46/90R57",
-            serie: "S0USC0013",
+            serie: "S0USC0014",
             marca: 'BridgeStone',
             remanente: 97,
         },
         {
             id: 3,
             modelo: "46/90R57",
-            serie: "S0USC0013",
+            serie: "S0USC0015",
             marca: 'BridgeStone',
             remanente: 97,
         },
         {
             id: 4,
             modelo: "46/90R57",
-            serie: "S0USC0013",
+            serie: "S0USC0016",
             marca: 'BridgeStone',
             remanente: 97,
         },
         {
             id: 5,
             modelo: "46/90R57",
-            serie: "S0USC0013",
+            serie: "S0USC0017",
             marca: 'BridgeStone',
             remanente: 97,
         },
         {
             id: 6,
             modelo: "46/90R57",
-            serie: "S0USC0013",
+            serie: "S0USC0018",
             marca: 'BridgeStone',
             remanente: 97,
         }
@@ -94,6 +96,26 @@ export default function Page() {
     const [selectedNeumaticos, setSelectedNeumaticos] = useState<NeumaticoConPosicion[]>([]);
     const [selectedPosicion, setSelectedPosicion] = useState(0);
     const [listaPosiciones, setListaPosiciones] = useState<Posicion[]>(posiciones);
+
+    // Filtros
+    const [filtros, setFiltros] = useState({
+        serie: '',
+        remanenteMin: '',
+        remanenteMax: ''
+    });
+
+    const [showFiltros, setShowFiltros] = useState(false);
+
+    const neumaticosFiltrados = listaNeumaticos.filter((n) => {
+        const cumpleSerie = filtros.serie === '' || n.serie.toLowerCase().includes(filtros.serie.toLowerCase());
+        const cumpleMin = filtros.remanenteMin === '' || n.remanente >= Number(filtros.remanenteMin);
+        const cumpleMax = filtros.remanenteMax === '' || n.remanente <= Number(filtros.remanenteMax);
+        return cumpleSerie && cumpleMin && cumpleMax;
+    });
+
+    // Modal Crear Neumatico
+    const [mostrarModal, setMostrarModal] = useState(false);
+
 
     const handleSelect = (neumatico: Neumatico) => {
         const selectedId = neumatico.id;
@@ -196,6 +218,77 @@ export default function Page() {
                     <section className={`flex flex-col my-2 lg:border-r border-r-gray-200 px-4 w-full lg:w-1/3 ${disabledForm ? "opacity-50" : ""}`}>
                         <h3 className="font-semibold">Neumaticos disponibles:</h3>
                         <p className="text-sm text-gray-500">Seleccione los neumaticos que desea agregar al equipo</p>
+                        <section className="flex flex-row my-2 gap-1 w-full">
+                            <div className="relative mb-2 w-1/2">
+                                <button
+                                    disabled={disabledForm}
+                                    onClick={() => setShowFiltros(!showFiltros)}
+                                    className="bg-gray-10 border border-gray-300 flex items-center justify-center gap-2 px-3 py-2 font-semibold rounded hover:bg-gray-300 text-sm w-full"
+                                >
+                                    Filtros
+
+                                    {
+                                        showFiltros ? <FaArrowDown className="rotate-180" /> : <FaArrowDown />
+                                    }
+                                </button>
+
+                                {showFiltros && (
+                                    <div className="absolute z-10 top-10 left-0 bg-white dark:bg-[#2a2a2a] shadow-md rounded-md p-4 w-96 border border-gray-200">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-sm font-semibold">Serie:</label>
+                                            <input
+                                                type="text"
+                                                value={filtros.serie}
+                                                onChange={(e) => setFiltros({ ...filtros, serie: e.target.value })}
+                                                className="border rounded p-1 text-sm bg-gray-50 dark:bg-[#212121]"
+                                            />
+                                            <div className="flex flex-row gap-2">
+                                                <div className="flex flex-col w-1/2">
+                                                    <label className="text-sm font-semibold">Remanente mínimo:</label>
+                                                    <input
+                                                        type="number"
+                                                        value={filtros.remanenteMin}
+                                                        onChange={(e) => setFiltros({ ...filtros, remanenteMin: e.target.value })}
+                                                        className="border rounded p-1 text-sm bg-gray-50 dark:bg-[#212121]"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col w-1/2">
+                                                    <label className="text-sm font-semibold">Remanente máximo:</label>
+                                                    <input
+                                                        type="number"
+                                                        value={filtros.remanenteMax}
+                                                        onChange={(e) => setFiltros({ ...filtros, remanenteMax: e.target.value })}
+                                                        className="border rounded p-1 text-sm bg-gray-50 dark:bg-[#212121]"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <button
+                                                onClick={() => {
+                                                    setFiltros({ serie: '', remanenteMin: '', remanenteMax: '' });
+                                                }}
+                                                className="text-xs text-blue-600 underline mt-2"
+                                            >
+                                                Limpiar filtros
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            {/* Boton de crear nuevo neumatico */}
+                            <div className="w-1/2">
+                                <button
+                                    disabled={disabledForm}
+                                    onClick={() => setMostrarModal(true)}
+                                    className="bg-gray-10 border border-gray-300 flex items-center justify-center gap-1  px-3 py-2 font-semibold rounded hover:bg-gray-300 text-sm w-full"
+                                >
+                                    Crear Neumatico
+                                    <FaPlus />
+                                </button>
+                            </div>
+                        </section>
+
+                        {/* Selector de posicion */}
                         <select
                             disabled={disabledForm}
                             onChange={(e) => {
@@ -214,12 +307,12 @@ export default function Page() {
                         </select>
                         <div className="flex flex-col h-[70vh] overflow-y-auto">
                             {
-                                listaNeumaticos.length === 0 && (
+                                neumaticosFiltrados.length === 0 && (
                                     <p className="text-gray-500">No hay neumaticos disponibles</p>
                                 )
                             }
                             {
-                                listaNeumaticos.map((neumatico) => (
+                                neumaticosFiltrados.map((neumatico) => (
                                     <div key={neumatico.id} className="flex flex-row justify-between items-center bg-gray-50 dark:bg-[#212121] border-gray-200 border text-md rounded-md outline-amber-200 p-2 mb-1">
                                         <div className="flex flex-col">
                                             <p className="font-semibold">{neumatico.marca} - {neumatico.modelo}</p>
@@ -267,7 +360,14 @@ export default function Page() {
                     </section>
                 </main>
             </div>
-            {/* Lista de neumaticos */}
+            <ModalCrearNeumatico
+                visible={mostrarModal}
+                onClose={() => setMostrarModal(false)}
+                onGuardar={nuevoNeumatico => {
+                    setMostrarModal(false);
+                    console.log("Nuevo usuario agregado:", nuevoNeumatico);
+                }}
+            />
 
         </main>
     )
