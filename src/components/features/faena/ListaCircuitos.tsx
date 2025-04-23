@@ -1,5 +1,4 @@
 "use client";
-import ModalEditarFaena from "@/components/features/faena/ModalEditarFaena";
 import Modal from "@/components/common/modal/CustomModal";
 import Link from "next/link";
 import { FaEyeSlash, FaFile } from "react-icons/fa";
