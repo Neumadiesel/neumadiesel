@@ -55,8 +55,6 @@ export default function ListaCircuitos() {
         setIsOpen(false);
         console.log("Usuario desactivado");
     };
-    const [circuitos, setCircuitos] = useState<CircuitoDTO[]>(listaCircuitos);
-
 
     const handleEditarFaena = (faena: CircuitoDTO) => {
         setCircuitoSelected(faena);
@@ -99,7 +97,7 @@ export default function ListaCircuitos() {
                     </thead>
                     <tbody>
                         {
-                            circuitos.map((circuito) => (
+                            listaCircuitos.map((circuito) => (
                                 <tr key={circuito.id}>
                                     <td className="p-4 border-b border-blue-gray-50">
                                         <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">

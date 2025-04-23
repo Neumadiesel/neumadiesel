@@ -54,7 +54,6 @@ export default function Page() {
         setIsOpen(false);
         console.log("Usuario desactivado");
     };
-    const [faenas, setFaenas] = useState<FaenaDTO[]>(listaFaenas);
 
 
     const handleEditarFaena = (faena: FaenaDTO) => {
@@ -104,7 +103,7 @@ export default function Page() {
                         </thead>
                         <tbody>
                             {
-                                faenas.map((faena) => (
+                                listaFaenas.map((faena) => (
                                     <tr key={faena.id}>
                                         <td className="p-4 border-b border-blue-gray-50">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
