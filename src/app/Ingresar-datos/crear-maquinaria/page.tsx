@@ -8,7 +8,14 @@ interface Neumatico {
     marca: string;
     remanente: number;
 }
-export default function page() {
+interface Posicion {
+    id: number;
+    posicion: string;
+}
+interface NeumaticoConPosicion extends Neumatico {
+    posicion: string;
+}
+export default function Page() {
     const neumaticos = [
         {
             id: 1,
@@ -83,10 +90,10 @@ export default function page() {
     ]
 
     const [disabledForm, setDisabledForm] = useState(true);
-    const [listaNeumaticos, setListaNeumaticos] = useState<any[]>(neumaticos);
-    const [selectedNeumaticos, setSelectedNeumaticos] = useState<any[]>([]);
+    const [listaNeumaticos, setListaNeumaticos] = useState<Neumatico[]>(neumaticos);
+    const [selectedNeumaticos, setSelectedNeumaticos] = useState<NeumaticoConPosicion[]>([]);
     const [selectedPosicion, setSelectedPosicion] = useState(0);
-    const [listaPosiciones, setListaPosiciones] = useState<any[]>(posiciones);
+    const [listaPosiciones, setListaPosiciones] = useState<Posicion[]>(posiciones);
 
     const handleSelect = (neumatico: Neumatico) => {
         const selectedId = neumatico.id;
