@@ -2,7 +2,7 @@
 import ModalEditarFaena from "@/components/features/faena/ModalEditarFaena";
 import Modal from "@/components/common/modal/CustomModal";
 import Link from "next/link";
-import { FaEyeSlash, FaFile } from "react-icons/fa";
+import { FaEyeSlash, FaFile, FaPlusSquare } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 
@@ -61,16 +61,17 @@ export default function Page() {
     return (
         <div className="bg-white dark:bg-[#212121] p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
             <section className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold">Contratos de faena</h1>
-                <button className="bg-amber-300 hover:bg-amber-400 flex px-4 justify-center text-black p-2 rounded-md items-center gap-2 text-md font-semibold">
-                    <span>Nuevo contrato</span>
+                <h1 className="text-2xl font-bold">Contratos de faena</h1>
+                <button className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold">
+                    <FaPlusSquare className="text-xl" />
+                    <span>Registrar Nuevo contrato</span>
                 </button>
             </section>
             <main >
                 <div
-                    className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm rounded-sm bg-clip-border">
+                    className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
                     <table className="w-full text-left table-auto min-w-max">
-                        <thead className="align-baseline bg-amber-200">
+                        <thead className="text-xs text-black uppercase bg-amber-300 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
@@ -138,7 +139,7 @@ export default function Page() {
                             {
                                 listaFaenas.map((faena) => (
                                     <tr key={faena.id}>
-                                        <td className="p-4 border-b border-blue-gray-50">
+                                        <td className="p-4 border-b border-blue-gray-50 bg-gray-50">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.name}
                                             </p>
@@ -148,7 +149,7 @@ export default function Page() {
                                                 {faena.region}
                                             </p>
                                         </td>
-                                        <td className="p-4 border-b border-blue-gray-50">
+                                        <td className="p-4 border-b border-blue-gray-50 bg-gray-50">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.contract?.startDate ? new Date(faena.contract.startDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
@@ -158,7 +159,7 @@ export default function Page() {
                                                 {faena.contract?.endDate ? new Date(faena.contract.endDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
                                         </td>
-                                        <td className=" border-b border-blue-gray-50">
+                                        <td className=" border-b border-blue-gray-50 bg-gray-50 px-2">
                                             <div className="flex gap-2">
                                                 <Link href={`/administracion/faena/${faena.id}`} className="p-2 text-amber-500 hover:text-amber-600 bg-amber-50 border border-amber-300 rounded-md flex items-center justify-center">
                                                     <FaFile />

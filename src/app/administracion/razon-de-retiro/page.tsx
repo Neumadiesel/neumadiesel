@@ -55,8 +55,8 @@ export default function Page() {
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Razon de baja de neumaticos</h1>
                 <div className="flex">
-                    <button onClick={handleOpenModal} className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-lg font-semibold">
-                        <FaPlusSquare className="text-2xl" />
+                    <button onClick={handleOpenModal} className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold">
+                        <FaPlusSquare className="text-xl" />
                         <span>Agregar Razon de Retiro</span>
                     </button>
                 </div>
@@ -65,16 +65,16 @@ export default function Page() {
 
             <div className="relative overflow-x-auto mt-4">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                    <thead className="text-xs text-black uppercase bg-amber-300 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-6 py-3">
-                                Product name
+                                Razon
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Estado
+                                Descripción
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
-                                Acciones
+                                Editar
                             </th>
                         </tr>
                     </thead>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaEllipsisV, FaEyeSlash, FaPen } from "react-icons/fa";
+import { FaEllipsisV, FaEyeSlash, FaPen, FaPlusSquare } from "react-icons/fa";
 import Modal from "@/components/common/modal/CustomModal";
 import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
 import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
@@ -115,7 +115,7 @@ export default function Page() {
     const [menuAbierto, setMenuAbierto] = useState<number | null>(null);
 
     return (
-        <div className="lg:p-4">
+        <div className="lg:p-4 bg-white dark:bg-[#212121] p-3 pb-4">
             <div className="p-2 lg:p-0">
                 <h1 className="text-2xl font-bold">Lista de usuarios</h1>
                 <p>Esta es la página de administración de usuarios.</p>
@@ -123,15 +123,10 @@ export default function Page() {
 
             {/* Sección de botones y filtros */}
             <section className="flex flex-wrap justify-between items-center my-4 gap-2 p-2 lg:p-0">
-                <button
-                    onClick={() => setMostrarModal(true)}
-                    className="bg-amber-300 w-44 h-10 hover:bg-amber-400 text-black font-bold py-2 px-4 rounded"
-                >
-                    Agregar Usuario
-                </button>
+
 
                 <select
-                    className="border w-44 border-amber-500 rounded-md h-10 bg-amber-50 dark:bg-[#212121] py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold"
                     value={filtroRol}
                     onChange={e => setFiltroRol(e.target.value)}
                 >
@@ -149,19 +144,26 @@ export default function Page() {
                         placeholder="Buscar..."
                         value={busqueda}
                         onChange={e => setBusqueda(e.target.value)}
-                        className="border w-44 h-10 border-amber-500 rounded-md bg-amber-50 dark:bg-[#212121] py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold"
                     />
                 </div>
+                <button
+                    onClick={() => setMostrarModal(true)}
+                    className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold"
+                >
+                    <FaPlusSquare className="text-xl" />
+                    Registrar Usuario
+                </button>
             </section>
 
             {/* Tabla */}
-            <table className="table-auto w-full border-collapse bg-white dark:bg-[#212121] shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-amber-300 text-black">
+            <table className="table-auto w-full border-collapse bg-white dark:bg-[#212121] shadow-md  overflow-hidden">
+                <thead className="text-xs text-black uppercase bg-amber-300 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th className="p-2 w-[20%]">Nombre</th>
-                        <th className="p-2 w-[20%] hidden lg:block">Email</th>
-                        <th className="p-2">Rol</th>
-                        <th className="p-2">Faena</th>
+                        <th className="p-2 text-start ">Nombre</th>
+                        <th className="p-2 text-start w-[20%] hidden lg:block">Email</th>
+                        <th className="p-2 text-start">Rol</th>
+                        <th className="p-2 text-start">Faena</th>
                         <th className="p-2 w-[20%]">Acciones</th>
                     </tr>
                 </thead>
@@ -202,19 +204,19 @@ export default function Page() {
                         </tr>
                     ) : null}
                     {usuariosPagina.map((usuario, index) => (
-                        <tr key={usuario.user_id} className="">
-                            <td className="px-4 p-2">
+                        <tr key={usuario.user_id} className="border-b dark:border-gray-700">
+                            <td className="px-4 p-2 bg-gray-50">
                                 {usuario.name} {usuario.last_name}
                             </td>
                             <td className="p-2 hidden lg:block">{usuario.email}</td>
-                            <td className="p-2 text-center">
+                            <td className="p-2 text-start bg-gray-50">
                                 {usuario.role?.name?.toLowerCase() || "sin rol"}
                             </td>
-                            <td className="p-2 text-center">Sin asignar</td>
+                            <td className="p-2 text-start">Sin asignar</td>
 
-                            <td className="p-2 relative text-center">
+                            <td className="p-2 relative text-center bg-gray-50">
                                 {/* Botones en escritorio */}
-                                <div className="hidden md:flex justify-center gap-2">
+                                <div className="hidden md:flex justify-center gap-2 ">
                                     <button
                                         onClick={() => abrirEditor(usuario)}
                                         className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-50 text-black border border-amber-200 font-bold py-2 px-4 rounded"

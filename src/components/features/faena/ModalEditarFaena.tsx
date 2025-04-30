@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 
 
@@ -39,7 +38,6 @@ export default function ModalEditarFaena({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const { token } = useAuth();
 
     useEffect(() => {
         if (faena) {
@@ -57,10 +55,6 @@ export default function ModalEditarFaena({
 
     if (!visible || !faena) return null;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFaenaeditada(prev => ({ ...prev, [name]: value }));
-    };
 
     const handleSubmit = async () => {
         setError(null);
