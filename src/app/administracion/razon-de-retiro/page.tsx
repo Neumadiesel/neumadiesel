@@ -1,49 +1,50 @@
 "use client";
-import { FaPen, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react";
-import Modal from "@/components/common/modal/CustomModal";
+import { FaPen, FaPlusSquare } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import ModalRegistrarRazon from "@/components/features/razon-retiro/ModalRegistrarRazon";
+import ModalEditarRazon from "@/components/features/razon-retiro/ModalEditarRazon";
 
-interface Razon {
+
+interface RazonDto {
     id: number;
-    nombre: string;
-    estado: boolean;
+    name: string;
+    description: string;
 }
 
-const razones: Razon[] = [
-    {
-        id: 1,
-        nombre: "Desgaste",
-        estado: true,
-    },
-    {
-        id: 2,
-        nombre: "Corte",
-        estado: true,
-    },
-    {
-        id: 3,
-        nombre: "Separacion",
-        estado: true,
-    },
-    {
-        id: 4,
-        nombre: "Desgarro",
-        estado: true,
-    },
-    {
-        id: 5,
-        nombre: "Desgaste Anormal",
-        estado: false,
-    },
-];
 
 export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
-    const [razonSeleccionada, setRazonSeleccionada] = useState<Razon | null>(null);
-
-    const abrirEditor = (razon: Razon) => {
+    const [razonSeleccionada, setRazonSeleccionada] = useState<RazonDto | null>(null);
+    const [razones, setRazones] = useState<RazonDto[]>([]);
+    const abrirEditor = (razon: RazonDto) => {
         setRazonSeleccionada(razon);
         setIsOpen(true);
+    };
+
+    const [openRegisterModal, setOpenRegisterModal] = useState(false);
+
+    // crea una funcion que pida los datos desde esta api, http://localhost:3000/retirement-reasons
+    // y los guarde en el estado de razones
+    const fetchRazones = async () => {
+        try {
+            const response = await fetch("http://localhost:3002/retirement-reason");
+            const data = await response.json();
+            setRazones(data);
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchRazones();
+    }, []);
+
+    useEffect(() => {
+        fetchRazones();
+    }, [openRegisterModal, isOpen]);
+
+    const handleOpenModal = () => {
+        setOpenRegisterModal(true);
     };
 
     const handleConfirm = () => {
@@ -56,13 +57,9 @@ export default function Page() {
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Razon de baja de neumaticos</h1>
                 <div className="flex">
-                    <input
-                        type="text"
-                        placeholder="Nueva razon de retiro"
-                        className="w-52 p-2 rounded-l-md border border-gray-300"
-                    />
-                    <button className="bg-amber-300 flex px-4 justify-center text-black p-2 rounded-r-md items-center gap-2 text-lg font-bold">
-                        <span>Crear</span>
+                    <button onClick={handleOpenModal} className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-lg font-semibold">
+                        <FaPlusSquare className="text-2xl" />
+                        <span>Agregar Razon de Retiro</span>
                     </button>
                 </div>
             </div>
@@ -70,7 +67,7 @@ export default function Page() {
 
             <div className="relative overflow-x-auto mt-4">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-6 py-3">
                                 Product name
@@ -91,33 +88,23 @@ export default function Page() {
                             >
                                 <th
                                     scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    className="px-6 py-4 font-medium text-gray-900 bg-gray-50 whitespace-nowrap dark:text-white"
                                 >
-                                    {razon.nombre}
+                                    {razon.name}
                                 </th>
                                 <td className="px-6 py-4">
                                     <p
-                                        className={`${
-                                            razon.estado
-                                                ? "bg-green-100 border-green-500"
-                                                : "bg-red-100 border-red-500"
-                                        } text-black px-2 border py-1 rounded-md w-20 text-center`}
+                                        className={` text-black px-2 py-1 rounded-md `}
                                     >
-                                        {razon.estado ? "Activo" : "Inactivo"}
+                                        {razon.description}
                                     </p>
                                 </td>
-                                <td className="px-6 py-4 flex justify-center">
+                                <td className="px-6 py-4 flex justify-center bg-gray-50">
                                     <button
                                         onClick={() => abrirEditor(razon)}
                                         className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-50 text-black border border-amber-200 font-bold py-2 px-4 rounded"
                                     >
                                         <FaPen className="inline-block" />
-                                    </button>
-                                    <button
-                                        onClick={() => setIsOpen(true)}
-                                        className="bg-gray-50 hover:bg-red-50 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded ml-2"
-                                    >
-                                        <FaEyeSlash className="inline-block" />
                                     </button>
                                 </td>
                             </tr>
@@ -125,20 +112,21 @@ export default function Page() {
                     </tbody>
                 </table>
             </div>
-            <Modal
-                isOpen={isOpen}
+            <ModalRegistrarRazon
+                visible={openRegisterModal}
+                onClose={() => setOpenRegisterModal(false)}
+                onGuardar={() => {
+                    setOpenRegisterModal(false);
+                }} />
+
+            <ModalEditarRazon
+                visible={isOpen}
+                razon={razonSeleccionada}
                 onClose={() => setIsOpen(false)}
-                onConfirm={handleConfirm}
-                title="Desactivar razon de retiro"
-            >
-                <p>
-                    Desactivar una razon de retiro la retirara del sistema y de las opciones
-                    disponibles, pero no eliminara los datos de la base de datos.
-                </p>
-                <p className="font-semibold">
-                    ¿Estás seguro de que deseas desactivar esta razon de retiro?
-                </p>
-            </Modal>
+                onGuardar={() => {
+                    setIsOpen(false);
+                }} />
+
         </div>
     );
 }
