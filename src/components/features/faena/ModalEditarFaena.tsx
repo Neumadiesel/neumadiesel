@@ -7,10 +7,15 @@ import axios from "axios";
 
 interface FaenaDTO {
     id: number;
-    nombre: string;
+    name: string;
     region: string;
-    inicio: Date;
-    fin: Date;
+    isActive: boolean;
+    contract?: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        siteId: number;
+    };
 }
 
 interface ModalEditarFaenaProps {
@@ -27,10 +32,10 @@ export default function ModalEditarFaena({
     onGuardar,
 }: ModalEditarFaenaProps) {
     const [faenaEditada, setFaenaeditada] = useState({
-        nombre: "",
+        name: "",
         region: "",
-        inicio: "",
-        fin: "",
+        startDate: "",
+        endDate: "",
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -38,11 +43,12 @@ export default function ModalEditarFaena({
 
     useEffect(() => {
         if (faena) {
+            console.log("faena", faena);
             setFaenaeditada({
-                nombre: faena.nombre,
+                name: faena.name,
                 region: faena.region,
-                inicio: faena.inicio.toString(),
-                fin: faena.fin.toString(),
+                startDate: faena.contract?.startDate ? faena.contract.startDate.split("T")[0] : "",
+                endDate: faena.contract?.endDate ? faena.contract.endDate.split("T")[0] : "",
             });
         }
     }, [faena]);
@@ -60,20 +66,29 @@ export default function ModalEditarFaena({
         setError(null);
         setLoading(true);
 
+        const { name, region, startDate, endDate } = faenaEditada;
+        if (!name || !region || !startDate || !endDate) {
+            setError("Por favor, completa todos los campos");
+            setLoading(false);
+            return;
+        }
+        if (new Date(startDate) > new Date(endDate)) {
+            setError("La fecha de inicio no puede ser mayor que la fecha de fin");
+            setLoading(false);
+            return;
+        }
+
         try {
-            const response = await axios.put(
-                `${process.env.NEXT_PUBLIC_API_URL}/faena/${faena.id}`,
+            const response = await axios.patch(
+                `http://localhost:3002/sites/${faena.id}`,
                 {
-                    nombre: faenaEditada.nombre,
-                    region: faenaEditada.region,
-                    inicio: faenaEditada.inicio,
-                    fin: faenaEditada.fin,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
+                    name,
+                    region,
+                    contract: {
+                        startDate: new Date(startDate).toISOString(),
+                        endDate: new Date(endDate).toISOString(),
                     },
-                }
+                },
             );
 
             if (response.status !== 200) {
@@ -82,6 +97,7 @@ export default function ModalEditarFaena({
 
             onGuardar();
             onClose();
+            return response.data;
         } catch (error) {
             setError(error instanceof Error ? error.message : "Error al actualizar la faena");
         } finally {
@@ -101,8 +117,10 @@ export default function ModalEditarFaena({
                     <label className="text-sm mt-2 font-semibold mb-2">Nombre de la Faena</label>
                     <input
                         name="nombre"
-                        value={faenaEditada.nombre}
-                        onChange={handleChange}
+                        value={faenaEditada.name}
+                        onChange={
+                            (e) => setFaenaeditada({ ...faenaEditada, name: e.target.value })
+                        }
                         placeholder="Nombre"
                         className="border border-gray-300 p-2 rounded"
                     />
@@ -110,7 +128,9 @@ export default function ModalEditarFaena({
                     <input
                         name="region"
                         value={faenaEditada.region}
-                        onChange={handleChange}
+                        onChange={
+                            (e) => setFaenaeditada({ ...faenaEditada, region: e.target.value })
+                        }
                         placeholder="Region"
                         className="border border-gray-300 p-2 rounded"
                     />
@@ -118,8 +138,10 @@ export default function ModalEditarFaena({
                     <input
                         name="inicio"
                         type="date"
-                        value={faenaEditada.inicio}
-                        onChange={handleChange}
+                        value={faenaEditada.startDate}
+                        onChange={
+                            (e) => setFaenaeditada({ ...faenaEditada, startDate: e.target.value })
+                        }
                         placeholder="Fecha Inicio"
                         className="border border-gray-300 p-2 rounded"
                     />
@@ -127,8 +149,10 @@ export default function ModalEditarFaena({
                     <input
                         name="fin"
                         type="date"
-                        value={faenaEditada.fin}
-                        onChange={handleChange}
+                        value={faenaEditada.endDate}
+                        onChange={
+                            (e) => setFaenaeditada({ ...faenaEditada, endDate: e.target.value })
+                        }
                         placeholder="Fecha Final"
                         className="border border-gray-300 p-2 rounded"
                     />

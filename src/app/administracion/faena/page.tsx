@@ -4,56 +4,52 @@ import Modal from "@/components/common/modal/CustomModal";
 import Link from "next/link";
 import { FaEyeSlash, FaFile } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface FaenaDTO {
     id: number;
-    nombre: string;
+    name: string;
     region: string;
-    inicio: Date;
-    fin: Date;
+    isActive: boolean;
+    contract: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        siteId: number;
+    };
 }
 
 export default function Page() {
-    const listaFaenas = [
-        {
-            id: 1,
-            nombre: "Zaldivar - CMZ",
-            region: "Antofagasta",
-            inicio: new Date("2024-01-01"),
-            fin: new Date("2024-01-01"),
-        },
-        {
-            id: 2,
-            nombre: "El Peñon",
-            region: "Antofagasta",
-            inicio: new Date("2024-02-01"),
-            fin: new Date("2024-02-01"),
-        },
-        {
-            id: 3,
-            nombre: "La Negra",
-            region: "Antofagasta",
-            inicio: new Date("2024-03-01"),
-            fin: new Date("2024-03-01"),
-        },
-    ]
+    const [listaFaenas, setRazones] = useState<FaenaDTO[]>([]);
+    const [faenaSelected, setFaenaSelected] = useState<FaenaDTO | null>(null);
 
+    const fetchFaenas = async () => {
+        try {
+            const response = await fetch("http://localhost:3002/sites/with-contract");
+            const data = await response.json();
+            setRazones(data);
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchFaenas();
+    }, []);
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
-    const [faenaSelected, setFaenaSelected] = useState<FaenaDTO>({
-        id: 0,
-        nombre: "",
-        region: "",
-        inicio: new Date(),
-        fin: new Date(),
-    });
 
     const [isOpen, setIsOpen] = useState(false);
     const handleConfirm = () => {
         setIsOpen(false);
         console.log("Usuario desactivado");
     };
+
+
+    useEffect(() => {
+        fetchFaenas();
+    }, [isOpen, mostrarEditar]);
+
 
 
     const handleEditarFaena = (faena: FaenaDTO) => {
@@ -107,7 +103,7 @@ export default function Page() {
                                     <tr key={faena.id}>
                                         <td className="p-4 border-b border-blue-gray-50">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {faena.nombre}
+                                                {faena.name}
                                             </p>
                                         </td>
                                         <td className="p-4 border-b border-blue-gray-50">
@@ -117,12 +113,12 @@ export default function Page() {
                                         </td>
                                         <td className="p-4 border-b border-blue-gray-50">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {faena.inicio.toLocaleDateString()}
+                                                {faena.contract?.startDate ? new Date(faena.contract.startDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
                                         </td>
                                         <td className="p-4 border-b border-blue-gray-50">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {faena.fin.toLocaleDateString()}
+                                                {faena.contract?.endDate ? new Date(faena.contract.endDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
                                         </td>
                                         <td className=" border-b border-blue-gray-50">
