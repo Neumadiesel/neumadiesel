@@ -20,15 +20,18 @@ export default function Page() {
         setRazonSeleccionada(razon);
         setIsOpen(true);
     };
+    const [loading, setLoading] = useState(false);
 
     const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
     // crea una funcion que pida los datos desde esta api, http://localhost:3000/retirement-reasons
     // y los guarde en el estado de razones
     const fetchRazones = async () => {
+        setLoading(true);
         try {
             const response = await fetch("http://localhost:3002/retirement-reason");
             const data = await response.json();
+            setLoading(false);
             setRazones(data);
         } catch (error) {
             console.error("Error fetching reasons:", error);
@@ -76,6 +79,41 @@ export default function Page() {
                         </tr>
                     </thead>
                     <tbody>
+                        {loading ? (
+                            <tr>
+                                <td colSpan={6} className="text-center p-8">
+                                    <div className="flex flex-col items-center justify-center space-y-4">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
+                                        <p className="text-gray-600 dark:text-gray-400">
+                                            Cargando razones de retiro...
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : razones.length === 0 ? (
+                            <tr>
+                                <td colSpan={6} className="text-center p-8">
+                                    <div className="flex flex-col items-center justify-center space-y-4  animate-pulse">
+                                        <svg
+                                            className="w-12 h-12 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                            />
+                                        </svg>
+                                        <p className="text-gray-600 dark:text-gray-400">
+                                            No se encontraron razones de retiro.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : null}
                         {razones.map(razon => (
                             <tr
                                 key={razon.id}
