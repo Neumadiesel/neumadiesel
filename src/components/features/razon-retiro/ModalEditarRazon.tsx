@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 
 
@@ -30,7 +29,6 @@ export default function ModalEditarRazon({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const { token } = useAuth();
 
     useEffect(() => {
         if (razon) {
@@ -44,40 +42,6 @@ export default function ModalEditarRazon({
 
 
     if (!visible || !razon) return null;
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setRazonEditada(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async () => {
-
-        try {
-            const response = await axios.put(
-                `${process.env.NEXT_PUBLIC_API_URL}/faena/${razon.id}`,
-                {
-                    name: razonEditada.name,
-                    region: razonEditada.description,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (response.status !== 200) {
-                throw new Error("Error al actualizar la faena");
-            }
-
-            onGuardar();
-            onClose();
-        } catch (error) {
-            setError(error instanceof Error ? error.message : "Error al actualizar la faena");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const updateRetirementReason = async () => {
         setError(null);

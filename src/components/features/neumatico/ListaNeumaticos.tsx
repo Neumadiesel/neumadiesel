@@ -31,7 +31,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
         );
         setFilteredNeumaticos(filtered);
         setCurrentPage(1);
-    }, [codigo, camion, estado]);
+    }, [codigo, camion, estado, neumaticos]);
 
     // Configuración de paginación
     const itemsPerPage = 8;

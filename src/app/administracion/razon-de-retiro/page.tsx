@@ -47,11 +47,6 @@ export default function Page() {
         setOpenRegisterModal(true);
     };
 
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Razaon desactivado", razonSeleccionada);
-    };
-
     return (
         <div className="bg-white dark:bg-[#212121] p-3 rounded-md shadow-lg h-[100%] pb-4">
             <div className="flex justify-between items-center">

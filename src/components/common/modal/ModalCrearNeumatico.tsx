@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, use } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 
@@ -55,7 +54,6 @@ export default function ModalCrearNeumatico({
     }, [modelo]);
 
     const [error, setError] = useState<string>("");
-    const { token } = useAuth();
 
     if (!visible) return null;
 
