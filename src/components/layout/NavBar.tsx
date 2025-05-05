@@ -127,21 +127,20 @@ export default function NavBar() {
 
     return (
         <div
-            className={`flex lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden transition-all duration-300 ease-in-out ${
-                isCollapsed ? "lg:min-w-[80px]" : "lg:min-w-[220px]"
-            }`}
+            className={`flex lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "lg:min-w-[80px]" : "lg:min-w-[220px]"
+                }`}
             onMouseEnter={() => isCollapsed && setIsHovered(true)}
             onMouseLeave={() => isCollapsed && setIsHovered(false)}
         >
-            <div className="w-full flex justify-between items-center lg:flex-col">
-                <Link href={"/"} className="w-[100%] bg-amber-300 p-2">
+            <div className="w-full flex justify-between items-center bg-amber-300 ">
+                <Link href={"/"} className="w-[60%]  p-2">
                     {isCollapsed ? (
                         <Image
                             onClick={() => setMenuOpen(false)}
                             src="/icon.png"
                             alt="logo"
-                            width={40}
-                            height={40}
+                            width={30}
+                            height={30}
                             className="transition-all duration-300"
                         />
                     ) : (
@@ -149,36 +148,35 @@ export default function NavBar() {
                             onClick={() => setMenuOpen(false)}
                             src="/NEUMASYSTEM.png"
                             alt="logo"
-                            width={250}
+                            width={240}
                             height={180}
                             className="transition-all duration-300"
                         />
                     )}
                 </Link>
+                <button
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    className="hidden lg:block p-2 text-black hover:bg-amber-400 rounded"
+                >
+                    {isCollapsed ? (
+                        <FaAngleDoubleRight size={20} />
+                    ) : (
+                        <FaAngleDoubleLeft size={20} />
+                    )}
+                </button>
             </div>
 
             <div
-                className={`hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%] ${
-                    isCollapsed ? "items-center" : ""
-                }`}
+                className={`hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%] ${isCollapsed ? "items-center" : ""
+                    }`}
             >
                 <ul className="w-full">
                     <li className="mb-2">
                         <div
-                            className={`flex items-center ${
-                                isCollapsed ? "justify-center" : "justify-end"
-                            }`}
+                            className={`flex items-center ${isCollapsed ? "justify-center" : "justify-end"
+                                }`}
                         >
-                            <button
-                                onClick={() => setIsCollapsed(!isCollapsed)}
-                                className="hidden lg:block p-2 text-white hover:bg-gray-700 rounded"
-                            >
-                                {isCollapsed ? (
-                                    <FaAngleDoubleRight size={20} />
-                                ) : (
-                                    <FaAngleDoubleLeft size={20} />
-                                )}
-                            </button>
+
                         </div>
                         <Link
                             href={"/perfil"}
@@ -215,11 +213,10 @@ export default function NavBar() {
                                     </button>
                                     {openCategories[item.title] && (!isCollapsed || isHovered) && (
                                         <ul
-                                            className={`ml-4 mt-1 overflow-hidden text-sm transition-all duration-300 ease-in-out ${
-                                                openCategories[item.title]
-                                                    ? "max-h-96 opacity-100"
-                                                    : "max-h-0 opacity-0"
-                                            }`}
+                                            className={`ml-4 mt-1 overflow-hidden text-sm transition-all duration-300 ease-in-out ${openCategories[item.title]
+                                                ? "max-h-96 opacity-100"
+                                                : "max-h-0 opacity-0"
+                                                }`}
                                         >
                                             {item.children.map((subItem, subIndex) => (
                                                 <li key={subIndex}>
