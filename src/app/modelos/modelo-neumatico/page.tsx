@@ -197,7 +197,7 @@ export default function ModelosNeumaticos() {
                                                     <FaPencil />
                                                 </button>
                                                 {/* Boton de ver detalles */}
-                                                <Link href={`/modelos/modelo-equipo/${tyreModel.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
+                                                <Link href={`/modelos/modelo-neumatico/${tyreModel.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
                                                     <FaInfoCircle />
                                                 </Link>
                                             </div>
