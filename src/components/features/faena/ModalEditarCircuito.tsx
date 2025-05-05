@@ -95,8 +95,11 @@ export default function ModalEditarFaena({
             <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
                 <h2 className="text-xl font-bold mb-4">Editar Circuito</h2>
 
-                {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-
+                {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                    <button onClick={() => setError(null)} className=" text-red-500">
+                        X
+                    </button>
+                </div>}
                 <div className="flex flex-col">
                     <label className="text-sm mt-2 font-semibold">Nombre Circuito:</label>
                     <input

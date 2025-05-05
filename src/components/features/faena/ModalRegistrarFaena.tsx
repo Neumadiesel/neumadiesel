@@ -109,8 +109,11 @@ export default function ModalRegistrarFaena({
                 <p className="text-sm text-gray-500 mb-2">
                     Completa los campos para registrar un nuevo contrato de faena, puede registrar el contrato de inmediato o registrarlo en un futuro.
                 </p>
-                {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-
+                {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                    <button onClick={() => setError(null)} className=" text-red-500">
+                        X
+                    </button>
+                </div>}
                 <div className="flex flex-col">
                     <label className="text-sm mt-2 font-semibold mb-2">Nombre de la Faena</label>
                     <input

@@ -61,8 +61,11 @@ export default function ModalRegistrarRazon({
                 <p className="text-sm text-gray-500 mb-4">
                     Complete los campos para registrar una nueva razon de retiro.
                 </p>
-                {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-
+                {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                    <button onClick={() => setError(null)} className=" text-red-500">
+                        X
+                    </button>
+                </div>}
                 <div className="flex flex-col">
                     <label className="text-sm mt-2 font-semibold mb-2">Razon de retiro</label>
                     <input
