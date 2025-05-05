@@ -5,6 +5,7 @@ import NavBar from "@/components/layout/NavBar";
 import { Suspense } from "react";
 import LoadingSkeleton from "./Loading";
 import { AuthProvider } from "@/contexts/AuthContext";
+import Breadcrumb from "@/components/layout/BreadCrumb";
 // import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
@@ -31,14 +32,17 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} bg-[#f1f1f1] dark:bg-[#212121] antialiased grid grid-cols-1 lg:flex`}
+                className={`${geistSans.variable} ${geistMono.variable} bg-white dark:bg-[#212121] antialiased grid grid-cols-1 lg:flex`}
             >
                 <AuthProvider>
                     <aside className="">
                         <NavBar />
                     </aside>
                     <main className="w-[100%]  lg:w-full xl:w-full h-[100%] lg:h-screen overflow-y-scroll ">
-                        <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>
+                        <Suspense fallback={<LoadingSkeleton />}>
+                            <Breadcrumb />
+                            {children}
+                        </Suspense>
                     </main>
                 </AuthProvider>
                 {/* <Footer /> */}

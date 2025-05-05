@@ -68,7 +68,7 @@ export default function RootLayout({
                 {/* Lista de camiones */}
                 <main className="w-full lg:w-[40%] lg:h-screen h-[45vh]  flex justify-center items-center">
                     <div className="bg-white dark:bg-black shadow-md w-[100%] h-[100%] ">
-                        <div className="flex justify-between items-center px-4">
+                        <div className="flex justify-between items-center px-4 mb-2">
                             <h2 className="dark:text-amber-300 text-2xl font-bold p-2">Lista de Equipos</h2>
                             <button
                                 onClick={() => setModalRegistrarVehiculo(true)}
@@ -84,7 +84,7 @@ export default function RootLayout({
                                 <Link
                                     href={`/maquinaria/${vehicle.id}`}
                                     key={vehicle.id}
-                                    className="flex flex-col h-28 justify-center items-center p-2 bg-[#f1f1f1] dark:bg-[#212121] rounded-md hover:bg-amber-200 transition-all ease-in-out shadow-sm"
+                                    className="flex flex-col h-28 justify-center border items-center p-2 bg-[#f1f1f1] dark:bg-[#212121] rounded-md hover:bg-gray-200 transition-all ease-in-out"
                                 >
                                     <GiMineTruck size={35} />
                                     <p className="text-xl font-semibold font-mono">{vehicle.code}</p>
