@@ -40,7 +40,6 @@ export default function RootLayout({
                     </aside>
                     <main className="w-[100%]  lg:w-full xl:w-full h-[100%] lg:h-screen overflow-y-scroll ">
                         <Suspense fallback={<LoadingSkeleton />}>
-                            <Breadcrumb />
                             {children}
                         </Suspense>
                     </main>

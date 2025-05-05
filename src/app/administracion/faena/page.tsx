@@ -2,10 +2,11 @@
 import ModalEditarFaena from "@/components/features/faena/ModalEditarFaena";
 import Modal from "@/components/common/modal/CustomModal";
 import Link from "next/link";
-import { FaEyeSlash, FaFile, FaPlusSquare } from "react-icons/fa";
+import { FaEyeSlash, FaInfoCircle, FaPlusSquare } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ModalRegistrarFaena from "@/components/features/faena/ModalRegistrarFaena";
+import Breadcrumb from "@/components/layout/BreadCrumb";
 
 interface FaenaDTO {
     id: number;
@@ -60,15 +61,16 @@ export default function Page() {
         setMostrarEditar(true);
     }
     return (
-        <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
-            <section className="flex justify-between items-center">
+        <div className="bg-white dark:bg-[#212121] dark:text-white rounded-md shadow-lg h-[100%] pb-4  flex flex-col">
+            <Breadcrumb />
+            <section className="flex justify-between items-center mb-2 px-3">
                 <h1 className="text-2xl font-bold">Contratos de faena</h1>
                 <button onClick={() => { setModalRegistrarFaena(true) }} className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white">
                     <FaPlusSquare className="text-xl" />
                     <span>Registrar Nuevo contrato</span>
                 </button>
             </section>
-            <main >
+            <main className="px-3" >
                 <div
                     className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
                     <table className="w-full text-left table-auto min-w-max">
@@ -163,7 +165,7 @@ export default function Page() {
                                         <td className="  bg-gray-50 dark:bg-neutral-900 px-2">
                                             <div className="flex gap-2">
                                                 <Link href={`/administracion/faena/${faena.id}`} className="p-2 text-amber-500 hover:text-amber-600 bg-amber-50 border border-amber-300 rounded-md flex items-center justify-center">
-                                                    <FaFile />
+                                                    <FaInfoCircle />
                                                 </Link>
                                                 {/* boton editar */}
                                                 <button onClick={() => handleEditarFaena(faena)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center">

@@ -1,5 +1,6 @@
 "use client";
 import ListaCircuitos from "@/components/features/faena/ListaCircuitos";
+import Breadcrumb from "@/components/layout/BreadCrumb";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
@@ -25,7 +26,7 @@ export default function Page() {
     const [faena, setFaena] = useState<FaenaDTO | null>(null);
     const fetchFaenas = async () => {
         try {
-            const response = await fetch(`http://localhost:3002/sites/${id}`);
+            const response = await fetch(`http://localhost:3002/sites/${id}/with-contract`);
             const data = await response.json();
             setFaena(data);
         } catch (error) {
@@ -38,28 +39,29 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="bg-white p-4 rounded-lg h-full ">
-            <h1 className="text-3xl font-bold">Faena {faena?.name
+        <div className="bg-white rounded-lg h-full ">
+            <Breadcrumb />
+            <h1 className="text-3xl font-bold px-4">Faena {faena?.name
                 ? faena.name
                 : "Cargando.."
             }</h1>
-            <div className="flex justify-between items-center border-b border-gray-300 pb-4">
+            <div className="flex justify-between items-center border-b px-4 py-2 border-gray-300 pb-4">
                 <div className="flex flex-col gap-2">
                     <span className="text-md text-gray-600 font-semibold flex items-center gap-2">
                         <FaMapMarkerAlt /> Región: {faena?.region ? faena.region : "Cargando.."}
                     </span>
                     <span className="text-md text-gray-600 font-semibold flex items-center gap-2">
-                        <FaCalendarAlt className="text-xl" />
-                        <div className="flex flex-col gap-1">
+                        <FaCalendarAlt className="text-3xl" />
+                        <div className="flex flex-col">
                             <span>Inicio: </span>
-                            <span className="text-xl font-bold text-black">
+                            <span className="text-lg font-semibold text-neutral-900">
                                 {faena?.contract?.startDate ? new Date(faena.contract.startDate).toISOString().split("T")[0] : "Sin fecha"}
                             </span>
                         </div>
-                        <FaCalendarAlt className="text-xl ml-4" />
+                        <FaCalendarAlt className="text-3xl ml-4" />
                         <div className="flex flex-col gap-1">
                             <span>Fecha: </span>
-                            <span className="text-xl font-bold text-black">
+                            <span className="text-lg font-semibold text-neutral-900">
                                 {faena?.contract?.endDate ? new Date(faena.contract.endDate).toISOString().split("T")[0] : "Sin fecha"}
                             </span>
                         </div>

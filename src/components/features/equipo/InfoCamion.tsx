@@ -102,7 +102,7 @@ export default function ListaMaquinaria() {
                         <section className="flex flex-col w-full pt-5 items-start mb-2 ">
                             <section className="flex justify-between w-full items-center mb-2">
                                 <h2 className="text-xl font-semibold mb-2">
-                                    Equipo {vehicle.code} - Faena {vehicle.site?.name}
+                                    Equipo {loading ? "..." : vehicle.code} - Faena {loading ? "Cargando..." : vehicle.site?.name}
                                 </h2>
                                 {/* Boton de mantenimiento */}
                                 <Link
@@ -153,8 +153,8 @@ export default function ListaMaquinaria() {
                         <section className="relative overflow-x-auto lg:h-[80%] my-2">
                             <div className="flex flex-col gap-y-2">
                                 {/* Table head */}
-                                <table className="w-full table-auto">
-                                    <thead className="bg-amber-300 rounded-md">
+                                <table className="w-full table-auto rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                                    <thead className="bg-gray-100">
                                         <tr>
                                             <th className="p-2 w-[5%]">Pos</th>
                                             <th className="p-2 w-[20%]">Codigo</th>
