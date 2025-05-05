@@ -115,7 +115,7 @@ export default function Page() {
     const [menuAbierto, setMenuAbierto] = useState<number | null>(null);
 
     return (
-        <div className="lg:p-4 bg-white dark:bg-[#212121] p-3 pb-4">
+        <div className="lg:p-4 bg-white dark:bg-[#212121] dark:text-white p-3 pb-4">
             <div className="p-2 lg:p-0">
                 <h1 className="text-2xl font-bold">Lista de usuarios</h1>
                 <p>Esta es la página de administración de usuarios.</p>
@@ -126,7 +126,7 @@ export default function Page() {
 
 
                 <select
-                    className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold"
+                    className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white"
                     value={filtroRol}
                     onChange={e => setFiltroRol(e.target.value)}
                 >
@@ -144,12 +144,12 @@ export default function Page() {
                         placeholder="Buscar..."
                         value={busqueda}
                         onChange={e => setBusqueda(e.target.value)}
-                        className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold"
+                        className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white placeholder:text-white"
                     />
                 </div>
                 <button
                     onClick={() => setMostrarModal(true)}
-                    className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold"
+                    className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white"
                 >
                     <FaPlusSquare className="text-xl" />
                     Registrar Usuario
@@ -158,7 +158,7 @@ export default function Page() {
 
             {/* Tabla */}
             <table className="table-auto w-full border-collapse bg-white dark:bg-[#212121] shadow-md  overflow-hidden">
-                <thead className="text-xs text-black uppercase bg-amber-300 dark:bg-gray-700 dark:text-gray-400">
+                <thead className="text-xs text-black uppercase bg-amber-300">
                     <tr>
                         <th className="p-2 text-start ">Nombre</th>
                         <th className="p-2 text-start w-[20%] hidden lg:block">Email</th>
@@ -181,7 +181,7 @@ export default function Page() {
                         </tr>
                     ) : usuariosPagina.length === 0 ? (
                         <tr>
-                            <td colSpan={6} className="text-center p-8">
+                            <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
                                 <div className="flex flex-col items-center justify-center space-y-4  animate-pulse">
                                     <svg
                                         className="w-12 h-12 text-gray-400"
@@ -205,16 +205,16 @@ export default function Page() {
                     ) : null}
                     {usuariosPagina.map((usuario, index) => (
                         <tr key={usuario.user_id} className="border-b dark:border-gray-700">
-                            <td className="px-4 p-2 bg-gray-50">
+                            <td className="px-4 p-2 bg-gray-50 dark:bg-neutral-900 text-start">
                                 {usuario.name} {usuario.last_name}
                             </td>
                             <td className="p-2 hidden lg:block">{usuario.email}</td>
-                            <td className="p-2 text-start bg-gray-50">
+                            <td className="p-2 text-start bg-gray-50 dark:bg-neutral-900">
                                 {usuario.role?.name?.toLowerCase() || "sin rol"}
                             </td>
                             <td className="p-2 text-start">Sin asignar</td>
 
-                            <td className="p-2 relative text-center bg-gray-50">
+                            <td className="p-2 relative text-center bg-gray-50 dark:bg-neutral-900">
                                 {/* Botones en escritorio */}
                                 <div className="hidden md:flex justify-center gap-2 ">
                                     <button

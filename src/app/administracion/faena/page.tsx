@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FaEyeSlash, FaFile, FaPlusSquare } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
+import ModalRegistrarFaena from "@/components/features/faena/ModalRegistrarFaena";
 
 interface FaenaDTO {
     id: number;
@@ -40,7 +41,7 @@ export default function Page() {
     }, []);
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
-
+    const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const handleConfirm = () => {
         setIsOpen(false);
@@ -50,7 +51,7 @@ export default function Page() {
 
     useEffect(() => {
         fetchFaenas();
-    }, [isOpen, mostrarEditar]);
+    }, [isOpen, mostrarEditar, modalRegistarFaena]);
 
 
 
@@ -59,10 +60,10 @@ export default function Page() {
         setMostrarEditar(true);
     }
     return (
-        <div className="bg-white dark:bg-[#212121] p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
+        <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
             <section className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Contratos de faena</h1>
-                <button className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold">
+                <button onClick={() => { setModalRegistrarFaena(true) }} className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white">
                     <FaPlusSquare className="text-xl" />
                     <span>Registrar Nuevo contrato</span>
                 </button>
@@ -71,7 +72,7 @@ export default function Page() {
                 <div
                     className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
                     <table className="w-full text-left table-auto min-w-max">
-                        <thead className="text-xs text-black uppercase bg-amber-300 dark:bg-gray-700 dark:text-gray-400">
+                        <thead className="text-xs text-black uppercase bg-amber-300  ">
                             <tr>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
@@ -103,7 +104,7 @@ export default function Page() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan={6} className="text-center p-8">
+                                    <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
                                         <div className="flex flex-col items-center justify-center space-y-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                             <p className="text-gray-600 dark:text-gray-400">
@@ -138,28 +139,28 @@ export default function Page() {
                             ) : null}
                             {
                                 listaFaenas.map((faena) => (
-                                    <tr key={faena.id}>
-                                        <td className="p-4 border-b border-blue-gray-50 bg-gray-50">
+                                    <tr key={faena.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
+                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.name}
                                             </p>
                                         </td>
-                                        <td className="p-4 border-b border-blue-gray-50">
+                                        <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.region}
                                             </p>
                                         </td>
-                                        <td className="p-4 border-b border-blue-gray-50 bg-gray-50">
+                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.contract?.startDate ? new Date(faena.contract.startDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
                                         </td>
-                                        <td className="p-4 border-b border-blue-gray-50">
+                                        <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.contract?.endDate ? new Date(faena.contract.endDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
                                         </td>
-                                        <td className=" border-b border-blue-gray-50 bg-gray-50 px-2">
+                                        <td className="  bg-gray-50 dark:bg-neutral-900 px-2">
                                             <div className="flex gap-2">
                                                 <Link href={`/administracion/faena/${faena.id}`} className="p-2 text-amber-500 hover:text-amber-600 bg-amber-50 border border-amber-300 rounded-md flex items-center justify-center">
                                                     <FaFile />
@@ -207,7 +208,13 @@ export default function Page() {
                     faena={faenaSelected}
                     onGuardar={() => {
                         setMostrarEditar(false);
-                        console.log("Faena actualizada");
+                    }} />
+
+                <ModalRegistrarFaena
+                    visible={modalRegistarFaena}
+                    onClose={() => setModalRegistrarFaena(false)}
+                    onGuardar={() => {
+                        setModalRegistrarFaena(false);
                     }} />
             </main>
         </div>

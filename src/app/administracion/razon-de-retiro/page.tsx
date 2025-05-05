@@ -51,11 +51,11 @@ export default function Page() {
     };
 
     return (
-        <div className="bg-white dark:bg-[#212121] p-3 rounded-md shadow-lg h-[100%] pb-4">
+        <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Razon de baja de neumaticos</h1>
                 <div className="flex">
-                    <button onClick={handleOpenModal} className="bg-gray-100 hover:bg-gray-200 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold">
+                    <button onClick={handleOpenModal} className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white">
                         <FaPlusSquare className="text-xl" />
                         <span>Agregar Razon de Retiro</span>
                     </button>
@@ -64,8 +64,8 @@ export default function Page() {
             {/* Lista de razones de retiro */}
 
             <div className="relative overflow-x-auto mt-4">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-black uppercase bg-amber-300 dark:bg-gray-700 dark:text-gray-400">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-white">
+                    <thead className="text-xs text-black uppercase bg-amber-300 ">
                         <tr>
                             <th scope="col" className="px-6 py-3">
                                 Razon
@@ -82,7 +82,7 @@ export default function Page() {
                         {loading ? (
                             <tr>
                                 <td colSpan={6} className="text-center p-8">
-                                    <div className="flex flex-col items-center justify-center space-y-4">
+                                    <div className="flex flex-col items-center dark:bg-neutral-900 justify-center space-y-4">
                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                         <p className="text-gray-600 dark:text-gray-400">
                                             Cargando razones de retiro...
@@ -92,7 +92,7 @@ export default function Page() {
                             </tr>
                         ) : razones.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center p-8">
+                                <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
                                     <div className="flex flex-col items-center justify-center space-y-4  animate-pulse">
                                         <svg
                                             className="w-12 h-12 text-gray-400"
@@ -117,25 +117,25 @@ export default function Page() {
                         {razones.map(razon => (
                             <tr
                                 key={razon.id}
-                                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
+                                className="bg-white border-b  dark:border-gray-700 border-gray-200"
                             >
                                 <th
                                     scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 bg-gray-50 whitespace-nowrap dark:text-white"
+                                    className="px-6 py-4 font-medium text-gray-900 bg-gray-50 whitespace-nowrap dark:text-white dark:bg-neutral-800"
                                 >
                                     {razon.name}
                                 </th>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-4 dark:bg-neutral-900 ">
                                     <p
-                                        className={` text-black px-2 py-1 rounded-md `}
+                                        className={`  px-2 py-1 rounded-md `}
                                     >
                                         {razon.description}
                                     </p>
                                 </td>
-                                <td className="px-6 py-4 flex justify-center bg-gray-50">
+                                <td className="px-6 py-4 flex justify-center bg-gray-50 dark:bg-neutral-800">
                                     <button
                                         onClick={() => abrirEditor(razon)}
-                                        className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-50 text-black border border-amber-200 font-bold py-2 px-4 rounded"
+                                        className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-50 text-black border border-amber-200 font-bold py-2 px-4 rounded dark:hover:bg-neutral-800"
                                     >
                                         <FaPen className="inline-block" />
                                     </button>
