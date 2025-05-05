@@ -1,10 +1,10 @@
 "use client";
-import { Camiones } from "@/mocks/Camiones.json";
 import { Neumaticos } from "@/mocks/neumaticos.json";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { FaClock } from "react-icons/fa";
+import { FaClock, FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 
 interface NeumaticoInt {
@@ -19,11 +19,56 @@ interface NeumaticoInt {
     Posicion: number;
 }
 
+interface VehicleDTO {
+    id: number;
+    code: string;
+    modelId: number;
+    siteId: number;
+    kilometrage: number;
+    hours: number;
+    model: {
+        id: number;
+        brand: string;
+        model: string;
+        wheelCount: number;
+    };
+    site: {
+        id: number;
+        name: string;
+        region: string;
+        isActive: boolean;
+    };
+}
+
+
 export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
     const id = params.id;
 
-    const camion = Camiones.find(camion => camion.Codigo === id);
+    const [loading, setLoading] = useState(true);
+    const [vehicle, setVehicle] = useState<VehicleDTO>(
+        {} as VehicleDTO
+    );
+    const fetchVehicleModels = async () => {
+        setLoading(true);
+        if (!id) {
+            setLoading(false);
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:3002/vehicles/${id}`);
+            const data = await response.json();
+            console.log(data);
+            setLoading(false);
+            setVehicle(data);
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchVehicleModels();
+    }, []);
 
     // Tipar los neumáticos correctamente
     const neumaticos: NeumaticoInt[] = Neumaticos.filter(
@@ -31,37 +76,27 @@ export default function ListaMaquinaria() {
     );
 
     return (
-        <div className="p-2 h-[100%] w-full bg-white dark:bg-black relative shadow-md font-mono">
+        <div className="p-2 h-[100%] w-full bg-white dark:bg-black relative shadow-md">
             <div className="text-black dark:text-white flex flex-col">
                 {/* Info del camión */}
 
                 {/* Seccion de informacion */}
                 <div className="flex flex-col justify-center items-center">
                     {/* Esquema de neumaticos*/}
-                    <div className="flex h-[30vh] justify-between w-full">
+                    <div className="flex h-[20vh]  justify-between w-full">
                         {/* Info del camión */}
-                        <section className="flex flex-col w-[60%] pt-5 items-start mb-2 ">
-                            <h2 className="text-2xl font-bold mb-2">
-                                Equipo {id} - Faena {camion?.Faena}
-                            </h2>
-
-                            {/* Info del camión */}
-                            <div className="flex flex-col pt-4 bg-gray-200 rounded-md p-2 w-[100%] h-[50%] mb-2">
-                                <p>
-                                    <span className="font-bold">Marca:</span> {camion?.Marca}
-                                </p>
-                            </div>
-                            {/* Boton para cambiar entre neumaticos y sensores */}
-                            <div className="flex gap-y-1 justify-between w-[100%]  gap-x-4">
-                                {/* Boton para acceder a la pagina de mantenimiento */}
-
+                        <section className="flex flex-col w-full pt-5 items-start mb-2 ">
+                            <section className="flex justify-between w-full items-center mb-2">
+                                <h2 className="text-xl font-semibold mb-2">
+                                    Equipo {vehicle.code} - Faena {vehicle.site?.name}
+                                </h2>
+                                {/* Boton de mantenimiento */}
                                 <Link
                                     href={`/mantenimiento/${id}`}
-                                    className={`text-lg w-52 text-center p-2 rounded-md border border-black flex justify-center items-center gap-2 ${
-                                        id
-                                            ? "text-black bg-amber-300 hover:bg-amber-400 cursor-pointer"
-                                            : "text-gray-400 bg-gray-200 cursor-not-allowed"
-                                    }`}
+                                    className={`text-lg w-52 text-center p-1 rounded-md border flex justify-center items-center gap-2 ${id
+                                        ? "text-black bg-gray-100 hover:bg-gray-200 cursor-pointer"
+                                        : "text-gray-400 bg-gray-200 cursor-not-allowed"
+                                        }`}
                                     onClick={e => {
                                         if (!id) {
                                             e.preventDefault();
@@ -71,17 +106,30 @@ export default function ListaMaquinaria() {
                                     <FaCirclePlus size={20} />
                                     Mantenimiento
                                 </Link>
+                                {/* Boton de editar */}
+
+                                <button className="bg-gray-100 hover:bg-gray-200 border text-lg text-black p-2 rounded-md mb-2 flex items-center justify-center">
+                                    <FaEdit />
+                                </button>
+                            </section>
+                            {/* Info del camión */}
+                            <div className="grid grid-cols-2 pt-2 bg-gray-100 rounded-sm border  p-1 w-[100%] h-[60%] mb-2">
+
+                                <p>
+                                    <span className="text-sm font-semibold">Marca:</span> {vehicle.model?.brand}
+                                </p>
+                                <p>
+                                    <span className="text-sm font-semibold">Modelo:</span> {vehicle.model?.model}
+                                </p>
+                                <p>
+                                    <span className="text-sm font-semibold">Horas:</span> {vehicle.hours}
+                                </p>
+                                <p>
+                                    <span className="text-sm font-semibold">Kilometraje:</span> {vehicle.kilometrage}
+                                </p>
                             </div>
-                        </section>
-                        {/* Diagrama de neumaticos */}
-                        <section className="min-w-[20%] rotate-90 p-2 flex justify-center items-center ">
-                            <Image
-                                src="/Axle_gray.png"
-                                className="drop-shadow-xl"
-                                alt="Esquema"
-                                width={200}
-                                height={150}
-                            />
+                            {/* Boton para cambiar entre neumaticos y sensores */}
+
                         </section>
                     </div>
 
