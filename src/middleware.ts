@@ -5,33 +5,37 @@ import type { NextRequest } from 'next/server';
 const routePermissions = {
     // Rutas públicas
     public: ['/login', '/'],
-    
+
     // Rutas accesibles para todos los usuarios autenticados
     authenticated: ['/perfil'],
-    
+
     // Rutas de administración
     administrador: [
         '/administracion/usuarios',
         '/administracion/faena',
         '/administracion/razon-de-retiro',
     ],
-    
+
     // Rutas de reportabilidad
     reportabilidad: [
         '/estadisticas',
     ],
-    
+
     // Rutas de equipos
     equipos: [
         '/maquinaria',
     ],
-    
+
     // Rutas de neumáticos
     neumaticos: [
         '/neumaticos',
         '/neumaticos/bodega',
     ],
-    
+
+    modelos: [
+        '/modelos/modelo-equipo',
+        '/modelos/modelo-neumatico',
+    ],
     // Rutas de mantenimiento
     mantenimiento: [
         '/mantenimiento',
@@ -40,7 +44,7 @@ const routePermissions = {
         '/mantenimiento/programar-mantenimiento',
         '/mantenimiento/programas',
     ],
-    
+
     // Rutas de ingreso de datos
     ingresoDatos: [
         '/Ingresar-datos',
@@ -58,6 +62,7 @@ const rolePermissions = {
         ...routePermissions.reportabilidad,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
+        ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
         ...routePermissions.ingresoDatos,
     ],
@@ -65,6 +70,7 @@ const rolePermissions = {
         ...routePermissions.reportabilidad,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
+        ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
         ...routePermissions.ingresoDatos,
     ],
@@ -72,6 +78,7 @@ const rolePermissions = {
         ...routePermissions.reportabilidad,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
+        ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
         ...routePermissions.ingresoDatos,
     ],
@@ -89,11 +96,11 @@ export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Permitir acceso a archivos estáticos y multimedia
-    const isStaticFile = pathname.startsWith('/_next') || 
-                        pathname.startsWith('/api') || 
-                        pathname.startsWith('/public') ||
-                        pathname.includes('.') || // Para archivos con extensiones
-                        pathname.endsWith('/favicon.ico');
+    const isStaticFile = pathname.startsWith('/_next') ||
+        pathname.startsWith('/api') ||
+        pathname.startsWith('/public') ||
+        pathname.includes('.') || // Para archivos con extensiones
+        pathname.endsWith('/favicon.ico');
 
     // Si es un archivo estático o multimedia, permitir el acceso
     if (isStaticFile) {
@@ -128,12 +135,12 @@ export function middleware(request: NextRequest) {
         try {
             const user = JSON.parse(userData);
             const userRole = user.role?.name?.toLowerCase();
-            
+
             if (userRole && rolePermissions[userRole as keyof typeof rolePermissions]) {
                 const allowedPaths = rolePermissions[userRole as keyof typeof rolePermissions];
-                
+
                 // Verificar si la ruta actual está permitida para el rol
-                const isPathAllowed = allowedPaths.some(allowedPath => 
+                const isPathAllowed = allowedPaths.some(allowedPath =>
                     pathname.startsWith(allowedPath)
                 );
 

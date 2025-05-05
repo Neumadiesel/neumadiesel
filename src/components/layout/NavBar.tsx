@@ -14,6 +14,7 @@ import {
     FaSignOutAlt,
     FaAngleDoubleRight,
     FaAngleDoubleLeft,
+    FaWpforms,
 } from "react-icons/fa";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -76,6 +77,16 @@ export default function NavBar() {
                 { title: "Razon de retiro", path: "/administracion/razon-de-retiro" },
             ],
         },
+        // modelos,
+        {
+            title: "Modelos",
+            icon: <FaWpforms className="text-2xl" />,
+            allowedRoles: ["administrador", "planificador", "supervisor"],
+            children: [
+                { title: "Crear Modelo Neumatico", path: "/modelos/modelo-neumatico" },
+                { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
+            ],
+        },
         {
             title: "Mantenimiento",
             icon: <FaWrench className="text-2xl" />,
@@ -101,7 +112,6 @@ export default function NavBar() {
                     path: "/Ingresar-datos/medicion-por-equipo",
                 },
                 { title: "Crear Neumatico Nuevo", path: "/Ingresar-datos/crear-neumatico" },
-                { title: "Crear Modelo Neumatico", path: "/Ingresar-datos/crear-modelo" },
                 { title: "Registrar Maquinaria", path: "/Ingresar-datos/crear-maquinaria" },
             ],
         },
