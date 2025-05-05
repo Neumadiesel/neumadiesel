@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { FaClock, FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
+import ModaleditarEquipo from "./modaleditarEquipo";
 
 interface NeumaticoInt {
     Id: string;
@@ -45,6 +46,7 @@ export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
     const id = params.id;
 
+
     const [loading, setLoading] = useState(true);
     const [vehicle, setVehicle] = useState<VehicleDTO>(
         {} as VehicleDTO
@@ -66,9 +68,15 @@ export default function ListaMaquinaria() {
         }
     };
 
+    const [mostrarEditar, setMostrarEditar] = useState(false);
+
     useEffect(() => {
         fetchVehicleModels();
     }, []);
+
+    useEffect(() => {
+        fetchVehicleModels();
+    }, [mostrarEditar]);
 
     // Tipar los neumáticos correctamente
     const neumaticos: NeumaticoInt[] = Neumaticos.filter(
@@ -108,7 +116,7 @@ export default function ListaMaquinaria() {
                                 </Link>
                                 {/* Boton de editar */}
 
-                                <button className="bg-gray-100 hover:bg-gray-200 border text-lg text-black p-2 rounded-md mb-2 flex items-center justify-center">
+                                <button onClick={() => setMostrarEditar(true)} className="bg-gray-100 hover:bg-gray-200 border text-lg text-black p-2 rounded-md mb-2 flex items-center justify-center">
                                     <FaEdit />
                                 </button>
                             </section>
@@ -199,6 +207,14 @@ export default function ListaMaquinaria() {
                     </div>
                 </div>
             </div>
+            <ModaleditarEquipo
+                visible={mostrarEditar}
+                onClose={() => setMostrarEditar(false)}
+                vehicle={vehicle}
+                onGuardar={() => {
+                    setMostrarEditar(false);
+                }} />
+
         </div>
     );
 }
