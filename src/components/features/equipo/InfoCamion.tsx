@@ -1,12 +1,12 @@
 "use client";
 import { Neumaticos } from "@/mocks/neumaticos.json";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { FaClock, FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import ModaleditarEquipo from "./modaleditarEquipo";
+import { useLayoutContext } from "@/contexts/LayoutContext";
 
 interface NeumaticoInt {
     Id: string;
@@ -46,6 +46,7 @@ export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
     const id = params.id;
 
+    const { setHasChanged } = useLayoutContext();
 
     const [loading, setLoading] = useState(true);
     const [vehicle, setVehicle] = useState<VehicleDTO>(
@@ -70,13 +71,18 @@ export default function ListaMaquinaria() {
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
 
+    const handleUpdate = () => {
+        setHasChanged(true);
+    }
     useEffect(() => {
         fetchVehicleModels();
     }, []);
 
     useEffect(() => {
+        handleUpdate();
         fetchVehicleModels();
     }, [mostrarEditar]);
+
 
     // Tipar los neumáticos correctamente
     const neumaticos: NeumaticoInt[] = Neumaticos.filter(
@@ -91,7 +97,7 @@ export default function ListaMaquinaria() {
                 {/* Seccion de informacion */}
                 <div className="flex flex-col justify-center items-center">
                     {/* Esquema de neumaticos*/}
-                    <div className="flex h-[20vh]  justify-between w-full">
+                    <div className="flex h-[25vh]  justify-between w-full">
                         {/* Info del camión */}
                         <section className="flex flex-col w-full pt-5 items-start mb-2 ">
                             <section className="flex justify-between w-full items-center mb-2">
@@ -212,6 +218,8 @@ export default function ListaMaquinaria() {
                 onClose={() => setMostrarEditar(false)}
                 vehicle={vehicle}
                 onGuardar={() => {
+
+                    setHasChanged(true);
                     setMostrarEditar(false);
                 }} />
 
