@@ -37,7 +37,6 @@ export default function NavBar() {
     const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
     const [menuOpen, setMenuOpen] = React.useState(false);
     const [isCollapsed, setIsCollapsed] = React.useState(false);
-    const [isHovered, setIsHovered] = React.useState(false);
 
     const hasAccess = (allowedRoles?: string[]) => {
         if (!allowedRoles) return true;
@@ -127,10 +126,7 @@ export default function NavBar() {
 
     return (
         <div
-            className={`flex lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "lg:min-w-[80px]" : "lg:min-w-[220px]"
-                }`}
-            onMouseEnter={() => isCollapsed && setIsHovered(true)}
-            onMouseLeave={() => isCollapsed && setIsHovered(false)}
+            className={`flex lg:flex-col gap-y-2 items-center lg:h-screen bg-[#212121] text-neutral-300 shadow-sm font-semibold overflow-y-hidden transition-all duration-300 ease-in-out ${isCollapsed ? "lg:min-w-[80px]" : "lg:min-w-[220px]"}`}
         >
             <div className="w-full flex justify-between items-center bg-amber-300 ">
                 <Link href={"/"} className="w-[60%]  p-2">
@@ -183,7 +179,7 @@ export default function NavBar() {
                             className="flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
                         >
                             <FaRegUserCircle className="text-3xl" />
-                            {(!isCollapsed || isHovered) && (
+                            {(!isCollapsed) && (
                                 <span>
                                     {user?.name} {user?.last_name}
                                 </span>
@@ -200,18 +196,18 @@ export default function NavBar() {
                                     >
                                         <div className="flex items-center gap-x-2">
                                             {item.icon}
-                                            {(!isCollapsed || isHovered) && (
+                                            {(!isCollapsed) && (
                                                 <span>{item.title}</span>
                                             )}
                                         </div>
-                                        {(!isCollapsed || isHovered) &&
+                                        {(!isCollapsed) &&
                                             (openCategories[item.title] ? (
                                                 <FaAngleUp size={16} />
                                             ) : (
                                                 <FaAngleDown size={16} />
                                             ))}
                                     </button>
-                                    {openCategories[item.title] && (!isCollapsed || isHovered) && (
+                                    {openCategories[item.title] && (!isCollapsed) && (
                                         <ul
                                             className={`ml-4 mt-1 overflow-hidden text-sm transition-all duration-300 ease-in-out ${openCategories[item.title]
                                                 ? "max-h-96 opacity-100"
@@ -237,7 +233,7 @@ export default function NavBar() {
                                     className="flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded"
                                 >
                                     {item.icon}
-                                    {(!isCollapsed || isHovered) && <span>{item.title}</span>}
+                                    {(!isCollapsed) && <span>{item.title}</span>}
                                 </Link>
                             )}
                         </li>
@@ -258,7 +254,7 @@ export default function NavBar() {
                     className="flex items-center justify-around"
                 >
                     {user ? <FaSignOutAlt size={40} /> : <FaRegUserCircle size={40} />}
-                    {(!isCollapsed || isHovered) && (
+                    {(!isCollapsed) && (
                         <p className="hidden lg:block">
                             {user ? "Cerrar sesion" : "Iniciar sesion"}
                         </p>
