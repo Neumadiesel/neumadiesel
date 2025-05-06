@@ -9,6 +9,7 @@ interface VehicleDTO {
     code: string;
     modelId: number;
     siteId: number;
+    typeId: number;
     kilometrage: number;
     hours: number;
     model: {
@@ -46,6 +47,11 @@ interface FaenaDTO {
     };
 }
 
+interface VehicleTypeDTO {
+    id: number;
+    code: string;
+    name: string;
+}
 
 interface ModaleditarEquipoProps {
     visible: boolean;
@@ -63,6 +69,7 @@ export default function ModaleditarEquipo({
     const [vehicleEdited, setVehicleEdited] = useState({
         code: "",
         modelId: null as number | null,
+        typeId: null as number | null,
         siteId: null as number | null,
         kilometrage: null as number | null,
         hours: null as number | null,
@@ -72,6 +79,7 @@ export default function ModaleditarEquipo({
 
     const [vehicleModels, setVehicleModels] = useState<VehicleModelDto[]>([]);
     const [sites, setSites] = useState<FaenaDTO[]>([]);
+    const [vehicleTypes, setVehicleTypes] = useState<VehicleTypeDTO[]>([]);
 
     useEffect(() => {
         if (vehicle) {
@@ -79,6 +87,7 @@ export default function ModaleditarEquipo({
             setVehicleEdited({
                 code: vehicle.code,
                 modelId: vehicle.modelId,
+                typeId: vehicle.typeId,
                 siteId: vehicle.siteId,
                 kilometrage: vehicle.kilometrage,
                 hours: vehicle.hours,
@@ -86,33 +95,23 @@ export default function ModaleditarEquipo({
         }
     }, [vehicle]);
 
-    const fetchFaenas = async () => {
+    const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/sites/with-contract");
+            const response = await fetch("http://localhost:3002/dataForm/registerVehicle");
             const data = await response.json();
             setLoading(false);
-            setSites(data);
+            setSites(data.sites);
+            setVehicleModels(data.vehicleModels);
+            setVehicleTypes(data.vehicleTypes);
+            console.log("Data fetched:", data.vehicleTypes);
         } catch (error) {
-            console.error("Error fetching reasons:", error);
-        }
-    };
-
-    const fetchVehicleModels = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch("http://localhost:3002/vehicleModels");
-            const data = await response.json();
-            setLoading(false);
-            setVehicleModels(data);
-        } catch (error) {
-            console.error("Error fetching reasons:", error);
+            console.error("Error fetching data:", error);
         }
     };
 
     useEffect(() => {
-        fetchFaenas();
-        fetchVehicleModels();
+        fetchData();
     }, []);
 
 
@@ -123,8 +122,8 @@ export default function ModaleditarEquipo({
         setError(null);
         setLoading(true);
 
-        const { code, modelId, siteId, hours, kilometrage } = vehicleEdited;
-        if (!code || !modelId || !siteId || hours === null || kilometrage === null) {
+        const { code, modelId, typeId, siteId, hours, kilometrage } = vehicleEdited;
+        if (!code || !modelId || !typeId || !siteId || hours === null || kilometrage === null) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
@@ -171,7 +170,7 @@ export default function ModaleditarEquipo({
                     </button>
                 </div>}
 
-                <div className="flex flex-col">
+                <div className="grid grid-cols-2 gap-2">
                     {/* Lista de modelos */}
                     <label className="text-sm mt-2 font-semibold mb-2">Modelo</label>
                     <select
@@ -203,6 +202,23 @@ export default function ModaleditarEquipo({
                         {sites.map((site) => (
                             <option key={site.id} value={site.id}>
                                 {site.name} - {site.region}
+                            </option>
+                        ))}
+                    </select>
+                    {/* Lista de tipos */}
+                    <label className="text-sm mt-2 font-semibold mb-2">Tipo de Vehiculo</label>
+                    <select
+                        name="Tipo"
+                        value={vehicleEdited.typeId || ""}
+                        onChange={
+                            (e) => setVehicleEdited({ ...vehicleEdited, typeId: Number(e.target.value) })
+                        }
+                        className="border border-gray-300 p-2 rounded"
+                    >
+                        <option value="">Selecciona un tipo de vehiculo</option>
+                        {vehicleTypes.map((type) => (
+                            <option key={type.id} value={type.id}>
+                                {type.code} - {type.name}
                             </option>
                         ))}
                     </select>

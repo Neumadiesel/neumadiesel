@@ -25,6 +25,7 @@ interface VehicleDTO {
     code: string;
     modelId: number;
     siteId: number;
+    typeId: number;
     kilometrage: number;
     hours: number;
     model: {
