@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { TyreModelDto } from "@/types/TyreModelDTO";
+import Label from "@/components/common/forms/Label";
 
 interface ModaleditarTyreModelProps {
     visible: boolean;
@@ -59,8 +60,8 @@ export default function ModaleditarTyreModel({
         setError(null);
         setLoading(true);
 
-        const { code, brand, dimensions, constructionType, pattern, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
-        if (!code || !brand || !dimensions || !constructionType || !pattern || originalTread === null || TKPH === null || cost === null || nominalHours === null || nominalKilometrage === null) {
+        const { code, brand, dimensions, pattern, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
+        if (!code || !brand || !dimensions || !pattern || originalTread === null) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
@@ -74,7 +75,6 @@ export default function ModaleditarTyreModel({
                     code,
                     brand,
                     dimensions,
-                    constructionType,
                     pattern,
                     originalTread,
                     TKPH,
@@ -107,7 +107,7 @@ export default function ModaleditarTyreModel({
                     </button>
                 </div>}
                 <div className="grid grid-cols-2 gap-1">
-                    <label className="text-sm mt-2 font-semibold mb-2">Marca</label>
+                    <Label title="Marca" isNotEmpty={true} />
                     <input
                         name="Marca"
                         value={tyreModelEdited.brand}
@@ -118,7 +118,7 @@ export default function ModaleditarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Codigo */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Codigo</label>
+                    <Label title="Codigo" isNotEmpty={true} />
                     <input
                         name="Codigo"
                         value={tyreModelEdited.code}
@@ -129,7 +129,7 @@ export default function ModaleditarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Dimensiones */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Dimensiones</label>
+                    <Label title="Dimensiones" isNotEmpty={true} />
                     <input
                         name="Dimensiones"
                         value={tyreModelEdited.dimensions}
@@ -139,19 +139,19 @@ export default function ModaleditarTyreModel({
                         placeholder="Dimensiones"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Constrution type */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Tipo de Construcción</label>
+                    {/* Patron */}
+                    <Label title="Patron" isNotEmpty={true} />
                     <input
-                        name="Tipo de Construcción"
-                        value={tyreModelEdited.constructionType}
+                        name="Patron"
+                        value={tyreModelEdited.pattern}
                         onChange={
-                            (e) => setTyreModelEdited({ ...tyreModelEdited, constructionType: e.target.value })
+                            (e) => setTyreModelEdited({ ...tyreModelEdited, pattern: e.target.value })
                         }
-                        placeholder="Tipo de Construcción"
+                        placeholder="Patron"
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Goma original */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Goma Original</label>
+                    <Label title="Goma Original" isNotEmpty={true} />
                     <input
                         name="originalTread"
                         type="number"
@@ -167,7 +167,7 @@ export default function ModaleditarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* TKPH */}
-                    <label className="text-sm mt-2 font-semibold mb-2">TKPH</label>
+                    <Label title="TKPH" isNotEmpty={false} />
                     <input
                         name="tkph"
                         type="number"
@@ -183,7 +183,7 @@ export default function ModaleditarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Costo */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Costo</label>
+                    <Label title="Costo" isNotEmpty={false} />
                     <input
                         name="costo"
                         type="number"
@@ -200,7 +200,7 @@ export default function ModaleditarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Horas nominales */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Horas Nominales</label>
+                    <Label title="Horas Nominales" isNotEmpty={false} />
                     <input
                         name="horasNominales"
                         type="number"
@@ -217,7 +217,7 @@ export default function ModaleditarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Kilometraje nominal */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Kilometraje Nominal</label>
+                    <Label title="Kilometraje Nominal" isNotEmpty={false} />
                     <input
                         name="kilometrajeNominal"
                         type="number"

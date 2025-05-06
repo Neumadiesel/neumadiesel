@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { LayoutProvider, useLayoutContext } from "@/contexts/LayoutContext";
 import ModalRegistrarVehiculo from "@/components/features/equipo/ModalRegistrarVehiculo";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import Button from "@/components/common/button/Button";
 
 interface VehicleDTO {
     id: number;
@@ -83,12 +84,11 @@ export default function RootLayout({
                             <>
                                 <div className="flex justify-between items-center px-4 mb-2">
                                     <h2 className="dark:text-amber-300 text-2xl font-bold p-2">Lista de Equipos</h2>
-                                    <button
+                                    <Button
                                         onClick={() => setModalRegistrarVehiculo(true)}
-                                        className="bg-gray-100 border dark:bg-amber-500 text-black font-semibold py-2 px-4 rounded-sm hover:bg-gray-200 transition-all ease-in-out"
-                                    >
-                                        Registrar nuevo equipo
-                                    </button>
+                                        text="Registrar nuevo equipo"
+                                        className="hidden lg:flex"
+                                    />
                                 </div>
 
                                 <div className="flex flex-col h-[80%] overflow-y-scroll gap-x-4 gap-y-2 px-4">

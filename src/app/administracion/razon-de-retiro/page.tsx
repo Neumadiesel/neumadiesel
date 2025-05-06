@@ -3,6 +3,7 @@ import { FaPen, FaPlusSquare } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import ModalRegistrarRazon from "@/components/features/razon-retiro/ModalRegistrarRazon";
 import ModalEditarRazon from "@/components/features/razon-retiro/ModalEditarRazon";
+import Button from "@/components/common/button/Button";
 
 
 interface RazonDto {
@@ -55,10 +56,7 @@ export default function Page() {
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Razon de baja de neumaticos</h1>
                 <div className="flex">
-                    <button onClick={handleOpenModal} className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white">
-                        <FaPlusSquare className="text-xl" />
-                        <span>Agregar Razon de Retiro</span>
-                    </button>
+                    <Button onClick={handleOpenModal} text="Agregar Razon de Retiro" />
                 </div>
             </div>
             {/* Lista de razones de retiro */}

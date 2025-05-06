@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import ModalEditarVehicleModel from "@/components/features/equipo/modaleditarModeloVehiculo";
 import ModalRegistarModeloVehiculo from "@/components/features/equipo/ModalRegistrarModeloVehiculo";
 import Link from "next/link";
+import Button from "@/components/common/button/Button";
 
 interface VehicleModelDto {
     id: number;
@@ -57,10 +58,11 @@ export default function ModelosEquipo() {
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
             <section className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Modelos de Equipos</h1>
-                <button onClick={() => { setModalRegistrarFaena(true) }} className="bg-gray-100  hover:bg-neutral-300 dark:hover:bg-neumtral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white">
-                    <FaPlusSquare className="text-xl" />
-                    <span>Crear Nuevo Modelo</span>
-                </button>
+                <Button
+                    onClick={() => { setModalRegistrarFaena(true) }}
+                    text="Crear Nuevo Modelo"
+
+                />
             </section>
             <main >
                 <div

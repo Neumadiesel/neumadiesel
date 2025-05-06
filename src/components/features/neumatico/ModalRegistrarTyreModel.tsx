@@ -2,20 +2,8 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Label from "@/components/common/forms/Label";
 
-interface TyreModelDto {
-    id: number;
-    code: string;
-    brand: string;
-    dimensions: string;
-    constructionType: string;
-    rubberDesign: string;
-    originalTread: number;
-    TKPH: number;
-    cost: number;
-    nominalHours: number;
-    nominalKilometrage: number;
-}
 
 interface ModalRegistrarTyreModelProps {
     visible: boolean;
@@ -33,7 +21,7 @@ export default function ModalRegistrarTyreModel({
         brand: "",
         dimensions: "",
         constructionType: "",
-        rubberDesign: "",
+        pattern: "",
         originalTread: null as number | null,
         TKPH: null as number | null,
         cost: null as number | null,
@@ -52,14 +40,12 @@ export default function ModalRegistrarTyreModel({
         setError(null);
         setLoading(true);
 
-        const { code, brand, dimensions, constructionType, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
-        if (!code || !brand || !dimensions || !constructionType || originalTread === null || TKPH === null || cost === null || nominalHours === null || nominalKilometrage === null) {
+        const { code, brand, dimensions, constructionType, pattern, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
+        if (!code || !brand || !dimensions || originalTread === null) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
         }
-        const rubberDesign = "Radial"
-
 
         try {
             const response = await axios.post(
@@ -69,7 +55,7 @@ export default function ModalRegistrarTyreModel({
                     brand,
                     dimensions,
                     constructionType,
-                    rubberDesign,
+                    pattern,
                     originalTread,
                     TKPH,
                     cost,
@@ -78,7 +64,18 @@ export default function ModalRegistrarTyreModel({
                 },
             );
 
-
+            setTyreModelEdited({
+                code: "",
+                brand: "",
+                dimensions: "",
+                constructionType: "",
+                pattern: "",
+                originalTread: null,
+                TKPH: null,
+                cost: null,
+                nominalHours: null,
+                nominalKilometrage: null,
+            });
             onGuardar();
             onClose();
             return response.data;
@@ -93,8 +90,8 @@ export default function ModalRegistrarTyreModel({
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
             <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
-                <h2 className="text-xl font-bold mb-4">Registrar Modelo de Neumatico</h2>
-
+                <h2 className="text-xl font-bold">Registrar Modelo de Neumatico</h2>
+                <p className="text-sm text-gray-500 mb-4">Completa los campos para registrar un nuevo modelo de neumatico.</p>
                 {/* Mostrar error si existe */}
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
                     <button onClick={() => setError(null)} className=" text-red-500">
@@ -102,7 +99,7 @@ export default function ModalRegistrarTyreModel({
                     </button>
                 </div>}
                 <div className="grid grid-cols-2 gap-1">
-                    <label className="text-sm mt-2 font-semibold mb-2">Marca</label>
+                    <Label title="Marca" isNotEmpty={true} />
                     <input
                         name="Marca"
                         value={tyreModelEdited.brand}
@@ -113,18 +110,18 @@ export default function ModalRegistrarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Codigo */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Codigo</label>
+                    <Label title="Codigo" isNotEmpty={true} />
                     <input
                         name="Codigo"
                         value={tyreModelEdited.code}
                         onChange={
-                            (e) => setTyreModelEdited({ ...tyreModelEdited, code: e.target.value })
+                            (e) => setTyreModelEdited({ ...tyreModelEdited, code: e.target.value.toUpperCase() })
                         }
                         placeholder="Codigo"
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Dimensiones */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Dimensiones</label>
+                    <Label title="Dimensiones" isNotEmpty={true} />
                     <input
                         name="Dimensiones"
                         value={tyreModelEdited.dimensions}
@@ -134,19 +131,19 @@ export default function ModalRegistrarTyreModel({
                         placeholder="Dimensiones"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Constrution type */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Tipo de Construcción</label>
+                    {/* Patron */}
+                    <Label title="Patron" isNotEmpty={true} />
                     <input
-                        name="Tipo de Construcción"
-                        value={tyreModelEdited.constructionType}
+                        name="Patron"
+                        value={tyreModelEdited.pattern}
                         onChange={
-                            (e) => setTyreModelEdited({ ...tyreModelEdited, constructionType: e.target.value })
+                            (e) => setTyreModelEdited({ ...tyreModelEdited, pattern: e.target.value.toUpperCase() })
                         }
-                        placeholder="Tipo de Construcción"
+                        placeholder="Patron"
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Goma original */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Goma Original</label>
+                    <Label title="Goma Original" isNotEmpty={true} />
                     <input
                         name="originalTread"
                         type="number"
@@ -162,7 +159,7 @@ export default function ModalRegistrarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* TKPH */}
-                    <label className="text-sm mt-2 font-semibold mb-2">TKPH</label>
+                    <Label title="TKPH" isNotEmpty={false} />
                     <input
                         name="tkph"
                         type="number"
@@ -178,7 +175,7 @@ export default function ModalRegistrarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Costo */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Costo</label>
+                    <Label title="Costo" isNotEmpty={false} />
                     <input
                         name="costo"
                         type="number"
@@ -195,7 +192,7 @@ export default function ModalRegistrarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Horas nominales */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Horas Nominales</label>
+                    <Label title="Horas Nominales" isNotEmpty={false} />
                     <input
                         name="horasNominales"
                         type="number"
@@ -212,7 +209,7 @@ export default function ModalRegistrarTyreModel({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Kilometraje nominal */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Kilometraje Nominal</label>
+                    <Label title="Kilometraje Nominal" isNotEmpty={false} />
                     <input
                         name="kilometrajeNominal"
                         type="number"

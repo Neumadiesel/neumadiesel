@@ -7,6 +7,7 @@ import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ModalRegistrarFaena from "@/components/features/faena/ModalRegistrarFaena";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import Button from "@/components/common/button/Button";
 
 interface FaenaDTO {
     id: number;
@@ -65,10 +66,10 @@ export default function Page() {
             <Breadcrumb />
             <section className="flex justify-between items-center mb-2 px-3">
                 <h1 className="text-2xl font-bold">Contratos de faena</h1>
-                <button onClick={() => { setModalRegistrarFaena(true) }} className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white">
-                    <FaPlusSquare className="text-xl" />
-                    <span>Registrar Nuevo contrato</span>
-                </button>
+                <Button
+                    onClick={() => { setModalRegistrarFaena(true) }}
+                    text="Registrar nuevo contrato"
+                />
             </section>
             <main className="px-3" >
                 <div
