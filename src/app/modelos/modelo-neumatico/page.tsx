@@ -5,20 +5,8 @@ import { useEffect, useState } from "react";
 import ModalRegistrarTyreModel from "@/components/features/neumatico/ModalRegistrarTyreModel";
 import Link from "next/link";
 import ModaleditarTyreModel from "@/components/features/neumatico/ModalEditarTyreModel";
+import { TyreModelDto } from "@/types/TyreModelDTO";
 
-interface TyreModelDto {
-    id: number;
-    code: string;
-    brand: string;
-    dimensions: string;
-    constructionType: string;
-    rubberDesign: string;
-    originalTread: number;
-    TKPH: number;
-    cost: number;
-    nominalHours: number;
-    nominalKilometrage: number;
-}
 export default function ModelosNeumaticos() {
     const [tyreModels, setTyreModels] = useState<TyreModelDto[]>([]);
     const [tyreModelSelected, setTyreModelSelected] = useState<TyreModelDto | null>(null);
@@ -91,22 +79,12 @@ export default function ModelosNeumaticos() {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                        Patron
+                                    </p>
+                                </th>
+                                <th className="p-4">
+                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
                                         Goma Original
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        TKPH
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Horas Nominales
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        KM's Nominal
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -172,25 +150,15 @@ export default function ModelosNeumaticos() {
                                         </td>
                                         <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                                {tyreModel.pattern}
+                                            </p>
+                                        </td>
+                                        <td className="p-4 bg-gray-50">
+                                            <p className="block  font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tyreModel.originalTread}
                                             </p>
                                         </td>
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tyreModel.TKPH}
-                                            </p>
-                                        </td>
-                                        <td className="p-4 ">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tyreModel.nominalHours}
-                                            </p>
-                                        </td>
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tyreModel.nominalKilometrage}
-                                            </p>
-                                        </td>
-                                        <td className="  bg-gray-50 dark:bg-neutral-900 px-2">
+                                        <td className="dark:bg-neutral-900 px-2">
                                             <div className="flex gap-2">
                                                 {/* boton editar */}
                                                 <button onClick={() => handleEditTyreModel(tyreModel)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center">

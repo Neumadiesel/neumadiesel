@@ -2,20 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-
-interface TyreModelDto {
-    id: number;
-    code: string;
-    brand: string;
-    dimensions: string;
-    constructionType: string;
-    rubberDesign: string;
-    originalTread: number;
-    TKPH: number;
-    cost: number;
-    nominalHours: number;
-    nominalKilometrage: number;
-}
+import { TyreModelDto } from "@/types/TyreModelDTO";
 
 interface ModaleditarTyreModelProps {
     visible: boolean;
@@ -35,7 +22,7 @@ export default function ModaleditarTyreModel({
         brand: "",
         dimensions: "",
         constructionType: "",
-        rubberDesign: "",
+        pattern: "",
         originalTread: null as number | null,
         TKPH: null as number | null,
         cost: null as number | null,
@@ -53,7 +40,7 @@ export default function ModaleditarTyreModel({
                 brand: tyreModel.brand,
                 dimensions: tyreModel.dimensions,
                 constructionType: tyreModel.constructionType,
-                rubberDesign: tyreModel.rubberDesign,
+                pattern: tyreModel.pattern,
                 originalTread: tyreModel.originalTread || 0,
                 TKPH: tyreModel.TKPH || 0,
                 cost: tyreModel.cost || 0,
@@ -72,8 +59,8 @@ export default function ModaleditarTyreModel({
         setError(null);
         setLoading(true);
 
-        const { code, brand, dimensions, constructionType, rubberDesign, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
-        if (!code || !brand || !dimensions || !constructionType || !rubberDesign || originalTread === null || TKPH === null || cost === null || nominalHours === null || nominalKilometrage === null) {
+        const { code, brand, dimensions, constructionType, pattern, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
+        if (!code || !brand || !dimensions || !constructionType || !pattern || originalTread === null || TKPH === null || cost === null || nominalHours === null || nominalKilometrage === null) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
@@ -88,7 +75,7 @@ export default function ModaleditarTyreModel({
                     brand,
                     dimensions,
                     constructionType,
-                    rubberDesign,
+                    pattern,
                     originalTread,
                     TKPH,
                     cost,
