@@ -140,7 +140,12 @@ export default function ModalRegistrarVehiculo({
             setError(null);
             return response.data;
         } catch (error) {
-            setError(error instanceof Error ? error.message : "Error al actualizar el modelo");
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                setError(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
         } finally {
             setLoading(false);
         }

@@ -112,7 +112,7 @@ export default function ModalEditarVehicleModel({
                         name="Modelo"
                         value={vehicleModelEdited.model}
                         onChange={
-                            (e) => setVehicleModelEdited({ ...vehicleModelEdited, model: e.target.value })
+                            (e) => setVehicleModelEdited({ ...vehicleModelEdited, model: e.target.value.toUpperCase() })
                         }
                         placeholder="Modelo"
                         className="border border-gray-300 p-2 rounded"

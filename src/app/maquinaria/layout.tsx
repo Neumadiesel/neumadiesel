@@ -91,15 +91,16 @@ export default function RootLayout({
                                     </button>
                                 </div>
 
-                                <div className="grid grid-cols-3 h-[90%] overflow-scroll gap-x-4 gap-y-2 px-4">
+                                <div className="flex flex-col h-[80%] overflow-y-scroll gap-x-4 gap-y-2 px-4">
                                     {vehicles.map(vehicle => (
                                         <Link
                                             href={`/maquinaria/${vehicle.id}`}
                                             key={vehicle.id}
-                                            className="flex flex-col h-28 justify-center border items-center p-2 bg-[#f1f1f1] dark:bg-[#212121] rounded-md hover:bg-gray-200 transition-all ease-in-out"
+                                            className="flex h-20 justify-around border items-center p-2 bg-gray-100 dark:bg-[#212121] rounded-md hover:bg-gray-200 transition-all ease-in-out"
                                         >
-                                            <GiMineTruck size={35} />
-                                            <p className="text-xl font-semibold font-mono">{vehicle.code}</p>
+                                            <p className="text-lg font-semibold font-mono">{vehicle.code}</p>
+                                            <p className="text-sm font-semibold text-gray-500">{vehicle.model.brand} {vehicle.model.model}</p>
+                                            <p className="text-sm font-semibold text-gray-500">{vehicle.site.name}</p>
                                         </Link>
                                     ))}
                                 </div>

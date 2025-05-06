@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaAngleLeft, FaAngleRight, FaRegCopy } from "react-icons/fa";
 import { DB_Relacion_Numaticos_Camion } from "@/mocks/DB_Relacion_Neumaticos_Camion.json";
+import Breadcrumb from "@/components/layout/BreadCrumb";
 
 // Cálculo fuera del componente
 const neumaticosConEstado = DB_Relacion_Numaticos_Camion.map(neumatico => {
@@ -46,6 +47,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
 
     return (
         <div className="w-full">
+            <Breadcrumb />
             {/* Header y filtros */}
             <div className="flex justify-between h-[10%] items-center w-full">
                 <div className="gap-y-2 lg:flex items-center justify-between w-full mx-auto my-2">
@@ -128,10 +130,10 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                 {tipo === "operacion" && (
                                     <td className="px-6 py-4">
                                         <div className={`font-bold w-5 h-5 rounded-full border-2 ${neumatico.estado === 'Desgastado'
-                                                ? 'bg-red-200 border-red-500'
-                                                : neumatico.estado === 'Mantención'
-                                                    ? 'bg-yellow-200 border-yellow-500'
-                                                    : 'bg-emerald-200 border-emerald-500'
+                                            ? 'bg-red-200 border-red-500'
+                                            : neumatico.estado === 'Mantención'
+                                                ? 'bg-yellow-200 border-yellow-500'
+                                                : 'bg-emerald-200 border-emerald-500'
                                             }`} />
                                     </td>
                                 )}

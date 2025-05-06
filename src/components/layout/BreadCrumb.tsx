@@ -8,7 +8,7 @@ export default function Breadcrumb() {
     const pathname = usePathname();
     const segments = pathname.split("/").filter(Boolean);
 
-    if (segments.length <= 1 && segments[0] !== "maquinaria") {
+    if (segments.length === 0) {
         return <nav className="hidden" aria-label="Breadcrumb"></nav>;
     }
 
