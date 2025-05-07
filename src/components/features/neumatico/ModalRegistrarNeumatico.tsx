@@ -1,9 +1,7 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
-import { Location } from "@/types/Location";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 
 
@@ -27,23 +25,8 @@ export default function ModalRegistrarNeumatico({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [locations, setLocations] = useState<Location[]>([]);
     const [tireModels, setTireModels] = useState<TyreModelDto[]>([]);
     const [selectedModel, setSelectedModel] = useState<TyreModelDto | null>(null);
-
-
-
-    const fetchLocations = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch("http://localhost:3002/locations");
-            const data = await response.json();
-            setLoading(false);
-            setLocations(data);
-        } catch (error) {
-            console.error("Error fetching tyre models:", error);
-        }
-    };
 
     const fetchModelTire = async () => {
         setLoading(true);
@@ -57,9 +40,7 @@ export default function ModalRegistrarNeumatico({
         }
     };
 
-
     useEffect(() => {
-        fetchLocations();
         fetchModelTire();
         console.log("selected", selectedModel)
     }, []);
