@@ -61,11 +61,8 @@ export default function NavBar() {
         {
             title: "Neumáticos",
             icon: <FaCircleDot className="text-2xl" />,
+            path: "/neumaticos",
             allowedRoles: ["administrador", "planificador", "supervisor"],
-            children: [
-                { title: "Operación", path: "/neumaticos/" },
-                { title: "Bodega", path: "/neumaticos/bodega" },
-            ],
         },
         {
             title: "Administración",

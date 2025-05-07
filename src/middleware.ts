@@ -29,7 +29,6 @@ const routePermissions = {
     // Rutas de neumáticos
     neumaticos: [
         '/neumaticos',
-        '/neumaticos/bodega',
     ],
 
     modelos: [
