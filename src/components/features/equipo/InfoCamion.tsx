@@ -8,6 +8,8 @@ import { FaCirclePlus } from "react-icons/fa6";
 import ModaleditarEquipo from "./modaleditarEquipo";
 import { useLayoutContext } from "@/contexts/LayoutContext";
 import { installedTiresDTO } from "@/types/Tire";
+import Button from "@/components/common/button/Button";
+import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
 
 interface NeumaticoInt {
     Id: string;
@@ -88,6 +90,7 @@ export default function ListaMaquinaria() {
     };
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
+    const [mostrarAsignarNeumatico, setMostrarAsignarNeumatico] = useState(false);
 
     const handleUpdate = () => {
         setHasChanged(true);
@@ -99,13 +102,7 @@ export default function ListaMaquinaria() {
     useEffect(() => {
         handleUpdate();
         fetchVehicleModels();
-    }, [mostrarEditar]);
-
-
-    // Tipar los neumáticos correctamente
-    const neumaticos: NeumaticoInt[] = Neumaticos.filter(
-        (neumatico: NeumaticoInt) => neumatico.Codigo_Camion === id
-    );
+    }, [mostrarEditar, mostrarAsignarNeumatico]);
 
     return (
         <div className="p-2 h-[100%] w-full bg-white dark:bg-black relative shadow-md">
@@ -123,24 +120,16 @@ export default function ListaMaquinaria() {
                                     Equipo {loading ? "..." : vehicle.code}
                                 </h2>
                                 {/* Boton de mantenimiento */}
-                                <Link
-                                    href={`/mantenimiento/${id}`}
-                                    className={`text-lg w-52 text-center p-1 rounded-md border flex justify-center items-center gap-2 ${id
-                                        ? "text-black bg-gray-100 hover:bg-gray-200 cursor-pointer"
-                                        : "text-gray-400 bg-gray-200 cursor-not-allowed"
-                                        }`}
-                                    onClick={e => {
-                                        if (!id) {
-                                            e.preventDefault();
-                                        }
-                                    }}
-                                >
-                                    <FaCirclePlus size={20} />
-                                    Mantenimiento
-                                </Link>
+                                <Button
+                                    disabled={loading
+                                        || id === undefined
+                                    }
+                                    text="Asignar Neumatico"
+                                    onClick={() => { setMostrarAsignarNeumatico(true) }}
+                                />
                                 {/* Boton de editar */}
 
-                                <button onClick={() => setMostrarEditar(true)} className="bg-gray-100 hover:bg-gray-200 border text-lg text-black p-2 rounded-md mb-2 flex items-center justify-center">
+                                <button disabled={loading || id === undefined} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  border text-lg text-black p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined ? "opacity-50 " : "cursor-pointer hover:bg-gray-200"}`}>
                                     <FaEdit />
                                 </button>
                             </section>
@@ -253,6 +242,15 @@ export default function ListaMaquinaria() {
 
                     setHasChanged(true);
                     setMostrarEditar(false);
+                }} />
+            <ModalAsignarNeumatico
+                visible={mostrarAsignarNeumatico}
+                onClose={() => setMostrarAsignarNeumatico(false)}
+                vehicle={vehicle}
+                onGuardar={() => {
+
+                    setHasChanged(true);
+                    setMostrarAsignarNeumatico(false);
                 }} />
 
         </div>
