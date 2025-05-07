@@ -9,14 +9,11 @@ export default function TirePage() {
     const { id } = useParams();
 
     const [tire, setTires] = useState<TireDTO>();
-    const [loading, setLoading] = useState(true);
+
     const fetchTires = async () => {
-        setLoading(true);
         try {
             const response = await fetch(`http://localhost:3002/tires/${id}`);
             const data = await response.json();
-            setLoading(false);
-            console.log("INFORMACION NEUMATICOS ✅", data);
             setTires(data);
         } catch (error) {
             console.error("Error fetching tyre models:", error);
