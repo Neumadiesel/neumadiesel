@@ -37,6 +37,7 @@ export default function RootLayout({
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
     const [modalRegistrarVehiculo, setModalRegistrarVehiculo] = useState(false);
     const { hasChanged, setHasChanged } = useLayoutContext();
+    const [codigo, setCodigo] = useState("");
 
     const fetchVehicleModels = async () => {
         setLoading(true);
@@ -50,6 +51,13 @@ export default function RootLayout({
             setLoading(false);
         }
     };
+
+    const filteredVehicles = vehicles.filter((vehicle) => {
+        const matchCode = vehicle.code.toLowerCase().includes(codigo.toLowerCase());
+
+        return matchCode;
+    });
+
 
     useEffect(() => {
         fetchVehicleModels();
@@ -89,9 +97,18 @@ export default function RootLayout({
                                         className="hidden lg:flex"
                                     />
                                 </div>
+                                <div className="flex justify-center items-center px-4 mb-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Buscar por codigo de Equipo..."
+                                        value={codigo.toUpperCase()}
+                                        onChange={(e) => setCodigo(e.target.value)}
+                                        className="w-full h-10 px-4 border border-gray-300 rounded-md focus:outline-none"
+                                    />
+                                </div>
 
                                 <div className="flex flex-col h-[80%] overflow-y-scroll gap-x-4 gap-y-2 px-4">
-                                    {vehicles.map(vehicle => (
+                                    {filteredVehicles.map(vehicle => (
                                         <Link
                                             href={`/maquinaria/${vehicle.id}`}
                                             key={vehicle.id}

@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Pencil, Info } from "lucide-react";
+import { Pencil, Info, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
 import ModalRegistrarNeumatico from "./ModalRegistrarNeumatico";
@@ -89,12 +88,12 @@ export default function ListaNeumaticos() {
                         <input
                             type="text"
                             placeholder="Buscar por código Neumático o Equipo"
-                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white font-semibold outline-gray-200 placeholder:text-gray-700 "
+                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-sm outline-gray-200 placeholder:text-gray-700 "
                             value={codigo.toUpperCase()}
                             onChange={(e) => setCodigo(e.target.value)}
                         />
                         <select
-                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white font-semibold outline-gray-200 placeholder:text-gray-700"
+                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-md outline-gray-200 placeholder:text-gray-700"
                             value={estado}
                             onChange={(e) => setEstado(e.target.value)}
                         >
@@ -150,11 +149,6 @@ export default function ListaNeumaticos() {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Disponible
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
                                         Acciones
                                     </p>
                                 </th>
@@ -195,8 +189,7 @@ export default function ListaNeumaticos() {
                                         </div>
                                     </td>
                                 </tr>
-                            ) : null}
-                            {
+                            ) :
                                 paginatedNeumaticos.map((tire) => (
                                     <tr key={tire.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-900">
@@ -224,11 +217,6 @@ export default function ListaNeumaticos() {
                                                 {tire.initialTread}
                                             </p>
                                         </td>
-                                        <td className="p-4 bg-gray-50">
-                                            <p className="block  font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tire.initialHours}
-                                            </p>
-                                        </td>
                                         <td className="dark:bg-neutral-900 px-2">
                                             <div className="flex gap-2">
                                                 {/* Botón editar */}
@@ -241,7 +229,7 @@ export default function ListaNeumaticos() {
 
                                                 {/* Botón de ver detalles */}
                                                 <Link
-                                                    href={`/modelos/modelo-neumatico/${tire.id}`}
+                                                    href={`/neumaticos/${tire.id}`}
                                                     className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center"
                                                 >
                                                     <Info className="w-4 h-4" />
@@ -263,21 +251,21 @@ export default function ListaNeumaticos() {
                 <button
                     onClick={() => setCurrentPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`p-3 font-mono font-semibold h-10 border border-gray-400 rounded-l-md ${currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200"
+                    className={`p-3 font-mono font-semibold h-10 border rounded-full ${currentPage === 1 ? "bg-gray-100 cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200"
                         } text-black`}
                 >
-                    <FaAngleLeft size={20} />
+                    <ArrowLeft className="w-4 h-4" />
                 </button>
-                <span className="text-black bg-gray-100 border-y border-gray-400 h-10 w-48 flex justify-center items-center py-3 dark:text-white font-semibold text-lg">
+                <span className="text-black h-10 w-48 flex justify-center items-center py-3 dark:text-white text-sm">
                     Página {currentPage} de {totalPages}
                 </span>
                 <button
                     onClick={() => setCurrentPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`p-3 font-mono h-10 font-semibold border border-gray-400 rounded-r-md ${currentPage === totalPages ? "bg-gray-400 cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200"
+                    className={`p-3 font-mono h-10 font-semibold border rounded-full ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200"
                         } text-black`}
                 >
-                    <FaAngleRight size={20} />
+                    <ArrowRight className="w-4 h-4" />
                 </button>
             </div>
             <ModalRegistrarNeumatico

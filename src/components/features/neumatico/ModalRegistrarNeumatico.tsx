@@ -21,7 +21,6 @@ export default function ModalRegistrarNeumatico({
     const [tyreModelEdited, setTyreModelEdited] = useState({
         code: "",
         modelId: null as number | null,
-        locationId: null as number | null,
         initialTread: null as number | null,
         initialKilometrage: null as number | null,
         initialHours: null as number | null
@@ -70,13 +69,12 @@ export default function ModalRegistrarNeumatico({
         setLoading(true);
 
         const {
-            code, modelId, locationId, initialTread, initialKilometrage, initialHours
+            code, modelId, initialTread, initialKilometrage, initialHours
         } = tyreModelEdited;
         console.log(tyreModelEdited);
         if (
             !code ||
             modelId === null ||
-            locationId === null ||
             initialTread === null ||
             initialKilometrage === null ||
             initialHours === null
@@ -92,7 +90,7 @@ export default function ModalRegistrarNeumatico({
             setLoading(false);
             return;
         }
-
+        const locationId = 2;
         try {
             const response = await axios.post(
                 `http://localhost:3002/tires/`,
@@ -109,7 +107,6 @@ export default function ModalRegistrarNeumatico({
             setTyreModelEdited({
                 code: "",
                 modelId: null,
-                locationId: null,
                 initialTread: null,
                 initialKilometrage: null,
                 initialHours: null
@@ -132,7 +129,7 @@ export default function ModalRegistrarNeumatico({
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
             <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
                 <h2 className="text-xl font-bold">Registrar Nuevo Neumatico</h2>
-                <p className="text-sm text-gray-500 mb-4">Completa los campos para registrar un nuevo neumatico.</p>
+                <p className="text-sm text-gray-500 mb-4">Completa los campos para registrar un nuevo neumatico. Todos los nuevos neumaticos se almacenaran en bodega.</p>
                 {/* Mostrar error si existe */}
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
                     <button onClick={() => setError("")} className=" text-red-500">
@@ -151,21 +148,6 @@ export default function ModalRegistrarNeumatico({
                         placeholder="Codigo"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Locacion */}
-                    <Label title="Locacion" isNotEmpty={true} />
-                    <select
-                        name="locacion"
-                        value={tyreModelEdited.locationId === null ? "" : tyreModelEdited.locationId}
-                        onChange={(e) => setTyreModelEdited({ ...tyreModelEdited, locationId: Number(e.target.value) })}
-                        className="border border-gray-300 p-2 rounded"
-                    >
-                        <option value="">Seleccionar Locacion</option>
-                        {locations.map((location) => (
-                            <option key={location.id} value={location.id}>
-                                {location.name}
-                            </option>
-                        ))}
-                    </select>
                     {/* Modelo */}
                     <Label title="Modelo" isNotEmpty={true} />
                     <select
