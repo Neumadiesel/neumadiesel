@@ -12,7 +12,7 @@ export default function EditarInfo() {
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
-        setError(null);
+        setError(null as string | null);
         setLoading(true);
 
         try {

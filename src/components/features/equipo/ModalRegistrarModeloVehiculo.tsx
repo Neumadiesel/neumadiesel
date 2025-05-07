@@ -32,7 +32,7 @@ export default function ModalRegistarModeloVehiculo({
 
 
     const registerModelVehicle = async () => {
-        setError(null);
+        setError(null as string | null);
         setLoading(true);
 
         const { brand, model, wheelCount } = vehicleModelEdited;
@@ -78,7 +78,7 @@ export default function ModalRegistarModeloVehiculo({
                     Completa los campos para registrar un nuevo modelo de vehículo.
                 </p>
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError(null)} className=" text-red-500">
+                    <button onClick={() => setError(null as string | null)} className=" text-red-500">
                         X
                     </button>
                 </div>}

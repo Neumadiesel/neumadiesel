@@ -83,7 +83,7 @@ export default function ModalRegistrarVehiculo({
 
 
     const handleSubmit = async () => {
-        setError(null);
+        setError(null as string | null);
         setLoading(true);
 
         const { code, modelId, typeId, siteId, hours, kilometrage } = vehicleEdited;
@@ -117,7 +117,7 @@ export default function ModalRegistrarVehiculo({
                 kilometrage: null,
                 hours: null,
             });
-            setError(null);
+            setError(null as string | null);
             return response.data;
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -142,7 +142,7 @@ export default function ModalRegistrarVehiculo({
 
                 {/* Mostrar error si existe */}
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError(null)} className=" text-red-500">
+                    <button onClick={() => setError(null as string | null)} className=" text-red-500">
                         X
                     </button>
                 </div>}

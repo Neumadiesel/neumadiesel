@@ -37,7 +37,7 @@ export default function ModalRegistrarTyreModel({
 
 
     const handleSubmit = async () => {
-        setError(null);
+        setError(null as string | null);
         setLoading(true);
 
         const { code, brand, dimensions, constructionType, pattern, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
@@ -94,7 +94,7 @@ export default function ModalRegistrarTyreModel({
                 <p className="text-sm text-gray-500 mb-4">Completa los campos para registrar un nuevo modelo de neumatico.</p>
                 {/* Mostrar error si existe */}
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError(null)} className=" text-red-500">
+                    <button onClick={() => setError(null as string | null)} className=" text-red-500">
                         X
                     </button>
                 </div>}

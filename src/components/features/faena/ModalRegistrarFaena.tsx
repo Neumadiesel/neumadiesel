@@ -33,7 +33,7 @@ export default function ModalRegistrarFaena({
 
 
     const registerSite = async () => {
-        setError(null);
+        setError(null as string | null);
         setLoading(true);
 
         const { name, region } = faenaEditada;
@@ -110,7 +110,7 @@ export default function ModalRegistrarFaena({
                     Completa los campos para registrar un nuevo contrato de faena, puede registrar el contrato de inmediato o registrarlo en un futuro.
                 </p>
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError(null)} className=" text-red-500">
+                    <button onClick={() => setError(null as string | null)} className=" text-red-500">
                         X
                     </button>
                 </div>}
