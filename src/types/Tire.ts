@@ -24,6 +24,22 @@ export interface TireDTO {
         id: number;
         name: string;
     };
+    installedTires: {
+        id: number;
+        vehicleId: number;
+        tireId: number;
+        sensorId: number | null;
+        position: number;
+        vehicle: {
+            id: number;
+            code: string;
+            modelId: number;
+            siteId: number;
+            kilometrage: number;
+            hours: number;
+            typeId: number;
+        };
+    }[];
 }
 
 export interface installedTiresDTO {

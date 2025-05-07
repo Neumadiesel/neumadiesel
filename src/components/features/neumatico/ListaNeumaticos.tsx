@@ -17,7 +17,6 @@ import { FaPencil } from "react-icons/fa6";
 
 export default function ListaNeumaticos({ tipo }: { tipo: string }) {
     const [codigo, setCodigo] = useState('');
-    const [camion, setCamion] = useState('');
     const [estado, setEstado] = useState('');
     const [bodega, setBodega] = useState('Bodega');
 
@@ -34,7 +33,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
             const response = await fetch("http://localhost:3002/tires");
             const data = await response.json();
             setLoading(false);
-            console.log(data);
+            console.log("INFORMACION NEUMATICOS ✅", data);
             setTires(data);
         } catch (error) {
             console.error("Error fetching tyre models:", error);
@@ -56,8 +55,19 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
     // Aplicar filtros cada vez que cambian los inputs
 
 
-    const totalPages = Math.ceil(tires.length / itemsPerPage);
-    const paginatedNeumaticos = tires.slice(
+    const filteredTires = tires.filter((tire) => {
+        const matchCode = tire.code.toLowerCase().includes(codigo.toLowerCase());
+
+        const matchEstado = estado === "" ||
+            (estado === "Operativo"
+                ? tire.location.name === "Operativo"
+                : tire.location.name === estado);
+
+        return matchCode && matchEstado;
+    });
+
+    const totalPages = Math.ceil(filteredTires.length / itemsPerPage);
+    const paginatedNeumaticos = filteredTires.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -126,22 +136,27 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Marca
+                                        Ubicacion
                                     </p>
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Dimensiones
+                                        Posicion
                                     </p>
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Patron
+                                        Int
                                     </p>
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Goma Original
+                                        Ext
+                                    </p>
+                                </th>
+                                <th className="p-4">
+                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                        Disponible
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -163,7 +178,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                         </div>
                                     </td>
                                 </tr>
-                            ) : tires.length === 0 ? (
+                            ) : paginatedNeumaticos.length === 0 ? (
                                 <tr>
                                     <td colSpan={6} className="text-center p-8">
                                         <div className="flex flex-col items-center justify-center space-y-4  animate-pulse">
@@ -188,7 +203,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                 </tr>
                             ) : null}
                             {
-                                tires.map((tire) => (
+                                paginatedNeumaticos.map((tire) => (
                                     <tr key={tire.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
@@ -197,17 +212,22 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                         </td>
                                         <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tire.model.pattern}
+                                                {tire.location.name == "Operativo" ? tire.installedTires[0].vehicle.code : tire.location.name}
                                             </p>
                                         </td>
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-900">
+                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                                {tire.installedTires[0]?.position ? tire.installedTires[0].position : "N/A"}
+                                            </p>
+                                        </td>
+                                        <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tire.initialTread}
                                             </p>
                                         </td>
                                         <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tire.initialKilometrage}
+                                                {tire.initialTread}
                                             </p>
                                         </td>
                                         <td className="p-4 bg-gray-50">
