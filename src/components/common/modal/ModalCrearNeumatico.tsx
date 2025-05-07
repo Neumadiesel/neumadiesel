@@ -100,7 +100,7 @@ export default function ModalCrearNeumatico({
                     Complete los campos requeridos para registrar un nuevo neumatico al stock.
                 </p>
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError(null)} className=" text-red-500">
+                    <button onClick={() => setError("")} className=" text-red-500">
                         X
                     </button>
                 </div>}                <div className="space-y-3">
