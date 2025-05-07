@@ -7,6 +7,7 @@ import { FaClock, FaEdit } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import ModaleditarEquipo from "./modaleditarEquipo";
 import { useLayoutContext } from "@/contexts/LayoutContext";
+import { installedTiresDTO } from "@/types/Tire";
 
 interface NeumaticoInt {
     Id: string;
@@ -19,15 +20,14 @@ interface NeumaticoInt {
     Costo: number;
     Posicion: number;
 }
-
-interface VehicleDTO {
+export interface VehicleDTO {
     id: number;
     code: string;
     modelId: number;
     siteId: number;
-    typeId: number;
     kilometrage: number;
     hours: number;
+    typeId: number;
     model: {
         id: number;
         brand: string;
@@ -40,6 +40,24 @@ interface VehicleDTO {
         region: string;
         isActive: boolean;
     };
+    installedTires: {
+        id: number;
+        vehicleId: number;
+        tireId: number;
+        sensorId: number | null;
+        position: number;
+        tire: {
+            id: number;
+            code: string;
+            modelId: number;
+            initialTread: number;
+            initialKilometrage: number;
+            initialHours: number;
+            lastInspectionId: number | null;
+            locationId: number;
+        };
+        sensor: any | null; // Cambia `any` si tienes una estructura definida para el sensor
+    }[];
 }
 
 
@@ -50,9 +68,8 @@ export default function ListaMaquinaria() {
     const { setHasChanged } = useLayoutContext();
 
     const [loading, setLoading] = useState(true);
-    const [vehicle, setVehicle] = useState<VehicleDTO>(
-        {} as VehicleDTO
-    );
+    const [vehicle, setVehicle] = useState<VehicleDTO>({} as VehicleDTO);
+    const [installedTires, setInstalledTires] = useState<installedTiresDTO[]>([]);
     const fetchVehicleModels = async () => {
         setLoading(true);
         if (!id) {
@@ -60,11 +77,11 @@ export default function ListaMaquinaria() {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:3002/vehicles/${id}`);
+            const response = await fetch(`http://localhost:3002/vehicles/withTires/${id}`);
             const data = await response.json();
-            console.log(data);
             setLoading(false);
             setVehicle(data);
+            setInstalledTires(data.installedTires);
         } catch (error) {
             console.error("Error fetching reasons:", error);
         }
@@ -102,8 +119,8 @@ export default function ListaMaquinaria() {
                         {/* Info del camión */}
                         <section className="flex flex-col w-full pt-5 items-start mb-2 ">
                             <section className="flex justify-between w-full items-center mb-2">
-                                <h2 className="text-xl font-semibold mb-2">
-                                    Equipo {loading ? "..." : vehicle.code} - Faena {loading ? "Cargando..." : vehicle.site?.name}
+                                <h2 className="text-xl font-semibold mb-2 w-42">
+                                    Equipo {loading ? "..." : vehicle.code}
                                 </h2>
                                 {/* Boton de mantenimiento */}
                                 <Link
@@ -128,8 +145,10 @@ export default function ListaMaquinaria() {
                                 </button>
                             </section>
                             {/* Info del camión */}
-                            <div className="grid grid-cols-2 pt-2 bg-gray-100 rounded-sm border  p-1 w-[100%] h-[60%] mb-2">
-
+                            <div className="grid grid-cols-2 pt-2 bg-gray-100 rounded-sm border  p-1 w-[100%] h-[65%] mb-2">
+                                <p>
+                                    <span className="text-sm font-semibold">Faena:</span>  {loading ? "Cargando..." : vehicle.site?.name}
+                                </p>
                                 <p>
                                     <span className="text-sm font-semibold">Marca:</span> {vehicle.model?.brand}
                                 </p>
@@ -171,30 +190,42 @@ export default function ListaMaquinaria() {
                                         </tr>
                                     </thead>
                                     <tbody className="table-auto ">
-                                        {neumaticos.length === 0 && (
+                                        {loading ? (
                                             <tr>
-                                                <td colSpan={5} className="text-center p-4">
-                                                    No hay neumáticos disponibles
+                                                <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
+                                                    <div className="flex flex-col items-center justify-center space-y-4">
+                                                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
+                                                        <p className="text-gray-600 dark:text-gray-400">
+                                                            Cargando neumaticos...
+                                                        </p>
+                                                    </div>
                                                 </td>
                                             </tr>
-                                        )}
-
-                                        {neumaticos.map(neumatico => (
+                                        ) :
+                                            installedTires.length === 0 && (
+                                                <tr>
+                                                    <td colSpan={5} className="text-center p-4">
+                                                        No hay neumáticos disponibles
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        {/* Mapear los neumaticos */}
+                                        {installedTires.map(neumatico => (
                                             <tr
-                                                key={neumatico.Codigo}
+                                                key={neumatico.tire.id}
                                                 className="bg-gray-50 border-b border-b-amber-200 dark:bg-[#212121] hover:bg-gray-100 h-16 text-center dark:hover:bg-gray-700 transition-all ease-in-out  rounded-md "
                                             >
-                                                <td className="w-[5%]">{neumatico.Posicion}</td>
-                                                <td className="w-[20%]">{neumatico.Codigo}</td>
+                                                <td className="w-[5%]">{neumatico.position}</td>
+                                                <td className="w-[20%]">{neumatico.tire.code}</td>
                                                 <td>
                                                     <div>
-                                                        <p>Int: {neumatico.Profundidad}</p>
-                                                        <p>Ext: {neumatico.Profundidad}</p>
+                                                        <p>Int: {neumatico.tire.initialTread}</p>
+                                                        <p>Ext: {neumatico.tire.initialTread}</p>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <p>{neumatico.META_HORAS}</p>
-                                                    <p>{neumatico.META_KMS}</p>
+                                                    <p>{neumatico.tire.initialHours}</p>
+                                                    <p>{neumatico.tire.initialKilometrage}</p>
                                                 </td>
                                                 <td>
                                                     <p>PSI: 105</p>

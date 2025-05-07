@@ -25,3 +25,22 @@ export interface TireDTO {
         name: string;
     };
 }
+
+export interface installedTiresDTO {
+    id: number;
+    vehicleId: number;
+    tireId: number;
+    sensorId: number | null;
+    position: number;
+    tire: {
+        id: number;
+        code: string;
+        modelId: number;
+        initialTread: number;
+        initialKilometrage: number;
+        initialHours: number;
+        lastInspectionId: number | null;
+        locationId: number;
+    };
+    sensor: any | null; // Cambia `any` si tienes una estructura definida para el sensor
+}
