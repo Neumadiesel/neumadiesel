@@ -135,7 +135,7 @@ export default function Page() {
                 <p className="text-gray-400 text-xs mt-2">*Verifique que los datos sean correctos antes de confirmar</p>
                 <p className="text-gray-400 text-xs ml-2">*Los datos se guardarán en la base de datos</p>
             </div>
-            {error && <CustomModal isOpen={!!error} onClose={() => setError(null as string | null)} title="Error" message={error} />}
+            {error && <CustomModal isOpen={!!error} onClose={() => setError("")} title="Error" message={error} />}
         </div>
     );
 }

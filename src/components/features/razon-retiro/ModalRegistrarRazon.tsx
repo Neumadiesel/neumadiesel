@@ -24,7 +24,7 @@ export default function ModalRegistrarRazon({
     if (!visible) return null;
 
     const registerRetirementReason = async () => {
-        setError(null as string | null);
+        setError("");
         setLoading(true);
         if (name === "" || description === "") {
             setError("Por favor complete todos los campos");
@@ -62,7 +62,7 @@ export default function ModalRegistrarRazon({
                     Complete los campos para registrar una nueva razon de retiro.
                 </p>
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError(null as string | null)} className=" text-red-500">
+                    <button onClick={() => setError("")} className=" text-red-500">
                         X
                     </button>
                 </div>}

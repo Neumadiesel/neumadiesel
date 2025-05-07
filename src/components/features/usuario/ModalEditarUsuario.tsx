@@ -86,7 +86,7 @@ export default function ModalEditarUsuario({
     };
 
     const handleSubmit = async () => {
-        setError(null as string | null);
+        setError("");
         setLoading(true);
 
         try {
@@ -119,7 +119,7 @@ export default function ModalEditarUsuario({
                 <h2 className="text-xl font-bold mb-4">Editar Usuario</h2>
 
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError(null as string | null)} className=" text-red-500">
+                    <button onClick={() => setError("")} className=" text-red-500">
                         X
                     </button>
                 </div>}

@@ -258,7 +258,7 @@ export default function Page() {
 
             </section>
 
-            {error && <CustomModal isOpen={!!error} onClose={() => setError(null as string | null)} title="Error" message={error} />}
+            {error && <CustomModal isOpen={!!error} onClose={() => setError("")} title="Error" message={error} />}
         </div>
     );
 }
