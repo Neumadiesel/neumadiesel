@@ -1,7 +1,6 @@
 "use client";
 import { FaInfoCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import ModalEditarVehicleModel from "@/components/features/equipo/modaleditarModeloVehiculo";
 import ModalRegistarModeloVehiculo from "@/components/features/equipo/ModalRegistrarModeloVehiculo";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -50,11 +49,10 @@ export default function EquiposPorModelo() {
 
     // const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         fetchVehicleModels();
-    }, [isOpen, modalRegistarFaena]);
+    }, [modalRegistarFaena]);
 
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">

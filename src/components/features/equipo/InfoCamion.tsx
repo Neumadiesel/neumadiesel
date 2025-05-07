@@ -48,7 +48,6 @@ export interface VehicleDTO {
             lastInspectionId: number | null;
             locationId: number;
         };
-        sensor: any | null; // Cambia `any` si tienes una estructura definida para el sensor
     }[];
 }
 
