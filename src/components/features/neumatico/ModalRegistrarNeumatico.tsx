@@ -30,6 +30,7 @@ export default function ModalRegistrarNeumatico({
     const [loading, setLoading] = useState(false);
     const [locations, setLocations] = useState<Location[]>([]);
     const [tireModels, setTireModels] = useState<TyreModelDto[]>([]);
+    const [selectedModel, setSelectedModel] = useState<TyreModelDto | null>(null);
 
 
 
@@ -61,6 +62,7 @@ export default function ModalRegistrarNeumatico({
     useEffect(() => {
         fetchLocations();
         fetchModelTire();
+        console.log("selected", selectedModel)
     }, []);
 
     const handleSubmit = async () => {
@@ -71,8 +73,22 @@ export default function ModalRegistrarNeumatico({
             code, modelId, locationId, initialTread, initialKilometrage, initialHours
         } = tyreModelEdited;
         console.log(tyreModelEdited);
-        if (!code || !modelId || !locationId || !initialTread === null) {
+        if (
+            !code ||
+            modelId === null ||
+            locationId === null ||
+            initialTread === null ||
+            initialKilometrage === null ||
+            initialHours === null
+        ) {
             setError("Por favor, completa todos los campos");
+            setLoading(false);
+            return;
+        }
+
+
+        if (selectedModel && initialTread > selectedModel.originalTread) {
+            setError(`La goma inicial no puede ser mayor a la original del modelo (${selectedModel.originalTread})`);
             setLoading(false);
             return;
         }
@@ -108,6 +124,7 @@ export default function ModalRegistrarNeumatico({
         }
     };
 
+
     if (!visible) return null;
 
     return (
@@ -126,7 +143,7 @@ export default function ModalRegistrarNeumatico({
                     {/* Codigo */}
                     <Label title="Codigo" isNotEmpty={true} />
                     <input
-                        name="Codigo"
+                        name="Codigo Neumatico"
                         value={tyreModelEdited.code}
                         onChange={
                             (e) => setTyreModelEdited({ ...tyreModelEdited, code: e.target.value.toUpperCase() })
@@ -134,21 +151,6 @@ export default function ModalRegistrarNeumatico({
                         placeholder="Codigo"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Modelo */}
-                    <Label title="Modelo" isNotEmpty={true} />
-                    <select
-                        name="modelo"
-                        value={tyreModelEdited.modelId === null ? "" : tyreModelEdited.modelId}
-                        onChange={(e) => setTyreModelEdited({ ...tyreModelEdited, modelId: Number(e.target.value) })}
-                        className="border border-gray-300 p-2 rounded"
-                    >
-                        <option value="">Seleccionar Modelo</option>
-                        {tireModels.map((model) => (
-                            <option key={model.id} value={model.id}>
-                                {model.code} - {model.dimensions}
-                            </option>
-                        ))}
-                    </select>
                     {/* Locacion */}
                     <Label title="Locacion" isNotEmpty={true} />
                     <select
@@ -164,13 +166,39 @@ export default function ModalRegistrarNeumatico({
                             </option>
                         ))}
                     </select>
+                    {/* Modelo */}
+                    <Label title="Modelo" isNotEmpty={true} />
+                    <select
+                        name="modelo"
+                        value={tyreModelEdited.modelId === null ? "" : tyreModelEdited.modelId}
+                        onChange={(e) => {
+                            const selectedId = Number(e.target.value);
+                            const selectedModel = tireModels.find((model) => model.id === selectedId);
+                            setSelectedModel(selectedModel || null);
+                            setTyreModelEdited({
+                                ...tyreModelEdited,
+                                modelId: selectedId,
+                                initialTread: selectedModel?.originalTread ?? null,
+                            });
+                        }}
+                        disabled={loading}
+                        className="border border-gray-300 p-2 rounded"
+                    >
+                        <option value="">Seleccionar Modelo</option>
+                        {tireModels.map((model) => (
+                            <option key={model.id} value={model.id}>
+                                {model.code} - {model.dimensions}
+                            </option>
+                        ))}
+                    </select>
 
                     {/* Goma original */}
                     <Label title="Goma Inicial" isNotEmpty={true} />
                     <input
+                        disabled={selectedModel === null}
+                        value={tyreModelEdited.initialTread === null ? "" : tyreModelEdited.initialTread}
                         name="gomaInicial"
                         type="number"
-                        value={tyreModelEdited.initialTread === null ? "" : tyreModelEdited.initialTread}
                         onChange={(e) => {
                             const val = e.target.value;
                             setTyreModelEdited({
@@ -179,7 +207,7 @@ export default function ModalRegistrarNeumatico({
                             });
                         }}
                         placeholder="Goma Inicial"
-                        className="border border-gray-300 p-2 rounded"
+                        className={`border border-gray-300 p-2 rounded ${selectedModel === null ? "opacity-50" : ""}`}
                     />
                     {/* KM inicial */}
                     <Label title="KM Inicial" isNotEmpty={true} />
@@ -188,12 +216,12 @@ export default function ModalRegistrarNeumatico({
                         type="number"
                         value={tyreModelEdited.initialKilometrage === null ? "" : tyreModelEdited.initialKilometrage}
                         onChange={(e) => {
-                            const val = e.target.value;
                             setTyreModelEdited({
                                 ...tyreModelEdited,
-                                initialKilometrage: val === "" ? null : Number(val),
+                                initialKilometrage: e.target.value.trim() === "" ? null : Number(e.target.value),
                             });
                         }}
+
                         placeholder="KM Inicial"
                         className="border border-gray-300 p-2 rounded"
                     />
@@ -204,10 +232,9 @@ export default function ModalRegistrarNeumatico({
                         type="number"
                         value={tyreModelEdited.initialHours === null ? "" : tyreModelEdited.initialHours}
                         onChange={(e) => {
-                            const val = e.target.value;
                             setTyreModelEdited({
                                 ...tyreModelEdited,
-                                initialHours: val === "" ? null : Number(val),
+                                initialHours: e.target.value.trim() === "" ? null : Number(e.target.value),
                             });
                         }}
                         placeholder="Horas Iniciales"

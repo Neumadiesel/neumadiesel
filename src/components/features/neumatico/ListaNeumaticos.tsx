@@ -66,6 +66,10 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
         fetchLocations();
         fetchTires();
     }, []);
+
+    useEffect(() => {
+        fetchTires();
+    }, [openRegisterModal]);
     return (
         <div className="w-full">
             <Breadcrumb />
