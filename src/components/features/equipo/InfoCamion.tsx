@@ -11,6 +11,7 @@ import Button from "@/components/common/button/Button";
 import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
 import Modal from "@/components/common/modal/CustomModal";
 import axios from "axios";
+import LabelLoading from "@/components/common/forms/LabelLoading";
 
 export interface VehicleDTO {
     id: number;
@@ -50,7 +51,6 @@ export interface VehicleDTO {
         };
     }[];
 }
-
 
 export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
@@ -150,21 +150,11 @@ export default function ListaMaquinaria() {
                             </section>
                             {/* Info del camión */}
                             <div className="grid grid-cols-2 pt-2 bg-gray-100 rounded-sm border  p-1 w-[100%] h-[65%] mb-2">
-                                <p>
-                                    <span className="text-sm font-semibold">Faena:</span>  {loading ? "Cargando..." : vehicle.site?.name}
-                                </p>
-                                <p>
-                                    <span className="text-sm font-semibold">Marca:</span> {vehicle.model?.brand}
-                                </p>
-                                <p>
-                                    <span className="text-sm font-semibold">Modelo:</span> {vehicle.model?.model}
-                                </p>
-                                <p>
-                                    <span className="text-sm font-semibold">Horas:</span> {vehicle.hours}
-                                </p>
-                                <p>
-                                    <span className="text-sm font-semibold">Kilometraje:</span> {vehicle.kilometrage}
-                                </p>
+                                <LabelLoading loading={loading} title={"Feana:"} text={vehicle.site?.name} />
+                                <LabelLoading loading={loading} title={"Marca:"} text={vehicle.model?.brand} />
+                                <LabelLoading loading={loading} title={"Modelo:"} text={vehicle.model?.model} />
+                                <LabelLoading loading={loading} title={"Horas:"} text={vehicle.hours?.toString()} />
+                                <LabelLoading loading={loading} title={"Kilometraje:"} text={vehicle.kilometrage?.toString()} />
                             </div>
                             {/* Boton para cambiar entre neumaticos y sensores */}
 
