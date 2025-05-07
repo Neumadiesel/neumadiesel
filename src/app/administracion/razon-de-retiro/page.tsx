@@ -1,5 +1,5 @@
 "use client";
-import { FaPen, FaPlusSquare } from "react-icons/fa";
+import { FaPen } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import ModalRegistrarRazon from "@/components/features/razon-retiro/ModalRegistrarRazon";
 import ModalEditarRazon from "@/components/features/razon-retiro/ModalEditarRazon";

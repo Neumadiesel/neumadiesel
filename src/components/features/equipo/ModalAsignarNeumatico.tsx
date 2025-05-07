@@ -28,33 +28,6 @@ interface VehicleDTO {
     };
 }
 
-interface VehicleModelDto {
-    id: number;
-    brand: string;
-    model: string;
-    wheelCount: number;
-    vehicleCount: number;
-}
-
-interface FaenaDTO {
-    id: number;
-    name: string;
-    region: string;
-    isActive: boolean;
-    contract: {
-        id: number;
-        startDate: string;
-        endDate: string;
-        siteId: number;
-    };
-}
-
-interface VehicleTypeDTO {
-    id: number;
-    code: string;
-    name: string;
-}
-
 interface ModalAsignarNeumaticoProps {
     visible: boolean;
     onClose: () => void;

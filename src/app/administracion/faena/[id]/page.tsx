@@ -24,6 +24,7 @@ export default function Page() {
     const id = params.id
 
     const [faena, setFaena] = useState<FaenaDTO | null>(null);
+
     const fetchFaenas = async () => {
         try {
             const response = await fetch(`http://localhost:3002/sites/${id}/with-contract`);

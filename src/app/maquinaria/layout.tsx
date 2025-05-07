@@ -1,6 +1,5 @@
 "use client"
 import Link from "next/link";
-import { GiMineTruck } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { LayoutProvider, useLayoutContext } from "@/contexts/LayoutContext";
 import ModalRegistrarVehiculo from "@/components/features/equipo/ModalRegistrarVehiculo";

@@ -1,7 +1,6 @@
 "use client";
 import { FaInfoCircle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import ModalEditarVehicleModel from "@/components/features/equipo/modaleditarModeloVehiculo";
 import ModalRegistarModeloVehiculo from "@/components/features/equipo/ModalRegistrarModeloVehiculo";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -33,7 +32,6 @@ export default function EquiposPorModelo() {
     const { id } = useParams();
     const [tires, setTires] = useState<TireDto[]>([]);
     const [model, setModel] = useState<TyreModelDto>({} as TyreModelDto);
-    const [vehicleModelSelected, setVehicleModelSelected] = useState<TyreModelDto | null>(null);
     const [loading, setLoading] = useState(true);
     const fetchVehicleModels = async () => {
         setLoading(true);
@@ -54,18 +52,11 @@ export default function EquiposPorModelo() {
         fetchVehicleModels();
     }, []);
 
-    const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Usuario desactivado");
-    };
-
 
     useEffect(() => {
         fetchVehicleModels();
-    }, [isOpen, mostrarEditar, modalRegistarFaena]);
+    }, [modalRegistarFaena]);
 
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">

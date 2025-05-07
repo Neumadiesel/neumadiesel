@@ -4,27 +4,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 
-interface VehicleDTO {
-    id: number;
-    code: string;
-    modelId: number;
-    siteId: number;
-    kilometrage: number;
-    hours: number;
-    model: {
-        id: number;
-        brand: string;
-        model: string;
-        wheelCount: number;
-    };
-    site: {
-        id: number;
-        name: string;
-        region: string;
-        isActive: boolean;
-    };
-}
-
 interface VehicleModelDto {
     id: number;
     brand: string;

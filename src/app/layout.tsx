@@ -5,7 +5,6 @@ import NavBar from "@/components/layout/NavBar";
 import { Suspense } from "react";
 import LoadingSkeleton from "./Loading";
 import { AuthProvider } from "@/contexts/AuthContext";
-import Breadcrumb from "@/components/layout/BreadCrumb";
 // import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({

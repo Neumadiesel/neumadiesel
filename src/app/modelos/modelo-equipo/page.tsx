@@ -1,5 +1,5 @@
 "use client";
-import { FaInfoCircle, FaPlusSquare } from "react-icons/fa";
+import { FaInfoCircle } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ModalEditarVehicleModel from "@/components/features/equipo/modaleditarModeloVehiculo";
@@ -37,16 +37,12 @@ export default function ModelosEquipo() {
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Usuario desactivado");
-    };
+
 
 
     useEffect(() => {
         fetchVehicleModels();
-    }, [isOpen, mostrarEditar, modalRegistarFaena]);
+    }, [mostrarEditar, modalRegistarFaena]);
 
 
 

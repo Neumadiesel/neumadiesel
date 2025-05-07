@@ -1,5 +1,5 @@
 "use client";
-import { FaInfoCircle, FaPlusSquare } from "react-icons/fa";
+import { FaInfoCircle } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ModalRegistrarTyreModel from "@/components/features/neumatico/ModalRegistrarTyreModel";
@@ -31,16 +31,11 @@ export default function ModelosNeumaticos() {
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistrarModelo, setModalRegistrarModelo] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Usuario desactivado");
-    };
 
 
     useEffect(() => {
         fetchModelTyres();
-    }, [isOpen, mostrarEditar, modalRegistrarModelo]);
+    }, [mostrarEditar, modalRegistrarModelo]);
 
 
 

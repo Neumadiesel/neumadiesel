@@ -2,7 +2,7 @@
 import ModalEditarFaena from "@/components/features/faena/ModalEditarFaena";
 import Modal from "@/components/common/modal/CustomModal";
 import Link from "next/link";
-import { FaEyeSlash, FaInfoCircle, FaPlusSquare } from "react-icons/fa";
+import { FaEyeSlash, FaInfoCircle } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ModalRegistrarFaena from "@/components/features/faena/ModalRegistrarFaena";

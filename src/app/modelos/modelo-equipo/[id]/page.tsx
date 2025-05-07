@@ -27,7 +27,7 @@ export default function EquiposPorModelo() {
     const { id } = useParams();
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
     const [model, setModel] = useState<VehicleModelDto>({} as VehicleModelDto);
-    const [vehicleModelSelected, setVehicleModelSelected] = useState<VehicleModelDto | null>(null);
+    // const [vehicleModelSelected, setVehicleModelSelected] = useState<VehicleModelDto | null>(null);
     const [loading, setLoading] = useState(true);
     const fetchVehicleModels = async () => {
         setLoading(true);
@@ -48,18 +48,13 @@ export default function EquiposPorModelo() {
         fetchVehicleModels();
     }, []);
 
-    const [mostrarEditar, setMostrarEditar] = useState(false);
+    // const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Usuario desactivado");
-    };
-
 
     useEffect(() => {
         fetchVehicleModels();
-    }, [isOpen, mostrarEditar, modalRegistarFaena]);
+    }, [isOpen, modalRegistarFaena]);
 
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
@@ -174,13 +169,13 @@ export default function EquiposPorModelo() {
                     </table>
                 </div>
                 {/* Modal editar Faena */}
-                <ModalEditarVehicleModel
+                {/* <ModalEditarVehicleModel
                     visible={mostrarEditar}
                     onClose={() => setMostrarEditar(false)}
                     vehicleModel={vehicleModelSelected}
                     onGuardar={() => {
                         setMostrarEditar(false);
-                    }} />
+                    }} /> */}
 
                 <ModalRegistarModeloVehiculo
                     visible={modalRegistarFaena}

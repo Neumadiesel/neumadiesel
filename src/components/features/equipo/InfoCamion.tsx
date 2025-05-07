@@ -1,27 +1,17 @@
 "use client";
-import { Neumaticos } from "@/mocks/neumaticos.json";
+import { MoveLeft, History } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { FaClock, FaEdit } from "react-icons/fa";
-import { FaCirclePlus } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
 import ModaleditarEquipo from "./modaleditarEquipo";
 import { useLayoutContext } from "@/contexts/LayoutContext";
 import { installedTiresDTO } from "@/types/Tire";
 import Button from "@/components/common/button/Button";
 import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
+import Modal from "@/components/common/modal/CustomModal";
+import axios from "axios";
 
-interface NeumaticoInt {
-    Id: string;
-    Codigo: string;
-    Serie: string;
-    Codigo_Camion: string;
-    Profundidad: number;
-    META_HORAS: number;
-    META_KMS: number;
-    Costo: number;
-    Posicion: number;
-}
 export interface VehicleDTO {
     id: number;
     code: string;
@@ -66,12 +56,12 @@ export interface VehicleDTO {
 export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
     const id = params.id;
-
     const { setHasChanged } = useLayoutContext();
 
     const [loading, setLoading] = useState(true);
     const [vehicle, setVehicle] = useState<VehicleDTO>({} as VehicleDTO);
     const [installedTires, setInstalledTires] = useState<installedTiresDTO[]>([]);
+
     const fetchVehicleModels = async () => {
         setLoading(true);
         if (!id) {
@@ -91,10 +81,36 @@ export default function ListaMaquinaria() {
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const [mostrarAsignarNeumatico, setMostrarAsignarNeumatico] = useState(false);
-
+    const [mostrarDesmontar, setMostrarDesmontar] = useState(false);
     const handleUpdate = () => {
         setHasChanged(true);
     }
+    const [tireDesmontado, setTireDesmonatado] = useState<installedTiresDTO | null>(null);
+
+    const handleDesmontar = async () => {
+        if (!tireDesmontado) return;
+        setLoading(true);
+        try {
+            const response = await axios.delete(
+                `http://localhost:3002/installed-tires/${tireDesmontado.id}`
+            );
+
+            setMostrarDesmontar(false);
+            setHasChanged(true);
+            setTireDesmonatado(null);
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                console.log(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchVehicleModels();
     }, []);
@@ -102,7 +118,7 @@ export default function ListaMaquinaria() {
     useEffect(() => {
         handleUpdate();
         fetchVehicleModels();
-    }, [mostrarEditar, mostrarAsignarNeumatico]);
+    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar]);
 
     return (
         <div className="p-2 h-[100%] w-full bg-white dark:bg-black relative shadow-md">
@@ -220,10 +236,24 @@ export default function ListaMaquinaria() {
                                                     <p>PSI: 105</p>
                                                     <p>Temp: 95</p>
                                                 </td>
-                                                <td className="flex justify-center mt-5 items-center">
-                                                    <Link href={`/mantenimiento/Historial`}>
-                                                        <FaClock size={20} />
+                                                <td className="flex justify-center mt-5 items-center gap-1">
+                                                    <Link
+                                                        href={`/mantenimiento/Historial`}
+                                                        className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 border border-indigo-300 rounded-md flex items-center justify-center"
+                                                    >
+                                                        <History className="w-4 h-4" />
                                                     </Link>
+                                                    {/* Botón de desmontar */}
+                                                    <button
+                                                        onClick={() => {
+                                                            setTireDesmonatado(neumatico);
+                                                            setMostrarDesmontar(true)
+                                                        }
+                                                        }
+                                                        className="p-2 text-red-500 hover:text-red-600 bg-red-50 border border-red-300 rounded-md flex items-center justify-center"
+                                                    >
+                                                        <MoveLeft className="w-4 h-4" />
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -234,6 +264,23 @@ export default function ListaMaquinaria() {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                isOpen={mostrarDesmontar}
+                onClose={() => setMostrarDesmontar(false)}
+                onConfirm={handleDesmontar}
+                title="Desmontar Neumático"
+            >
+                <p>
+                    ¿Estás seguro de que deseas desmontar el neumático {tireDesmontado?.tire.code} del Equipo?
+                </p>
+                <p>
+                    Este neumático se desmontará y se enviará a la lista de neumáticos en bodega.
+                </p>
+                <p className="font-semibold">
+                    ¿Estás seguro de que desea desmontar el neumático?
+                </p>
+            </Modal>
             <ModaleditarEquipo
                 visible={mostrarEditar}
                 onClose={() => setMostrarEditar(false)}

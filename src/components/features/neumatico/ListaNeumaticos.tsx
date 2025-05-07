@@ -1,24 +1,18 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { Pencil, Info } from "lucide-react";
 import Link from "next/link";
-import { FaAngleLeft, FaAngleRight, FaInfoCircle, FaRegCopy } from "react-icons/fa";
-import { DB_Relacion_Numaticos_Camion } from "@/mocks/DB_Relacion_Neumaticos_Camion.json";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
 import ModalRegistrarNeumatico from "./ModalRegistrarNeumatico";
 import { Location } from "@/types/Location";
 import { TireDTO } from "@/types/Tire";
-import { FaPencil } from "react-icons/fa6";
-// Cálculo fuera del componente
 
-
-
-
-export default function ListaNeumaticos({ tipo }: { tipo: string }) {
+export default function ListaNeumaticos() {
     const [codigo, setCodigo] = useState('');
     const [estado, setEstado] = useState('');
-    const [bodega, setBodega] = useState('Bodega');
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
@@ -88,7 +82,7 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                 <div className="gap-y-2  items-center justify-between w-full mx-auto my-2">
                     <div className="lg:w-[40%] flex items-center justify-start">
                         <h1 className="font-mono text-2xl font-bold">
-                            Lista de Neumaticos {tipo !== 'operacion' && `en ${bodega}`}
+                            Lista de Neumaticos
                         </h1>
                     </div>
                     <div className="w-full flex justify-between">
@@ -237,14 +231,23 @@ export default function ListaNeumaticos({ tipo }: { tipo: string }) {
                                         </td>
                                         <td className="dark:bg-neutral-900 px-2">
                                             <div className="flex gap-2">
-                                                {/* boton editar */}
-                                                <button onClick={() => console.log(tire)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center">
-                                                    <FaPencil />
+                                                {/* Botón editar */}
+                                                <button
+                                                    onClick={() => console.log(tire)}
+                                                    className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center"
+                                                >
+                                                    <Pencil className="w-4 h-4" />
                                                 </button>
-                                                {/* Boton de ver detalles */}
-                                                <Link href={`/modelos/modelo-neumatico/${tire.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
-                                                    <FaInfoCircle />
+
+                                                {/* Botón de ver detalles */}
+                                                <Link
+                                                    href={`/modelos/modelo-neumatico/${tire.id}`}
+                                                    className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center"
+                                                >
+                                                    <Info className="w-4 h-4" />
                                                 </Link>
+
+
                                             </div>
                                         </td>
                                     </tr>
