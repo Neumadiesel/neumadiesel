@@ -1,249 +1,316 @@
 'use client';
-import { useState } from 'react';
-import { FaRedo } from 'react-icons/fa';
-import CustomModal from "@/components/common/alerts/alert";
+import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
-
+import { Search } from "lucide-react";
+import { VehicleDTO } from '@/components/features/equipo/InfoCamion';
+import axios from 'axios';
 export default function Page() {
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
 
-    const medidasNeumaticosIniciales = [
-        { pos: 1, ext: 95, int: 93, pre: 78, tem: 78 },
-        { pos: 2, ext: 90, int: 88, pre: 78, tem: 78 },
-        { pos: 3, ext: 85, int: 83, pre: 78, tem: 78 },
-        { pos: 4, ext: 80, int: 78, pre: 78, tem: 78 },
-        { pos: 5, ext: 75, int: 73, pre: 78, tem: 78 },
-        { pos: 6, ext: 70, int: 68, pre: 78, tem: 78 },
-    ];
+    const [loading, setLoading] = useState(false);
 
-    const [nuevasMedidas, setNuevasMedidas] = useState([...medidasNeumaticosIniciales]);
+    const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
+    const [vehicleCode, setVehicleCode] = useState<string | null>(null);
+    const [tireSelected, setTireSelected] = useState<VehicleDTO["installedTires"][0] | null>(null);
 
-    const handleInputChange = (index: number, field: string, value: number) => {
-        const valorOriginal = medidasNeumaticosIniciales[index][field as keyof typeof medidasNeumaticosIniciales[0]];
+    const [tireInspected, setTireInspected] = useState({
+        position: 0,
+        externalTread: 0,
+        internalTread: 0,
+        kilometrage: 0,
+        pressure: 0,
+        temperature: 0,
+        observation: "",
+        inspectionDate: new Date().toISOString(),
+        tireId: 0
+    });
 
-        if (value < 1) {
-            setError("El valor no puede ser inferior a 1");
-        } else if (value > valorOriginal && field !== "tem" && field !== "pre") {
-            setError(`La goma remanente no puede ser mayor a la original (${valorOriginal})`);
-        } else {
-            setNuevasMedidas((prev) =>
-                prev.map((neumatico, i) =>
-                    i === index ? { ...neumatico, [field]: value } : neumatico
-                )
-            );
+    useEffect(() => {
+        if (tireSelected) {
+            setTireInspected({
+                position: tireSelected.position,
+                externalTread: tireSelected.tire.lastInspection.externalTread,
+                internalTread: tireSelected.tire.lastInspection.internalTread,
+                kilometrage: vehicle?.kilometrage || 0,
+                pressure: tireSelected.tire.lastInspection.pressure,
+                temperature: tireSelected.tire.lastInspection.temperature,
+                observation: tireSelected.tire.lastInspection.observation,
+                inspectionDate: new Date().toISOString(),
+                tireId: tireSelected.tire.id
+            });
+        }
+    }, [tireSelected, vehicle]);
+
+    const fetchVehicle = async () => {
+        setError(null);
+        setLoading(true);
+        try {
+            const response = await axios.get(`http://localhost:3002/vehicles/code/${vehicleCode}`);
+            console.log("Vehiculo", response.data);
+            setVehicle(response.data);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                setError(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleResetRow = (index: number) => {
-        setNuevasMedidas((prev) =>
-            prev.map((neumatico, i) =>
-                i === index ? { ...medidasNeumaticosIniciales[index] } : neumatico
-            )
-        );
+    const handleInputChange = (
+        type: "ext" | "int" | "pre" | "tem",
+        value: number
+    ) => {
+        setTireInspected((prev) => ({
+            ...prev,
+            ...(type === "ext" && { externalTread: value }),
+            ...(type === "int" && { internalTread: value }),
+            ...(type === "pre" && { pressure: value }),
+            ...(type === "tem" && { temperature: value }),
+        }));
     };
+    const resetData = () => {
+        setTireSelected(null);
+        setTireInspected({
+            position: 0,
+            externalTread: 0,
+            internalTread: 0,
+            kilometrage: 0,
+            pressure: 0,
+            temperature: 0,
+            observation: "",
+            inspectionDate: new Date().toISOString(),
+            tireId: 0
+        });
+    }
 
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Datos a enviar:", nuevasMedidas);
+    useEffect(() => {
+        if (!tireSelected) {
+            setTireInspected({
+                position: 0,
+                externalTread: 0,
+                internalTread: 0,
+                kilometrage: 0,
+                pressure: 0,
+                temperature: 0,
+                observation: "",
+                inspectionDate: new Date().toISOString(),
+                tireId: 0
+            });
+        }
+    }, [tireSelected]);
+
+    const handleConfirm = async () => {
+        try {
+            const response = await axios.post("http://localhost:3002/inspections", tireInspected);
+            setIsOpen(false);
+            resetData();
+            return response.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                setError(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
+        }
     };
 
     return (
         <div className="font-mono p-4 gap-y-2 bg-white">
-            <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Ingresar datos de Equipo</h1>
+            <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección del Neumatico</h1>
             <section className=''>
                 <div className='flex items-center gap-x-2 border-b border-b-amber-300 pb-3'>
                     <label className="text-lg mb-1 text-black font-semibold dark:text-white ">Ingrese código del equipo:</label>
-                    <input type="text" className="w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2" />
+                    <input
+                        onChange={(e) => setVehicleCode(e.target.value.toUpperCase())}
+                        value={vehicleCode || ""}
+                        placeholder="Codigo equipo"
+
+                        type="text" className="w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2" />
+                    <button onClick={() => fetchVehicle()} className="bg-amber-300 hover:bg-amber-400 hover:cursor-pointer text-black p-2 font-bold rounded-lg">
+                        <Search className="w-6 h-6" />
+                    </button>
+                    <div>
+                        {error && <div className="text-red-500 flex justify-between text-sm w-80 bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                            <button onClick={() => setError("")} className=" text-red-500">
+                                X
+                            </button>
+                        </div>
+                        }
+                    </div>
                 </div>
 
                 {/* Fecha medicion anterior */}
-                <div className='flex justify-between my-2'>
-                    <p className="text-sm text-gray-700 dark:text-white">Ultima medición del equipo <span className='font-semibold'>29/03/2025</span></p>
+                <div className='flex gap-x-4 my-2'>
+                    <p className="text-sm text-gray-700 dark:text-white">Kilometraje del Equipo: <span className='font-semibold'>{vehicle?.kilometrage}</span></p>
+                    <p className="text-sm text-gray-700 dark:text-white">Modelo: <span className='font-semibold'>{vehicle?.model.model}</span></p>
+                    <p className="text-sm text-gray-700 dark:text-white">Codigo: <span className='font-semibold'>{vehicle?.code}</span></p>
+                    <p className="text-sm text-gray-700 dark:text-white">Faena: <span className='font-semibold'>{vehicle?.site.name}</span></p>
+
                 </div>
-                <div className="overflow-x-auto mt-4 w-[100%]">
+                {/* Selecotr de neumaticos instalados */}
+                <div className="flex gap-x-4 my-2">
+                    <select
+                        disabled={!vehicle}
+                        className={`w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2 ${!vehicle ? "opacity-50" : ""}`}
+                        onChange={(e) => {
+                            const selectedTireId = parseInt(e.target.value, 10);
+                            const selected = vehicle?.installedTires.find(
+                                (installed) => installed.tire.id === selectedTireId
+                            );
+                            setTireSelected(selected || null);
+                        }}
+                        value={tireSelected?.tire.id || ""}
+                    >
+                        <option value="">Seleccione un neumático</option>
+                        {vehicle?.installedTires.map((installed) => (
+                            <option key={installed.id} value={installed.tire.id}>
+                                {installed.tire.code} — Posición {installed.position}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="overflow-x-auto  mt-4 w-[100%]">
                     <div className='flex gap-x-2 justify-between mb-2'>
-                        {
-                            nuevasMedidas.map((neumatico, index) => (
 
 
-                                <section key={index} className='border bg-gray-50 border-amber-300 rounded-lg p-2 my-2 py-4 lg:hidden'>
-                                    <p className='text-xl font-bold'>Posición {neumatico.pos}</p>
-                                    <p className='font-semibold'>Codigo del neumatico: WHE393</p>
-                                    <p>Remanente de la goma</p>
-                                    {/* Medicion exterior */}
-                                    <div className='flex flex-col'>
-                                        <div className="flex items-center mt-2 ">
-                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Exterior:</label>
-                                            {/* Botón de disminuir */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "ext", neumatico.ext - 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                            >
-                                                -
-                                            </button>
 
-                                            {/* Input numérico */}
-                                            <input
-                                                type="number"
-                                                value={neumatico.ext}
-                                                onChange={(e) => handleInputChange(0, "ext", parseFloat(e.target.value) || 0)}
-                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                            />
+                        <section key={tireSelected?.id} className={`
+                        border bg-gray-50 border-amber-300 rounded-lg p-2 my-2 w-full py-4
+                            ${tireSelected ? "" : "opacity-50"}
+                            `}>
+                            <p className='text-xl font-bold'>Posición {tireSelected?.position}</p>
+                            <p className='font-semibold'>Codigo del neumatico: {tireSelected?.tire.code}</p>
+                            <p>Remanente de la goma</p>
+                            {/* Medicion exterior */}
+                            <div className='flex flex-col'>
+                                <div className="flex items-center mt-2 ">
+                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Exterior:</label>
+                                    {/* Botón de disminuir */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("ext", tireInspected.externalTread - 1)}
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                    >
+                                        -
+                                    </button>
 
-                                            {/* Botón de aumentar */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "ext", neumatico.ext + 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                        {/* Medicion interior */}
-                                        <div className="flex items-center mt-2">
-                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Interior:</label>
-                                            {/* Botón de disminuir */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "int", neumatico.int - 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                            >
-                                                -
-                                            </button>
-                                            {/* Input numérico */}
-                                            <input
-                                                type="number"
-                                                value={neumatico.int}
-                                                onChange={(e) => handleInputChange(0, "int", parseFloat(e.target.value) || 0)}
-                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                            />
-                                            {/* Botón de aumentar */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "int", neumatico.int + 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                        {/* medicion presion */}
-                                        <div className="flex items-center mt-2">
-                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Presión:</label>
-                                            {/* Botón de disminuir */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "pre", neumatico.pre - 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                            >
-                                                -
-                                            </button>
-                                            {/* Input numérico */}
-                                            <input
-                                                type="number"
-                                                value={neumatico.pre}
-                                                onChange={(e) => handleInputChange(0, "pre", parseFloat(e.target.value) || 0)}
-                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                            />
-                                            {/* Botón de aumentar */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "pre", nuevasMedidas[0].pre + 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                        {/* medicion temperatura */}
-                                        <div className="flex items-center mt-2">
-                                            <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Temperatura:</label>
-                                            {/* Botón de disminuir */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "tem", nuevasMedidas[0].tem - 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                            >
-                                                -
-                                            </button>
-                                            {/* Input numérico */}
-                                            <input
-                                                type="number"
-                                                value={nuevasMedidas[0].tem}
-                                                onChange={(e) => handleInputChange(0, "tem", parseFloat(e.target.value) || 0)}
-                                                className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                            />
-                                            {/* Botón de aumentar */}
-                                            <button
-                                                onClick={() => handleInputChange(0, "tem", nuevasMedidas[0].tem + 1)}
-                                                className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                    </div>
-                                </section>
-                            ))
-                        }
-                    </div>
-                    {/* Tabla version escritorio */}
-                    <div className='hidden lg:block w-[100%]'>
-                        <table className="w-full shadow-md rounded-lg h-[50%] ">
-                            <thead >
-                                <tr className="bg-amber-200 text-black">
-                                    <th className="px-2 py-2 text-left">Pos</th>
-                                    <th className="px-2 py-2 text-center">Ext</th>
-                                    <th className="px-2 py-2 text-center">Int</th>
-                                    <th className="px-2 py-2 text-center">Pre.</th>
-                                    <th className="px-2 py-2 text-center">Tem.</th>
-                                    <th className="px-2 py-2 text-center">Res.</th>
-                                </tr>
-                            </thead>
-                            <tbody className='bg-gray-50 dark:bg-[#414141] w-[100%]'>
-                                {nuevasMedidas.map((neumatico, index) => (
-                                    <tr key={index} className="border-b border-gray-300">
-                                        <td className="px-2 py-2 text-center">{neumatico.pos}</td>
-                                        {["ext", "int", "pre", "tem"].map((field) => (
-                                            <td key={field} className="px-1 py-2 text-center">
-                                                <div className="inline-flex items-center justify-center ">
-                                                    {/* Botón de disminuir */}
-                                                    <button
-                                                        onClick={() => handleInputChange(index, field, neumatico[field as keyof typeof neumatico] - 1)}
-                                                        className="bg-amber-50 border border-amber-500 text-black p-2 h-12 rounded-l-lg text-sm"
-                                                    >
-                                                        -
-                                                    </button>
-                                                    {/* Input numérico */}
-                                                    <input
-                                                        type="text"
-                                                        value={neumatico[field as keyof typeof neumatico]}
-                                                        onChange={(e) => handleInputChange(index, field, parseFloat(e.target.value) || 0)}
-                                                        className="w-20 text-center bg-white dark:bg-[#414141]  border-y border-y-amber-300 p-2 h-12"
-                                                    />
+                                    {/* Input numérico */}
+                                    <input
+                                        type="number"
+                                        value={tireInspected.externalTread}
+                                        onChange={
+                                            (e) => handleInputChange("ext", parseFloat(e.target.value) || 0)
+                                        }
+                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                    />
 
-                                                    {/* Botón de aumentar */}
-                                                    <button
-                                                        onClick={() => handleInputChange(index, field, neumatico[field as keyof typeof neumatico] + 1)}
-                                                        className="bg-amber-50 text-black p-2 h-12 rounded-r-lg text-sm border border-amber-500"
-                                                    >
-                                                        +
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        ))}
+                                    {/* Botón de aumentar */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("ext", tireInspected.externalTread + 1)}
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                {/* Medicion interior */}
+                                <div className="flex items-center mt-2">
+                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Interior:</label>
+                                    {/* Botón de disminuir */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("int", tireInspected.internalTread - 1)}
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                    >
+                                        -
+                                    </button>
+                                    {/* Input numérico */}
+                                    <input
+                                        type="number"
+                                        value={tireInspected.internalTread}
+                                        onChange={(e) => handleInputChange("int", parseFloat(e.target.value) || 0)}
+                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                    />
+                                    {/* Botón de aumentar */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("int", tireInspected.internalTread + 1)}
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                {/* medicion presion */}
+                                <div className="flex items-center mt-2">
+                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Presión:</label>
+                                    {/* Botón de disminuir */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("pre", tireInspected.pressure - 1)}
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                    >
+                                        -
+                                    </button>
+                                    {/* Input numérico */}
+                                    <input
+                                        type="number"
+                                        value={tireInspected.pressure}
+                                        onChange={(e) => handleInputChange("pre", parseFloat(e.target.value) || 0)}
+                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                    />
+                                    {/* Botón de aumentar */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("pre", tireInspected.pressure + 1)}
 
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                {/* medicion temperatura */}
+                                <div className="flex items-center mt-2">
+                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Temperatura:</label>
+                                    {/* Botón de disminuir */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("tem", tireInspected.temperature - 1)}
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
+                                    >
+                                        -
+                                    </button>
+                                    {/* Input numérico */}
+                                    <input
+                                        type="number"
+                                        value={tireInspected.temperature}
+                                        onChange={(e) => handleInputChange("tem", parseFloat(e.target.value) || 0)}
+                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
+                                    />
+                                    {/* Botón de aumentar */}
+                                    <button disabled={!tireSelected}
+                                        onClick={() => handleInputChange("tem", tireInspected.temperature + 1)}
+                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
 
-                                        <td className="px-2 py-2 text-center">
-                                            <button
-                                                onClick={() => handleResetRow(index)}
-                                                className="bg-red-200 border border-red-500 h-12 w-32 text-black font-semibold px-3 py-1 rounded-lg text-sm flex items-center  justify-center gap-2 mx-auto"
-                                            >
-                                                <FaRedo /> Deshacer
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
-                <div>
+                <div className={`${tireSelected ? "" : "opacity-50"}`}>
                     <label className="text-md mb-1 text-black font-semibold dark:text-white ">Observaciones:</label>
-                    <textarea className="w-full bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2" />
+                    <textarea
+                        disabled={!tireSelected}
+                        value={tireInspected.observation}
+                        onChange={(e) =>
+                            setTireInspected((prev) => ({ ...prev, observation: e.target.value }))
+                        }
+                        className="w-full bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2"
+                    />
+
                 </div>
 
                 <div className='lg:flex gap-x-4 lg:justify-around'>
@@ -258,7 +325,6 @@ export default function Page() {
 
             </section>
 
-            {error && <CustomModal isOpen={!!error} onClose={() => setError("")} title="Error" message={error} />}
         </div>
     );
 }
