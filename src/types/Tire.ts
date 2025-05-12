@@ -5,6 +5,8 @@ export interface TireDTO {
     initialTread: number;
     initialKilometrage: number;
     initialHours: number;
+    usedHours: number;
+    usedKilometrage: number;
     lastInspectionId: number;
     locationId: number;
     model: {
@@ -24,16 +26,6 @@ export interface TireDTO {
         id: number;
         name: string;
     };
-    // "lastInspection": {
-    //     "id": 2,
-    //     "position": 1,
-    //     "externalTread": 78,
-    //     "internalTread": 83,
-    //     "kilometrage": 15000,
-    //     "inspectionDate": "2025-05-12T10:00:00.000Z",
-    //     "pressure": 115,
-    //     "temperature": 25,
-    //     "tireId": 12
     lastInspection: {
         id: number;
         position: number;

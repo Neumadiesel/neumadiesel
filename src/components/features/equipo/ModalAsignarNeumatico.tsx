@@ -50,7 +50,7 @@ export default function ModalAsignarNeumatico({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/tires");
+            const response = await fetch("http://localhost:3002/tires/available");
             const data = await response.json();
             setTires(data);
             console.log("Neumaticos", data);
@@ -109,6 +109,20 @@ export default function ModalAsignarNeumatico({
         }
     };
 
+    const filteredTires = tires.filter((tire) => {
+        if (posicion === 1 || posicion === 2) {
+            return tire.lastInspection === null;
+        }
+
+        return true;
+    });
+
+    const handleClose = () => {
+        setPosition(null);
+        setTireIdSelected(null);
+        setError(null);
+        onClose();
+    };
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
@@ -152,17 +166,18 @@ export default function ModalAsignarNeumatico({
                     {/* Lista de neumaticos */}
                     <Label title="Neumatico" isNotEmpty={true} />
                     <select
+                        disabled={posicion === null}
                         value={tireIdSelected ?? ""}
                         onChange={(e) => setTireIdSelected(Number(e.target.value))}
-                        className="border border-gray-300 p-2 rounded"
+                        className={`border border-gray-300 p-2 rounded ${posicion === null ? "opacity-50" : ""}`}
                     >
                         <option value="" disabled>
                             Seleccione un neumatico
                         </option>
-                        {tires.map((tire) => (
+                        {filteredTires.map((tire) => (
                             tire.locationId !== 1 && (
                                 <option key={tire.id} value={tire.id}>
-                                    {`${tire.code} - ${tire.model.brand} ${tire.model.dimensions}`}
+                                    {`${tire.code} - ${tire.model.brand} ${tire.model.dimensions} ${tire.lastInspection ? (`| INT: ${tire.lastInspection?.internalTread} | EXT: ${tire.lastInspection?.externalTread}`) : ('| Nuevo')}   `}
                                 </option>
                             )
                         ))}
@@ -178,7 +193,7 @@ export default function ModalAsignarNeumatico({
                         {loading ? "Procesando..." : "Guardar Cambios"}
                     </button>
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
                     >
                         Cancelar

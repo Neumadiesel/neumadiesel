@@ -72,6 +72,8 @@ export default function ModalRegistrarNeumatico({
             return;
         }
         const locationId = 2;
+        const usedHours = 0;
+        const usedKilometrage = 0;
         try {
             const response = await axios.post(
                 `http://localhost:3002/tires/`,
@@ -82,6 +84,8 @@ export default function ModalRegistrarNeumatico({
                     initialTread,
                     initialKilometrage,
                     initialHours,
+                    usedHours,
+                    usedKilometrage,
                 },
             );
 
