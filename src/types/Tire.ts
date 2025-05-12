@@ -24,6 +24,27 @@ export interface TireDTO {
         id: number;
         name: string;
     };
+    // "lastInspection": {
+    //     "id": 2,
+    //     "position": 1,
+    //     "externalTread": 78,
+    //     "internalTread": 83,
+    //     "kilometrage": 15000,
+    //     "inspectionDate": "2025-05-12T10:00:00.000Z",
+    //     "pressure": 115,
+    //     "temperature": 25,
+    //     "tireId": 12
+    lastInspection: {
+        id: number;
+        position: number;
+        externalTread: number;
+        internalTread: number;
+        kilometrage: number;
+        inspectionDate: string;
+        pressure: number;
+        temperature: number;
+        tireId: number;
+    };
     installedTires: {
         id: number;
         vehicleId: number;

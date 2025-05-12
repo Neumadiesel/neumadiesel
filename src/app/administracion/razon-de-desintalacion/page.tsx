@@ -54,9 +54,9 @@ export default function Page() {
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Razon de baja de neumaticos</h1>
+                <h1 className="text-2xl font-bold">Razon de desintalación de neumaticos</h1>
                 <div className="flex">
-                    <Button onClick={handleOpenModal} text="Agregar Razon de Retiro" />
+                    <Button onClick={handleOpenModal} text="Agregar Razon de Desintalación" />
                 </div>
             </div>
             {/* Lista de razones de retiro */}
@@ -83,7 +83,7 @@ export default function Page() {
                                     <div className="flex flex-col items-center dark:bg-neutral-900 justify-center space-y-4">
                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                         <p className="text-gray-600 dark:text-gray-400">
-                                            Cargando razones de retiro...
+                                            Cargando razones de desintalación...
                                         </p>
                                     </div>
                                 </td>
@@ -106,7 +106,7 @@ export default function Page() {
                                             />
                                         </svg>
                                         <p className="text-gray-600 dark:text-gray-400">
-                                            No se encontraron razones de retiro.
+                                            No se encontraron razones de desintalación.
                                         </p>
                                     </div>
                                 </td>

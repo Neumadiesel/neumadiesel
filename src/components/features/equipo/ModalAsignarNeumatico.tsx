@@ -91,7 +91,9 @@ export default function ModalAsignarNeumatico({
                     tireId,
                 },
             );
-
+            setPosition(null);
+            setTireIdSelected(null);
+            fetchData();
             onGuardar();
             onClose();
             return response.data;
@@ -158,9 +160,11 @@ export default function ModalAsignarNeumatico({
                             Seleccione un neumatico
                         </option>
                         {tires.map((tire) => (
-                            <option key={tire.id} value={tire.id}>
-                                {`${tire.code} - ${tire.model.brand} ${tire.model.dimensions}`}
-                            </option>
+                            tire.locationId !== 1 && (
+                                <option key={tire.id} value={tire.id}>
+                                    {`${tire.code} - ${tire.model.brand} ${tire.model.dimensions}`}
+                                </option>
+                            )
                         ))}
                     </select>
                 </div>

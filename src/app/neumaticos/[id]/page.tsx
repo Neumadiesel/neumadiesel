@@ -14,6 +14,7 @@ export default function TirePage() {
         try {
             const response = await fetch(`http://localhost:3002/tires/${id}`);
             const data = await response.json();
+            console.log(data);
             setTires(data);
         } catch (error) {
             console.error("Error fetching tyre models:", error);
@@ -24,6 +25,15 @@ export default function TirePage() {
         fetchTires();
     }, []);
 
+    // funcion de porcentaje de desgaste
+    const calculateWearPercentage = (initialTread: number | null, currentTread: number | null) => {
+        if (initialTread === null || currentTread === null) return 0;
+        if (initialTread === 0) return 0;
+        console.log("initialTread", initialTread);
+        console.log("currentTread", currentTread);
+        console.log("result", ((initialTread - currentTread) / initialTread) * 100);
+        return (((initialTread - currentTread) / initialTread) * 100).toFixed(2);
+    };
 
     return (
         <div className="p-3 bg-white h-[110vh] dark:bg-[#212121] relative shadow-sm">
@@ -44,26 +54,30 @@ export default function TirePage() {
                 </div>
             </section>
             {/* Cuadro informacion camion instalado */}
-            <section className="flex w-full gap-4 mt-5">
-                <div className="flex flex-col w-1/2 gap-2">
-                    <h2 className="text-xl font-semibold">Detalles del Equipo</h2>
-                    <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-1">
-                        <p><strong>Equipo:</strong> {tire?.installedTires[0].vehicle.code}</p>
-                        <p><strong>Posicion:</strong> {tire?.installedTires[0].position}</p>
-                        <p><strong>Fecha de instalacion:</strong> 07-05-2025</p>
+            {
+                tire &&
+                (<section className="flex w-full gap-4 mt-5">
+                    <div className="flex flex-col w-1/2 gap-2">
+                        <h2 className="text-xl font-semibold">Detalles del Equipo</h2>
+                        <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-1">
+                            <p><strong>Equipo:</strong> {tire?.installedTires[0]?.vehicle?.code}</p>
+                            <p><strong>Posicion:</strong> {tire?.installedTires[0]?.position}</p>
+                            <p><strong>Fecha de instalacion:</strong> 07-05-2025</p>
+                        </div>
                     </div>
-                </div>
-                <div className="flex flex-col w-1/2 gap-2">
-                    <h2 className="text-xl font-semibold">Detalles del Desgaste</h2>
-                    <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-2">
-                        <p><strong>Desgaste Interior:</strong> {tire?.initialTread}</p>
-                        <p><strong>Kilometraje:</strong> {tire?.initialKilometrage}</p>
-                        <p><strong>Desgaste Interior:</strong> {tire?.initialTread}</p>
-                        <p><strong>Horas:</strong> {tire?.initialHours}</p>
-                        <p><strong>% de Desgaste:</strong> 0% </p>
+                    <div className="flex flex-col w-1/2 gap-2">
+                        <h2 className="text-xl font-semibold">Detalles del Desgaste</h2>
+                        <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-2">
+                            <p><strong>Desgaste Interior:</strong> {tire?.lastInspection?.internalTread}</p>
+                            <p><strong>Kilometraje:</strong> {tire?.lastInspection?.kilometrage}</p>
+                            <p><strong>Desgaste Exterior:</strong> {tire?.lastInspection?.externalTread}</p>
+                            <p><strong>Horas:</strong> {tire?.initialHours}</p>
+                            <p><strong>% de Desgaste:</strong> {calculateWearPercentage(tire.initialTread, tire.lastInspection?.externalTread)}% </p>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>)
+            }
+
             {/* Seccion de historial */}
             <section className="flex flex-col gap-4 mt-5">
                 <div className="flex justify-between items-center">

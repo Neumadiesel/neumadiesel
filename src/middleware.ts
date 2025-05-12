@@ -13,7 +13,7 @@ const routePermissions = {
     administrador: [
         '/administracion/usuarios',
         '/administracion/faena',
-        '/administracion/razon-de-retiro',
+        '/administracion/razon-de-desintalacion',
     ],
 
     // Rutas de reportabilidad
