@@ -46,53 +46,36 @@ export default function TirePage() {
             {/* Section cuadro de informacion */}
             <section className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-col gap-2">
-                    <h2 className="text-xl font-semibold">Detalles del Modelo</h2>
-                    <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-2">
-                        <LabelLoading loading={loading} title="Marca:" text={tire?.model.brand || ""} />
-                        <LabelLoading loading={loading} title="Modelo:" text={tire?.model.pattern || ""} />
-                        <LabelLoading loading={loading} title="Medidas:" text={tire?.model.dimensions || ""} />
-                        <LabelLoading loading={loading} title="Código:" text={tire?.model.code || ""} />
-                        <LabelLoading loading={loading} title="Remanente:" text={tire?.model.originalTread?.toString() || ""} />
+                    <div className="bg-gray-50 p-4 rounded-md border grid grid-cols-3">
+                        <div className="grid grid-cols-2 gap-2">
 
-                    </div>
-                </div>
-            </section>
-            {/* Cuadro informacion camion instalado */}
-            {
-                tire &&
-                (<section className="flex w-full gap-4 mt-5">
-                    <div className="flex flex-col w-1/2 gap-2">
-                        <h2 className="text-xl font-semibold">Detalles del Equipo</h2>
-                        <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-1">
+                            <LabelLoading loading={loading} title="Marca:" text={tire?.model.brand || ""} />
+                            <LabelLoading loading={loading} title="Patron:" text={tire?.model.pattern || ""} />
+                            <LabelLoading loading={loading} title="Código:" text={tire?.model.code || ""} />
+                            <LabelLoading loading={loading} title="Medidas:" text={tire?.model.dimensions || ""} />
+                            <LabelLoading loading={loading} title="OTD:" text={tire?.model.originalTread?.toString() || ""} />
+                        </div>
+                        <div className="px-4 grid grid-cols-2 gap-2 border-x border-gray-200">
+                            <LabelLoading loading={loading} title="Desgaste Interior:" text={tire?.lastInspection?.internalTread.toString() || ""} />
+                            <LabelLoading loading={loading} title="Desgaste Exterior:" text={tire?.lastInspection?.externalTread.toString() || ""} />
+                            <LabelLoading loading={loading} title="Kilometraje:" text={tire?.lastInspection?.kilometrage?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Horas:" text={tire?.initialHours?.toString() || ""} />
+                            {
+                                tire &&
+                                <LabelLoading loading={loading} title="% de Desgaste:" text={`${calculateWearPercentage(tire?.initialTread, tire?.lastInspection?.externalTread)}%`} />
+                            }
+                        </div>
+                        <div className="px-4 flex flex-col gap-2 ">
                             <LabelLoading loading={loading} title="Ubicación:" text={tire?.location.name || ""} />
                             <LabelLoading loading={loading} title="Equipo:" text={tire?.installedTires[0]?.vehicle?.code || ""} />
                             <LabelLoading loading={loading} title="Posicion:" text={tire?.installedTires[0]?.position?.toString() || ""} />
                         </div>
-                    </div>
-                    <div className="flex flex-col w-1/2 gap-2">
-                        <h2 className="text-xl font-semibold">Detalles del Desgaste</h2>
-                        <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-2">
-                            <LabelLoading loading={loading} title="Desgaste Interior:" text={tire?.lastInspection?.toString() || ""} />
-                            <LabelLoading loading={loading} title="Desgaste Exterior:" text={tire?.lastInspection?.toString() || ""} />
-                            <LabelLoading loading={loading} title="Kilometraje:" text={tire?.lastInspection?.kilometrage?.toString() || ""} />
-                            <LabelLoading loading={loading} title="Horas:" text={tire?.initialHours?.toString() || ""} />
-                            <LabelLoading loading={loading} title="% de Desgaste:" text={`${calculateWearPercentage(tire?.initialTread, tire?.lastInspection?.externalTread)}%`} />
-                        </div>
-                    </div>
-                </section>)
-            }
 
-            {/* Seccion de historial */}
-            <section className="flex flex-col gap-4 mt-5">
-                <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold">Historial de movimientos</h2>
-                    <Button disabled={true} onClick={() => { }} text="Realizar Mantenimiento" />
-                </div>
-                <div className="bg-gray-100 p-4 rounded-md flex justify-center items-center border">
-                    <p><strong>Proximamente</strong></p>
 
+                    </div>
                 </div>
             </section>
+
         </div>
     );
 }
