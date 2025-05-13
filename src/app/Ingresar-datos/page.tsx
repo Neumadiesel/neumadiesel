@@ -261,7 +261,7 @@ export default function Page() {
 
             <div className='flex w-full justify-center items-center flex-col'>
                 <div className='lg:flex gap-x-4 w-full lg:justify-center'>
-                    <button onClick={() => handleConfirm()} className="bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4">
+                    <button disabled={data.length === 0} onClick={() => handleConfirm()} className={`bg-amber-300  text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4 ${data.length === 0 ? 'opacity-50 ' : 'hover:bg-amber-400 cursor-pointer'}`}>
                         Confirmar Datos
                     </button>
                     <button onClick={handleCancel} className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">
