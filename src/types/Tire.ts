@@ -70,5 +70,16 @@ export interface installedTiresDTO {
         initialHours: number;
         lastInspectionId: number | null;
         locationId: number;
+        lastInspection: {
+            id: number;
+            position: number;
+            externalTread: number;
+            internalTread: number;
+            kilometrage: number;
+            inspectionDate: string;
+            pressure: number;
+            temperature: number;
+            tireId: number;
+        };
     };
 }

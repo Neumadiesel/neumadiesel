@@ -81,6 +81,7 @@ export default function ListaMaquinaria() {
         try {
             const response = await fetch(`http://localhost:3002/vehicles/withTires/${id}`);
             const data = await response.json();
+            console.log("Installed tires", data);
             setLoading(false);
             setVehicle(data);
             setInstalledTires(data.installedTires);
@@ -187,7 +188,7 @@ export default function ListaMaquinaria() {
                                                 <p className="hidden lg:block">Profundidad</p>
                                                 <p className="block lg:hidden">Rem</p>
                                             </th>
-                                            <th className="p-2 w-[15%]">Meta </th>
+                                            <th className="p-2 w-[15%]">Datos</th>
                                             <th className="p-2 w-[15%]">Sensor</th>
                                             <th className="p-2 w-[15%]">
                                                 <p className="hidden lg:block">Historial</p>
@@ -223,17 +224,17 @@ export default function ListaMaquinaria() {
                                                         <td className="w-[20%]">{neumatico.tire.code}</td>
                                                         <td>
                                                             <div>
-                                                                <p>Int: {neumatico.tire.initialTread}</p>
-                                                                <p>Ext: {neumatico.tire.initialTread}</p>
+                                                                <p>Int: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.internalTread : neumatico.tire.initialTread}</p>
+                                                                <p>Ext: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.externalTread : neumatico.tire.initialTread}</p>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <p>{neumatico.tire.initialHours}</p>
-                                                            <p>{neumatico.tire.initialKilometrage}</p>
+                                                            <p>{neumatico.tire.lastInspection !== null ? neumatico.tire.initialHours : neumatico.tire.initialHours}</p>
+                                                            <p>{neumatico.tire.lastInspection !== null ? neumatico.tire.initialKilometrage : neumatico.tire.initialKilometrage}</p>
                                                         </td>
-                                                        <td>
-                                                            <p>PSI: 105</p>
-                                                            <p>Temp: 95</p>
+                                                        <td className="text-start">
+                                                            <p>PSI: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.pressure : "No Data"}</p>
+                                                            <p>Temp: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.temperature : "No Data"}</p>
                                                         </td>
                                                         <td className="flex justify-center mt-5 items-center gap-1">
                                                             <Link
