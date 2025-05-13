@@ -108,8 +108,6 @@ export default function NavBar() {
                     title: "Ingresar Medición por Equipo",
                     path: "/Ingresar-datos/medicion-por-equipo",
                 },
-                { title: "Crear Neumatico Nuevo", path: "/Ingresar-datos/crear-neumatico" },
-                { title: "Registrar Maquinaria", path: "/Ingresar-datos/crear-maquinaria" },
             ],
         },
         {

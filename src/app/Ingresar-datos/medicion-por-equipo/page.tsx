@@ -4,7 +4,7 @@ import Modal from "@/components/common/modal/CustomModal";
 import { Search } from "lucide-react";
 import { VehicleDTO } from '@/components/features/equipo/InfoCamion';
 import axios from 'axios';
-export default function Page() {
+export default function MedicionPorEquipo() {
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
 

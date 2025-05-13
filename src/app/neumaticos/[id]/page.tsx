@@ -1,5 +1,7 @@
 'use client';
 import Button from "@/components/common/button/Button";
+import Label from "@/components/common/forms/Label";
+import LabelLoading from "@/components/common/forms/LabelLoading";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { TireDTO } from "@/types/Tire";
 import { useParams } from "next/navigation";
@@ -9,13 +11,14 @@ export default function TirePage() {
     const { id } = useParams();
 
     const [tire, setTires] = useState<TireDTO>();
-
+    const [loading, setLoading] = useState(true);
     const fetchTires = async () => {
         try {
+            setLoading(true);
             const response = await fetch(`http://localhost:3002/tires/${id}`);
             const data = await response.json();
-            console.log(data);
             setTires(data);
+            setLoading(false);
         } catch (error) {
             console.error("Error fetching tyre models:", error);
         }
@@ -45,11 +48,12 @@ export default function TirePage() {
                 <div className="flex flex-col gap-2">
                     <h2 className="text-xl font-semibold">Detalles del Modelo</h2>
                     <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-2">
-                        <p><strong>Marca:</strong> {tire?.model.brand}</p>
-                        <p><strong>Patron:</strong> {tire?.model.pattern}</p>
-                        <p><strong>Medidas:</strong> {tire?.model.dimensions}</p>
-                        <p><strong>Código:</strong> {tire?.model.code}</p>
-                        <p><strong>Remanente:</strong> {tire?.model.originalTread}</p>
+                        <LabelLoading loading={loading} title="Marca:" text={tire?.model.brand || ""} />
+                        <LabelLoading loading={loading} title="Modelo:" text={tire?.model.pattern || ""} />
+                        <LabelLoading loading={loading} title="Medidas:" text={tire?.model.dimensions || ""} />
+                        <LabelLoading loading={loading} title="Código:" text={tire?.model.code || ""} />
+                        <LabelLoading loading={loading} title="Remanente:" text={tire?.model.originalTread?.toString() || ""} />
+
                     </div>
                 </div>
             </section>
@@ -60,19 +64,19 @@ export default function TirePage() {
                     <div className="flex flex-col w-1/2 gap-2">
                         <h2 className="text-xl font-semibold">Detalles del Equipo</h2>
                         <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-1">
-                            <p><strong>Equipo:</strong> {tire?.installedTires[0]?.vehicle?.code}</p>
-                            <p><strong>Posicion:</strong> {tire?.installedTires[0]?.position}</p>
-                            <p><strong>Fecha de instalacion:</strong> 07-05-2025</p>
+                            <LabelLoading loading={loading} title="Ubicación:" text={tire?.location.name || ""} />
+                            <LabelLoading loading={loading} title="Equipo:" text={tire?.installedTires[0]?.vehicle?.code || ""} />
+                            <LabelLoading loading={loading} title="Posicion:" text={tire?.installedTires[0]?.position?.toString() || ""} />
                         </div>
                     </div>
                     <div className="flex flex-col w-1/2 gap-2">
                         <h2 className="text-xl font-semibold">Detalles del Desgaste</h2>
                         <div className="bg-gray-100 p-4 rounded-md border grid grid-cols-2">
-                            <p><strong>Desgaste Interior:</strong> {tire?.lastInspection?.internalTread}</p>
-                            <p><strong>Kilometraje:</strong> {tire?.lastInspection?.kilometrage}</p>
-                            <p><strong>Desgaste Exterior:</strong> {tire?.lastInspection?.externalTread}</p>
-                            <p><strong>Horas:</strong> {tire?.initialHours}</p>
-                            <p><strong>% de Desgaste:</strong> {calculateWearPercentage(tire.initialTread, tire.lastInspection?.externalTread)}% </p>
+                            <LabelLoading loading={loading} title="Desgaste Interior:" text={tire?.lastInspection?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Desgaste Exterior:" text={tire?.lastInspection?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Kilometraje:" text={tire?.lastInspection?.kilometrage?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Horas:" text={tire?.initialHours?.toString() || ""} />
+                            <LabelLoading loading={loading} title="% de Desgaste:" text={`${calculateWearPercentage(tire?.initialTread, tire?.lastInspection?.externalTread)}%`} />
                         </div>
                     </div>
                 </section>)

@@ -48,9 +48,6 @@ const routePermissions = {
     ingresoDatos: [
         '/Ingresar-datos',
         '/Ingresar-datos/medicion-por-equipo',
-        '/Ingresar-datos/crear-neumatico',
-        '/Ingresar-datos/crear-modelo',
-        '/Ingresar-datos/crear-maquinaria',
     ],
 };
 
