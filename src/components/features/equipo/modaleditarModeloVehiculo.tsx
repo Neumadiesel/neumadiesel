@@ -121,6 +121,7 @@ export default function ModalEditarVehicleModel({
                     <input
                         name="cantidadRuedas"
                         type="number"
+                        min={0}
                         value={vehicleModelEdited.wheelCount === null ? "" : vehicleModelEdited.wheelCount}
                         onChange={(e) => {
                             const val = e.target.value;

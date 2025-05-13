@@ -163,6 +163,7 @@ export default function ModalRegistrarNeumatico({
                     <Label title="Goma Inicial" isNotEmpty={true} />
                     <input
                         disabled={selectedModel === null}
+                        min={0}
                         value={tyreModelEdited.initialTread === null ? "" : tyreModelEdited.initialTread}
                         name="gomaInicial"
                         type="number"
@@ -181,6 +182,7 @@ export default function ModalRegistrarNeumatico({
                     <input
                         name="kmInicial"
                         type="number"
+                        min={0}
                         value={tyreModelEdited.initialKilometrage === null ? "" : tyreModelEdited.initialKilometrage}
                         onChange={(e) => {
                             setTyreModelEdited({
@@ -195,6 +197,7 @@ export default function ModalRegistrarNeumatico({
                     {/* Horas inciales */}
                     <Label title="Horas Iniciales" isNotEmpty={true} />
                     <input
+                        min={0}
                         name="horasIniciales"
                         type="number"
                         value={tyreModelEdited.initialHours === null ? "" : tyreModelEdited.initialHours}

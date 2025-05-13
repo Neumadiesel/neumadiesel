@@ -155,6 +155,7 @@ export default function ModaleditarTyreModel({
                     <input
                         name="originalTread"
                         type="number"
+                        min={0}
                         value={tyreModelEdited.originalTread === null ? "" : tyreModelEdited.originalTread}
                         onChange={(e) => {
                             const val = e.target.value;
@@ -171,6 +172,7 @@ export default function ModaleditarTyreModel({
                     <input
                         name="tkph"
                         type="number"
+                        min={0}
                         value={tyreModelEdited.TKPH === null ? "" : tyreModelEdited.TKPH}
                         onChange={(e) => {
                             const val = e.target.value;
@@ -187,6 +189,7 @@ export default function ModaleditarTyreModel({
                     <input
                         name="costo"
                         type="number"
+                        min={0}
                         value={tyreModelEdited.cost === null ? "" : tyreModelEdited.cost}
                         onChange={(e) => {
                             const val = e.target.value;
@@ -204,6 +207,7 @@ export default function ModaleditarTyreModel({
                     <input
                         name="horasNominales"
                         type="number"
+                        min={0}
                         value={tyreModelEdited.nominalHours === null ? "" : tyreModelEdited.nominalHours}
                         onChange={(e) => {
                             const val = e.target.value;
@@ -221,6 +225,7 @@ export default function ModaleditarTyreModel({
                     <input
                         name="kilometrajeNominal"
                         type="number"
+                        min={0}
                         value={tyreModelEdited.nominalKilometrage === null ? "" : tyreModelEdited.nominalKilometrage}
                         onChange={(e) => {
                             const val = e.target.value;

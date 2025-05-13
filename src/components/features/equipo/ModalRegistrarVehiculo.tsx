@@ -216,6 +216,7 @@ export default function ModalRegistrarVehiculo({
                     <input
                         name="horas"
                         type="number"
+                        min={0}
                         value={vehicleEdited.hours === null ? "" : vehicleEdited.hours}
                         onChange={(e) => {
                             const val = e.target.value;
@@ -232,6 +233,7 @@ export default function ModalRegistrarVehiculo({
                     <input
                         name="kilometraje"
                         type="number"
+                        min={0}
                         value={vehicleEdited.kilometrage === null ? "" : vehicleEdited.kilometrage}
                         onChange={(e) => {
                             const val = e.target.value;
