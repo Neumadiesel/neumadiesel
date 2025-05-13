@@ -170,7 +170,7 @@ export default function Page() {
                         <option value="">Seleccione un neumático</option>
                         {vehicle?.installedTires.map((installed) => (
                             <option key={installed.id} value={installed.tire.id}>
-                                {installed.tire.code} — Posición {installed.position}
+                                Posición {installed.position} - {installed.tire.code}
                             </option>
                         ))}
                     </select>
@@ -187,7 +187,7 @@ export default function Page() {
                             `}>
                             <p className='text-xl font-bold'>Posición {tireSelected?.position}</p>
                             <p className='font-semibold'>Codigo del neumatico: {tireSelected?.tire.code}</p>
-                            <p>Remanente de la goma</p>
+
                             {/* Medicion exterior */}
                             <div className='flex flex-col'>
                                 <div className="flex items-center mt-2 ">

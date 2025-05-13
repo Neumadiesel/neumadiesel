@@ -25,8 +25,8 @@ export default function ModalEditarNeumatico({
     const [tireEdited, setTireEdited] = useState({
         code: "",
         locationId: null as number | null,
-        usedHours: null as number | null,
-        usedKilometrage: null as number | null,
+        usedHours: "",
+        usedKilometrage: "",
     });
     const [locations, setLocations] = useState<LocationDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -49,8 +49,8 @@ export default function ModalEditarNeumatico({
             setTireEdited({
                 code: tire.code,
                 locationId: tire.location.id,
-                usedHours: tire.usedHours,
-                usedKilometrage: tire.usedKilometrage,
+                usedHours: tire.usedHours?.toString() ?? "",
+                usedKilometrage: tire.usedKilometrage?.toString() ?? "",
             });
         }
     }, [tire]);
@@ -72,14 +72,13 @@ export default function ModalEditarNeumatico({
         if (
             !code ||
             locationId === null ||
-            usedHours === null ||
-            usedKilometrage === null
+            usedHours === "" ||
+            usedKilometrage === ""
         ) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
         }
-
 
         try {
             const response = await axios.patch(
@@ -87,8 +86,8 @@ export default function ModalEditarNeumatico({
                 {
                     code,
                     locationId,
-                    usedHours,
-                    usedKilometrage,
+                    usedHours: Number(usedHours),
+                    usedKilometrage: Number(usedKilometrage),
                 },
             );
 
@@ -145,10 +144,19 @@ export default function ModalEditarNeumatico({
                     <input
                         name="Horas Usadas"
                         type="number"
-                        value={tireEdited.usedHours ?? ""}
-                        onChange={
-                            (e) => setTireEdited({ ...tireEdited, usedHours: Number(e.target.value) })
-                        }
+                        min="0"
+                        value={tireEdited.usedHours}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (/^\d*$/.test(value)) { // solo dígitos
+                                setTireEdited({ ...tireEdited, usedHours: value });
+                            }
+                        }}
+                        onBlur={() => {
+                            if (tireEdited.usedHours === "") {
+                                setTireEdited({ ...tireEdited, usedHours: "0" });
+                            }
+                        }}
                         placeholder="Horas Usadas"
                         className="border border-gray-300 p-2 rounded"
                     />
@@ -157,10 +165,19 @@ export default function ModalEditarNeumatico({
                     <input
                         name="Kilometraje Usado"
                         type="number"
-                        value={tireEdited.usedKilometrage ?? ""}
-                        onChange={
-                            (e) => setTireEdited({ ...tireEdited, usedKilometrage: Number(e.target.value) })
-                        }
+                        min="0"
+                        value={tireEdited.usedKilometrage}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (/^\d*$/.test(value)) {
+                                setTireEdited({ ...tireEdited, usedKilometrage: value });
+                            }
+                        }}
+                        onBlur={() => {
+                            if (tireEdited.usedKilometrage === "") {
+                                setTireEdited({ ...tireEdited, usedKilometrage: "0" });
+                            }
+                        }}
                         placeholder="Kilometraje Usado"
                         className="border border-gray-300 p-2 rounded"
                     />
