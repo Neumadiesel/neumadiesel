@@ -6,6 +6,14 @@ import CustomModal from "@/components/common/alerts/alert";
 import Modal from "@/components/common/modal/CustomModal";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
+import ModalResultInspeccion from '@/components/features/inspeccion/ModalResultInspeccion';
+interface RegistrosDTO {
+    id: number;
+    success: boolean;
+    error: string;
+    equipmentCode: string;
+    position: string;
+}
 
 type Inspection = {
     date: string;
@@ -25,7 +33,9 @@ export default function Page() {
     const [data, setData] = useState<Inspection[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
-
+    const [openRegistros, setOpenRegistros] = useState(false);
+    const [openRegistrosMalos, setOpenRegistrosMalos] = useState(false);
+    const [registrosCorrectos, setRegistrosCorrectos] = useState<RegistrosDTO[]>([]);
     const expectedSuffixes = {
         "Ext": "externalTread",
         "Int": "internalTread",
@@ -150,8 +160,24 @@ export default function Page() {
             console.log("Datos a enviar:", data);
             const response = await axios.post('http://localhost:3002/inspections/bulk', data);
             console.log('Inspecciones enviadas exitosamente:', response.data);
+            // tengo que destructurar el response.data para recibir solo data.equipmentCode, data.position, success, error
+            console.log('Response:', response.data);
+            const registros = response.data.map((registro: any, index: number) => {
+                const data = registro.success ? registro.inspection : registro.data;
 
-            setIsOpen(false);
+                return {
+                    id: index,
+                    success: registro.success,
+                    error: registro.error ?? registro.message,
+                    equipmentCode: data?.equipmentCode,
+                    position: data?.position ?? 'N/A',
+                };
+            });
+
+            setRegistrosCorrectos(registros);
+            console.log('Registros:', registros);
+
+            setOpenRegistros(true);
             setData([]); // Limpiar los datos después de enviar
             setError(null); // Limpiar el error si hubo uno
             setLoading(false);
@@ -251,6 +277,20 @@ export default function Page() {
 
             {error && <CustomModal isOpen={!!error} onClose={() => setError(null)} title="Error" message={error} />}
             <LoadingSpinner isOpen={loading} />
+            <ModalResultInspeccion
+                isOpen={openRegistros}
+                registros={registrosCorrectos.filter((registro) => registro.success)}
+                onClose={() => setOpenRegistros(false)}
+                onConfirm={() => { setOpenRegistros(false); setOpenRegistrosMalos(true) }}
+                title='Registros ingresados correctamente'
+            />
+            <ModalResultInspeccion
+                isOpen={openRegistrosMalos}
+                registros={registrosCorrectos.filter((registro) => !registro.success)}
+                onClose={() => setOpenRegistrosMalos(false)}
+                onConfirm={() => setOpenRegistrosMalos(false)}
+                title='Registros con errores'
+            />
         </div>
     );
 }
