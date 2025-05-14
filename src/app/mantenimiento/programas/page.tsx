@@ -1,203 +1,313 @@
-'use client'
-import { useState } from "react";
-import { programa_mantenimiento } from "@/mocks/programa.json";
+'use client';
+import { useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight, FaFileAlt, FaFileDownload, FaPen, FaPlusCircle } from "react-icons/fa";
-import Link from "next/link";
-import * as XLSX from "xlsx";
-import { FaCircleXmark } from "react-icons/fa6";
+
+
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+
 import Modal from "@/components/common/modal/CustomModal";
+import Button from "@/components/common/button/Button";
+import ModalProgramaMantenimiento from "@/components/features/mantenimiento/ModalProgramaMantenimiento";
+import axios from "axios";
+import { CircleX } from "lucide-react";
+import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
+
+interface ProgramasDTO {
+    id: number;
+    description: string;
+    scheduledDate: string;
+    vehicle: {
+        id: number;
+        code: string;
+    }
+}
 
 export default function Programas() {
-
     const [isOpen, setIsOpen] = useState(false);
-    const exportToExcel = () => {
-        const table = document.querySelector("table");
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [programMaintenance, setProgramMaintenance] = useState<ProgramasDTO[]>([]);
+    const [startDate, setStartDate] = useState(new Date()); // NUEVO: fecha base
+
+    const exportToExcel = async () => {
+        const table = document.querySelector("table") as HTMLTableElement;
         if (!table) return;
 
-        const workbook = XLSX.utils.book_new();
-        const worksheet = XLSX.utils.table_to_sheet(table);
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Programa");
 
-        // Ajustar el ancho de la columna "Motivo" (según su índice, aquí es la columna B -> índice 1)
-        worksheet["!cols"] = [
-            { wch: 15 }, // Columna A (Ejemplo)
-            { wch: 40 }, // Columna B (Motivo) - Ajustada para más espacio
-            { wch: 15 }, // Columna C
-            { wch: 15 }, // Columna D
-            { wch: 15 }  // Columna E
-        ];
 
-        // Insertar una fila superior como título
-        XLSX.utils.sheet_add_aoa(worksheet, [["Programa Semana"]], { origin: "A1" });
+        const fechaInicio = new Date(startDate).toLocaleDateString("es-CL", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        })
 
-        // Aplicar estilo a la primera fila (Encabezados)
-        const range = XLSX.utils.decode_range(worksheet["!ref"] ?? "");
-        for (let C = range.s.c; C <= range.e.c; C++) {
-            const cellAddress = XLSX.utils.encode_cell({ r: 1, c: C });
-            if (!worksheet[cellAddress]) continue;
-            worksheet[cellAddress].s = {
-                fill: { fgColor: { rgb: "FFFF00" } }, // Fondo amarillo
-                font: { bold: true } // Texto en negrita
+        const fechaFin = new Date(startDate);
+        fechaFin.setDate(fechaFin.getDate() + 6);
+        const formattedFechaFin = fechaFin.toLocaleDateString("es-CL", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
+        // Título
+        worksheet.addRow([`Programa Semana ${fechaInicio} - ${formattedFechaFin}`]);
+        worksheet.mergeCells('A1:C1'); // Ajusta si tienes más o menos columnas
+        const titleCell = worksheet.getCell('A1');
+        titleCell.font = { size: 14, bold: true };
+        titleCell.alignment = { horizontal: 'center' };
+
+        // Leer encabezados y encontrar el índice de la columna "Acciones"
+        const ths = Array.from(table.querySelectorAll("thead th"));
+        const headers = ths.map(th => th.textContent ?? "");
+        const accionIndex = headers.findIndex(h => h.toLowerCase().includes("acciones"));
+
+        // Filtrar encabezados
+        const filteredHeaders = headers.filter((_, i) => i !== accionIndex);
+        const headerRow = worksheet.addRow(filteredHeaders);
+
+        // Estilos de encabezado
+        headerRow.eachCell(cell => {
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFFF00' },
             };
-        }
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: 'center' };
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' },
+            };
+        });
 
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Programa");
-        XLSX.writeFile(workbook, "programa_mantenimiento.xlsx");
+        // Filtrar y agregar filas
+        const rows = Array.from(table.querySelectorAll("tbody tr")).map(row =>
+            Array.from(row.querySelectorAll("td"))
+                .filter((_, i) => i !== accionIndex)
+                .map(td => td.textContent)
+        );
+        rows.forEach(row => worksheet.addRow(row));
+
+        // Ajustar ancho automático
+        worksheet.columns.forEach(column => {
+            let maxLength = 10;
+            column.eachCell?.({ includeEmpty: true }, (cell) => {
+                const len = cell.value?.toString().length ?? 0;
+                if (len > maxLength) maxLength = len;
+            });
+            column.width = maxLength + 2;
+        });
+
+        // Descargar archivo
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        saveAs(blob, ` "programa_mantenimiento_semana_${fechaInicio}_${formattedFechaFin}.xlsx`);
     };
 
-    function getRangoDeFechas(semana: number): string {
-        const inicioDelAnio = new Date(new Date().getFullYear(), 0, 1); // 1 de enero
-        const diaInicioSemana = new Date(inicioDelAnio.getTime() + (semana - 1) * 7 * 24 * 60 * 60 * 1000);
 
-        const diaFinSemana = new Date(diaInicioSemana);
-        diaFinSemana.setDate(diaInicioSemana.getDate() + 6);
+
+
+    // NUEVO: función para rango de 7 días desde fecha base
+    function getRangoDeFechas(fecha: Date): string {
+        const inicio = new Date(fecha);
+        inicio.setHours(0, 0, 0, 0);
+
+        const fin = new Date(inicio);
+        fin.setDate(inicio.getDate() + 6);
+        fin.setHours(23, 59, 59, 999);
 
         const formatear = (fecha: Date) =>
             fecha.toLocaleDateString("es-CL", {
                 day: "2-digit",
-                month: "short",
+                month: "short"
             });
 
-        return `${formatear(diaInicioSemana)} - ${formatear(diaFinSemana)}`;
+        return `${formatear(inicio)} - ${formatear(fin)}`;
     }
 
-    const handleConfirm = () => {
-        setIsOpen(false); // Cerrar modal después de la acción
+    function formatearFechaLocal(fecha: Date): string {
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        return `${año}-${mes}-${dia}T00:00:00.000`;
+    }
+
+    function formatearFechaFinUTC(fecha: Date): string {
+        const fin = new Date(fecha);
+        fin.setHours(23, 59, 59, 999);
+        return fin.toISOString(); // Devuelve en formato UTC con la Z
+    }
+
+    const handleDeleteProgram = async (id: number) => {
+        try {
+            setLoading(true);
+            const response = await axios.delete(`http://localhost:3002/maintenance-program/${id}`);
+            fetchData();
+            setLoading(false);
+            return response.data;
+        } catch (error) {
+            console.error("Error al eliminar el programa:", error);
+        }
     };
 
+    const handleConfirm = () => {
+        setIsOpen(false);
+    };
 
-    const [semana, setSemana] = useState(12);
+    const fetchData = async () => {
+        const fechaInicio = new Date(startDate);
+        const fechaFin = new Date(startDate);
+        fechaFin.setDate(fechaInicio.getDate() + 6);
+
+        const isoInicio = formatearFechaLocal(fechaInicio);
+        const isoFin = formatearFechaFinUTC(fechaFin);
+
+        try {
+            console.log("Fechas:", isoInicio, isoFin);
+            setLoading(true);
+            const response = await fetch(`http://localhost:3002/maintenance-program/time-period/${isoInicio}/${isoFin}`);
+            const data = await response.json();
+            console.log("Programas", data);
+            setProgramMaintenance(data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching:", error);
+        }
+
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [startDate, isOpenModal]);
+
+
+
     return (
-        <div className="bg-[#f1f1f1] dark:bg-[#313131] lg:p-4 h-screen">
-            <div className=" lg:p-4 bg-white dark:bg-[#212121] rounded-md shadow-lg h-[95%]" >
-
+        <div className="bg-[#f1f1f1] dark:bg-[#313131]">
+            <div className="lg:p-3 bg-white dark:bg-[#212121] h-[95%]">
                 <div className="flex flex-col gap-y-2 p-2">
-
                     <section className="lg:flex items-center justify-between gap-x-2">
                         <h1 className="text-2xl font-mono font-bold">Programa Semanal de Mantenciones</h1>
 
-                        <div className="flex justify-center items-center w-[100%] lg:w-[50%]">
-                            <button className="bg-amber-300 text-black font-bold py-1 px-2 rounded-l-md h-10" onClick={() => setSemana(semana - 1)}>
+                    </section>
+
+                    <section className="lg:flex gap-y-2 items-center justify-between gap-x-2 md:w-[100%] mx-auto lg:mx-0">
+                        <div className="flex items-center w-[100%] lg:w-[50%]">
+                            <button
+                                className="bg-gray-100 border hover:bg-gray-200 font-bold py-1 px-2 rounded-l-md h-10"
+                                onClick={() =>
+                                    setStartDate(prev => {
+                                        const nueva = new Date(prev);
+                                        nueva.setDate(prev.getDate() - 7);
+                                        return nueva;
+                                    })
+                                }
+                            >
                                 <FaAngleLeft className="text-2xl" />
                             </button>
-                            <div className="text-center bg-gray-100 p-2 px-4 w-[80%] md:my-2 md:w-[60%] lg:w-[60%] flex justify-around items-center h-10">
-                                <p className="text-md font-mono ">Semana {semana}</p>
-                                <p className="text-lg text-black font-semibold dark:text-gray-300">{getRangoDeFechas(semana)}</p>
+                            <div className="text-center bg-gray-50 border-y p-2 px-4 w-[80%] md:my-2 md:w-[60%] lg:w-[40%] flex justify-around items-center h-10">
+                                <p className="text-lg text-gray-600 dark:text-gray-300">{getRangoDeFechas(startDate)}</p>
                             </div>
-                            <button className="bg-amber-300 text-black font-bold py-1 px-2 rounded-r-md h-10" onClick={() => setSemana(semana + 1)}>
+                            <button
+                                className="bg-gray-100 border hover:bg-gray-200 text-black font-bold py-1 px-2 rounded-r-md h-10"
+                                onClick={() =>
+                                    setStartDate(prev => {
+                                        const nueva = new Date(prev);
+                                        nueva.setDate(prev.getDate() + 7);
+                                        return nueva;
+                                    })
+                                }
+                            >
                                 <FaAngleRight className="text-2xl" />
                             </button>
                         </div>
-                    </section>
-                    <div>
-                        {/* botones de agregar mantenimientio y descargar */}
-                        <section className="lg:flex gap-y-2 items-center justify-between gap-x-2 md:w-[70%] mx-auto lg:mx-0">
+                        <div className="flex gap-x-2">
 
-                            <Link href="/mantenimiento/programar-mantenimiento" className="bg-amber-300 lg:w-[50%] text-black text-lg font-bold h-10 px-4 rounded-md hover:bg-amber-200 transition-all flex justify-center gap-x-2 items-center"
-                            >
-                                <FaPlusCircle className="text-2xl" />
-                                Agregar Mantenimiento
-                            </Link>
-                            <button
-                                className="bg-amber-50 border border-amber-300 flex w-[100%] my-2 lg:w-[50%] justify-center items-center h-10 gap-x-2 text-black font-bold py-4 px-4 rounded-md hover:bg-amber-100 transition-all"
+                            <Button
+                                disabled={loading}
+                                text="Agregar Mantenimiento"
+                                onClick={() => { setIsOpenModal(true); }}
+                            />
+                            <Button
+                                disabled={loading}
+                                text="Descargar Programa"
                                 onClick={exportToExcel}
-                            >
-                                <FaFileDownload className="text-2xl" />
-                                <p>Descargar</p>
-                            </button>
-                        </section>
-
-                    </div>
-
-
+                            />
+                        </div>
+                    </section>
                 </div>
-                {/* Programa semanal */}
+
                 <div className="relative overflow-x-auto h-[85%] my-2">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-lg rounded-t-md overflow-hidden">
-                        <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center ">
+                        <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center">
                             <tr>
-                                <th scope="col" className="px-6 py-3">
-                                    Equipo
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Motivo
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Dia
-                                </th>
-                                <th scope="col" className="px-2 py-3">
-                                    Fecha
-                                </th>
-                                <th scope="col" className="px-6 py-3">
-                                    Acciones
-                                </th>
+                                <th scope="col" className="px-6 py-3">Equipo</th>
+                                <th scope="col" className="px-6 py-3">Motivo</th>
+                                <th scope="col" className="px-2 py-3">Fecha</th>
+                                <th scope="col" className="px-6 py-3 w-32">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                                programa_mantenimiento.length === 0 && (
-                                    <tr className="text-center">
-                                        <td colSpan={6} className="py-4 h-[60vh] ">
-                                            <div className="flex flex-col items-center justify-center gap-y-4">
-
-                                                <FaFileAlt size={96} />
-                                                <p className="text-lg">
-
-                                                    No hay mantenimientos programados para esta semana.
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            }
-                            {
-                                programa_mantenimiento.map((programa, index) => (
-                                    <tr key={index} className="bg-[#f1f1f1] dark:bg-[#0b0a0a] h-16 dark:text-white border-b text-center hover:bg-slate-100 dark:hover:bg-gray-800 ease-in transition-all border-gray-200">
+                            {programMaintenance.length === 0 ? (
+                                <tr className="text-center">
+                                    <td colSpan={6} className="py-4 h-[60vh]">
+                                        <div className="flex flex-col items-center justify-center gap-y-4">
+                                            <FaFileAlt size={96} />
+                                            <p className="text-lg">No hay mantenimientos programados para este rango.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                programMaintenance.map((programa, index) => (
+                                    <tr key={index} className="bg-gray-50 dark:bg-[#0b0a0a] h-16 dark:text-white border-b text-center hover:bg-slate-100 dark:hover:bg-gray-800 ease-in transition-all border-gray-200">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="ml-4">
-                                                    <div className="text-sm font-medium ">{programa.equipo}</div>
+                                                    <div className="text-sm font-medium">{programa.vehicle.code}</div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm ">{programa.motivo}</div>
+                                        <td className="px-6 bg-white py-4 whitespace-nowrap">
+                                            <div className="text-sm">{programa.description}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm ">{programa.dia}</div>
+                                            <div className="text-sm">{new Date(programa.scheduledDate).toLocaleDateString("es-CL", {
+                                                day: "2-digit",
+                                                month: "2-digit",
+                                                year: "numeric"
+                                            })}</div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm ">{programa.fecha}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm flex justify-between items-center ">
-                                                <button
-                                                    className=" text-red-500 hover:text-red-600 font-bold  rounded-full p-1  transition-all"
-                                                    onClick={() => {
-                                                        setIsOpen(true);
-                                                    }}
-                                                >
-                                                    <FaCircleXmark size={25} />
-
+                                        <td className="px-6 bg-white  py-4 whitespace-nowrap">
+                                            <div className="text-sm flex justify-center items-center">
+                                                <button className="text-red-500 hover:text-red-600 font-bold rounded-full p-1 transition-all" onClick={() => handleDeleteProgram(programa.id)}>
+                                                    <CircleX size={25} />
                                                 </button>
-                                                <Link href={"/mantenimiento/programar-mantenimiento"}
-                                                    className=" text-amber-300 hover:text-amber-400 font-bold  rounded-full p-1  transition-all"
-
-                                                >
-                                                    <FaPen size={25} />
-
-                                                </Link>
                                             </div>
                                         </td>
                                     </tr>
                                 ))
-                            }
+                            )}
                         </tbody>
                     </table>
                 </div>
+                <LoadingSpinner isOpen={loading} />
+
+                <ModalProgramaMantenimiento
+                    visible={isOpenModal}
+                    onClose={() => setIsOpenModal(false)}
+                    onGuardar={() => { setIsOpenModal(false) }}
+                />
+
                 <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} title="¿Estás seguro?">
                     <p>¿Quieres confirmar esta acción?</p>
                 </Modal>
             </div>
         </div>
-    )
+    );
 }

@@ -99,21 +99,21 @@ export default function NavBar() {
             ],
         },
         {
-            title: "Ingresar datos",
+            title: "Mediciones",
             icon: <FaFile className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "supervisor"],
             children: [
-                { title: "Ingresar Mediciones", path: "/Ingresar-datos/" },
+                { title: "Mediciones", path: "/medicion/" },
                 {
                     title: "Ingresar Medición por Equipo",
-                    path: "/Ingresar-datos/medicion-por-equipo",
+                    path: "/medicion/medicion-por-equipo",
                 },
             ],
         },
         {
             title: "Ingresar Medición por Equipo",
             icon: <FaFile className="text-2xl" />,
-            path: "/Ingresar-datos/medicion-por-equipo",
+            path: "/medicion/medicion-por-equipo",
             allowedRoles: ["operador"],
         },
     ];
