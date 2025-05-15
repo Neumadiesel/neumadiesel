@@ -7,6 +7,7 @@ import Modal from "@/components/common/modal/CustomModal";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import ModalResultInspeccion from '@/components/features/inspeccion/ModalResultInspeccion';
+
 interface RegistrosDTO {
     id: number;
     success: boolean;
@@ -26,6 +27,26 @@ type Inspection = {
     pressure: number;
 };
 
+type RegistroResponse = {
+    success: boolean;
+    error?: string;
+    message?: string;
+    inspection?: {
+        equipmentCode: string;
+        position: string;
+    };
+    data?: {
+        equipmentCode: string;
+        position?: string;
+    };
+};
+
+interface ExcelRow {
+    Fecha?: string | number;
+    Código?: string;
+    Hodómetro?: number;
+    [key: string]: any; // Allow additional dynamic keys
+}
 
 type InspectionField = "externalTread" | "internalTread" | "temperature" | "pressure";
 
@@ -49,8 +70,7 @@ export default function Page() {
         return jsDate.toISOString().split("T")[0]; // Devuelve en formato "YYYY-MM-DD"
     };
 
-    //@ts-ignore
-    const validateAndTransformExcel = (jsonData: any[]): Inspection[] => {
+    const validateAndTransformExcel = (jsonData: ExcelRow[]): Inspection[] => {
         const transformed: Inspection[] = [];
 
         jsonData.forEach((row, rowIndex) => {
@@ -135,6 +155,7 @@ export default function Page() {
                     const worksheet = workbook.Sheets[sheetName];
                     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
+                    //@ts-expect-error
                     const transformedData = validateAndTransformExcel(jsonData);
                     if (transformedData.length === 0) {
                         throw new Error('El archivo no contiene datos válidos.');
@@ -164,8 +185,7 @@ export default function Page() {
             console.log('Inspecciones enviadas exitosamente:', response.data);
             // tengo que destructurar el response.data para recibir solo data.equipmentCode, data.position, success, error
             console.log('Response:', response.data);
-            // @ts-ignore
-            const registros = response.data.map((registro: any, index: number) => {
+            const registros = response.data.map((registro: RegistroResponse, index: number) => {
                 const data = registro.success ? registro.inspection : registro.data;
 
                 return {

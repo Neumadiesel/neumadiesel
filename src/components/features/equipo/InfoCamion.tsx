@@ -9,7 +9,6 @@ import { useLayoutContext } from "@/contexts/LayoutContext";
 import { installedTiresDTO } from "@/types/Tire";
 import Button from "@/components/common/button/Button";
 import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
-import axios from "axios";
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import ModalDesmontarNeumatico from "../mantenimiento/ModalDesmontarNeumatico";
 
