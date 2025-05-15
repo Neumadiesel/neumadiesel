@@ -1,6 +1,4 @@
 'use client';
-import Button from "@/components/common/button/Button";
-import Label from "@/components/common/forms/Label";
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { TireDTO } from "@/types/Tire";
@@ -26,7 +24,7 @@ export default function TirePage() {
     const fetchTires = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3002/tires/${id}`);
+            const response = await fetch(`https://inventory-service-emva.onrender.com/tires/${id}`);
             const data = await response.json();
             setTires(data);
             setLoading(false);
@@ -38,7 +36,7 @@ export default function TirePage() {
     const fetchHistory = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:3002/maintenance/tire/${id}`);
+            const response = await fetch(`https://inventory-service-emva.onrender.com/maintenance/tire/${id}`);
             const data = await response.json();
             setRecords(data);
             setLoading(false);

@@ -31,7 +31,7 @@ export default function ModalRegistrarNeumatico({
     const fetchModelTire = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/tireModels");
+            const response = await fetch("https://inventory-service-emva.onrender.com/tireModels");
             const data = await response.json();
             setLoading(false);
             setTireModels(data);
@@ -76,7 +76,7 @@ export default function ModalRegistrarNeumatico({
         const usedKilometrage = 0;
         try {
             const response = await axios.post(
-                `http://localhost:3002/tires/`,
+                `https://inventory-service-emva.onrender.com/tires/`,
                 {
                     code,
                     modelId,

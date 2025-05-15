@@ -63,7 +63,7 @@ export default function ModalEditarVehicleModel({
 
         try {
             const response = await axios.patch(
-                `http://localhost:3002/vehicleModels/${vehicleModel.id}`,
+                `https://inventory-service-emva.onrender.com/vehicleModels/${vehicleModel.id}`,
                 {
                     brand,
                     model,

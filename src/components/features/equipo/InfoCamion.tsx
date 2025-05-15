@@ -9,7 +9,6 @@ import { useLayoutContext } from "@/contexts/LayoutContext";
 import { installedTiresDTO } from "@/types/Tire";
 import Button from "@/components/common/button/Button";
 import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
-import Modal from "@/components/common/modal/CustomModal";
 import axios from "axios";
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import ModalDesmontarNeumatico from "../mantenimiento/ModalDesmontarNeumatico";
@@ -80,7 +79,7 @@ export default function ListaMaquinaria() {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:3002/vehicles/withTires/${id}`);
+            const response = await fetch(`https://inventory-service-emva.onrender.com/vehicles/withTires/${id}`);
             const data = await response.json();
             console.log("Installed tires", data);
             setLoading(false);
@@ -98,30 +97,6 @@ export default function ListaMaquinaria() {
         setHasChanged(true);
     }
     const [tireDesmontado, setTireDesmonatado] = useState<installedTiresDTO | null>(null);
-
-    const handleDesmontar = async () => {
-        if (!tireDesmontado) return;
-        setLoading(true);
-        try {
-            const response = await axios.delete(
-                `http://localhost:3002/installed-tires/${tireDesmontado.id}`
-            );
-
-            setMostrarDesmontar(false);
-            setHasChanged(true);
-            setTireDesmonatado(null);
-            return response.data;
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const message = error.response?.data?.message || "Error desconocido";
-                console.log(message);
-            } else {
-                console.error("Error inesperado:", error);
-            }
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
         fetchVehicleModels();

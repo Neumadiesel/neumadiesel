@@ -46,7 +46,7 @@ export default function MedicionPorEquipo() {
         setError(null);
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:3002/vehicles/code/${vehicleCode}`);
+            const response = await axios.get(`https://inventory-service-emva.onrender.com/vehicles/code/${vehicleCode}`);
             console.log("Vehiculo", response.data);
             setVehicle(response.data);
         } catch (error) {
@@ -89,6 +89,7 @@ export default function MedicionPorEquipo() {
     }
 
     useEffect(() => {
+        console.log(loading)
         if (!tireSelected) {
             setTireInspected({
                 position: 0,
@@ -106,7 +107,7 @@ export default function MedicionPorEquipo() {
 
     const handleConfirm = async () => {
         try {
-            const response = await axios.post("http://localhost:3002/inspections", tireInspected);
+            const response = await axios.post("https://inventory-service-emva.onrender.com/inspections", tireInspected);
             setIsOpen(false);
             resetData();
             return response.data;

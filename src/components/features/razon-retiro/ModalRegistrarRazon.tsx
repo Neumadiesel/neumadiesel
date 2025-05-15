@@ -32,7 +32,7 @@ export default function ModalRegistrarRazon({
             return;
         }
         try {
-            const response = await axios.post('http://localhost:3002/retirement-reason', {
+            const response = await axios.post('https://inventory-service-emva.onrender.com/retirement-reason', {
                 name,
                 description,
             });

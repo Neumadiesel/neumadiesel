@@ -47,7 +47,7 @@ export default function ModalRegistrarFaena({
             if (registerContract) {
                 console.log("Checkbox is checked");
                 console.log(new Date(faenaEditada.startDate).toISOString());
-                const response = await axios.post('http://localhost:3002/sites/with-contract', {
+                const response = await axios.post('https://inventory-service-emva.onrender.com/sites/with-contract', {
 
                     site: {
                         name,
@@ -73,7 +73,7 @@ export default function ModalRegistrarFaena({
             }
             // Si el checkbox no está marcado, crea la faena sin contrato
             else {
-                const response = await axios.post('http://localhost:3002/sites', {
+                const response = await axios.post('https://inventory-service-emva.onrender.com/sites', {
                     name,
                     region,
                     isActive: true,

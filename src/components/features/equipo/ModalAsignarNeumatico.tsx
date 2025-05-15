@@ -50,7 +50,7 @@ export default function ModalAsignarNeumatico({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/tires/available");
+            const response = await fetch("https://inventory-service-emva.onrender.com/tires/available");
             const data = await response.json();
             setTires(data);
             console.log("Neumaticos", data);
@@ -84,7 +84,7 @@ export default function ModalAsignarNeumatico({
         const tireId = Number(tireIdSelected);
         try {
             const response = await axios.post(
-                `http://localhost:3002/installed-tires`,
+                `https://inventory-service-emva.onrender.com/installed-tires`,
                 {
                     vehicleId,
                     position,

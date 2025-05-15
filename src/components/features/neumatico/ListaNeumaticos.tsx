@@ -27,7 +27,7 @@ export default function ListaNeumaticos() {
     const fetchTires = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/tires");
+            const response = await fetch("https://inventory-service-emva.onrender.com/tires");
             const data = await response.json();
             setLoading(false);
             console.log("INFORMACION NEUMATICOS ✅", data);
@@ -40,7 +40,7 @@ export default function ListaNeumaticos() {
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/locations");
+            const response = await fetch("https://inventory-service-emva.onrender.com/locations");
             const data = await response.json();
             setLoading(false);
             setLocations(data);

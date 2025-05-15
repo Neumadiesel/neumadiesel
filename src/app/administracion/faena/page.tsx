@@ -29,7 +29,7 @@ export default function Page() {
     const fetchFaenas = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/sites/with-contract");
+            const response = await fetch("https://inventory-service-emva.onrender.com/sites/with-contract");
             const data = await response.json();
             setLoading(false);
             setRazones(data);

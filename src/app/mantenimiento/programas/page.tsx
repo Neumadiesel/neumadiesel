@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { FaAngleLeft, FaAngleRight, FaFileAlt, FaFileDownload, FaPen, FaPlusCircle } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaFileAlt } from "react-icons/fa";
 
 
 import ExcelJS from 'exceljs';
@@ -147,7 +147,7 @@ export default function Programas() {
     const handleDeleteProgram = async (id: number) => {
         try {
             setLoading(true);
-            const response = await axios.delete(`http://localhost:3002/maintenance-program/${id}`);
+            const response = await axios.delete(`https://inventory-service-emva.onrender.com/maintenance-program/${id}`);
             fetchData();
             setLoading(false);
             return response.data;
@@ -171,7 +171,7 @@ export default function Programas() {
         try {
             console.log("Fechas:", isoInicio, isoFin);
             setLoading(true);
-            const response = await fetch(`http://localhost:3002/maintenance-program/time-period/${isoInicio}/${isoFin}`);
+            const response = await fetch(`https://inventory-service-emva.onrender.com/maintenance-program/time-period/${isoInicio}/${isoFin}`);
             const data = await response.json();
             console.log("Programas", data);
             setProgramMaintenance(data);

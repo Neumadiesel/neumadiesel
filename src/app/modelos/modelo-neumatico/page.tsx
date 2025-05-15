@@ -16,7 +16,7 @@ export default function ModelosNeumaticos() {
     const fetchModelTyres = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/tiremodels");
+            const response = await fetch("https://inventory-service-emva.onrender.com/tiremodels");
             const data = await response.json();
             setLoading(false);
             setTyreModels(data);

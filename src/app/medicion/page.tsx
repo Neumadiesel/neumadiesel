@@ -48,6 +48,8 @@ export default function Page() {
         const jsDate = new Date(excelEpoch.getTime() + (serial - 1) * 24 * 60 * 60 * 1000); // Ajuste por días
         return jsDate.toISOString().split("T")[0]; // Devuelve en formato "YYYY-MM-DD"
     };
+
+    //@ts-ignore
     const validateAndTransformExcel = (jsonData: any[]): Inspection[] => {
         const transformed: Inspection[] = [];
 
@@ -158,10 +160,11 @@ export default function Page() {
         try {
             setLoading(true);
             console.log("Datos a enviar:", data);
-            const response = await axios.post('http://localhost:3002/inspections/bulk', data);
+            const response = await axios.post('https://inventory-service-emva.onrender.com/inspections/bulk', data);
             console.log('Inspecciones enviadas exitosamente:', response.data);
             // tengo que destructurar el response.data para recibir solo data.equipmentCode, data.position, success, error
             console.log('Response:', response.data);
+            // @ts-ignore
             const registros = response.data.map((registro: any, index: number) => {
                 const data = registro.success ? registro.inspection : registro.data;
 
@@ -205,7 +208,7 @@ export default function Page() {
                     <div className="grid gap-2">
                         <div className="flex flex-col items-center justify-center">
                             <label className="text-xs mb-1 text-gray-400 dark:text-gray-300">
-                                Seleccione un archivo de Excel con columnas como: "P1 Ext", "P1 Int", "P1 Tem", "P1 Pre"
+                                Seleccione un archivo de Excel con columnas como: P1 Ext, P1 Int, P1 Tem, P1 Pre
                             </label>
                             <label>
                                 <input type="file" hidden onChange={handleFileUpload} />
@@ -271,8 +274,8 @@ export default function Page() {
                 <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} title="¿Estás seguro?">
                     <p>¿Quieres confirmar esta acción?</p>
                 </Modal>
-                <p className="text-gray-400 text-xs mt-2">*Verifique que los datos sean correctos antes de confirmar</p>
-                <p className="text-gray-400 text-xs ml-2">*Los datos se guardarán en la base de datos</p>
+                <p className="text-gray-400 text-xs mt-2">Verifique que los datos sean correctos antes de confirmar</p>
+                <p className="text-gray-400 text-xs ml-2">Los datos se guardarán en la base de datos</p>
             </div>
 
             {error && <CustomModal isOpen={!!error} onClose={() => setError(null)} title="Error" message={error} />}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { TireDTO } from "@/types/Tire";
 import Label from "@/components/common/forms/Label";
@@ -35,7 +35,7 @@ export default function ModalEditarNeumatico({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/locations");
+            const response = await fetch("https://inventory-service-emva.onrender.com/locations");
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -82,7 +82,7 @@ export default function ModalEditarNeumatico({
 
         try {
             const response = await axios.patch(
-                `http://localhost:3002/tires/${tire.id}`,
+                `https://inventory-service-emva.onrender.com/tires/${tire.id}`,
                 {
                     code,
                     locationId,

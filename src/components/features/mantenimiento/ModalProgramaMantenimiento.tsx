@@ -1,8 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
-import { TyreModelDto } from "@/types/TyreModelDTO";
 
 interface ProgramDTO {
     code: string;
@@ -48,7 +47,7 @@ export default function ModalProgramaMantenimiento({
 
         try {
             const response = await axios.post(
-                `http://localhost:3002/maintenance-program/`,
+                `https://inventory-service-emva.onrender.com/maintenance-program/`,
                 {
                     vehicleCode: code,
                     scheduledDate: date,

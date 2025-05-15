@@ -31,7 +31,7 @@ export default function EquiposPorModelo() {
     const fetchVehicleModels = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:3002/vehicleModels/withVehicles/${id}`);
+            const response = await fetch(`https://inventory-service-emva.onrender.com/vehicleModels/withVehicles/${id}`);
             const data = await response.json();
             console.log(data);
             console.log("Vehiculos", data.vehicles)
