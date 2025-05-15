@@ -12,6 +12,7 @@ import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
 import Modal from "@/components/common/modal/CustomModal";
 import axios from "axios";
 import LabelLoading from "@/components/common/forms/LabelLoading";
+import ModalDesmontarNeumatico from "../mantenimiento/ModalDesmontarNeumatico";
 
 export interface VehicleDTO {
     id: number;
@@ -264,23 +265,15 @@ export default function ListaMaquinaria() {
                     </div>
                 </div>
             </div>
-
-            <Modal
-                isOpen={mostrarDesmontar}
+            <ModalDesmontarNeumatico
+                visible={mostrarDesmontar}
                 onClose={() => setMostrarDesmontar(false)}
-                onConfirm={handleDesmontar}
-                title="Desmontar Neumático"
-            >
-                <p>
-                    ¿Estás seguro de que deseas desmontar el neumático {tireDesmontado?.tire.code} del Equipo?
-                </p>
-                <p>
-                    Este neumático se desmontará y se enviará a la lista de neumáticos en bodega.
-                </p>
-                <p className="font-semibold">
-                    ¿Estás seguro de que desea desmontar el neumático?
-                </p>
-            </Modal>
+                tire={tireDesmontado}
+                onGuardar={() => {
+                    setHasChanged(true);
+                    setMostrarDesmontar(false);
+                }}
+            />
             <ModaleditarEquipo
                 visible={mostrarEditar}
                 onClose={() => setMostrarEditar(false)}

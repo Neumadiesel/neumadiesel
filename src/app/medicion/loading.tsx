@@ -1,35 +1,18 @@
 export default function FormSkeleton() {
     return (
-        <div className="font-mono p-5 gap-y-5">
-            <h1 className="text-2xl font-bold mb-4 border-b border-b-amber-200">Cargando...</h1>
-            <div className="flex flex-col">
-                <label htmlFor="" className="font-semibold">Cargando...</label>
-                <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
-            </div>
-            <section className="flex gap-x-4 my-4">
+        <div className="fixed inset-0 flex items-center justify-center">
+            {/* Fondo oscuro con opacidad */}
+            <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
 
-                <div className=" flex flex-col">
-                    <label htmlFor="" className="font-semibold">Cargando...</label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
-                </div>
-                <div className=" flex flex-col">
-                    <label htmlFor="" className="font-semibold">Cargando...</label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
-                </div>
-            </section>
-            <section className="flex gap-x-4 my-4">
-                <div className=" flex flex-col">
-                    <label htmlFor="" className="font-semibold">Cargando...</label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
-                </div>
-                <div className=" flex flex-col">
-                    <label htmlFor="" className="font-semibold">Cargando...</label>
-                    <input type="text" className="bg-amber-50 border-amber-300 border rounded-md outline-amber-400 py-2 px-4" />
-                </div>
-            </section>
-            <div>
-                <button className="bg-amber-300 text-black font-semibold rounded-md p-2">Crear Modelo</button>
+            <div className="relative p-6 rounded-lg">
+                <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+
             </div>
+            {/* Texto que diga cargando informacion, espera un momento */}
+            <div className="absolute mt-32 inset-0 flex items-center justify-center text-white">
+                <p className="text-lg">Cargando información importante, espera un momento...</p>
+            </div>
+
         </div>
     )
 }
