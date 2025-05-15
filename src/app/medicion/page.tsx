@@ -152,7 +152,7 @@ export default function Page() {
                     const worksheet = workbook.Sheets[sheetName];
                     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-                    //@ts-expect-error
+                    //@ts-expect-error XLSX returns unknown type from sheet_to_json
                     const transformedData = validateAndTransformExcel(jsonData);
                     if (transformedData.length === 0) {
                         throw new Error('El archivo no contiene datos válidos.');
