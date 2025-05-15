@@ -41,12 +41,9 @@ type RegistroResponse = {
     };
 };
 
-interface ExcelRow {
-    Fecha?: string | number;
-    Código?: string;
-    Hodómetro?: number;
-    [key: string]: any; // Allow additional dynamic keys
-}
+type ExcelRow = {
+    [key: string]: string | number | undefined;
+};
 
 type InspectionField = "externalTread" | "internalTread" | "temperature" | "pressure";
 
