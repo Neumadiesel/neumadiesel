@@ -97,6 +97,18 @@ export default function ListaMaquinaria() {
     }
     const [tireDesmontado, setTireDesmonatado] = useState<installedTiresDTO | null>(null);
 
+
+    const getTiresByPosition = () => {
+        const posiciones: { position: number, tireData: installedTiresDTO | null }[] = [];
+
+        for (let i = 1; i <= vehicle.model?.wheelCount; i++) {
+            const neumatico = installedTires.find(t => t.position === i) || null;
+            posiciones.push({ position: i, tireData: neumatico });
+        }
+
+        return posiciones;
+    };
+
     useEffect(() => {
         fetchVehicleModels();
     }, []);
@@ -126,7 +138,7 @@ export default function ListaMaquinaria() {
                                     disabled={loading
                                         || id === undefined
                                     }
-                                    text="Asignar Neumatico"
+                                    text="Instalar Neumatico"
                                     onClick={() => { setMostrarAsignarNeumatico(true) }}
                                 />
                                 {/* Boton de editar */}
@@ -170,69 +182,67 @@ export default function ListaMaquinaria() {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="table-auto ">
+                                    <tbody className="table-auto">
                                         {loading ? (
                                             <tr>
                                                 <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
                                                     <div className="flex flex-col items-center justify-center space-y-4">
                                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                                         <p className="text-gray-600 dark:text-gray-400">
-                                                            Cargando neumaticos...
+                                                            Cargando neumáticos...
                                                         </p>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        ) : installedTires && installedTires.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={5} className="text-center p-4">
-                                                    No hay neumáticos disponibles
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            installedTires?.map(neumatico => (
-                                                <tr
-                                                    key={neumatico.tire.id}
-                                                    className="bg-gray-50 border-b border-b-amber-200 dark:bg-[#212121] hover:bg-gray-100 h-16 text-center dark:hover:bg-gray-700 transition-all ease-in-out  rounded-md "
-                                                >
-                                                    <td className="w-[5%]">{neumatico.position}</td>
-                                                    <td className="w-[20%]">{neumatico.tire.code}</td>
-                                                    <td>
-                                                        <div>
-                                                            <p>Int: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.internalTread : neumatico.tire.initialTread}</p>
-                                                            <p>Ext: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.externalTread : neumatico.tire.initialTread}</p>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <p>{neumatico.tire.lastInspection !== null ? neumatico.tire.initialHours : neumatico.tire.initialHours}</p>
-                                                        <p>{neumatico.tire.lastInspection !== null ? neumatico.tire.initialKilometrage : neumatico.tire.initialKilometrage}</p>
-                                                    </td>
-                                                    <td className="text-start">
-                                                        <p>PSI: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.pressure : "No Data"}</p>
-                                                        <p>Temp: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.temperature : "No Data"}</p>
-                                                    </td>
-                                                    <td className="flex justify-center mt-5 items-center gap-1">
-                                                        <Link
-                                                            href={`/neumaticos/${neumatico.tire.id}`}
-                                                            className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 border border-indigo-300 rounded-md flex items-center justify-center"
-                                                        >
-                                                            <History className="w-4 h-4" />
-                                                        </Link>
-                                                        {/* Botón de desmontar */}
-                                                        <button
-                                                            onClick={() => {
-                                                                setTireDesmonatado(neumatico);
-                                                                setMostrarDesmontar(true)
-                                                            }}
-                                                            className="p-2 text-red-500 hover:text-red-600 bg-red-50 border border-red-300 rounded-md flex items-center justify-center"
-                                                        >
-                                                            <MoveLeft className="w-4 h-4" />
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        )}
+                                        ) : getTiresByPosition().map(({ position, tireData }) => (
+                                            <tr
+                                                key={position}
+                                                className="bg-gray-50 border-b border-b-amber-200 dark:bg-[#212121] hover:bg-gray-100 h-16 text-center dark:hover:bg-gray-700 transition-all ease-in-out rounded-md"
+                                            >
+                                                <td className="w-[5%] font-semibold">{position}</td>
+                                                {tireData ? (
+                                                    <>
+                                                        <td className="w-[20%]">{tireData.tire.code}</td>
+                                                        <td>
+                                                            <p>Int: {tireData.tire.lastInspection?.internalTread ?? tireData.tire.initialTread}</p>
+                                                            <p>Ext: {tireData.tire.lastInspection?.externalTread ?? tireData.tire.initialTread}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>{tireData.tire.initialHours}</p>
+                                                            <p>{tireData.tire.initialKilometrage}</p>
+                                                        </td>
+                                                        <td className="text-start">
+                                                            <p>PSI: {tireData.tire.lastInspection?.pressure ?? "No Data"}</p>
+                                                            <p>Temp: {tireData.tire.lastInspection?.temperature ?? "No Data"}</p>
+                                                        </td>
+                                                        <td className="flex justify-center mt-5 items-center gap-1">
+                                                            <Link
+                                                                href={`/neumaticos/${tireData.tire.id}`}
+                                                                className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 border border-indigo-300 rounded-md flex items-center justify-center"
+                                                            >
+                                                                <History className="w-4 h-4" />
+                                                            </Link>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setTireDesmonatado(tireData);
+                                                                    setMostrarDesmontar(true);
+                                                                }}
+                                                                className="p-2 text-red-500 hover:text-red-600 bg-red-50 border border-red-300 rounded-md flex items-center justify-center"
+                                                            >
+                                                                <MoveLeft className="w-4 h-4" />
+                                                            </button>
+                                                        </td>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <td colSpan={5} className="italic text-gray-400">Sin neumático instalado</td>
 
+                                                    </>
+                                                )}
+                                            </tr>
+                                        ))}
                                     </tbody>
+
                                 </table>
                             </div>
                         </section>
