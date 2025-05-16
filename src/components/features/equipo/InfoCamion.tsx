@@ -212,7 +212,7 @@ export default function ListaMaquinaria() {
                                                     </td>
                                                     <td className="flex justify-center mt-5 items-center gap-1">
                                                         <Link
-                                                            href={`/mantenimiento/Historial`}
+                                                            href={`/neumaticos/${neumatico.tire.id}`}
                                                             className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 border border-indigo-300 rounded-md flex items-center justify-center"
                                                         >
                                                             <History className="w-4 h-4" />
