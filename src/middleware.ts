@@ -13,7 +13,7 @@ const routePermissions = {
     administrador: [
         '/administracion/usuarios',
         '/administracion/faena',
-        '/administracion/razon-de-retiro',
+        '/administracion/razon-de-desintalacion',
     ],
 
     // Rutas de reportabilidad
@@ -45,12 +45,9 @@ const routePermissions = {
     ],
 
     // Rutas de ingreso de datos
-    ingresoDatos: [
-        '/Ingresar-datos',
-        '/Ingresar-datos/medicion-por-equipo',
-        '/Ingresar-datos/crear-neumatico',
-        '/Ingresar-datos/crear-modelo',
-        '/Ingresar-datos/crear-maquinaria',
+    medicion: [
+        '/medicion',
+        '/medicion/medicion-por-equipo',
     ],
 };
 
@@ -63,7 +60,7 @@ const rolePermissions = {
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
-        ...routePermissions.ingresoDatos,
+        ...routePermissions.medicion,
     ],
     planificador: [
         ...routePermissions.reportabilidad,
@@ -71,7 +68,7 @@ const rolePermissions = {
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
-        ...routePermissions.ingresoDatos,
+        ...routePermissions.medicion,
     ],
     supervisor: [
         ...routePermissions.reportabilidad,
@@ -79,10 +76,10 @@ const rolePermissions = {
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
-        ...routePermissions.ingresoDatos,
+        ...routePermissions.medicion,
     ],
     operador: [
-        '/Ingresar-datos/medicion-por-equipo',
+        '/medicion/medicion-por-equipo',
     ],
     stakeholder: [
         ...routePermissions.reportabilidad,

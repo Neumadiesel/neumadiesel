@@ -49,7 +49,7 @@ export default function ModalRegistrarTyreModel({
 
         try {
             const response = await axios.post(
-                `http://localhost:3002/tiremodels/`,
+                `https://inventory-service-emva.onrender.com/tiremodels/`,
                 {
                     code,
                     brand,

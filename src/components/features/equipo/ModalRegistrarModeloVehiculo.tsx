@@ -42,7 +42,7 @@ export default function ModalRegistarModeloVehiculo({
             return;
         }
         try {
-            const response = await axios.post('http://localhost:3002/vehicleModels', {
+            const response = await axios.post('https://inventory-service-emva.onrender.com/vehicleModels', {
                 brand,
                 model,
                 wheelCount,
@@ -109,6 +109,7 @@ export default function ModalRegistarModeloVehiculo({
                     <input
                         name="cantidadRuedas"
                         type="number"
+                        min={0}
                         value={vehicleModelEdited.wheelCount === null ? "" : vehicleModelEdited.wheelCount}
                         onChange={(e) => {
                             const val = e.target.value;

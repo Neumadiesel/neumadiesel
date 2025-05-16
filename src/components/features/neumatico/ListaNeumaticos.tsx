@@ -8,6 +8,7 @@ import Button from "@/components/common/button/Button";
 import ModalRegistrarNeumatico from "./ModalRegistrarNeumatico";
 import { Location } from "@/types/Location";
 import { TireDTO } from "@/types/Tire";
+import ModalEditarNeumatico from "./ModalEditarNeumatico";
 
 export default function ListaNeumaticos() {
     const [codigo, setCodigo] = useState('');
@@ -20,10 +21,13 @@ export default function ListaNeumaticos() {
     const [loading, setLoading] = useState(false);
     const [locations, setLocations] = useState<Location[]>([]);
 
+    const [editarNeumatico, setEditarNeumatico] = useState(false);
+    const [tireSelected, setTireSelected] = useState<TireDTO | null>(null);
+
     const fetchTires = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/tires");
+            const response = await fetch("https://inventory-service-emva.onrender.com/tires");
             const data = await response.json();
             setLoading(false);
             console.log("INFORMACION NEUMATICOS ✅", data);
@@ -36,7 +40,7 @@ export default function ListaNeumaticos() {
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/locations");
+            const response = await fetch("https://inventory-service-emva.onrender.com/locations");
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -72,7 +76,7 @@ export default function ListaNeumaticos() {
 
     useEffect(() => {
         fetchTires();
-    }, [openRegisterModal]);
+    }, [openRegisterModal, editarNeumatico]);
     return (
         <div className="w-full">
             <Breadcrumb />
@@ -135,6 +139,11 @@ export default function ListaNeumaticos() {
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
                                         Posicion
+                                    </p>
+                                </th>
+                                <th className="p-4">
+                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                        Horas
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -207,21 +216,30 @@ export default function ListaNeumaticos() {
                                                 {tire.installedTires[0]?.position ? tire.installedTires[0].position : "N/A"}
                                             </p>
                                         </td>
-                                        <td className="p-4 ">
+                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tire.initialTread}
+                                                {tire.usedHours}
                                             </p>
                                         </td>
                                         <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tire.initialTread}
+                                                {tire.lastInspection ? tire.lastInspection.internalTread : tire.initialTread}
+                                            </p>
+                                        </td>
+                                        <td className="p-4 ">
+                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                                {tire.lastInspection ? tire.lastInspection.externalTread : tire.initialTread}
                                             </p>
                                         </td>
                                         <td className="dark:bg-neutral-900 px-2">
                                             <div className="flex gap-2">
                                                 {/* Botón editar */}
                                                 <button
-                                                    onClick={() => console.log(tire)}
+                                                    onClick={() => {
+                                                        setTireSelected(tire);
+                                                        setEditarNeumatico(true);
+                                                    }
+                                                    }
                                                     className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center"
                                                 >
                                                     <Pencil className="w-4 h-4" />
@@ -268,6 +286,14 @@ export default function ListaNeumaticos() {
                     <ArrowRight className="w-4 h-4" />
                 </button>
             </div>
+
+            <ModalEditarNeumatico
+                visible={editarNeumatico}
+                onClose={() => setEditarNeumatico(false)}
+                tire={tireSelected}
+                onGuardar={() => {
+                    setEditarNeumatico(false);
+                }} />
             <ModalRegistrarNeumatico
                 visible={openRegisterModal}
                 onClose={() => setOpenRegisterModal(false)}

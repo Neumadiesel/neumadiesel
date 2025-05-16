@@ -61,7 +61,7 @@ export default function ModalRegistrarVehiculo({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/dataForm/registerVehicle");
+            const response = await fetch("https://inventory-service-emva.onrender.com/dataForm/registerVehicle");
             const data = await response.json();
             setLoading(false);
             setSites(data.sites);
@@ -96,7 +96,7 @@ export default function ModalRegistrarVehiculo({
 
         try {
             const response = await axios.post(
-                `http://localhost:3002/vehicles/`,
+                `https://inventory-service-emva.onrender.com/vehicles/`,
                 {
                     code,
                     modelId,
@@ -216,6 +216,7 @@ export default function ModalRegistrarVehiculo({
                     <input
                         name="horas"
                         type="number"
+                        min={0}
                         value={vehicleEdited.hours === null ? "" : vehicleEdited.hours}
                         onChange={(e) => {
                             const val = e.target.value;
@@ -232,6 +233,7 @@ export default function ModalRegistrarVehiculo({
                     <input
                         name="kilometraje"
                         type="number"
+                        min={0}
                         value={vehicleEdited.kilometrage === null ? "" : vehicleEdited.kilometrage}
                         onChange={(e) => {
                             const val = e.target.value;

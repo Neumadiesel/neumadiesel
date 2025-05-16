@@ -74,7 +74,7 @@ export default function ModalEditarFaena({
 
         try {
             const response = await axios.patch(
-                `http://localhost:3002/sites/${faena.id}`,
+                `https://inventory-service-emva.onrender.com/sites/${faena.id}`,
                 {
                     name,
                     region,

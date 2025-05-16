@@ -42,7 +42,7 @@ export default function RootLayout({
     const fetchVehicleModels = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:3002/vehicles");
+            const response = await fetch("https://inventory-service-emva.onrender.com/vehicles");
             const data = await response.json();
             setVehicles(data);
         } catch (error) {

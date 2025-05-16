@@ -63,7 +63,7 @@ export default function ModalEditarVehicleModel({
 
         try {
             const response = await axios.patch(
-                `http://localhost:3002/vehicleModels/${vehicleModel.id}`,
+                `https://inventory-service-emva.onrender.com/vehicleModels/${vehicleModel.id}`,
                 {
                     brand,
                     model,
@@ -121,6 +121,7 @@ export default function ModalEditarVehicleModel({
                     <input
                         name="cantidadRuedas"
                         type="number"
+                        min={0}
                         value={vehicleModelEdited.wheelCount === null ? "" : vehicleModelEdited.wheelCount}
                         onChange={(e) => {
                             const val = e.target.value;

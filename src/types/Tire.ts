@@ -5,6 +5,8 @@ export interface TireDTO {
     initialTread: number;
     initialKilometrage: number;
     initialHours: number;
+    usedHours: number;
+    usedKilometrage: number;
     lastInspectionId: number;
     locationId: number;
     model: {
@@ -23,6 +25,17 @@ export interface TireDTO {
     location: {
         id: number;
         name: string;
+    };
+    lastInspection: {
+        id: number;
+        position: number;
+        externalTread: number;
+        internalTread: number;
+        kilometrage: number;
+        inspectionDate: string;
+        pressure: number;
+        temperature: number;
+        tireId: number;
     };
     installedTires: {
         id: number;
@@ -57,5 +70,16 @@ export interface installedTiresDTO {
         initialHours: number;
         lastInspectionId: number | null;
         locationId: number;
+        lastInspection: {
+            id: number;
+            position: number;
+            externalTread: number;
+            internalTread: number;
+            kilometrage: number;
+            inspectionDate: string;
+            pressure: number;
+            temperature: number;
+            tireId: number;
+        };
     };
 }
