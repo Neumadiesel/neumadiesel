@@ -38,7 +38,13 @@ export default function TirePage() {
             setLoading(true);
             const response = await fetch(`https://inventory-service-emva.onrender.com/maintenance/tire/${id}`);
             const data = await response.json();
-            setRecords(data);
+            console.log("Historial", data);
+            if (Array.isArray(data)) {
+                setRecords(data);
+            } else {
+                console.warn("La API no devolvió un array:", data);
+                setRecords([]); // Establece un array vacío si no es un array
+            }
             setLoading(false);
         } catch (error) {
             console.error("Error fetching tyre models:", error);
@@ -98,9 +104,10 @@ export default function TirePage() {
             </section>
             {/* Section historial */}
             <section
-                className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
+                className=" flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white ">
+                <h2 className="text-xl font-bold mt-4 mb-2">Historial de Movimientos</h2>
                 <table className="w-full text-left table-auto min-w-max">
-                    <thead className="text-xs text-black uppercase bg-amber-300  ">
+                    <thead className="text-xs text-black uppercase bg-gray-100  ">
                         <tr>
                             <th className="p-4">
                                 <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
@@ -146,7 +153,7 @@ export default function TirePage() {
                                     <div className="flex flex-col items-center justify-center space-y-4">
                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                         <p className="text-gray-600 dark:text-gray-400">
-                                            Cargando modelos...
+                                            Cargando movimientos...
                                         </p>
                                     </div>
                                 </td>
@@ -169,7 +176,7 @@ export default function TirePage() {
                                             />
                                         </svg>
                                         <p className="text-gray-600 dark:text-gray-400">
-                                            No se encontraron modelos.
+                                            No se han encontrado movimientos.
                                         </p>
                                     </div>
                                 </td>
