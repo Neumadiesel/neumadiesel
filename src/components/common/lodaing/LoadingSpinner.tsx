@@ -7,7 +7,7 @@ export default function LoadingSpinner({ isOpen }: LoadingSpinnerProps) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center">
+        <div className="fixed inset-0 z-20 flex items-center justify-center">
             {/* Fondo oscuro con opacidad */}
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
 

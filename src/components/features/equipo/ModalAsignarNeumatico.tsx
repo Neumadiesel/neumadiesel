@@ -7,6 +7,7 @@ import { TireDTO } from "@/types/Tire";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 
 interface VehicleDTO {
     id: number;
@@ -373,6 +374,8 @@ export default function ModalAsignarNeumatico({
                         </table>
                     </div>
                 </aside>
+                <LoadingSpinner isOpen={loading} />
+
             </section>
         </div>
     );
