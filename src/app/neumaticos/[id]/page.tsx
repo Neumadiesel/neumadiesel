@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 interface HistoryDTO {
     id: number;
     action: string;
-    excecutionDate: string;
-    exceutionTime: number;
+    executionDate: string;
+    executionTime: number;
     description: string;
     position: string;
 }
@@ -40,6 +40,7 @@ export default function TirePage() {
             const data = await response.json();
             console.log("Historial", data);
             if (Array.isArray(data)) {
+                console.log("Historial", data);
                 setRecords(data);
             } else {
                 console.warn("La API no devolvió un array:", data);
@@ -111,37 +112,22 @@ export default function TirePage() {
                         <tr>
                             <th className="p-4">
                                 <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                    Codigo
+                                    Accion
                                 </p>
                             </th>
                             <th className="p-4">
                                 <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                    Ubicacion
+                                    Movimiento
                                 </p>
                             </th>
                             <th className="p-4">
                                 <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                    Posicion
+                                    Fecha
                                 </p>
                             </th>
                             <th className="p-4">
                                 <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
                                     Horas
-                                </p>
-                            </th>
-                            <th className="p-4">
-                                <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                    Int
-                                </p>
-                            </th>
-                            <th className="p-4">
-                                <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                    Ext
-                                </p>
-                            </th>
-                            <th className="p-4">
-                                <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                    Acciones
                                 </p>
                             </th>
                         </tr>
@@ -184,42 +170,29 @@ export default function TirePage() {
                         ) :
                             records.map((record) => (
                                 <tr key={record.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
+                                    <td className="p-4 ">
+                                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                            {record.action}
+                                        </p>
+                                    </td>
                                     <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                         <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                             {record.description}
                                         </p>
                                     </td>
-                                    <td className="p-4 ">
+
+                                    <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                         <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {record.excecutionDate}
+                                            {record?.executionDate ? new Date(record.executionDate).toLocaleDateString("es-ES") : "Fecha no disponible"}
                                         </p>
                                     </td>
                                     <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                         <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {record.exceutionTime}
-                                        </p>
-                                    </td>
-                                    <td className="p-4  bg-gray-50 dark:bg-neutral-900">
-                                        <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {record.position}
+                                            {record.executionTime}
                                         </p>
                                     </td>
 
 
-                                    <td className="dark:bg-neutral-900 px-2">
-                                        <div className="flex gap-2">
-                                            {/* Botón editar */}
-                                            <button
-                                                onClick={() => {
-                                                    console.log("Edit button clicked for record:", record);
-                                                }
-                                                }
-                                                className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center"
-                                            >
-                                                <Pencil className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </td>
                                 </tr>
                             ))
                         }
