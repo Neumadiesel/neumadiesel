@@ -137,9 +137,19 @@ export default function ModalDesmontarNeumatico({
         }
     };
 
-
-
-
+    const handleCancel = () => {
+        setTireDesmonted({
+            code: "",
+            externalTread: 0,
+            internalTread: 0,
+        });
+        setActionDate(dayjs().tz('America/Santiago'));
+        setLocationId(null);
+        setExecuteTime(null);
+        setReasonId(null);
+        setOtCode(null);
+        onClose();
+    }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
@@ -275,7 +285,7 @@ export default function ModalDesmontarNeumatico({
                         {loading ? "Procesando..." : "Guardar Cambios"}
                     </button>
                     <button
-                        onClick={onClose}
+                        onClick={handleCancel}
                         className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
                     >
                         Cancelar
