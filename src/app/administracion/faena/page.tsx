@@ -2,12 +2,15 @@
 import ModalEditarFaena from "@/components/features/faena/ModalEditarFaena";
 import Modal from "@/components/common/modal/CustomModal";
 import Link from "next/link";
-import { FaEyeSlash, FaInfoCircle } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaInfoCircle } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import ModalRegistrarFaena from "@/components/features/faena/ModalRegistrarFaena";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
+import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
+import CustomModal from "@/components/common/alerts/alert";
+import axios from "axios";
 
 interface FaenaDTO {
     id: number;
@@ -26,6 +29,9 @@ export default function Page() {
     const [listaFaenas, setRazones] = useState<FaenaDTO[]>([]);
     const [faenaSelected, setFaenaSelected] = useState<FaenaDTO | null>(null);
     const [loading, setLoading] = useState(true);
+    const [faenaId, setFaenaId] = useState<number | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const fetchFaenas = async () => {
         setLoading(true);
         try {
@@ -38,6 +44,44 @@ export default function Page() {
         }
     };
 
+    const handleDesactive = async () => {
+        if (!faenaId) return;
+        try {
+            setIsLoading(true);
+            const response = await axios.patch(
+                `https://inventory-service-emva.onrender.com/sites/${faenaId}/deactivate`,
+            );
+            console.log("Desactivar usuario response", response);
+            setIsOpen(false);
+            setFaenaId(null);
+        } catch (error) {
+            console.error(error);
+            setError(error instanceof Error ? error.message : "Error al desactivar el usuario");
+        }
+        finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleReactivate = async () => {
+        if (!faenaId) return;
+        try {
+            setIsLoading(true);
+            const response = await axios.patch(
+                `https://inventory-service-emva.onrender.com/sites/${faenaId}/activate`,
+            );
+            console.log("Usuario reactivado:", response.data);
+            setIsOpenReactivar(false);
+            setFaenaId(null);
+        } catch (error) {
+            console.error(error);
+            setError(error instanceof Error ? error.message : "Error al desactivar el usuario");
+        }
+        finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchFaenas();
     }, []);
@@ -45,15 +89,11 @@ export default function Page() {
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Usuario desactivado");
-    };
-
+    const [isOpenReactivar, setIsOpenReactivar] = useState(false);
 
     useEffect(() => {
         fetchFaenas();
-    }, [isOpen, mostrarEditar, modalRegistarFaena]);
+    }, [isOpen, mostrarEditar, modalRegistarFaena, isOpenReactivar]);
 
 
 
@@ -172,13 +212,23 @@ export default function Page() {
                                                 <button onClick={() => handleEditarFaena(faena)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center">
                                                     <FaPencil />
                                                 </button>
-                                                {/* boton desactivar */}
-                                                <button
-                                                    onClick={() => setIsOpen(true)}
-                                                    className="p-2 text-red-500 hover:text-red-600 bg-red-50 border border-red-300 rounded-md flex items-center justify-center"
-                                                >
-                                                    <FaEyeSlash className="inline-block" />
-                                                </button>
+                                                {
+                                                    faena.isActive ? (
+                                                        <button
+                                                            onClick={() => { setFaenaId(faena.id); setIsOpen(true) }}
+                                                            className="bg-gray-50 hover:bg-red-50 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded"
+                                                        >
+                                                            <FaEyeSlash className="inline-block" />
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => { setFaenaId(faena.id); setIsOpenReactivar(true) }}
+                                                            className="bg-gray-50 hover:bg-emerald-50 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-4 rounded"
+                                                        >
+                                                            <FaEye className="inline-block" />
+                                                        </button>
+                                                    )
+                                                }
                                             </div>
                                         </td>
                                     </tr>
@@ -187,23 +237,44 @@ export default function Page() {
                         </tbody>
                     </table>
                 </div>
+
+                <LoadingSpinner isOpen={isLoading} />
+
                 {/* Modal para desactivar usuario */}
                 <Modal
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
-                    onConfirm={handleConfirm}
-                    title="Desactivar Faena"
+                    onConfirm={handleDesactive}
+                    title="Desactivar usuario"
                 >
                     <p>
-                        Desactivar una faena significa que no podrá ser utilizada en el sistema. Esto no eliminará la faena, solo la desactivará.
-                    </p>
-                    <p>
-                        Los usuarios asociados a esta faena no podrán acceder al sistema.
+                        Desactivar un usuario impedirá su acceso al sistema. Sin embargo, se mantendrán
+                        registrados sus datos y las acciones realizadas previamente.
                     </p>
                     <p className="font-semibold">
-                        ¿Estás seguro de que deseas desactivar esta Faena?
+                        ¿Estás seguro de que deseas desactivar este usuario?
                     </p>
                 </Modal>
+
+                {/* Modal para Reactivar usuario */}
+                <Modal
+                    isOpen={isOpenReactivar}
+                    onClose={() => setIsOpenReactivar(false)}
+                    onConfirm={handleReactivate}
+                    title="Reactivar usuario"
+                >
+                    <p>
+                        Reactivar un usuario le devolvera su acceso al sistema.
+                    </p>
+                    <p className="font-semibold">
+                        ¿Estás seguro de que deseas reactivar este usuario?
+                    </p>
+                </Modal>
+
+                {/* Modal de Alerta */}
+                {error && <CustomModal isOpen={!!error} onClose={() => setError(null)} title="Error" message={error} />}
+
+
                 {/* Modal editar Faena */}
                 <ModalEditarFaena
                     visible={mostrarEditar}
