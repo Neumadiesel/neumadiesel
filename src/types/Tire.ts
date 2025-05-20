@@ -68,6 +68,8 @@ export interface installedTiresDTO {
         initialTread: number;
         initialKilometrage: number;
         initialHours: number;
+        usedHours: number;
+        usedKilometrage: number;
         lastInspectionId: number | null;
         locationId: number;
         lastInspection: {

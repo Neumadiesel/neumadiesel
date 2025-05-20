@@ -159,7 +159,7 @@ export default function EquiposPorModelo() {
                                         <td className="  bg-gray-50 dark:bg-neutral-900 px-2">
                                             <div className="flex gap-2">
                                                 {/* Boton de ver detalles */}
-                                                <Link href={`/maquinaria/${tire.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
+                                                <Link href={`/neumaticos/${tire.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
                                                     <FaInfoCircle />
                                                 </Link>
                                             </div>

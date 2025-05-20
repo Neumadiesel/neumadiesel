@@ -11,6 +11,7 @@ import Button from "@/components/common/button/Button";
 import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import ModalDesmontarNeumatico from "../mantenimiento/ModalDesmontarNeumatico";
+import ModalAddKms from "./ModalAddKms";
 
 export interface VehicleDTO {
     id: number;
@@ -45,6 +46,8 @@ export interface VehicleDTO {
             initialTread: number;
             initialKilometrage: number;
             initialHours: number;
+            usedKilometrage: number;
+            usedHours: number;
             lastInspectionId: number | null;
             locationId: number;
             lastInspection: {
@@ -90,12 +93,25 @@ export default function ListaMaquinaria() {
     };
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
+    const [mostrarAddKms, setMostrarAddKms] = useState(false);
     const [mostrarAsignarNeumatico, setMostrarAsignarNeumatico] = useState(false);
     const [mostrarDesmontar, setMostrarDesmontar] = useState(false);
     const handleUpdate = () => {
         setHasChanged(true);
     }
     const [tireDesmontado, setTireDesmonatado] = useState<installedTiresDTO | null>(null);
+
+
+    const getTiresByPosition = () => {
+        const posiciones: { position: number, tireData: installedTiresDTO | null }[] = [];
+
+        for (let i = 1; i <= vehicle.model?.wheelCount; i++) {
+            const neumatico = installedTires.find(t => t.position === i) || null;
+            posiciones.push({ position: i, tireData: neumatico });
+        }
+
+        return posiciones;
+    };
 
     useEffect(() => {
         fetchVehicleModels();
@@ -104,7 +120,7 @@ export default function ListaMaquinaria() {
     useEffect(() => {
         handleUpdate();
         fetchVehicleModels();
-    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar]);
+    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarAddKms]);
 
     return (
         <div className="p-2 h-[100%] w-full bg-white dark:bg-black relative shadow-md">
@@ -126,11 +142,18 @@ export default function ListaMaquinaria() {
                                     disabled={loading
                                         || id === undefined
                                     }
-                                    text="Asignar Neumatico"
+                                    text="Instalar Neumatico"
                                     onClick={() => { setMostrarAsignarNeumatico(true) }}
                                 />
+                                {/* BOTON PARA AGREGAR HORAS Y KILOMETROS AL EQUIPO */}
+                                <Button
+                                    disabled={loading
+                                        || id === undefined
+                                    }
+                                    text="Agregar Horas/Kilometros"
+                                    onClick={() => { setMostrarAddKms(true) }}
+                                />
                                 {/* Boton de editar */}
-
                                 <button disabled={loading || id === undefined} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  border text-lg text-black p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined ? "opacity-50 " : "cursor-pointer hover:bg-gray-200"}`}>
                                     <FaEdit />
                                 </button>
@@ -158,81 +181,79 @@ export default function ListaMaquinaria() {
                                     <thead className="bg-gray-100">
                                         <tr>
                                             <th className="p-2 w-[5%]">Pos</th>
-                                            <th className="p-2 w-[20%]">Codigo</th>
-                                            <th className="p-2 w-[15%]">
+                                            <th className="w-[10%] text-start">Codigo</th>
+                                            <th className="w-[15%]  text-start">
                                                 <p className="hidden lg:block">Profundidad</p>
-                                                <p className="block lg:hidden">Rem</p>
+                                                <p className="block lg:hidden ">Rem</p>
                                             </th>
-                                            <th className="p-2 w-[15%]">Datos</th>
-                                            <th className="p-2 w-[15%]">Sensor</th>
-                                            <th className="p-2 w-[15%]">
+                                            <th className="text-start w-[15%]">Datos</th>
+                                            <th className="text-start w-[15%]">Sensor</th>
+                                            <th className="w-[15%]">
                                                 <p className="hidden lg:block">Historial</p>
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="table-auto ">
+                                    <tbody className="table-auto">
                                         {loading ? (
                                             <tr>
                                                 <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
                                                     <div className="flex flex-col items-center justify-center space-y-4">
                                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                                         <p className="text-gray-600 dark:text-gray-400">
-                                                            Cargando neumaticos...
+                                                            Cargando neumáticos...
                                                         </p>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        ) :
-                                            installedTires.length === 0 ? (
-                                                <tr>
-                                                    <td colSpan={5} className="text-center p-4">
-                                                        No hay neumáticos disponibles
-                                                    </td>
-                                                </tr>
-                                            ) :
-                                                installedTires.map(neumatico => (
-                                                    <tr
-                                                        key={neumatico.tire.id}
-                                                        className="bg-gray-50 border-b border-b-amber-200 dark:bg-[#212121] hover:bg-gray-100 h-16 text-center dark:hover:bg-gray-700 transition-all ease-in-out  rounded-md "
-                                                    >
-                                                        <td className="w-[5%]">{neumatico.position}</td>
-                                                        <td className="w-[20%]">{neumatico.tire.code}</td>
+                                        ) : getTiresByPosition().map(({ position, tireData }) => (
+                                            <tr
+                                                key={position}
+                                                className="bg-gray-50 border-b border-b-amber-200 dark:bg-[#212121] hover:bg-gray-100 h-16 text-start dark:hover:bg-gray-700 transition-all ease-in-out rounded-md"
+                                            >
+                                                <td className="w-[5%] text-center font-semibold">{position}</td>
+                                                {tireData ? (
+                                                    <>
+                                                        <td className="w-[15%]">{tireData.tire.code}</td>
                                                         <td>
-                                                            <div>
-                                                                <p>Int: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.internalTread : neumatico.tire.initialTread}</p>
-                                                                <p>Ext: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.externalTread : neumatico.tire.initialTread}</p>
-                                                            </div>
+                                                            <p>Int: {tireData.tire.lastInspection?.internalTread ?? tireData.tire.initialTread}</p>
+                                                            <p>Ext: {tireData.tire.lastInspection?.externalTread ?? tireData.tire.initialTread}</p>
                                                         </td>
-                                                        <td>
-                                                            <p>{neumatico.tire.lastInspection !== null ? neumatico.tire.initialHours : neumatico.tire.initialHours}</p>
-                                                            <p>{neumatico.tire.lastInspection !== null ? neumatico.tire.initialKilometrage : neumatico.tire.initialKilometrage}</p>
+                                                        <td className="text-justify">
+                                                            <p>HRS: {tireData.tire.usedHours}</p>
+                                                            <p>KMS: {tireData.tire.usedKilometrage}</p>
                                                         </td>
                                                         <td className="text-start">
-                                                            <p>PSI: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.pressure : "No Data"}</p>
-                                                            <p>Temp: {neumatico.tire.lastInspection !== null ? neumatico.tire.lastInspection.temperature : "No Data"}</p>
+                                                            <p>PSI: {tireData.tire.lastInspection?.pressure ?? "No Data"}</p>
+                                                            <p>TEM: {tireData.tire.lastInspection?.temperature ?? "No Data"}</p>
                                                         </td>
                                                         <td className="flex justify-center mt-5 items-center gap-1">
                                                             <Link
-                                                                href={`/mantenimiento/Historial`}
+                                                                href={`/neumaticos/${tireData.tire.id}`}
                                                                 className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 border border-indigo-300 rounded-md flex items-center justify-center"
                                                             >
                                                                 <History className="w-4 h-4" />
                                                             </Link>
-                                                            {/* Botón de desmontar */}
                                                             <button
                                                                 onClick={() => {
-                                                                    setTireDesmonatado(neumatico);
-                                                                    setMostrarDesmontar(true)
-                                                                }
-                                                                }
+                                                                    setTireDesmonatado(tireData);
+                                                                    setMostrarDesmontar(true);
+                                                                }}
                                                                 className="p-2 text-red-500 hover:text-red-600 bg-red-50 border border-red-300 rounded-md flex items-center justify-center"
                                                             >
                                                                 <MoveLeft className="w-4 h-4" />
                                                             </button>
                                                         </td>
-                                                    </tr>
-                                                ))}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <td colSpan={5} className="italic text-center text-gray-400">Sin neumático instalado</td>
+
+                                                    </>
+                                                )}
+                                            </tr>
+                                        ))}
                                     </tbody>
+
                                 </table>
                             </div>
                         </section>
@@ -248,6 +269,15 @@ export default function ListaMaquinaria() {
                     setMostrarDesmontar(false);
                 }}
             />
+            <ModalAddKms
+                visible={mostrarAddKms}
+                onClose={() => setMostrarAddKms(false)}
+                vehicle={vehicle}
+                onGuardar={() => {
+
+                    setHasChanged(true);
+                    setMostrarEditar(false);
+                }} />
             <ModaleditarEquipo
                 visible={mostrarEditar}
                 onClose={() => setMostrarEditar(false)}

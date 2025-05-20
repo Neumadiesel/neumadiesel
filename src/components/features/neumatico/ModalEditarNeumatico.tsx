@@ -133,11 +133,13 @@ export default function ModalEditarNeumatico({
                         className="border border-gray-300 p-2 rounded"
                     >
                         <option value="">Seleccionar Ubicacion</option>
-                        {locations.map((location) => (
-                            <option key={location.id} value={location.id}>
-                                {location.name}
-                            </option>
-                        ))}
+                        {locations
+                            .filter((location) => location.name !== "Operativo" && location.name !== "Baja")
+                            .map((location) => (
+                                <option key={location.id} value={location.id}>
+                                    {location.name}
+                                </option>
+                            ))}
                     </select>
                     {/* Horas Usadas */}
                     <Label title="Horas Usadas" isNotEmpty={true} />

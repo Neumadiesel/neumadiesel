@@ -48,8 +48,8 @@ export default function ModalRegistrarVehiculo({
         modelId: null as number | null,
         siteId: null as number | null,
         typeId: null as number | null,
-        kilometrage: null as number | null,
-        hours: null as number | null,
+        kilometrage: 0,
+        hours: 0,
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -114,8 +114,8 @@ export default function ModalRegistrarVehiculo({
                 modelId: null,
                 typeId: null,
                 siteId: null,
-                kilometrage: null,
-                hours: null,
+                kilometrage: 0,
+                hours: 0,
             });
             setError("");
             return response.data;
@@ -222,7 +222,7 @@ export default function ModalRegistrarVehiculo({
                             const val = e.target.value;
                             setVehicleEdited({
                                 ...vehicleEdited,
-                                hours: val === "" ? null : Number(val),
+                                hours: val === "" ? 0 : Number(val),
                             });
                         }}
                         placeholder="Horas trabajadas"
@@ -239,7 +239,7 @@ export default function ModalRegistrarVehiculo({
                             const val = e.target.value;
                             setVehicleEdited({
                                 ...vehicleEdited,
-                                kilometrage: val === "" ? null : Number(val),
+                                kilometrage: val === "" ? 0 : Number(val),
                             });
                         }
                         }

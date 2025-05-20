@@ -122,8 +122,8 @@ export default function ModaleditarEquipo({
         setError("");
         setLoading(true);
 
-        const { code, modelId, typeId, siteId, hours, kilometrage } = vehicleEdited;
-        if (!code || !modelId || !typeId || !siteId || hours === null || kilometrage === null) {
+        const { code, modelId, typeId, siteId } = vehicleEdited;
+        if (!code || !modelId || !typeId || !siteId == null) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
@@ -137,8 +137,6 @@ export default function ModaleditarEquipo({
                     code,
                     modelId,
                     siteId,
-                    hours,
-                    kilometrage
                 },
             );
 
@@ -231,42 +229,6 @@ export default function ModaleditarEquipo({
                             (e) => setVehicleEdited({ ...vehicleEdited, code: e.target.value.toUpperCase() })
                         }
                         placeholder="Codigo del equipo"
-                        className="border border-gray-300 p-2 rounded"
-                    />
-                    {/* Horas */}
-
-                    <label className="text-sm mt-2 font-semibold mb-2">Horas de trabajo</label>
-                    <input
-                        name="horas"
-                        type="number"
-                        min={0}
-                        value={vehicleEdited.hours === null ? "" : vehicleEdited.hours}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            setVehicleEdited({
-                                ...vehicleEdited,
-                                hours: val === "" ? null : Number(val),
-                            });
-                        }}
-                        placeholder="Horas trabajadas"
-                        className="border border-gray-300 p-2 rounded"
-                    />
-                    {/* Kilometraje */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Kilometraje</label>
-                    <input
-                        name="kilometraje"
-                        type="number"
-                        min={0}
-                        value={vehicleEdited.kilometrage === null ? "" : vehicleEdited.kilometrage}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            setVehicleEdited({
-                                ...vehicleEdited,
-                                kilometrage: val === "" ? null : Number(val),
-                            });
-                        }
-                        }
-                        placeholder="Kilometraje"
                         className="border border-gray-300 p-2 rounded"
                     />
                 </div>

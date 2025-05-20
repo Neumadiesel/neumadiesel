@@ -6,11 +6,16 @@ import { installedTiresDTO } from "@/types/Tire";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { Location } from "@/types/Location";
+import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 
 // Extender con los plugins
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+interface LocationMaintenanceDTO {
+    id: number;
+    description: string;
+}
 
 interface RazonDto {
     id: number;
@@ -36,7 +41,7 @@ export default function ModalDesmontarNeumatico({
         externalTread: 0,
         internalTread: 0,
     });
-    const [locations, setLocations] = useState<Location[]>([] as Location[]);
+    const [locations, setLocations] = useState<LocationMaintenanceDTO[]>([] as LocationMaintenanceDTO[]);
     const [razones, setRazones] = useState<RazonDto[]>([] as RazonDto[]);
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
@@ -52,11 +57,21 @@ export default function ModalDesmontarNeumatico({
 
     useEffect(() => {
         if (tire) {
-            setTireDesmonted({
-                code: tire.tire.code,
-                externalTread: tire.tire.lastInspection.externalTread,
-                internalTread: tire.tire.lastInspection.internalTread,
-            });
+            if (tire.tire.lastInspection) {
+
+                setTireDesmonted({
+                    code: tire.tire.code,
+                    externalTread: tire.tire.lastInspection.externalTread,
+                    internalTread: tire.tire?.lastInspection.internalTread,
+                });
+            } else {
+                setTireDesmonted({
+                    code: tire.tire.code,
+                    externalTread: tire.tire.initialTread,
+                    internalTread: tire.tire?.initialTread,
+                });
+            }
+
         }
     }, [tire]);
 
@@ -66,7 +81,7 @@ export default function ModalDesmontarNeumatico({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/locations");
+            const response = await fetch("https://inventory-service-emva.onrender.com/location-maintenance");
             const data = await response.json();
             console.log("locations", data);
             setLoading(false);
@@ -120,10 +135,18 @@ export default function ModalDesmontarNeumatico({
         });
         try {
             const response = await axios.post(
-                `https://inventory-service-emva.onrender.com/maintenance/`,
+                `https://inventory-service-emva.onrender.com/maintenance/dismount/`,
                 {
-                    code
-                },
+
+                    "tireCode": code,
+                    "maintenanceReasonId": reasonId,
+                    "executionDate": actionDate,
+                    "executionTime": executeTime,
+                    "internalTread": internalTread,
+                    "externalTread": externalTread,
+                    "locationId": locationId
+                }
+
             );
 
 
@@ -133,13 +156,26 @@ export default function ModalDesmontarNeumatico({
         } catch (error) {
             setError(error instanceof Error ? error.message : "Error al actualizar el modelo");
         } finally {
+            handleCancel();
             setLoading(false);
         }
     };
 
 
 
-
+    const handleCancel = () => {
+        setTireDesmonted({
+            code: "",
+            externalTread: 0,
+            internalTread: 0,
+        });
+        setActionDate(dayjs().tz('America/Santiago'));
+        setLocationId(null);
+        setExecuteTime(null);
+        setReasonId(null);
+        setOtCode(null);
+        onClose();
+    }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
@@ -193,20 +229,21 @@ export default function ModalDesmontarNeumatico({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Locacion */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Destino</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Lugar de Trabajo</label>
                     <select
-                        name="Destino"
+                        name="Lugar de Trabajo"
                         value={locationId || ""}
                         onChange={(e) => setLocationId(parseInt(e.target.value))}
                         className="border border-gray-300 p-2 rounded"
                     >
+                        <option value="">Selecciona una locacion</option>
                         {locations.map((location) => (
 
-                            location.name === "Inspección" && (
-                                <option key={location.id} value={location.id}>
-                                    {location.name}
-                                </option>
-                            )
+
+                            <option key={location.id} value={location.id}>
+                                {location.description}
+                            </option>
+
                         ))}
                     </select>
                     {/* Razon */}
@@ -275,12 +312,13 @@ export default function ModalDesmontarNeumatico({
                         {loading ? "Procesando..." : "Guardar Cambios"}
                     </button>
                     <button
-                        onClick={onClose}
+                        onClick={handleCancel}
                         className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
                     >
                         Cancelar
                     </button>
                 </div>
+                <LoadingSpinner isOpen={loading} />
             </div>
         </div>
     );
