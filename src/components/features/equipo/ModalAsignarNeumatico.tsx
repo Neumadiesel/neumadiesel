@@ -91,7 +91,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchReasons = async () => {
         try {
-            const response = await axios.get("http://localhost:3002/maintenance-reason");
+            const response = await axios.get("https://inventory-service-emva.onrender.com/maintenance-reason");
             const data = response.data;
             setReasons(data);
         } catch (error) {
@@ -101,7 +101,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get("http://localhost:3002/location-maintenance/");
+            const response = await axios.get("https://inventory-service-emva.onrender.com/location-maintenance/");
             setLocations(response.data);
         } catch (error) {
             console.error("Error fetching locations:", error);
@@ -138,7 +138,7 @@ export default function ModalAsignarNeumatico({
         const utcDate = date.toISOString();
         try {
             const response = await axios.post(
-                `http://localhost:3002/maintenance/mount`,
+                `https://inventory-service-emva.onrender.com/maintenance/mount`,
                 {
 
                     "tireCode": code,

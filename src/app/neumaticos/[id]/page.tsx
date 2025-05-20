@@ -2,7 +2,6 @@
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { TireDTO } from "@/types/Tire";
-import { Pencil } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 

@@ -6,8 +6,6 @@ import { installedTiresDTO } from "@/types/Tire";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { Location } from "@/types/Location";
-import { exec } from "child_process";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 
 // Extender con los plugins
