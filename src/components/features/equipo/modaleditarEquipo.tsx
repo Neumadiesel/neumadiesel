@@ -128,8 +128,6 @@ export default function ModaleditarEquipo({
             setLoading(false);
             return;
         }
-
-
         try {
             const response = await axios.patch(
                 `https://inventory-service-emva.onrender.com/vehicles/${vehicle.id}`,
@@ -139,11 +137,6 @@ export default function ModaleditarEquipo({
                     siteId,
                 },
             );
-
-            if (response.status !== 200) {
-                throw new Error("Error al actualizar la faena");
-            }
-
             onGuardar();
             onClose();
             return response.data;
