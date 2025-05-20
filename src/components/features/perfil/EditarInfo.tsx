@@ -72,6 +72,7 @@ export default function EditarInfo() {
                 <div className="flex flex-col w-full">
                     <label className="text-sm text-gray-500">Rol:</label>
                     <input
+                        disabled={true}
                         type="text"
                         className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
                         value={role}
