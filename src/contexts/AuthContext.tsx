@@ -30,6 +30,8 @@ interface AuthContextType {
         password: string,
         role_id: number
     ) => Promise<void>;
+    deactivateUser: (userId: number) => Promise<void>;
+    reactivateUser: (userId: number) => Promise<void>;
     updateUser: (
         userId: number,
         userData: {
@@ -38,6 +40,7 @@ interface AuthContextType {
             email?: string;
             password?: string;
             role_id?: number;
+            faena_id?: number;
         }
     ) => Promise<User>;
     setUser: (user: User | null) => void;
@@ -111,6 +114,59 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         router.push("/login");
     };
 
+    const reactivateUser = async (userId: number): Promise<void> => {
+        try {
+            const response = await axios.patch(
+                `${API_URL}/auth/users/${userId}/activate`,
+                {},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log("Usuario reactivado:", response.data);
+        } catch (error) {
+            console.error("Error al reactivar usuario:", error instanceof Error ? error.message : "Error al actualizar el modelo");
+
+            if (axios.isAxiosError(error) && error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error("Error al reactivar el usuario");
+        }
+    };
+
+    const deactivateUser = async (userId: number): Promise<void> => {
+        try {
+            const response = await axios.patch(
+                `${API_URL}/auth/users/${userId}/deactivate`,
+                {},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log("Usuario desactivado:", response.data);
+        } catch (error) {
+            console.error("Error al desactivar usuario:", error instanceof Error ? error.message : "Error al actualizar el modelo");
+
+            if (axios.isAxiosError(error) && error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error("Error al desactivar el usuario");
+        }
+    };
+
+
+    // } catch (error) {
+    //     setError(error instanceof Error ? error.message : "Error al actualizar el modelo");
+    // } finally {
+    //     setLoading(false);
+    // }
+
     const updateUser = async (
         userId: number,
         userData: {
@@ -119,19 +175,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             email?: string;
             password?: string;
             role_id?: number;
+            faena_id?: number;
         }
     ) => {
         try {
-            const response = await axios.put(`${API_URL}/auth/users/${userId}`, userData, {
+            console.log("userData", userData.faena_id);
+            const response = await axios.patch(`${API_URL}/auth/users/${userId}`, userData, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            if (response.status === 200) {
-                return response.data;
-            }
+            console.log("response", response.data);
+            return response.data;
         } catch (error) {
             console.error("Error al actualizar usuario:", error);
             if (axios.isAxiosError(error) && error.response?.data?.message) {
@@ -149,6 +205,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 login,
                 logout,
                 register,
+                deactivateUser,
+                reactivateUser,
                 updateUser,
                 setUser,
                 loading,

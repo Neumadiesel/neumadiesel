@@ -1,11 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaEllipsisV, FaEyeSlash, FaPen, FaPlusSquare } from "react-icons/fa";
+import { FaEllipsisV, FaEye, FaEyeSlash, FaPen, FaPlusSquare } from "react-icons/fa";
 import Modal from "@/components/common/modal/CustomModal";
 import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
 import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
+import CustomModal from "@/components/common/alerts/alert";
 interface Role {
     role_id: number;
     name: string;
@@ -16,9 +18,24 @@ interface UserDto {
     name: string;
     last_name: string;
     email: string;
+    faena_id: number;
+    is_active: boolean;
     role: {
         role_id: number;
         name: string;
+    };
+}
+
+interface FaenaDTO {
+    id: number;
+    name: string;
+    region: string;
+    isActive: boolean;
+    contract: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        siteId: number;
     };
 }
 
@@ -29,10 +46,12 @@ export default function Page() {
     const [usuarios, setUsuarios] = useState<UserDto[]>([]);
     const [usuariosFiltrados, setUsuariosFiltrados] = useState<UserDto[]>([]);
     const [roles, setRoles] = useState<Role[]>([]);
-    const { token } = useAuth();
+    const { token, deactivateUser, reactivateUser } = useAuth();
 
     const [mostrarModal, setMostrarModal] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpenReactivar, setIsOpenReactivar] = useState(false);
+
     const usuariosPorPagina = 10;
 
     // Editar usuario
@@ -41,6 +60,23 @@ export default function Page() {
 
     const [loading, setLoading] = useState(true);
 
+    const [faenas, setFaenas] = useState<FaenaDTO[]>([]);
+    const fetchFaenas = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch("https://inventory-service-emva.onrender.com/sites/with-contract");
+            const data = await response.json();
+            console.log("Faenas Fetched:", data);
+            setLoading(false);
+            setFaenas(data);
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchFaenas();
+    }, []);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -73,7 +109,7 @@ export default function Page() {
         if (token) {
             fetchData();
         }
-    }, [token, mostrarModal, mostrarEditar]);
+    }, [token, mostrarModal, mostrarEditar, isOpen, isOpenReactivar]);
 
     useEffect(() => {
         const filtrados = usuarios.filter(usuario => {
@@ -95,9 +131,40 @@ export default function Page() {
     const fin = inicio + usuariosPorPagina;
     const usuariosPagina = usuariosFiltrados.slice(inicio, fin);
 
-    const handleConfirm = () => {
-        setIsOpen(false);
-        console.log("Usuario desactivado");
+    const [userId, setUserId] = useState<number | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleConfirm = async () => {
+        if (!userId) return;
+        try {
+            setIsLoading(true);
+            await deactivateUser(userId);
+            setIsOpen(false);
+            setUserId(null);
+        } catch (error) {
+            console.error(error);
+            setError(error instanceof Error ? error.message : "Error al desactivar el usuario");
+        }
+        finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleReactivate = async () => {
+        if (!userId) return;
+        try {
+            setIsLoading(true);
+            await reactivateUser(userId);
+            setIsOpenReactivar(false);
+            setUserId(null);
+        } catch (error) {
+            console.error(error);
+            setError(error instanceof Error ? error.message : "Error al desactivar el usuario");
+        }
+        finally {
+            setIsLoading(false);
+        }
     };
 
     const abrirEditor = (usuario: UserDto) => {
@@ -107,6 +174,8 @@ export default function Page() {
             last_name: usuario.last_name,
             email: usuario.email,
             role: usuario.role,
+            faena_id: usuario.faena_id,
+            is_active: usuario.is_active,
         });
         setMostrarEditar(true);
     };
@@ -210,9 +279,12 @@ export default function Page() {
                             </td>
                             <td className="p-2 hidden lg:block">{usuario.email}</td>
                             <td className="p-2 text-start bg-gray-50 dark:bg-neutral-900">
-                                {usuario.role?.name?.toLowerCase() || "sin rol"}
+                                {usuario.role?.name || "Sin Rol"}
                             </td>
-                            <td className="p-2 text-start">Sin asignar</td>
+
+                            <td className="p-2 text-start bg-gray-50 dark:bg-neutral-900">
+                                {faenas.find(faena => faena.id === usuario.faena_id)?.name || "Sin faena"}
+                            </td>
 
                             <td className="p-2 relative text-center bg-gray-50 dark:bg-neutral-900">
                                 {/* Botones en escritorio */}
@@ -223,12 +295,23 @@ export default function Page() {
                                     >
                                         <FaPen className="inline-block" />
                                     </button>
-                                    <button
-                                        onClick={() => setIsOpen(true)}
-                                        className="bg-gray-50 hover:bg-red-50 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded ml-2"
-                                    >
-                                        <FaEyeSlash className="inline-block" />
-                                    </button>
+                                    {
+                                        usuario.is_active ? (
+                                            <button
+                                                onClick={() => { setUserId(usuario.user_id); setIsOpen(true) }}
+                                                className="bg-gray-50 hover:bg-red-50 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded"
+                                            >
+                                                <FaEyeSlash className="inline-block" />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => { setUserId(usuario.user_id); setIsOpenReactivar(true) }}
+                                                className="bg-gray-50 hover:bg-emerald-50 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-4 rounded"
+                                            >
+                                                <FaEye className="inline-block" />
+                                            </button>
+                                        )
+                                    }
                                 </div>
 
                                 {/* Botón de 3 puntos en móvil */}
@@ -290,6 +373,7 @@ export default function Page() {
                     Siguiente
                 </button>
             </div>
+            <LoadingSpinner isOpen={isLoading} />
 
             {/* Modal para desactivar usuario */}
             <Modal
@@ -306,6 +390,25 @@ export default function Page() {
                     ¿Estás seguro de que deseas desactivar este usuario?
                 </p>
             </Modal>
+
+            {/* Modal para Reactivar usuario */}
+            <Modal
+                isOpen={isOpenReactivar}
+                onClose={() => setIsOpenReactivar(false)}
+                onConfirm={handleReactivate}
+                title="Reactivar usuario"
+            >
+                <p>
+                    Reactivar un usuario le devolvera su acceso al sistema.
+                </p>
+                <p className="font-semibold">
+                    ¿Estás seguro de que deseas reactivar este usuario?
+                </p>
+            </Modal>
+
+            {/* Modal de Alerta */}
+            {error && <CustomModal isOpen={!!error} onClose={() => setError(null)} title="Error" message={error} />}
+
 
             {/* Modal para agregar usuario */}
             <ModalFormularioUsuario

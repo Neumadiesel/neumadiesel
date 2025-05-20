@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import Label from "@/components/common/forms/Label";
 
 interface Role {
     role_id: number;
@@ -17,6 +18,19 @@ interface UserDto {
     role: {
         role_id: number;
         name: string;
+    };
+}
+
+interface FaenaDTO {
+    id: number;
+    name: string;
+    region: string;
+    isActive: boolean;
+    contract: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        siteId: number;
     };
 }
 
@@ -38,12 +52,14 @@ export default function ModalEditarUsuario({
         last_name: "",
         correo: "",
         rol: "operador",
-        faena: "",
+        faena_id: 0,
     });
     const [roles, setRoles] = useState<Role[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const { updateUser, token } = useAuth();
+
+    const [faenas, setFaenas] = useState<FaenaDTO[]>([]);
 
     useEffect(() => {
         if (usuario) {
@@ -52,7 +68,7 @@ export default function ModalEditarUsuario({
                 last_name: usuario.last_name,
                 correo: usuario.email,
                 rol: usuario.role.name.toLowerCase(),
-                faena: "", // Mantenemos el campo faena por compatibilidad con la UI
+                faena_id: 0,
             });
         }
     }, [usuario]);
@@ -77,6 +93,23 @@ export default function ModalEditarUsuario({
             fetchRoles();
         }
     }, [visible, token]);
+    const fetchFaenas = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch("https://inventory-service-emva.onrender.com/sites/with-contract");
+            const data = await response.json();
+            console.log("Faenas Fetched:", data);
+            setLoading(false);
+            setFaenas(data);
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+        }
+    };
+
+
+    useEffect(() => {
+        fetchFaenas();
+    }, []);
 
     if (!visible || !usuario) return null;
 
@@ -85,10 +118,10 @@ export default function ModalEditarUsuario({
         setUsuarioEditado(prev => ({ ...prev, [name]: value }));
     };
 
+
     const handleSubmit = async () => {
         setError("");
         setLoading(true);
-
         try {
             // Convertir el rol seleccionado a role_id
             const selectedRole = roles.find(r => r.name.toLowerCase() === usuarioEditado.rol);
@@ -101,6 +134,7 @@ export default function ModalEditarUsuario({
                 last_name: usuarioEditado.last_name,
                 email: usuarioEditado.correo,
                 role_id: selectedRole.role_id,
+                faena_id: usuarioEditado.faena_id,
             });
 
             onGuardar();
@@ -111,6 +145,7 @@ export default function ModalEditarUsuario({
             setLoading(false);
         }
     };
+
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
@@ -123,7 +158,8 @@ export default function ModalEditarUsuario({
                         X
                     </button>
                 </div>}
-                <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-2">
+                    <Label title="Nombre" isNotEmpty={true} />
                     <input
                         name="nombre"
                         value={usuarioEditado.nombre}
@@ -131,6 +167,7 @@ export default function ModalEditarUsuario({
                         placeholder="Nombre"
                         className="border border-gray-300 p-2 rounded"
                     />
+                    <Label title="Apellido" isNotEmpty={true} />
                     <input
                         name="last_name"
                         value={usuarioEditado.last_name}
@@ -138,6 +175,7 @@ export default function ModalEditarUsuario({
                         placeholder="Apellido"
                         className="border border-gray-300 p-2 rounded"
                     />
+                    <Label title="Correo" isNotEmpty={true} />
                     <input
                         name="correo"
                         value={usuarioEditado.correo}
@@ -145,6 +183,7 @@ export default function ModalEditarUsuario({
                         placeholder="Correo"
                         className="border border-gray-300 p-2 rounded"
                     />
+                    <Label title="Rol" isNotEmpty={true} />
                     <select
                         name="rol"
                         value={usuarioEditado.rol}
@@ -166,13 +205,24 @@ export default function ModalEditarUsuario({
                             </>
                         )}
                     </select>
-                    <input
-                        name="faena"
-                        value={usuarioEditado.faena}
-                        onChange={handleChange}
-                        placeholder="Faena"
-                        className="border border-gray-300 p-2 rounded"
-                    />
+                    <Label title="Faena" isNotEmpty={false} />
+                    <select
+                        name="faena_id"
+                        disabled={usuario.role.name.toLowerCase() === "administrador"}
+                        value={usuarioEditado.faena_id}
+                        onChange={
+                            (e) => setUsuarioEditado({ ...usuarioEditado, faena_id: Number(e.target.value) })
+                        }
+                        className={`border border-gray-300 p-2 rounded ${usuario.role.name.toLowerCase() === "administrador" ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                        <option value="">Selecciona una faena</option>
+                        {faenas.map(faena => (
+                            <option key={faena.id} value={faena.id}>
+                                {faena.name} - {faena.region}
+                            </option>
+                        ))}
+                    </select>
+
                 </div>
 
                 <div className="flex justify-end gap-2 mt-6">
