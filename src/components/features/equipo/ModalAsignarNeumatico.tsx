@@ -190,19 +190,14 @@ export default function ModalAsignarNeumatico({
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
-            <section className="relative bg-white dark:bg-[#212121] p-6 rounded-md flex shadow-lg h-[75dvh]">
+            <section className="relative bg-white dark:bg-[#212121] p-6 rounded-md flex shadow-lg h-[80dvh] overflow-y-scroll">
 
                 <main className="w-[60dvh] border-r border-gray-300 pr-4">
                     <h2 className="text-xl font-bold mb-4">Instalar Neumatico</h2>
                     <p className="text-sm mb-4">
                         Seleccione el neumatico a instalar y la posicion en el equipo {vehicle.code}
                     </p>
-                    {/* Mostrar error si existe */}
-                    {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                        <button onClick={() => setError("")} className=" text-red-500">
-                            X
-                        </button>
-                    </div>}
+
 
                     <div className="grid grid-cols-2 gap-2">
                         {/* Lista de modelos */}
@@ -325,7 +320,7 @@ export default function ModalAsignarNeumatico({
                     </div>
                 </main>
                 {/* Lista de neumaticos */}
-                <aside className="w-[80dvh] pl-4">
+                <aside className="w-[90dvh] pl-4">
                     <h2 className="text-xl font-bold mb-4">Neumáticos Disponibles</h2>
                     <div className="overflow-y-auto h-[50dvh]">
                         <table className="w-full border-collapse">
@@ -334,6 +329,7 @@ export default function ModalAsignarNeumatico({
                                     <th className="border-b p-2 text-left">Código</th>
                                     <th className="border-b p-2 text-left">Marca</th>
                                     <th className="border-b p-2 text-left">Dimensiones</th>
+                                    <th className="border-b p-2 text-left">Patrón</th>
                                     <th className="border-b p-2 text-left">Estado</th>
                                     <th className="border-b p-2 text-left">Remanente</th>
                                     <th className="border-b p-2 text-left">Seleccionar</th>
@@ -346,6 +342,7 @@ export default function ModalAsignarNeumatico({
                                             <td className="p-2">{tire.code}</td>
                                             <td className="p-2">{tire.model.brand}</td>
                                             <td className="p-2">{tire.model.dimensions}</td>
+                                            <td className="p-2">{tire.model.pattern}</td>
                                             <td className="p-2">
                                                 {tire.lastInspection
                                                     ? `INT: ${tire.lastInspection.internalTread} | EXT: ${tire.lastInspection.externalTread}`
@@ -373,6 +370,12 @@ export default function ModalAsignarNeumatico({
                             </tbody>
                         </table>
                     </div>
+                    {/* Mostrar error si existe */}
+                    {error && <div className="text-red-500 flex justify-between text-sm h-[10dvh] mt-2 overflow-y-scroll bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                        <button onClick={() => setError("")} className=" text-red-500 pr-2">
+                            X
+                        </button>
+                    </div>}
                 </aside>
                 <LoadingSpinner isOpen={loading} />
 
