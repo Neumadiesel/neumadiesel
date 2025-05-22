@@ -123,7 +123,9 @@ export default function ModalAsignarNeumatico({
         setLoading(true);
 
 
-        if (!vehicle.code || !posicion === null) {
+        if (!vehicle.code || !posicion || !tireCode || !otCode || !actionDate || !executeTime || !reasonId || !locationId
+
+        ) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
@@ -324,21 +326,32 @@ export default function ModalAsignarNeumatico({
                     <h2 className="text-xl font-bold mb-4">Neumáticos Disponibles</h2>
                     <div className="overflow-y-auto h-[50dvh]">
                         <table className="w-full border-collapse">
-                            <thead className="sticky top-0 bg-white z-10">
+                            <thead className="sticky border-x border-t border-b-2 top-0 bg-white z-10">
                                 <tr>
+                                    <th className="border-b p-2 text-left"></th>
                                     <th className="border-b p-2 text-left">Código</th>
                                     <th className="border-b p-2 text-left">Marca</th>
                                     <th className="border-b p-2 text-left">Dimensiones</th>
                                     <th className="border-b p-2 text-left">Patrón</th>
                                     <th className="border-b p-2 text-left">Estado</th>
                                     <th className="border-b p-2 text-left">Remanente</th>
-                                    <th className="border-b p-2 text-left">Seleccionar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {tires.map((tire) => (
                                     tire.locationId !== 1 && (
                                         <tr key={tire.id} className={`border-b hover:bg-gray-100 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}`}>
+                                            <td className="p-2 py-4 border-x bg-gray-100 flex justify-center items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="mx-auto"
+                                                    checked={tireCode === tire.code}
+                                                    onChange={() => {
+                                                        setTireCode(tire.code);
+                                                        setTireSelected(tire);
+                                                    }}
+                                                />
+                                            </td>
                                             <td className="p-2">{tire.code}</td>
                                             <td className="p-2">{tire.model.brand}</td>
                                             <td className="p-2">{tire.model.dimensions}</td>
@@ -348,22 +361,13 @@ export default function ModalAsignarNeumatico({
                                                     ? `INT: ${tire.lastInspection.internalTread} | EXT: ${tire.lastInspection.externalTread}`
                                                     : 'Nuevo'}
                                             </td>
-                                            <td className="p-2">
+                                            <td className="p-2 border-r">
                                                 {tire.lastInspection
                                                     ? `${tire.lastInspection.externalTread} - 
                                                     ${tire.lastInspection.internalTread}`
                                                     : `${tire.initialTread} - ${tire.initialTread}`}
                                             </td>
-                                            <td className="p-2">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={tireCode === tire.code}
-                                                    onChange={() => {
-                                                        setTireCode(tire.code);
-                                                        setTireSelected(tire);
-                                                    }}
-                                                />
-                                            </td>
+
                                         </tr>
                                     )
                                 ))}
