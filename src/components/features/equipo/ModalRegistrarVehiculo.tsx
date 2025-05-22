@@ -48,8 +48,8 @@ export default function ModalRegistrarVehiculo({
         modelId: null as number | null,
         siteId: null as number | null,
         typeId: null as number | null,
-        kilometrage: 0,
-        hours: 0,
+        kilometrage: null as number | null,
+        hours: null as number | null,
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -212,7 +212,7 @@ export default function ModalRegistrarVehiculo({
                     />
                     {/* Horas */}
 
-                    <label className="text-sm mt-2 font-semibold mb-2">Horas de trabajo</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Horas Operacionales</label>
                     <input
                         name="horas"
                         type="number"
