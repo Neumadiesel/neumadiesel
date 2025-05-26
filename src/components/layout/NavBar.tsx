@@ -71,7 +71,7 @@ export default function NavBar() {
             children: [
                 { title: "Usuarios", path: "/administracion/usuarios" },
                 { title: "Faena", path: "/administracion/faena" },
-                { title: "Razon de desintalacion", path: "/administracion/razon-de-desintalacion" },
+                { title: "Razón de desintalacion", path: "/administracion/razon-de-desintalacion" },
             ],
         },
         // modelos,
@@ -80,7 +80,7 @@ export default function NavBar() {
             icon: <FaWpforms className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "supervisor"],
             children: [
-                { title: "Crear Modelo Neumatico", path: "/modelos/modelo-neumatico" },
+                { title: "Crear Modelo Neumático", path: "/modelos/modelo-neumatico" },
                 { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
             ],
         },
@@ -95,7 +95,7 @@ export default function NavBar() {
                     title: "Programar mantenimiento",
                     path: "/mantenimiento/programar-mantenimiento",
                 },
-                { title: "Progama semanal", path: "/mantenimiento/programas" },
+                { title: "Programa semanal", path: "/mantenimiento/programas" },
             ],
         },
         {
@@ -106,14 +106,14 @@ export default function NavBar() {
                 { title: "Mediciones", path: "/medicion/" },
                 {
                     title: "Ingresar Medición por Equipo",
-                    path: "/medicion/medicion-por-equipo",
+                    path: "/medicion/medición_apor-equipo",
                 },
             ],
         },
         {
             title: "Ingresar Medición por Equipo",
             icon: <FaFile className="text-2xl" />,
-            path: "/medicion/medicion-por-equipo",
+            path: "/medicion/medición-por-equipo",
             allowedRoles: ["operador"],
         },
     ];
@@ -261,7 +261,7 @@ export default function NavBar() {
                     {user ? <FaSignOutAlt size={40} /> : <FaRegUserCircle size={40} />}
                     {(!isCollapsed) && (
                         <p className="hidden lg:block">
-                            {user ? "Cerrar sesion" : "Iniciar sesion"}
+                            {user ? "Cerrar sesión" : "Iniciar sesion"}
                         </p>
                     )}
                 </Link>

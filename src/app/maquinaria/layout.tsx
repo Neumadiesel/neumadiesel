@@ -100,7 +100,7 @@ export default function RootLayout({
                                 <div className="flex justify-center items-center px-4 mb-2">
                                     <input
                                         type="text"
-                                        placeholder="Buscar por codigo de Equipo..."
+                                        placeholder="Buscar por código de Equipo..."
                                         value={codigo.toUpperCase()}
                                         onChange={(e) => setCodigo(e.target.value)}
                                         className="w-full h-10 px-4 border border-gray-300 rounded-md focus:outline-none"

@@ -123,8 +123,8 @@ export default function OrdenesTrabajoList() {
                 <table className="min-w-full text-sm text-left border">
                     <thead className="bg-amber-300 text-gray-700">
                         <tr>
-                            <th className="px-4 py-2">Codigo OT</th>
-                            <th className="px-4 py-2">Descripcion</th>
+                            <th className="px-4 py-2">Código OT</th>
+                            <th className="px-4 py-2">Descripción</th>
                             <th className="px-4 py-2">Equipo</th>
                             <th className="px-4 py-2">Estado</th>
                             <th className="px-4 py-2">Fecha</th>

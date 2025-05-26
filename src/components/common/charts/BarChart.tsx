@@ -64,7 +64,7 @@ export default function BarChartComponent() {
                 />
             </div>
             <button onClick={() => exportToImage(chartRef)} className="bg-amber-300 text-black flex justify-between p-2 items-center rounded-md font-semibold">
-                Descargar grafico
+                Descargar gráfico
                 <FaDownload className="ml-2" />
 
             </button>

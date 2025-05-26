@@ -124,7 +124,7 @@ export default function Page() {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Region
+                                        Región
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -264,7 +264,7 @@ export default function Page() {
                     title="Reactivar usuario"
                 >
                     <p>
-                        Reactivar un usuario le devolvera su acceso al sistema.
+                        Reactivar un usuario le devolverá su acceso al sistema.
                     </p>
                     <p className="font-semibold">
                         ¿Estás seguro de que deseas reactivar este usuario?

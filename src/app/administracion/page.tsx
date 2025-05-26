@@ -20,7 +20,7 @@ export default function Page() {
 
     return (
         <div className="block h-screen p-4 relative shadow-sm font-mono">
-            <h1 className="text-3xl">Administracion de usuarios</h1>
+            <h1 className="text-3xl">Administración de usuarios</h1>
             <table className="table-auto w-full mt-4">
                 <thead>
                     <tr>

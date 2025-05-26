@@ -47,7 +47,7 @@ export default function MedicionPorEquipo() {
         setLoading(true);
         try {
             const response = await axios.get(`https://inventory-service-emva.onrender.com/vehicles/code/${vehicleCode}`);
-            console.log("Vehiculo", response.data);
+            console.log("Vehículo", response.data);
             setVehicle(response.data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -123,14 +123,14 @@ export default function MedicionPorEquipo() {
 
     return (
         <div className="font-mono p-4 gap-y-2 bg-white">
-            <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección del Neumatico</h1>
+            <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección del Neumático</h1>
             <section className=''>
                 <div className='flex items-center gap-x-2 border-b border-b-amber-300 pb-3'>
                     <label className="text-lg mb-1 text-black font-semibold dark:text-white ">Ingrese código del equipo:</label>
                     <input
                         onChange={(e) => setVehicleCode(e.target.value.toUpperCase())}
                         value={vehicleCode || ""}
-                        placeholder="Codigo equipo"
+                        placeholder="Código equipo"
 
                         type="text" className="w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2" />
                     <button onClick={() => fetchVehicle()} className="bg-amber-300 hover:bg-amber-400 hover:cursor-pointer text-black p-2 font-bold rounded-lg">
@@ -150,7 +150,7 @@ export default function MedicionPorEquipo() {
                 <div className='flex gap-x-4 my-2'>
                     <p className="text-sm text-gray-700 dark:text-white">Kilometraje del Equipo: <span className='font-semibold'>{vehicle?.kilometrage}</span></p>
                     <p className="text-sm text-gray-700 dark:text-white">Modelo: <span className='font-semibold'>{vehicle?.model.model}</span></p>
-                    <p className="text-sm text-gray-700 dark:text-white">Codigo: <span className='font-semibold'>{vehicle?.code}</span></p>
+                    <p className="text-sm text-gray-700 dark:text-white">Código: <span className='font-semibold'>{vehicle?.code}</span></p>
                     <p className="text-sm text-gray-700 dark:text-white">Faena: <span className='font-semibold'>{vehicle?.site.name}</span></p>
 
                 </div>
@@ -187,7 +187,7 @@ export default function MedicionPorEquipo() {
                             ${tireSelected ? "" : "opacity-50"}
                             `}>
                             <p className='text-xl font-bold'>Posición {tireSelected?.position}</p>
-                            <p className='font-semibold'>Codigo del neumatico: {tireSelected?.tire.code}</p>
+                            <p className='font-semibold'>Código del neumático: {tireSelected?.tire.code}</p>
 
                             {/* Medicion exterior */}
                             <div className='flex flex-col'>

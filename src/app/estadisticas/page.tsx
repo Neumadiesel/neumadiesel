@@ -16,7 +16,7 @@ export default function Page() {
         <div className="flex flex-col overflow-x-hidden  h-full bg-[#f1f1f1] dark:bg-[#212121]   text-center w-full mx-auto font-mono lg:p-3">
             <main className="w-[100%] lg:rounded-md mx-auto lg:p-4 h-[95%] ">
                 <div className="flex w-full justify-between gap-2">
-                    <h1 className="text-2xl font-bold ">Estadisticas</h1>
+                    <h1 className="text-2xl font-bold ">Estadísticas</h1>
                     {/* Seleccion entre semana mes y año */}
                     <div className="flex text-center rounded-full">
                         <button className="bg-white dark:bg-gray-700 dark:hover:bg-gray-600         hover:bg-gray-200 px-4 w-20 py-2 rounded-l-full">
@@ -48,7 +48,7 @@ export default function Page() {
                         <FaCircleDot className="text-4xl text-blue-500" />
                         <div className="flex flex-col text-start">
                             <p>100</p>
-                            <p>Neumaticos Operativos</p>
+                            <p>Neumáticos Operativos</p>
                         </div>
                     </div>
                     {/* Equipos Operativos */}

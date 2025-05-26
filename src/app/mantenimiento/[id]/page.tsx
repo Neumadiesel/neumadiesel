@@ -12,7 +12,7 @@ export default function MantenimientoPage() {
             <FaSadTear size={96} className="text-black dark:text-white mb-4" />
             <h3 className="font-mono font-semibold text-xl mb-4">Pagina de {id} no encontrada</h3>
             <p className="text-sm w-[50%] text-center">
-                La pagina que buscas no existe o ha ocurrido un error.
+                La página que buscas no existe o ha ocurrido un error.
                 Regresa, o dirígete a weebir.com para elegir una nueva dirección
             </p>
         </div>

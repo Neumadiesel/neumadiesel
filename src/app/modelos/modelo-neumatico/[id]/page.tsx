@@ -62,7 +62,7 @@ export default function EquiposPorModelo() {
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
             <Breadcrumb />
             <section className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Lista de Neumaticos de {model.brand} - {model.constructionType}</h1>
+                <h1 className="text-2xl font-bold">Lista de Neumáticos de {model.brand} - {model.constructionType}</h1>
             </section>
             <main >
                 <div
@@ -72,7 +72,7 @@ export default function EquiposPorModelo() {
                             <tr>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Codigo
+                                        Código
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -104,7 +104,7 @@ export default function EquiposPorModelo() {
                                         <div className="flex flex-col items-center justify-center space-y-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                             <p className="text-gray-600 dark:text-gray-400">
-                                                Cargando Neumaticos...
+                                                Cargando Neumáticos...
                                             </p>
                                         </div>
                                     </td>
@@ -127,7 +127,7 @@ export default function EquiposPorModelo() {
                                                 />
                                             </svg>
                                             <p className="text-gray-600 dark:text-gray-400">
-                                                No se encontraron Neumaticos.
+                                                No se encontraron Neumáticos.
                                             </p>
                                         </div>
                                     </td>
