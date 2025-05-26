@@ -50,12 +50,22 @@ export default function RootLayout({
                     // Admin: obtener todos los vehículos
                     const response = await fetch("https://inventory-service-emva.onrender.com/vehicles");
                     const data = await response.json();
-                    setVehicles(data);
+                    if (Array.isArray(data)) {
+                        setVehicles(data);
+                    } else {
+                        console.error("La respuesta del backend no es un array:", data);
+                        setVehicles([]);
+                    }
                 } else {
                     // Usuario común: obtener solo vehículos de su faena
                     const response = await fetch(`https://inventory-service-emva.onrender.com/vehicles/site/${user.faena_id}`);
                     const data = await response.json();
-                    setVehicles(data);
+                    if (Array.isArray(data)) {
+                        setVehicles(data);
+                    } else {
+                        console.error("La respuesta del backend no es un array:", data);
+                        setVehicles([]);
+                    }
                 }
             }
         } catch (error) {
@@ -74,8 +84,10 @@ export default function RootLayout({
 
 
     useEffect(() => {
-        fetchVehicleModels();
-    }, []);
+        if (user && user.faena_id !== undefined) {
+            fetchVehicleModels();
+        }
+    }, [user]);
 
     useEffect(() => {
         fetchVehicleModels();
@@ -94,7 +106,7 @@ export default function RootLayout({
             <div className="block lg:flex min-h-[100%]">
                 {/* Lista de camiones */}
                 <main className="w-full lg:w-[40%] lg:h-screen h-[45vh] flex justify-center items-center">
-                    <div className="bg-white dark:bg-black shadow-md w-full h-full relative">
+                    <div className="bg-white dark:bg-[#313131] shadow-md w-full h-full relative">
                         <Breadcrumb />
 
                         {loading ? (
@@ -117,7 +129,7 @@ export default function RootLayout({
                                         placeholder="Buscar por código de Equipo..."
                                         value={codigo.toUpperCase()}
                                         onChange={(e) => setCodigo(e.target.value)}
-                                        className="w-full h-10 px-4 border border-gray-300 rounded-md focus:outline-none"
+                                        className="w-full h-10 px-4 border border-gray-300 placeholder:text-white rounded-md focus:outline-none"
                                     />
                                 </div>
 
@@ -126,11 +138,11 @@ export default function RootLayout({
                                         <Link
                                             href={`/maquinaria/${vehicle.id}`}
                                             key={vehicle.id}
-                                            className="flex h-20 justify-around border items-center p-2 bg-gray-100 dark:bg-[#212121] rounded-md hover:bg-gray-200 transition-all ease-in-out"
+                                            className="flex h-20 justify-around border items-center p-2 bg-gray-100 dark:bg-[#111111] rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
                                         >
-                                            <p className="text-lg font-semibold font-mono">{vehicle.code}</p>
-                                            <p className="text-sm font-semibold text-gray-500">{vehicle.model.brand} {vehicle.model.model}</p>
-                                            <p className="text-sm font-semibold text-gray-500">{vehicle.site.name}</p>
+                                            <p className="text-lg font-semibold font-mono dark:text-white">{vehicle.code}</p>
+                                            <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.model.brand} {vehicle.model.model}</p>
+                                            <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.site.name}</p>
                                         </Link>
                                     ))}
                                 </div>

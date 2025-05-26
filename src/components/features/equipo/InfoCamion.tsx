@@ -123,7 +123,7 @@ export default function ListaMaquinaria() {
     }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarAddKms]);
 
     return (
-        <div className="p-2 h-[100%] w-full bg-white dark:bg-black relative shadow-md">
+        <div className="p-2 h-[100%] w-full bg-white dark:bg-[#212121] relative shadow-md">
             <div className="text-black dark:text-white flex flex-col">
                 {/* Info del camión */}
 
@@ -154,12 +154,12 @@ export default function ListaMaquinaria() {
                                     onClick={() => { setMostrarAddKms(true) }}
                                 />
                                 {/* Boton de editar */}
-                                <button disabled={loading || id === undefined} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  border text-lg text-black p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined ? "opacity-50 " : "cursor-pointer hover:bg-gray-200"}`}>
+                                <button disabled={loading || id === undefined} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  dark:bg-[#313131] border text-lg text-black dark:text-white p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined ? "opacity-50 " : "cursor-pointer hover:bg-gray-200"}`}>
                                     <FaEdit />
                                 </button>
                             </section>
                             {/* Info del camión */}
-                            <div className="grid grid-cols-2 pt-2 bg-gray-100 rounded-sm border  p-1 w-[100%] h-[65%] mb-2">
+                            <div className="grid grid-cols-2 pt-2 bg-gray-100 dark:bg-[#111111] rounded-sm border  p-1 w-[100%] h-[65%] mb-2">
                                 <LabelLoading loading={loading} title={"Feana:"} text={vehicle.site?.name} />
                                 <LabelLoading loading={loading} title={"Marca:"} text={vehicle.model?.brand} />
                                 <LabelLoading loading={loading} title={"Modelo:"} text={vehicle.model?.model} />
@@ -178,7 +178,7 @@ export default function ListaMaquinaria() {
                             <div className="flex flex-col gap-y-2">
                                 {/* Table head */}
                                 <table className="w-full table-auto rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
-                                    <thead className="bg-gray-100">
+                                    <thead className="bg-gray-100 dark:bg-[#111111]">
                                         <tr>
                                             <th className="p-2 w-[5%]">Pos</th>
                                             <th className="w-[10%] text-start">Codigo</th>
@@ -196,7 +196,7 @@ export default function ListaMaquinaria() {
                                     <tbody className="table-auto">
                                         {loading ? (
                                             <tr>
-                                                <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
+                                                <td colSpan={6} className="text-center p-8 dark:bg-[#111111] bg-white">
                                                     <div className="flex flex-col items-center justify-center space-y-4">
                                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                                         <p className="text-gray-600 dark:text-gray-400">
@@ -208,7 +208,7 @@ export default function ListaMaquinaria() {
                                         ) : getTiresByPosition().map(({ position, tireData }) => (
                                             <tr
                                                 key={position}
-                                                className="bg-gray-50 border-b border-b-amber-200 dark:bg-[#212121] hover:bg-gray-100 h-16 text-start dark:hover:bg-gray-700 transition-all ease-in-out rounded-md"
+                                                className="bg-gray-50 border-b border-b-amber-200 dark:border-b-white dark:bg-[#111111] hover:bg-gray-100 h-16 text-start dark:hover:bg-gray-700 transition-all ease-in-out rounded-md"
                                             >
                                                 <td className="w-[5%] text-center font-semibold">{position}</td>
                                                 {tireData ? (
