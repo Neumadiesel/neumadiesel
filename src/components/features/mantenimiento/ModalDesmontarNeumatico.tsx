@@ -181,7 +181,7 @@ export default function ModalDesmontarNeumatico({
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
             <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
-                <h2 className="text-xl font-bold mb-4">Desmontar Neumatico del Equipo</h2>
+                <h2 className="text-xl font-bold mb-4">Desmontar Neumático del Equipo</h2>
 
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
                     <button onClick={() => setError("")} className=" text-red-500">
@@ -190,7 +190,7 @@ export default function ModalDesmontarNeumatico({
                 </div>}
                 <div className="grid grid-cols-2 gap-4">
                     {/* Codigo del neumatico */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Codigo</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Código</label>
                     <input
                         disabled
                         name="Codigo Neumatico"
@@ -198,7 +198,7 @@ export default function ModalDesmontarNeumatico({
                         onChange={
                             (e) => setTireDesmonted({ ...tireDesmonted, code: e.target.value.toUpperCase() })
                         }
-                        placeholder="Codigo Neumatico"
+                        placeholder="Código Neumático"
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Fecha de accion con hora */}
@@ -236,7 +236,7 @@ export default function ModalDesmontarNeumatico({
                         onChange={(e) => setLocationId(parseInt(e.target.value))}
                         className="border border-gray-300 p-2 rounded"
                     >
-                        <option value="">Selecciona una locacion</option>
+                        <option value="">Selecciona una locación</option>
                         {locations.map((location) => (
 
 
@@ -247,14 +247,14 @@ export default function ModalDesmontarNeumatico({
                         ))}
                     </select>
                     {/* Razon */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Razon de Desmontaje</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Razón de Desmontaje</label>
                     <select
                         name="Razon de Desmontaje"
                         value={reasonId || ""}
                         onChange={(e) => setReasonId(parseInt(e.target.value))}
                         className="border border-gray-300 p-2 rounded"
                     >
-                        <option value="">Selecciona una razon</option>
+                        <option value="">Selecciona una razón</option>
                         {razones.map((razon) => (
                             <option key={razon.id} value={razon.id}>
                                 {razon.name}
