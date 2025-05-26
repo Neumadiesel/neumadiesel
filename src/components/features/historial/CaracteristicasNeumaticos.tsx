@@ -34,7 +34,7 @@ export default function CaracteristicasNeumatico() {
             <section className=" h-[100%] p-2  w-[30%] border-x px-4 border-x-slate-300">
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="font-bold">Camion:</label>
+                        <label className="font-bold">Camión:</label>
                         <p className="text-gray-500">H43</p>
                     </div>
                     <div>

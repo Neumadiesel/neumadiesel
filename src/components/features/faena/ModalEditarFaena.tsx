@@ -128,7 +128,7 @@ export default function ModalEditarFaena({
                         onChange={
                             (e) => setFaenaeditada({ ...faenaEditada, region: e.target.value })
                         }
-                        placeholder="Region"
+                        placeholder="Región"
                         className="border border-gray-300 p-2 rounded"
                     />
                     <label className="text-sm mt-2 font-semibold mb-2">Fechas</label>

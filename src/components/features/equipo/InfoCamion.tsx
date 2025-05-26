@@ -181,7 +181,7 @@ export default function ListaMaquinaria() {
                                     <thead className="bg-gray-100">
                                         <tr>
                                             <th className="p-2 w-[5%]">Pos</th>
-                                            <th className="w-[10%] text-start">Codigo</th>
+                                            <th className="w-[10%] text-start">Código</th>
                                             <th className="w-[15%]  text-start">
                                                 <p className="hidden lg:block">Profundidad</p>
                                                 <p className="block lg:hidden ">Rem</p>
