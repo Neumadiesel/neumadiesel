@@ -50,16 +50,14 @@ export default function ModalEditarNeumatico({
                 code: tire.code,
                 locationId: tire.location.id,
                 usedHours: tire.usedHours?.toString() ?? "",
-                usedKilometrage: tire.usedKilometrage?.toString() ?? "",
+                usedKilometrage: tire.lastInspection.kilometrage?.toString() ?? "",
             });
         }
     }, [tire]);
 
     useEffect(() => {
         fetchLocations();
-    }
-        , []);
-
+    }, []);
 
     if (!visible || !tire) return null;
 
@@ -71,7 +69,6 @@ export default function ModalEditarNeumatico({
 
         if (
             !code ||
-            locationId === null ||
             usedHours === "" ||
             usedKilometrage === ""
         ) {

@@ -143,6 +143,11 @@ export default function ListaNeumaticos() {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                        Kilometros
+                                    </p>
+                                </th>
+                                <th className="p-4">
+                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
                                         Horas
                                     </p>
                                 </th>
@@ -214,6 +219,11 @@ export default function ListaNeumaticos() {
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-900">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tire.installedTires[0]?.position ? tire.installedTires[0].position : "N/A"}
+                                            </p>
+                                        </td>
+                                        <td className="p-4 ">
+                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                                {tire.lastInspection.kilometrage}
                                             </p>
                                         </td>
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-900">

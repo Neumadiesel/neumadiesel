@@ -38,7 +38,6 @@ export default function Perfil() {
                             {user?.email.toUpperCase()}
                         </p>
                         <p className="text-white text-md">{user?.role.name}</p>
-                        <p className="text-white text-sm">No asignado</p>
                     </section>
                     {/* Seccion de datos personales */}
                     <main className="flex flex-col bg-white shadow-sm h-full  p-4  w-3/4">

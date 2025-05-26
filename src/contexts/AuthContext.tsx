@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = "http://localhost:3001";
 
 interface User {
     user_id: number;
     name: string;
     last_name: string;
+    faena_id?: number; // Puede ser undefined si no aplica
     email: string;
     role: {
         role_id: number;
@@ -28,10 +29,16 @@ interface AuthContextType {
         last_name: string,
         email: string,
         password: string,
-        role_id: number
+        role_id: number,
+        faena_id: number
     ) => Promise<void>;
     deactivateUser: (userId: number) => Promise<void>;
     reactivateUser: (userId: number) => Promise<void>;
+    changePassword: (
+        userId: number,
+        currentPassword: string,
+        newPassword: string
+    ) => Promise<void>;
     updateUser: (
         userId: number,
         userData: {
@@ -88,7 +95,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         last_name: string,
         email: string,
         password: string,
-        role_id: number
+        role_id: number,
+        faena_id: number
     ) => {
         try {
             await axios.post(`${API_URL}/auth/register`, {
@@ -97,6 +105,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 email,
                 password,
                 role_id,
+                faena_id,
             });
         } catch (error) {
             console.error("Error al registrarse:", error);
@@ -104,6 +113,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const changePassword = async (userId: number, currentPassword: string, newPassword: string) => {
+        try {
+            const response = await axios.patch(
+                `${API_URL}/auth/users/${userId}/change-password`,
+                {
+                    currentPassword: currentPassword,
+                    newPassword: newPassword
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log("Contraseña cambiada:", response.data);
+        } catch (error) {
+            console.error("Error al cambiar contraseña:", error instanceof Error ? error.message : "Error al actualizar el modelo");
+            if (axios.isAxiosError(error) && error.response?.data?.message) {
+                throw new Error(error.response.data.message);
+            }
+            throw new Error("Error al cambiar la contraseña");
+        }
+    };
     const logout = () => {
         // Eliminar cookies
         Cookies.remove("auth-token");
@@ -160,13 +193,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-
-    // } catch (error) {
-    //     setError(error instanceof Error ? error.message : "Error al actualizar el modelo");
-    // } finally {
-    //     setLoading(false);
-    // }
-
     const updateUser = async (
         userId: number,
         userData: {
@@ -207,6 +233,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 register,
                 deactivateUser,
                 reactivateUser,
+                changePassword,
                 updateUser,
                 setUser,
                 loading,

@@ -9,6 +9,19 @@ interface Role {
     name: string;
 }
 
+interface FaenaDTO {
+    id: number;
+    name: string;
+    region: string;
+    isActive: boolean;
+    contract: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        siteId: number;
+    };
+}
+
 interface ModalFormularioUsuarioProps {
     visible: boolean;
     onClose: () => void;
@@ -27,11 +40,13 @@ export default function ModalFormularioUsuario({
     const [correo, setCorreo] = useState<string>("");
     const [rol, setRol] = useState<Usuario["rol"]>("operador");
     const [roleId, setRoleId] = useState<number>(0);
-    const [faena, setFaena] = useState<string>("");
+    const [faena, setFaena] = useState<number>(0);
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [roles, setRoles] = useState<Role[]>([]);
     const { register, token } = useAuth();
+    const [faenas, setFaenas] = useState<FaenaDTO[]>([]);
+
 
     useEffect(() => {
         const fetchRoles = async () => {
@@ -58,6 +73,22 @@ export default function ModalFormularioUsuario({
             fetchRoles();
         }
     }, [visible, token]);
+    const fetchFaenas = async () => {
+        try {
+            const response = await fetch("https://inventory-service-emva.onrender.com/sites/with-contract");
+            const data = await response.json();
+            console.log("Faenas Fetched:", data);
+            setFaenas(data);
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+        }
+    };
+
+
+
+    useEffect(() => {
+        fetchFaenas();
+    }, []);
 
     if (!visible) return null;
 
@@ -65,7 +96,7 @@ export default function ModalFormularioUsuario({
         try {
             setError("");
             // Primero registramos el usuario en el sistema de autenticación
-            await register(nombre, apellido, correo, password, roleId);
+            await register(nombre, apellido, correo, password, roleId, faena);
 
             // Luego creamos el usuario en la base de datos
             const nuevoUsuario: Usuario = {
@@ -79,7 +110,7 @@ export default function ModalFormularioUsuario({
             setNombre("");
             setCorreo("");
             setRol("operador");
-            setFaena("");
+            setFaena(0);
             setPassword("");
 
             // Llamar a onSuccess si está definido
@@ -177,13 +208,18 @@ export default function ModalFormularioUsuario({
                     <label className="text-sm font-semibold">
                         Faena<span className="font-bold text-lg text-red-500">*</span>
                     </label>
-                    <input
-                        type="text"
-                        placeholder="Faena"
+                    <select
                         className="w-full p-2 border border-gray-300 rounded"
                         value={faena}
-                        onChange={e => setFaena(e.target.value)}
-                    />
+                        onChange={e => setFaena(Number(e.target.value))}
+                    >
+                        <option value="">Seleccione una faena</option>
+                        {faenas.map(faena => (
+                            <option key={faena.id} value={faena.id}>
+                                {faena.name} - {faena.region}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div className="mt-6 flex justify-end gap-2">
