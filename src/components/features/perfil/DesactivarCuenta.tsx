@@ -11,7 +11,7 @@ export default function DesactivarCuenta() {
         if (!user) {
             console.error("No hay usuario autenticado");
         }
-        console.log("Usuario autenticado:", user?.user_id);
+        console.log("Usuario autenticado:", user);
         // Aquí podrías redirigir al usuario a otra página o mostrar un mensaje
     }, [user]);
 
@@ -35,6 +35,7 @@ export default function DesactivarCuenta() {
 
     return (
         <section className="flex justify-center items-center flex-col h-2/3 w-2/3 mx-auto">
+
             <h1 className=" text-center text-2xl font-bold">Desactivar cuenta</h1>
             {/* icono de alerta */}
             <FaExclamationTriangle className="my-4 text-red-500 text-5xl mx-auto" />
@@ -46,6 +47,11 @@ export default function DesactivarCuenta() {
                 Desactivar cuenta
             </button>
             <LoadingSpinner isOpen={isLoading} />
+            {error && <div className="text-red-500 flex justify-between text-sm w-full mt-4 bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                <button onClick={() => setError("")} className=" text-red-500">
+                    X
+                </button>
+            </div>}
         </section>
     );
 }
