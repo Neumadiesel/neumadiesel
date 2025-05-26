@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
+import MultiSelect from "@/components/common/select/MultiSelect";
+import { FaPlusCircle } from "react-icons/fa";
 
 interface VehicleDTO {
     id: number;
@@ -53,6 +55,20 @@ interface ModalAsignarNeumaticoProps {
     onGuardar: () => void;
 }
 
+interface TireModelDTO {
+    id: number;
+    code: string;
+    brand: string;
+    dimensions: string;
+    constructionType: string | null;
+    pattern: string;
+    originalTread: number | null;
+    TKPH: number | null;
+    cost: number | null;
+    nominalHours: number | null;
+    nominalKilometrage: number | null;
+}
+
 export default function ModalAsignarNeumatico({
     visible,
     onClose,
@@ -71,7 +87,8 @@ export default function ModalAsignarNeumatico({
     const [locationId, setLocationId] = useState<number | null>(null);
     const [reasons, setReasons] = useState<ReasonDTO[]>([]);
     const [reasonId, setReasonId] = useState<number | null>(null);
-
+    const [models, setModels] = useState<TireModelDTO[]>([]);
+    const [selectModelsId, setSelectModelsId] = useState<string[]>([]);
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
@@ -108,9 +125,19 @@ export default function ModalAsignarNeumatico({
         }
     }
 
+    const fetchModels = async () => {
+        try {
+            const response = await axios.get("https://inventory-service-emva.onrender.com/tireModels");
+            setModels(response.data);
+        } catch (error) {
+            console.error("Error fetching models:", error);
+        }
+    }
+
     useEffect(() => {
         fetchLocations();
         fetchReasons();
+        fetchModels();
         fetchData();
     }, []);
 
@@ -189,6 +216,20 @@ export default function ModalAsignarNeumatico({
         setError(null);
         onClose();
     };
+
+    const getFilteredTires = (): TireDTO[] => {
+        return tires.filter((tire) => {
+            // Excluir los neumáticos en la ubicación 1
+            if (tire.locationId === 1) return false;
+
+            // Si no hay modelos seleccionados, mostrar todos
+            if (selectModelsId.length === 0) return true;
+
+            // Mostrar solo los que coincidan con los modelos seleccionados
+            return selectModelsId.includes(tire.model.id.toString());
+        });
+    };
+
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
@@ -324,6 +365,30 @@ export default function ModalAsignarNeumatico({
                 {/* Lista de neumaticos */}
                 <aside className="w-[90dvh] pl-4">
                     <h2 className="text-xl font-bold mb-4">Neumáticos Disponibles</h2>
+                    <div className="flex flex-row justify-center items-center w-[50%]">
+                        <MultiSelect
+                            options={models.map((model) => ({
+                                value: model.id.toString(), // Convert number to string
+                                label: `${model.brand} - ${model.dimensions} - ${model.pattern}`,
+                            }))}
+                            selected={selectModelsId} // Ensure selected values are strings
+                            onChange={setSelectModelsId}
+                            placeholder="Filtrar por estado..."
+                        />
+                        {selectModelsId.length > 0 ? (
+                            <button
+                                onClick={() => setSelectModelsId([])}
+                                className="text-black w-8 rounded-xl h-10 text-2xl flex justify-center items-center "
+                                title="Limpiar filtros"
+                            >
+                                <FaPlusCircle className="text-2xl rotate-45 bg-white rounded-full" />
+                            </button>
+                        ) : (
+                            <div className="flex flex-row text-gray-500 font-bold w-8 rounded-xl h-10 justify-center items-center ">
+                                <FaPlusCircle className="text-2xl rotate-45 bg-gray-200 rounded-full" />
+                            </div>
+                        )}
+                    </div>
                     <div className="overflow-y-auto h-[50dvh]">
                         <table className="w-full border-collapse">
                             <thead className="sticky border-x border-t border-b-2 top-0 bg-white z-10">
@@ -338,39 +403,40 @@ export default function ModalAsignarNeumatico({
                                 </tr>
                             </thead>
                             <tbody>
-                                {tires.map((tire) => (
-                                    tire.locationId !== 1 && (
-                                        <tr key={tire.id} className={`border-b hover:bg-gray-100 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}`}>
-                                            <td className="p-2 py-4 border-x bg-gray-100 flex justify-center items-center">
-                                                <input
-                                                    type="checkbox"
-                                                    className="mx-auto"
-                                                    checked={tireCode === tire.code}
-                                                    onChange={() => {
-                                                        setTireCode(tire.code);
-                                                        setTireSelected(tire);
-                                                    }}
-                                                />
-                                            </td>
-                                            <td className="p-2">{tire.code}</td>
-                                            <td className="p-2">{tire.model.brand}</td>
-                                            <td className="p-2">{tire.model.dimensions}</td>
-                                            <td className="p-2">{tire.model.pattern}</td>
-                                            <td className="p-2">
-                                                {tire.lastInspection
-                                                    ? `INT: ${tire.lastInspection.internalTread} | EXT: ${tire.lastInspection.externalTread}`
-                                                    : 'Nuevo'}
-                                            </td>
-                                            <td className="p-2 border-r">
-                                                {tire.lastInspection
-                                                    ? `${tire.lastInspection.externalTread} - 
+                                {getFilteredTires()
+                                    .map((tire) => (
+                                        tire.locationId !== 1 && (
+                                            <tr key={tire.id} className={`border-b hover:bg-gray-100 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}`}>
+                                                <td className="p-2 py-4 border-x bg-gray-100 flex justify-center items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="mx-auto"
+                                                        checked={tireCode === tire.code}
+                                                        onChange={() => {
+                                                            setTireCode(tire.code);
+                                                            setTireSelected(tire);
+                                                        }}
+                                                    />
+                                                </td>
+                                                <td className="p-2">{tire.code}</td>
+                                                <td className="p-2">{tire.model.brand}</td>
+                                                <td className="p-2">{tire.model.dimensions}</td>
+                                                <td className="p-2">{tire.model.pattern}</td>
+                                                <td className="p-2">
+                                                    {tire.lastInspection
+                                                        ? `INT: ${tire.lastInspection.internalTread} | EXT: ${tire.lastInspection.externalTread}`
+                                                        : 'Nuevo'}
+                                                </td>
+                                                <td className="p-2 border-r">
+                                                    {tire.lastInspection
+                                                        ? `${tire.lastInspection.externalTread} - 
                                                     ${tire.lastInspection.internalTread}`
-                                                    : `${tire.initialTread} - ${tire.initialTread}`}
-                                            </td>
+                                                        : `${tire.initialTread} - ${tire.initialTread}`}
+                                                </td>
 
-                                        </tr>
-                                    )
-                                ))}
+                                            </tr>
+                                        )
+                                    ))}
                             </tbody>
                         </table>
                     </div>

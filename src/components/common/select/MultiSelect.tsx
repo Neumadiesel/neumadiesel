@@ -48,7 +48,7 @@ export default function MultiSelect({
             </button>
 
             {open && (
-                <div className="absolute z-10 mt-2 w-full bg-white border rounded-md shadow-md max-h-64 overflow-y-auto">
+                <div className="absolute z-30 mt-2 w-full bg-white border rounded-md shadow-md max-h-64 overflow-y-auto">
                     {options.map(opt => (
                         <label
                             key={opt.value}
