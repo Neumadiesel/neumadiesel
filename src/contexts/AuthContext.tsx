@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = "http://localhost:3001";
 
 interface User {
     user_id: number;
@@ -29,7 +29,8 @@ interface AuthContextType {
         last_name: string,
         email: string,
         password: string,
-        role_id: number
+        role_id: number,
+        faena_id: number
     ) => Promise<void>;
     deactivateUser: (userId: number) => Promise<void>;
     reactivateUser: (userId: number) => Promise<void>;
@@ -94,7 +95,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         last_name: string,
         email: string,
         password: string,
-        role_id: number
+        role_id: number,
+        faena_id: number
     ) => {
         try {
             await axios.post(`${API_URL}/auth/register`, {
@@ -103,6 +105,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 email,
                 password,
                 role_id,
+                faena_id,
             });
         } catch (error) {
             console.error("Error al registrarse:", error);

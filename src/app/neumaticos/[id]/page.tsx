@@ -86,7 +86,7 @@ export default function TirePage() {
                             <LabelLoading loading={loading} title="Desgaste Interior:" text={tire?.lastInspection?.internalTread.toString() || ""} />
                             <LabelLoading loading={loading} title="Desgaste Exterior:" text={tire?.lastInspection?.externalTread.toString() || ""} />
                             <LabelLoading loading={loading} title="Kilometraje:" text={tire?.lastInspection?.kilometrage?.toString() || ""} />
-                            <LabelLoading loading={loading} title="Horas:" text={tire?.initialHours?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Horas:" text={tire?.usedHours?.toString() || ""} />
                             {
                                 tire &&
                                 <LabelLoading loading={loading} title="% de Desgaste:" text={`${calculateWearPercentage(tire?.initialTread, tire?.lastInspection?.externalTread)}%`} />
