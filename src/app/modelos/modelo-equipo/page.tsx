@@ -35,7 +35,7 @@ export default function ModelosEquipo() {
 
         setLoading(true);
         try {
-            const response = await fetch(`http://localhost:3002/vehicleModels/site/${user.faena_id}`);
+            const response = await fetch(`https://inventory-service-emva.onrender.com/vehicleModels/site/${user.faena_id}`);
             const data = await response.json();
             setVehicleModels(data);
         } catch (error) {
