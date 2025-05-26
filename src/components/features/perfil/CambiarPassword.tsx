@@ -28,40 +28,40 @@ export default function CambiarPassword() {
         }
     };
     return (
-        <section className="flex flex-col h-full">
+        <section className="flex flex-col h-full dark:text-white">
             <h1 className="text-2xl font-bold">Cambiar contraseña</h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-md text-gray-500 dark:text-white">
                 Para cambiar su contraseña ingrese su contraseña actual seguido de la nueva contraseña.
             </p>
             <main className="grid mt-2 grid-cols-1 h-3/4 items-center justify-center w-full">
                 <div className="flex px-2 flex-col pt-10 justify-between items-center w-full h-full ">
                     <div className="flex flex-col w-1/2">
                         {/* Contrasena actual */}
-                        <label className="text-sm mt-4 text-gray-950 font-semibold">
+                        <label className="text-md mt-4 text-gray-950 dark:text-white font-semibold">
                             Contraseña actual:
                         </label>
                         <input
                             type="password"
                             onChange={(e) => setPassword({ ...password, current: e.target.value })}
-                            className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
+                            className="text-md bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 dark:border-yellow-600 rounded-sm p-2"
                         />
-                        <label className="text-sm mt-4 text-gray-950 font-semibold">
+                        <label className="text-md mt-4 text-gray-950 dark:text-white font-semibold">
                             Nueva contraseña:
                         </label>
                         <input
                             type="password"
                             disabled={!password.current}
                             onChange={(e) => setPassword({ ...password, new: e.target.value })}
-                            className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
+                            className="text-md bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 dark:border-yellow-600 rounded-sm p-2"
                         />
-                        <label className="text-sm mt-4 text-gray-950 font-semibold">
+                        <label className="text-md mt-4 text-gray-950 dark:text-white font-semibold">
                             Confirmar contraseña:
                         </label>
                         <input
                             disabled={!password.new}
                             onChange={(e) => setPassword({ ...password, confirm: e.target.value })}
                             type="password"
-                            className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
+                            className="text-md bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 dark:border-yellow-600 rounded-sm p-2"
                         />
                     </div>
                     <button

@@ -17,7 +17,7 @@ export default function Breadcrumb() {
 
     return (
         <nav
-            className=" text-sm text-gray-500 bg-transparent backdrop-blur-md px-4 py-2 rounded-md"
+            className=" text-sm text-gray-500 dark:text-white bg-transparent backdrop-blur-md px-4 py-2 rounded-md"
             aria-label="Breadcrumb"
         >
             <ol className="flex items-center space-x-1">
@@ -32,9 +32,9 @@ export default function Breadcrumb() {
                     const href = generatePath(index);
                     return (
                         <li key={href} className="flex items-center">
-                            <ChevronRight className="h-4 w-4 text-gray-400 mx-1" />
+                            <ChevronRight className="h-4 w-4 text-gray-400 dark:text-white mx-1" />
                             {isLast ? (
-                                <span className="text-gray-700 capitalize">{decodeURIComponent(segment)}</span>
+                                <span className="text-gray-700 dark:text-white capitalize">{decodeURIComponent(segment)}</span>
                             ) : (
                                 <Link href={href} className="hover:underline capitalize rounded-md px-1">
                                     {decodeURIComponent(segment)}

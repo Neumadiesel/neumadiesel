@@ -40,24 +40,24 @@ export default function Perfil() {
                         <p className="text-white text-md">{user?.role.name}</p>
                     </section>
                     {/* Seccion de datos personales */}
-                    <main className="flex flex-col bg-white shadow-sm h-full  p-4  w-3/4">
+                    <main className="flex flex-col bg-white dark:bg-[#212121] shadow-sm h-full  p-4  w-3/4">
                         {/* Quiero una barra de 3 botones para editar datos personales, cambiar contrasena y desactivar cuenta*/}
                         <div className="flex flex-row mb-2">
                             <button
                                 onClick={() => setActiveSection("datos personales")}
-                                className="bg-gray-100 hover:bg-gray-200 text-black font-semibold border-b-4 border-amber-400 w-1/3 p-2"
+                                className="bg-gray-100 hover:bg-gray-200 dark:bg-black dark:hover:bg-[#141414] text-black dark:text-white font-semibold border-b-4 border-amber-400 w-1/3 p-2"
                             >
                                 Editar datos personales
                             </button>
                             <button
                                 onClick={() => setActiveSection("cambiar contraseña")}
-                                className="bg-gray-100 hover:bg-gray-200 text-black font-semibold border-b-4 border-blue-400 w-1/3 p-2"
+                                className="bg-gray-100 hover:bg-gray-200 dark:bg-black dark:hover:bg-[#141414] text-black dark:text-white font-semibold border-b-4 border-blue-400 w-1/3 p-2"
                             >
                                 Cambiar contraseña
                             </button>
                             <button
                                 onClick={() => setActiveSection("desactivar cuenta")}
-                                className="bg-gray-100 hover:bg-gray-200 text-black font-semibold border-b-4 border-red-400 w-1/3 p-2"
+                                className="bg-gray-100 hover:bg-gray-200 dark:bg-black dark:hover:bg-[#141414] text-black dark:text-white font-semibold border-b-4 border-red-400 w-1/3 p-2"
                             >
                                 Desactivar cuenta
                             </button>

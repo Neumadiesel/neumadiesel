@@ -34,12 +34,12 @@ export default function DesactivarCuenta() {
     };
 
     return (
-        <section className="flex justify-center items-center flex-col h-2/3 w-2/3 mx-auto">
+        <section className="flex justify-center items-center flex-col h-2/3 w-2/3 mx-auto dark:text-white">
 
             <h1 className=" text-center text-2xl font-bold">Desactivar cuenta</h1>
             {/* icono de alerta */}
             <FaExclamationTriangle className="my-4 text-red-500 text-5xl mx-auto" />
-            <p className="text-sm text-gray-500 text-justify">
+            <p className="text-md text-gray-500 dark:text-white text-justify">
                 Al desactivar su cuenta, ya no podrá acceder a la aplicación ni a sus datos.
                 Si desea volver a activar su cuenta, deberá ponerse en contacto con la administración.
             </p>
