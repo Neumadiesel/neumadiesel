@@ -5,6 +5,7 @@ import { LayoutProvider, useLayoutContext } from "@/contexts/LayoutContext";
 import ModalRegistrarVehiculo from "@/components/features/equipo/ModalRegistrarVehiculo";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface VehicleDTO {
     id: number;
@@ -38,19 +39,32 @@ export default function RootLayout({
     const [modalRegistrarVehiculo, setModalRegistrarVehiculo] = useState(false);
     const { hasChanged, setHasChanged } = useLayoutContext();
     const [codigo, setCodigo] = useState("");
+    const { user } = useAuth();
 
     const fetchVehicleModels = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/vehicles");
-            const data = await response.json();
-            setVehicles(data);
+            if (user && user.faena_id !== undefined) {
+                console.log("Fetching vehicles for user with faena_id:", user.faena_id);
+                if (user.faena_id === 99) {
+                    // Admin: obtener todos los vehículos
+                    const response = await fetch("https://inventory-service-emva.onrender.com/vehicles");
+                    const data = await response.json();
+                    setVehicles(data);
+                } else {
+                    // Usuario común: obtener solo vehículos de su faena
+                    const response = await fetch(`https://inventory-service-emva.onrender.com/vehicles/site/${user.faena_id}`);
+                    const data = await response.json();
+                    setVehicles(data);
+                }
+            }
         } catch (error) {
             console.error("Error fetching vehicles:", error);
         } finally {
             setLoading(false);
         }
     };
+
 
     const filteredVehicles = vehicles.filter((vehicle) => {
         const matchCode = vehicle.code.toLowerCase().includes(codigo.toLowerCase());
