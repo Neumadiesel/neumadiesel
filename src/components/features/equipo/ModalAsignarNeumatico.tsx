@@ -236,9 +236,9 @@ export default function ModalAsignarNeumatico({
             <section className="relative bg-white dark:bg-[#212121] p-6 rounded-md flex shadow-lg h-[80dvh] overflow-y-scroll">
 
                 <main className="w-[60dvh] border-r border-gray-300 pr-4">
-                    <h2 className="text-xl font-bold mb-4">Instalar Neumatico</h2>
+                    <h2 className="text-xl font-bold mb-4">Instalar neumático</h2>
                     <p className="text-sm mb-4">
-                        Seleccione el neumatico a instalar y la posicion en el equipo {vehicle.code}
+                        Seleccione el neumático a instalar y la posición en el equipo {vehicle.code}
                     </p>
 
 
@@ -252,22 +252,22 @@ export default function ModalAsignarNeumatico({
                             className="border border-gray-300 p-2 rounded"
                         />
                         {/* Lista de posiciones segun el nuemro de ruedas dado en el modelo */}
-                        <Label title="Posicion" isNotEmpty={true} />
+                        <Label title="Posición" isNotEmpty={true} />
                         <select
                             value={posicion ?? ""}
                             onChange={(e) => setPosition(Number(e.target.value))}
                             className="border border-gray-300 p-2 rounded"
                         >
                             <option value="" disabled>
-                                Seleccione una posicion
+                                Seleccione una posición
                             </option>
                             {Array.from({ length: vehicle.model.wheelCount }, (_, index) => (
                                 <option key={index} value={index + 1}>
-                                    {`Posicion ${index + 1}`}
+                                    {`Posición ${index + 1}`}
                                 </option>
                             ))}
                         </select>
-                        <Label title="Fecja de Montaje" isNotEmpty={true} />
+                        <Label title="Fecha de Montaje" isNotEmpty={true} />
                         <input
                             type="datetime-local"
                             name="Fecha de Montaje"
@@ -302,25 +302,25 @@ export default function ModalAsignarNeumatico({
                             value={vehicle.kilometrage}
                             className="border border-gray-300 p-2 rounded"
                         />
-                        {/* Codigo de la OT */}
-                        <Label title="Codigo de la OT" isNotEmpty={true} />
+                        {/* código de la OT */}
+                        <Label title="código de la OT" isNotEmpty={true} />
                         <input
                             type="text"
-                            name="Codigo de la OT"
+                            name="codigo de la OT"
                             value={otCode ?? ""}
                             onChange={(e) => setOtCode(e.target.value)}
-                            placeholder="Codigo de la OT"
+                            placeholder="código de la OT"
                             className="border border-gray-300 p-2 rounded"
                         />
                         {/* Razon */}
-                        <Label title="Razon" isNotEmpty={true} />
+                        <Label title="razón" isNotEmpty={true} />
                         <select
                             value={reasonId ?? ""}
                             onChange={(e) => setReasonId(Number(e.target.value))}
                             className="border border-gray-300 p-2 rounded"
                         >
                             <option value="" disabled>
-                                Seleccione una razon
+                                Seleccione una razón
                             </option>
                             {reasons.map((reason) => (
                                 <option key={reason.id} value={reason.id}>
@@ -329,14 +329,14 @@ export default function ModalAsignarNeumatico({
                             ))}
                         </select>
                         {/* Ubicacion */}
-                        <Label title="Ubicacion" isNotEmpty={true} />
+                        <Label title="ubicación" isNotEmpty={true} />
                         <select
                             value={locationId ?? ""}
                             onChange={(e) => setLocationId(Number(e.target.value))}
                             className="border border-gray-300 p-2 rounded"
                         >
                             <option value="" disabled>
-                                Seleccione una ubicacion
+                                Seleccione una ubicación
                             </option>
                             {locations.map((location) => (
                                 <option key={location.id} value={location.id}>

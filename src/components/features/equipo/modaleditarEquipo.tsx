@@ -197,7 +197,7 @@ export default function ModaleditarEquipo({
                         ))}
                     </select>
                     {/* Lista de tipos */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Tipo de Vehiculo</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Tipo de Vehículo</label>
                     <select
                         name="Tipo"
                         value={vehicleEdited.typeId || ""}
@@ -206,7 +206,7 @@ export default function ModaleditarEquipo({
                         }
                         className="border border-gray-300 p-2 rounded"
                     >
-                        <option value="">Selecciona un tipo de vehiculo</option>
+                        <option value="">Selecciona un tipo de vehículo</option>
                         {vehicleTypes.map((type) => (
                             <option key={type.id} value={type.id}>
                                 {type.code} - {type.name}
@@ -214,14 +214,14 @@ export default function ModaleditarEquipo({
                         ))}
                     </select>
                     {/* Codigo del vehiculo */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Codigo del equipo</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Código del equipo</label>
                     <input
                         name="Codigo"
                         value={vehicleEdited.code}
                         onChange={
                             (e) => setVehicleEdited({ ...vehicleEdited, code: e.target.value.toUpperCase() })
                         }
-                        placeholder="Codigo del equipo"
+                        placeholder="Código del equipo"
                         className="border border-gray-300 p-2 rounded"
                     />
                 </div>
