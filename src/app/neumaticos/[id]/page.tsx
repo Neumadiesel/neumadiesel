@@ -77,7 +77,7 @@ export default function TirePage() {
                         <div className="grid grid-cols-2 gap-2">
 
                             <LabelLoading loading={loading} title="Marca:" text={tire?.model.brand || ""} />
-                            <LabelLoading loading={loading} title="Patron:" text={tire?.model.pattern || ""} />
+                            <LabelLoading loading={loading} title="Patrón:" text={tire?.model.pattern || ""} />
                             <LabelLoading loading={loading} title="Código:" text={tire?.model.code || ""} />
                             <LabelLoading loading={loading} title="Medidas:" text={tire?.model.dimensions || ""} />
                             <LabelLoading loading={loading} title="OTD:" text={tire?.model.originalTread?.toString() || ""} />
@@ -95,7 +95,7 @@ export default function TirePage() {
                         <div className="px-4 flex flex-col gap-2 ">
                             <LabelLoading loading={loading} title="Ubicación:" text={tire?.location.name || ""} />
                             <LabelLoading loading={loading} title="Equipo:" text={tire?.installedTires[0]?.vehicle?.code || ""} />
-                            <LabelLoading loading={loading} title="Posicion:" text={tire?.installedTires[0]?.position?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Posición:" text={tire?.installedTires[0]?.position?.toString() || ""} />
                         </div>
 
 
@@ -111,7 +111,7 @@ export default function TirePage() {
                         <tr>
                             <th className="p-4">
                                 <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                    Accion
+                                    Acción
                                 </p>
                             </th>
                             <th className="p-4">

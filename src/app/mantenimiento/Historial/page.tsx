@@ -8,7 +8,7 @@ export default function MantenimientoPage() {
         <div className="p-4 h-[100%] w-[100%]  ">
             {/* selecter que cargue los datos del neumatico */}
             <div className="flex w-[100%] bg-white dark:bg-[#212121]  rounded-md shadow-md px-2 items-center gap-x-2 p-2 py-3">
-                <label className="font-bold">Codigo neumatico: </label>
+                <label className="font-bold">Código neumático: </label>
                 <input className=" border border-gray-300 text-md focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-amber-500 p-1 rounded-lg bg-[#f1f1f1]  shadow-sm " type="text" value={neumaticoId} onChange={(e) => setNeumaticoId(e.target.value)} />
                 <button onClick={() => console.log("onclick")} className="bg-amber-300 text-black cursor-pointer p-2 rounded-md shadow-md hover:bg-amber-600 transition-all ease-in-out">
                     <FaSearch className="text-2xl " />

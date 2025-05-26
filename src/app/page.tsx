@@ -110,7 +110,7 @@ export default function Page() {
                 <div className=" grid grid-cols-1 lg:grid-cols-3 gap-4 w-4/5 gap-x-4">
                     {/* Card de seguimiento de neumaticos */}
                     <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72  h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
-                        <p className="text-xl font-bold">Seguimiento de Neumaticos</p>
+                        <p className="text-xl font-bold">Seguimiento de NeumÁticos</p>
                         <p className="text-md ">
                             Control detallado del historial y estado actual de cada neumático en su
                             flota.
@@ -126,7 +126,7 @@ export default function Page() {
                     </div>
                     {/* Card de gestion de inventario */}
                     <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
-                        <p className="text-xl font-bold">Gestion de Inventario</p>
+                        <p className="text-xl font-bold">GestiÓn de Inventario</p>
                         <p className="text-md ">
                             Control de stock de neumáticos nuevos, reparados y fuera de servicio.
                         </p>

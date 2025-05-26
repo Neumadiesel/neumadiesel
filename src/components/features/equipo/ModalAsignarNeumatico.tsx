@@ -99,7 +99,7 @@ export default function ModalAsignarNeumatico({
             const response = await fetch("https://inventory-service-emva.onrender.com/tires/available");
             const data = await response.json();
             setTires(data);
-            console.log("Neumaticos", data);
+            console.log("Neumáticos", data);
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -246,7 +246,7 @@ export default function ModalAsignarNeumatico({
                         {/* Lista de modelos */}
                         <Label title="Modelo" isNotEmpty={true} />
                         <input
-                            name="Codigo Equipo"
+                            name="Código Equipo"
                             value={vehicle.code}
                             disabled
                             className="border border-gray-300 p-2 rounded"
@@ -306,7 +306,7 @@ export default function ModalAsignarNeumatico({
                         <Label title="código de la OT" isNotEmpty={true} />
                         <input
                             type="text"
-                            name="codigo de la OT"
+                            name="código de la OT"
                             value={otCode ?? ""}
                             onChange={(e) => setOtCode(e.target.value)}
                             placeholder="código de la OT"
