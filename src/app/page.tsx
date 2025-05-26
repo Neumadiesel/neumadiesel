@@ -23,7 +23,7 @@ export default function Page() {
 
                 <div className="flex flex-col items-center justify-center w-3/4 z-20 gap-y-4">
                     <h2 className="text-6xl text-center font-bold text-white">
-                        Sistema de Gestión de Neumaticos
+                        Sistema de Gestión de Neumáticos
                     </h2>
                     <p className="text-lg text-white text-center lg:px-30">
                         Optimice el mantenimiento de sus neumáticos mineros, mejore la seguridad y
