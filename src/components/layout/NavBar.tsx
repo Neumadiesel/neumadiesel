@@ -106,14 +106,14 @@ export default function NavBar() {
                 { title: "Mediciones", path: "/medicion/" },
                 {
                     title: "Ingresar Medición por Equipo",
-                    path: "/medicion/medición_apor-equipo",
+                    path: "/medicion/medicion-por-equipo",
                 },
             ],
         },
         {
             title: "Ingresar Medición por Equipo",
             icon: <FaFile className="text-2xl" />,
-            path: "/medicion/medición-por-equipo",
+            path: "/medicion/medicion-por-equipo",
             allowedRoles: ["operador"],
         },
     ];
