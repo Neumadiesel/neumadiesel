@@ -57,9 +57,9 @@ export default function ModalRegistrarRazon({
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
             <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-xl w-full">
-                <h2 className="text-xl font-bold">Registar Razon de Retiro</h2>
+                <h2 className="text-xl font-bold">Registar Razón de Retiro</h2>
                 <p className="text-sm text-gray-500 mb-4">
-                    Complete los campos para registrar una nueva razon de retiro.
+                    Complete los campos para registrar una nueva razón de retiro.
                 </p>
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
                     <button onClick={() => setError("")} className=" text-red-500">
@@ -67,14 +67,14 @@ export default function ModalRegistrarRazon({
                     </button>
                 </div>}
                 <div className="flex flex-col">
-                    <label className="text-sm mt-2 font-semibold mb-2">Razon de retiro</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Razón de retiro</label>
                     <input
                         name="razon"
                         value={name}
                         onChange={
                             (e) => setName(e.target.value)
                         }
-                        placeholder="Razon"
+                        placeholder="Razón"
                         className="border border-gray-300 p-2 rounded"
                     />
                     <label className="text-sm mt-2 font-semibold mb-2">Descripción</label>
@@ -95,7 +95,7 @@ export default function ModalRegistrarRazon({
                         disabled={loading}
                         className="px-4 py-2 bg-amber-400 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50"
                     >
-                        {loading ? "Procesando..." : "Registrar Razon"}
+                        {loading ? "Procesando..." : "Registrar Razón"}
                     </button>
                     <button
                         onClick={onClose}

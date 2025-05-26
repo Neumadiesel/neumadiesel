@@ -93,7 +93,7 @@ export default function ModalEditarRazon({
                         onChange={
                             (e) => setRazonEditada({ ...razonEditada, description: e.target.value })
                         }
-                        placeholder="Region"
+                        placeholder="Región"
                         className="border border-gray-300 p-2 rounded"
                     />
                 </div>
