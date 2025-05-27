@@ -84,7 +84,7 @@ export default function ListaNeumaticos() {
             <div className="flex justify-between h-[10%] items-center w-full">
                 <div className="gap-y-2  items-center justify-between w-full mx-auto my-2 dark:text-white">
                     <div className="lg:w-[40%] flex items-center justify-start">
-                        <h1 className="  text-2xl font-bold">
+                        <h1 className=" mb-2 text-2xl font-bold">
                             Lista de Neumáticos
                         </h1>
                     </div>
@@ -92,12 +92,12 @@ export default function ListaNeumaticos() {
                         <input
                             type="text"
                             placeholder="Buscar por código Neumático o Equipo"
-                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-sm outline-gray-200 placeholder:text-gray-700 dark:placeholder:text-gray-200"
+                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-sm outline-none dark:border-neutral-700 placeholder:text-gray-700 dark:placeholder:text-gray-200"
                             value={codigo.toUpperCase()}
                             onChange={(e) => setCodigo(e.target.value)}
                         />
                         <select
-                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-md outline-gray-200 placeholder:text-gray-700"
+                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 placeholder:text-gray-700"
                             value={estado}
                             onChange={(e) => setEstado(e.target.value)}
                         >
@@ -122,7 +122,7 @@ export default function ListaNeumaticos() {
             {/* Tabla */}
             <main >
                 <div
-                    className="relative flex flex-col w-full h-full overflow-scroll border rounded-md text-gray-700 bg-white shadow-sm bg-clip-border">
+                    className="relative flex flex-col w-full h-full overflow-scroll border rounded-md text-gray-700 bg-white shadow-sm bg-clip-border dark:border-neutral-700 dark:text-white">
                     <table className="w-full text-left table-auto min-w-max ">
                         <thead className="text-xs text-black uppercase bg-amber-300  dark:bg-neutral-900 dark:text-white">
                             <tr>
@@ -205,7 +205,7 @@ export default function ListaNeumaticos() {
                                 </tr>
                             ) :
                                 paginatedNeumaticos.map((tire) => (
-                                    <tr key={tire.id} className="bg-white border-b dark:bg-neutral-800 dark:border-neutral-300 border-gray-200 dark:text-white">
+                                    <tr key={tire.id} className="bg-white border-b dark:bg-neutral-800 dark:border-neutral-700 border-gray-200 dark:text-white">
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-800">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tire.code}
@@ -279,7 +279,7 @@ export default function ListaNeumaticos() {
                 <button
                     onClick={() => setCurrentPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`p-3   font-semibold h-10 border rounded-full ${currentPage === 1 ? "bg-gray-100 dark:bg-neutral-800 dark:text-white cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200"
+                    className={`p-3   font-semibold h-10 border rounded-full ${currentPage === 1 ? "bg-gray-100 dark:bg-neutral-800 dark:text-white " : "bg-amber-300 dark:border-black hover:bg-amber-200"
                         } text-black`}
                 >
                     <ArrowLeft className="w-4 h-4" />
@@ -290,7 +290,7 @@ export default function ListaNeumaticos() {
                 <button
                     onClick={() => setCurrentPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`p-3   h-10 font-semibold border rounded-full ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200 dark:border-black"
+                    className={`p-3   h-10 font-semibold border rounded-full ${currentPage === totalPages ? "bg-gray-200  dark:bg-neutral-800 dark:text-white" : "bg-amber-300 hover:bg-amber-200 dark:border-black"
                         } text-black`}
                 >
                     <ArrowRight className="w-4 h-4" />
