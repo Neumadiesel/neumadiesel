@@ -250,7 +250,7 @@ export default function ListaNeumaticos() {
                                                         setEditarNeumatico(true);
                                                     }
                                                     }
-                                                    className="p-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
+                                                    className="p-2 px-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
                                                 >
                                                     <Pencil className="w-4 h-4" />
                                                 </button>

@@ -2,8 +2,7 @@
 import ModalEditarFaena from "@/components/features/faena/ModalEditarFaena";
 import Modal from "@/components/common/modal/CustomModal";
 import Link from "next/link";
-import { FaEye, FaEyeSlash, FaInfoCircle } from "react-icons/fa";
-import { FaPencil } from "react-icons/fa6";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import ModalRegistrarFaena from "@/components/features/faena/ModalRegistrarFaena";
 import Breadcrumb from "@/components/layout/BreadCrumb";
@@ -11,6 +10,7 @@ import Button from "@/components/common/button/Button";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import CustomModal from "@/components/common/alerts/alert";
 import axios from "axios";
+import { Info, Pencil } from "lucide-react";
 
 interface FaenaDTO {
     id: number;
@@ -113,8 +113,8 @@ export default function Page() {
             </section>
             <main className="px-3" >
                 <div
-                    className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
-                    <table className="w-full text-left table-auto min-w-max">
+                    className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 shadow-sm bg-clip-border">
+                    <table className="w-full text-left table-auto min-w-max rounded-md overflow-hidden border">
                         <thead className="text-xs text-black uppercase bg-amber-300  ">
                             <tr>
                                 <th className="p-4">
@@ -147,7 +147,7 @@ export default function Page() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
+                                    <td colSpan={6} className="text-center p-8 dark:bg-neutral-800">
                                         <div className="flex flex-col items-center justify-center space-y-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                             <p className="text-gray-600 dark:text-gray-400">
@@ -182,8 +182,8 @@ export default function Page() {
                             ) : null}
                             {
                                 listaFaenas.map((faena) => (
-                                    <tr key={faena.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
+                                    <tr key={faena.id} className="bg-white border-b dark:bg-neutral-800 dark:border-neutral-700 border-gray-200 dark:text-white">
+                                        <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.name}
                                             </p>
@@ -193,7 +193,7 @@ export default function Page() {
                                                 {faena.region}
                                             </p>
                                         </td>
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
+                                        <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {faena.contract?.startDate ? new Date(faena.contract.startDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
@@ -203,27 +203,31 @@ export default function Page() {
                                                 {faena.contract?.endDate ? new Date(faena.contract.endDate).toISOString().split("T")[0] : "Sin fecha"}
                                             </p>
                                         </td>
-                                        <td className="  bg-gray-50 dark:bg-neutral-900 px-2">
+                                        <td className="  px-2">
                                             <div className="flex gap-2">
-                                                <Link href={`/administracion/faena/${faena.id}`} className="p-2 text-amber-500 hover:text-amber-600 bg-amber-50 border border-amber-300 rounded-md flex items-center justify-center">
-                                                    <FaInfoCircle />
-                                                </Link>
                                                 {/* boton editar */}
-                                                <button onClick={() => handleEditarFaena(faena)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center">
-                                                    <FaPencil />
+                                                <button onClick={() => handleEditarFaena(faena)}
+                                                    className="p-2 px-3 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
+                                                >
+                                                    <Pencil className="w-4 h-4" />
                                                 </button>
+                                                <Link href={`/administracion/faena/${faena.id}`}
+                                                    className="p-2 px-3 text-blue-500 hover:text-blue-600 bg-blue-50 border dark:bg-neutral-800 border-blue-500 rounded-md flex items-center justify-center"
+                                                >
+                                                    <Info className="w-4 h-4" />
+                                                </Link>
                                                 {
                                                     faena.isActive ? (
                                                         <button
                                                             onClick={() => { setFaenaId(faena.id); setIsOpen(true) }}
-                                                            className="bg-gray-50 hover:bg-red-50 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded"
+                                                            className="bg-gray-50 hover:bg-red-50 dark:hover:bg-neutral-700 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded"
                                                         >
                                                             <FaEyeSlash className="inline-block" />
                                                         </button>
                                                     ) : (
                                                         <button
                                                             onClick={() => { setFaenaId(faena.id); setIsOpenReactivar(true) }}
-                                                            className="bg-gray-50 hover:bg-emerald-50 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-4 rounded"
+                                                            className="bg-gray-50 hover:bg-emerald-50 dark:hover:bg-neutral-700 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-4 rounded"
                                                         >
                                                             <FaEye className="inline-block" />
                                                         </button>
