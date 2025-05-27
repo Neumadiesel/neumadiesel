@@ -160,7 +160,7 @@ export default function ListaMaquinaria() {
                             </section>
                             {/* Info del camión */}
 
-                            <div className="grid grid-cols-2 pt-2 bg-gray-100 dark:bg-[#111111] rounded-sm border  p-1 w-[100%] h-[65%] mb-2">
+                            <div className="grid grid-cols-2 pt-2 bg-gray-100 dark:bg-[#141414] rounded-sm border dark:border-neutral-700  p-1 w-[100%] h-[65%] mb-2">
                                 <LabelLoading loading={loading} title={"Feana:"} text={vehicle.site?.name} />
                                 <LabelLoading loading={loading} title={"Marca:"} text={vehicle.model?.brand} />
                                 <LabelLoading loading={loading} title={"Modelo:"} text={vehicle.model?.model} />
@@ -176,9 +176,9 @@ export default function ListaMaquinaria() {
                     <div className="w-[100%] h-full">
                         {/* Tabla de neumaticos */}
                         <section className="relative overflow-x-auto lg:h-[80%] my-2">
-                            <div className="flex flex-col gap-y-2 border border-gray-200  rounded-md shadow-sm">
+                            <div className="flex flex-col gap-y-2 border border-gray-200 dark:border-neutral-700  rounded-md shadow-sm">
                                 {/* Table head */}
-                                <table className="w-full table-auto rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                                <table className="w-full table-auto rounded-md overflow-hidden ">
                                     <thead className="bg-gray-100 dark:bg-[#111111]">
                                         <tr>
                                             <th className="p-2 w-[5%]">Pos</th>
@@ -197,7 +197,7 @@ export default function ListaMaquinaria() {
                                     <tbody className="table-auto">
                                         {loading ? (
                                             <tr>
-                                                <td colSpan={6} className="text-center p-8 dark:bg-[#111111] bg-white">
+                                                <td colSpan={6} className="text-center p-8 dark:bg-[#242424] bg-white">
                                                     <div className="flex flex-col items-center justify-center space-y-4">
                                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                                         <p className="text-gray-600 dark:text-gray-400">
@@ -209,7 +209,7 @@ export default function ListaMaquinaria() {
                                         ) : getTiresByPosition().map(({ position, tireData }) => (
                                             <tr
                                                 key={position}
-                                                className="bg-gray-50 border-b border-b-amber-200 dark:border-b-white dark:bg-[#111111] hover:bg-gray-100 h-16 text-start dark:hover:bg-gray-800 transition-all ease-in-out rounded-md"
+                                                className="bg-gray-50 border-b border-b-amber-200 dark:border-b-neutral-700 dark:bg-[#242424] hover:bg-gray-100 h-16 text-start dark:hover:bg-neutral-800 transition-all ease-in-out rounded-md"
                                             >
                                                 <td className="w-[5%] text-center font-semibold">{position}</td>
                                                 {tireData ? (
@@ -230,7 +230,7 @@ export default function ListaMaquinaria() {
                                                         <td className="flex justify-center mt-5 items-center gap-1">
                                                             <Link
                                                                 href={`/neumaticos/${tireData.tire.id}`}
-                                                                className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 dark:bg-nuetral-700 border border-indigo-300 rounded-md flex items-center justify-center"
+                                                                className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 dark:bg-neutral-800 border border-indigo-300 rounded-md flex items-center justify-center"
                                                             >
                                                                 <History className="w-4 h-4" />
                                                             </Link>
@@ -239,7 +239,7 @@ export default function ListaMaquinaria() {
                                                                     setTireDesmonatado(tireData);
                                                                     setMostrarDesmontar(true);
                                                                 }}
-                                                                className="p-2 text-red-500 dark:text-red-400 hover:text-red-600 bg-red-50 dark:bg-neutral-700 border border-red-400 rounded-md flex items-center justify-center"
+                                                                className="p-2 text-red-500 dark:text-red-400 hover:text-red-600 bg-red-50 dark:bg-neutral-800 border border-red-400 rounded-md flex items-center justify-center"
                                                             >
                                                                 <MoveLeft className="w-4 h-4" />
                                                             </button>

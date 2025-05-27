@@ -129,7 +129,7 @@ export default function RootLayout({
                                         placeholder="Buscar por código de Equipo..."
                                         value={codigo.toUpperCase()}
                                         onChange={(e) => setCodigo(e.target.value)}
-                                        className="w-full h-10 px-4 border border-gray-300 dark:text-white placeholder:text-white rounded-md focus:outline-none"
+                                        className="w-full h-10 px-4 border border-gray-300 dark:border-neutral-700 dark:text-white placeholder:text-white rounded-md focus:outline-none"
                                     />
                                 </div>
 
@@ -138,7 +138,7 @@ export default function RootLayout({
                                         <Link
                                             href={`/maquinaria/${vehicle.id}`}
                                             key={vehicle.id}
-                                            className="flex h-20 justify-around border items-center p-2 bg-gray-100 dark:bg-[#111111] rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
+                                            className="flex h-20 justify-around border items-center p-2 bg-gray-100 dark:border-neutral-700 dark:bg-[#111111] rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
                                         >
                                             <p className="text-lg font-semibold   dark:text-white">{vehicle.code}</p>
                                             <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.model.brand} {vehicle.model.model}</p>
