@@ -57,16 +57,15 @@ export default function Page() {
                 <h1 className="text-2xl font-bold">Modelos de Cadenas</h1>
                 <button
                     onClick={() => setModalCrearVisible(true)}
-                    className="bg-amber-400 text-black px-4 py-2 rounded font-semibold flex items-center gap-2"
-                >
-                    <Plus size={18} /> Registrar Modelo
+                    className="bg-amber-300 hover:bg-amber-400 text-black px-4 py-2 rounded font-semibold flex items-center gap-2">
+                    <Plus size={18} /> Crear Nuevo Modelo
                 </button>
             </div>
 
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200">
                     <thead>
-                        <tr className="bg-gray-100">
+                        <tr className="bg-amber-300 text-black">
                             <th className="px-4 py-2 text-left">Código</th>
                             <th className="px-4 py-2 text-left">Modelo</th>
                             <th className="px-4 py-2 text-left">Patrón de Malla</th>
@@ -78,21 +77,22 @@ export default function Page() {
                     <tbody>
                         {modelos.map((modelo) => (
                             <tr key={modelo.id} className="border-t border-gray-200">
-                                <td className="px-4 py-2">{modelo.code}</td>
+                                <td className="px-4 py-2 bg-gray-50">{modelo.code}</td>
                                 <td className="px-4 py-2">{modelo.model}</td>
-                                <td className="px-4 py-2">{modelo.meshPattern}</td>
+                                <td className="px-4 py-2 bg-gray-50">{modelo.meshPattern}</td>
                                 <td className="px-4 py-2">{modelo.meshDesign}</td>
-                                <td className="px-4 py-2">{modelo.tireSize}</td>
+                                <td className="px-4 py-2 bg-gray-50">{modelo.tireSize}</td>
                                 <td className="px-4 py-2 flex gap-2">
                                     <button
                                         onClick={() => abrirModalEditar(modelo)}
-                                        className="text-blue-600 hover:text-blue-800"
+
+                                        className="p-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
                                     >
                                         <Pencil size={18} />
                                     </button>
                                     <button
                                         onClick={() => abrirModalLista(modelo)}
-                                        className="text-gray-600 hover:text-gray-800"
+                                        className="text-gray-600 hover:text-bg-amber-300"
                                     >
                                         <LinkIcon size={18} />
                                     </button>

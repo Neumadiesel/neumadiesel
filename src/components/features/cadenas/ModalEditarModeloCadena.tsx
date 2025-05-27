@@ -110,7 +110,7 @@ export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, m
                     />
                 </div>
                 <button
-                    className="mt-4 w-full bg-amber-400 text-black py-2 rounded font-se"
+                    className="mt-4 w-full bg-amber-400 hover:bg-amber-500 text-black py-2 rounded font-semibold"
                     onClick={handleGuardar}
                 >
                     Guardar Cambios

@@ -53,12 +53,12 @@ export default function ModalRegistrarModeloCadena({ visible, onClose, onGuardar
                     <input type="text" placeholder="Patrón de Malla" value={patron} onChange={(e) => setPatron(e.target.value)} className="w-full p-2 border rounded" />
                     <Label title="Diseño de Malla" isNotEmpty={true} />
                     <input type="text" placeholder="Diseño de Malla" value={diseno} onChange={(e) => setDiseno(e.target.value)} className="w-full p-2 border rounded" />
-                    <Label title="Tamaño Neumático Recomendado" isNotEmpty={true} />
+                    <Label title="Tamaño Neumático " isNotEmpty={true} />
                     <input type="text" placeholder="Tamaño Neumático Recomendado" value={size} onChange={(e) => setSize(e.target.value)} className="w-full p-2 border rounded" />
                 </div>
 
-                <button onClick={handleGuardar} className="mt-4 w-full bg-amber-400 text-black py-2 rounded font-sem">
-                    Guardaribold
+                <button onClick={handleGuardar} className="mt-4 w-full bg-amber-300 hover:bg-amber-500 text-black py-2 rounded font-semibold">
+                    Guardar Cambios
                 </button>
             </div>
 
