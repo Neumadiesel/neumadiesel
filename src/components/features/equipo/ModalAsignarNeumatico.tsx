@@ -233,7 +233,7 @@ export default function ModalAsignarNeumatico({
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
-            <section className="relative bg-white dark:bg-[#212121] p-6 rounded-md flex shadow-lg h-[80dvh] overflow-y-scroll">
+            <section className="relative bg-white dark:bg-[#212121] dark:text-white placeholder:dark:text-white p-6 rounded-md flex shadow-lg h-[80dvh] overflow-y-scroll">
 
                 <main className="w-[60dvh] border-r border-gray-300 pr-4">
                     <h2 className="text-xl font-bold mb-4">Instalar neumático</h2>
@@ -384,14 +384,14 @@ export default function ModalAsignarNeumatico({
                                 <FaPlusCircle className="text-2xl rotate-45 bg-white rounded-full" />
                             </button>
                         ) : (
-                            <div className="flex flex-row text-gray-500 font-bold w-8 rounded-xl h-10 justify-center items-center ">
-                                <FaPlusCircle className="text-2xl rotate-45 bg-gray-200 rounded-full" />
+                            <div className="flex flex-row text-gray-500 font-bold dark:bg-text-900 w-8 rounded-xl h-10 justify-center items-center ">
+                                <FaPlusCircle className="text-2xl rotate-45 bg-gray-200  rounded-full" />
                             </div>
                         )}
                     </div>
-                    <div className="overflow-y-auto h-[50dvh]">
+                    <div className="overflow-y-auto h-[50dvh] mt-2">
                         <table className="w-full border-collapse">
-                            <thead className="sticky border-x border-t border-b-2 top-0 bg-white z-10">
+                            <thead className="sticky border-x border-t border-b-2 top-0 bg-white dark:bg-[#131313] z-10">
                                 <tr>
                                     <th className="border-b p-2 text-left"></th>
                                     <th className="border-b p-2 text-left">Código</th>
@@ -406,8 +406,8 @@ export default function ModalAsignarNeumatico({
                                 {getFilteredTires()
                                     .map((tire) => (
                                         tire.locationId !== 1 && (
-                                            <tr key={tire.id} className={`border-b hover:bg-gray-100 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}`}>
-                                                <td className="p-2 py-4 border-x bg-gray-100 flex justify-center items-center">
+                                            <tr key={tire.id} className={`border-b hover:bg-gray-100 dark:hover:bg-neutral-900 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}`}>
+                                                <td className="p-2 py-4 border-x bg-gray-100 dark:bg-[#121212]">
                                                     <input
                                                         type="checkbox"
                                                         className="mx-auto"

@@ -106,7 +106,7 @@ export default function RootLayout({
             <div className="block lg:flex min-h-[100%]">
                 {/* Lista de camiones */}
                 <main className="w-full lg:w-[40%] lg:h-screen h-[45vh] flex justify-center items-center">
-                    <div className="bg-white dark:bg-[#313131] shadow-md w-full h-full relative">
+                    <div className="bg-white dark:bg-[#212121] shadow-md w-full h-full relative">
                         <Breadcrumb />
 
                         {loading ? (
@@ -129,7 +129,7 @@ export default function RootLayout({
                                         placeholder="Buscar por código de Equipo..."
                                         value={codigo.toUpperCase()}
                                         onChange={(e) => setCodigo(e.target.value)}
-                                        className="w-full h-10 px-4 border border-gray-300 placeholder:text-white rounded-md focus:outline-none"
+                                        className="w-full h-10 px-4 border border-gray-300 dark:text-white placeholder:text-white rounded-md focus:outline-none"
                                     />
                                 </div>
 

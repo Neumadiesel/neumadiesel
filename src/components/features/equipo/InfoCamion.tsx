@@ -154,7 +154,7 @@ export default function ListaMaquinaria() {
                                     onClick={() => { setMostrarAddKms(true) }}
                                 />
                                 {/* Boton de editar */}
-                                <button disabled={loading || id === undefined} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  dark:bg-[#313131] border text-lg text-black dark:text-white p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined ? "opacity-50 " : "cursor-pointer hover:bg-gray-200"}`}>
+                                <button disabled={loading || id === undefined} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  dark:bg-[#313131] border text-lg text-black dark:text-white p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined ? "opacity-50 " : "cursor-pointer hover:bg-gray-200 dark:hover:bg-[#141414]"}`}>
                                     <FaEdit />
                                 </button>
                             </section>
@@ -176,7 +176,7 @@ export default function ListaMaquinaria() {
                     <div className="w-[100%] h-full">
                         {/* Tabla de neumaticos */}
                         <section className="relative overflow-x-auto lg:h-[80%] my-2">
-                            <div className="flex flex-col gap-y-2">
+                            <div className="flex flex-col gap-y-2 border border-gray-200  rounded-md shadow-sm">
                                 {/* Table head */}
                                 <table className="w-full table-auto rounded-md overflow-hidden border border-gray-200 dark:border-gray-700">
                                     <thead className="bg-gray-100 dark:bg-[#111111]">
@@ -209,7 +209,7 @@ export default function ListaMaquinaria() {
                                         ) : getTiresByPosition().map(({ position, tireData }) => (
                                             <tr
                                                 key={position}
-                                                className="bg-gray-50 border-b border-b-amber-200 dark:border-b-white dark:bg-[#111111] hover:bg-gray-100 h-16 text-start dark:hover:bg-gray-700 transition-all ease-in-out rounded-md"
+                                                className="bg-gray-50 border-b border-b-amber-200 dark:border-b-white dark:bg-[#111111] hover:bg-gray-100 h-16 text-start dark:hover:bg-gray-800 transition-all ease-in-out rounded-md"
                                             >
                                                 <td className="w-[5%] text-center font-semibold">{position}</td>
                                                 {tireData ? (
@@ -230,7 +230,7 @@ export default function ListaMaquinaria() {
                                                         <td className="flex justify-center mt-5 items-center gap-1">
                                                             <Link
                                                                 href={`/neumaticos/${tireData.tire.id}`}
-                                                                className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 border border-indigo-300 rounded-md flex items-center justify-center"
+                                                                className="p-2 text-indigo-500 hover:text-indigo-600 bg-indigo-50 dark:bg-nuetral-700 border border-indigo-300 rounded-md flex items-center justify-center"
                                                             >
                                                                 <History className="w-4 h-4" />
                                                             </Link>
@@ -239,7 +239,7 @@ export default function ListaMaquinaria() {
                                                                     setTireDesmonatado(tireData);
                                                                     setMostrarDesmontar(true);
                                                                 }}
-                                                                className="p-2 text-red-500 hover:text-red-600 bg-red-50 border border-red-300 rounded-md flex items-center justify-center"
+                                                                className="p-2 text-red-500 dark:text-red-400 hover:text-red-600 bg-red-50 dark:bg-neutral-700 border border-red-400 rounded-md flex items-center justify-center"
                                                             >
                                                                 <MoveLeft className="w-4 h-4" />
                                                             </button>

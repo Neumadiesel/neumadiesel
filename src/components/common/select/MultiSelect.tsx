@@ -6,7 +6,7 @@ import clsx from "clsx";
 type Option = {
     label: string;
     value: string;
-    color?: string; // ej: bg-blue-500
+    color?: string;
     icon?: React.ReactNode;
 };
 
@@ -37,7 +37,7 @@ export default function MultiSelect({
         <div className="relative w-full max-w-xs">
             <button
                 onClick={() => setOpen(!open)}
-                className="w-full border rounded-md px-4 py-2 bg-white flex justify-between items-center shadow-sm"
+                className="w-full border rounded-md px-4 py-2 bg-white dark:bg-[#313131] flex justify-between items-center shadow-sm"
             >
                 <span className="truncate text-left">
                     {selected.length > 0 ? `${selected.length} seleccionados` : placeholder}
@@ -48,11 +48,11 @@ export default function MultiSelect({
             </button>
 
             {open && (
-                <div className="absolute z-30 mt-2 w-full bg-white border rounded-md shadow-md max-h-64 overflow-y-auto">
+                <div className="absolute z-30 mt-2 w-full bg-white dark:bg-[#313131] border rounded-md shadow-md max-h-64 overflow-y-auto">
                     {options.map(opt => (
                         <label
                             key={opt.value}
-                            className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer"
+                            className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-neutral-900 cursor-pointer"
                         >
                             <input
                                 type="checkbox"
