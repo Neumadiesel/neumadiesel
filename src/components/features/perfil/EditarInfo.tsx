@@ -35,46 +35,46 @@ export default function EditarInfo() {
     };
 
     return (
-        <section className="flex flex-col">
-            <h1 className="text-2xl font-bold">Datos personales</h1>
+        <section className="flex flex-col dark:text-white">
+            <h1 className="text-2xl font-bold ">Datos personales</h1>
             <div className="grid mt-2 grid-cols-2 gap-4 items-center justify-center w-2/3 ">
                 <div className="flex flex-col  w-full">
-                    <label className="text-sm text-gray-500">Nombre:</label>
+                    <label className="text-sm text-gray-500 dark:text-white">Nombre:</label>
                     <input
                         type="text"
-                        className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
+                        className="text-sm bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 rounded-sm p-2"
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col w-full">
-                    <label className="text-sm text-gray-500">Apellido:</label>
+                    <label className="text-sm text-gray-500 dark:text-white">Apellido:</label>
                     <input
                         type="text"
-                        className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
+                        className="text-sm bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 rounded-sm p-2"
                         value={last_name}
                         onChange={e => setLastName(e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col w-full">
-                    <label className="text-sm text-gray-500">Email:</label>
+                    <label className="text-sm text-gray-500 dark:text-white">Email:</label>
                     <input
                         type="text"
-                        className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
+                        className="text-sm bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 rounded-sm p-2"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col w-full">
-                    <label className="text-sm text-gray-500">Password:</label>
-                    <p className="text-sm text-gray-950 font-semibold">**********</p>
+                    <label className="text-sm text-gray-500 dark:text-white">Password:</label>
+                    <p className="text-sm text-gray-950 dark:text-white font-semibold">**********</p>
                 </div>
                 <div className="flex flex-col w-full">
-                    <label className="text-sm text-gray-500">Rol:</label>
+                    <label className="text-sm text-gray-500 dark:text-white">Rol:</label>
                     <input
                         disabled={true}
                         type="text"
-                        className="text-sm bg-amber-50 outline-amber-300 text-gray-950 font-semibold border border-amber-300 rounded-sm p-2"
+                        className="text-sm bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 rounded-sm p-2"
                         value={role}
                         onChange={e => setRole(e.target.value)}
                     />
@@ -95,7 +95,7 @@ export default function EditarInfo() {
             <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="px-4 py-2 w-2/3 mt-4 bg-amber-300 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50"
+                className="px-4 py-2 w-2/3 mt-4 bg-amber-300 text-black font-bold rounded hover:bg-amber-50 dark:bg-[#313131]0 disabled:opacity-50"
             >
                 {loading ? "Procesando..." : "Guardar Cambios"}
             </button>

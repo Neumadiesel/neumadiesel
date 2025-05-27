@@ -1,16 +1,20 @@
 "use client";
+
 import { FaInfoCircle } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ModalRegistarModeloVehiculo from "@/components/features/equipo/ModalRegistrarModeloVehiculo";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import { useAuth } from "@/contexts/AuthContext";
+
 interface VehicleModelDto {
     id: number;
     brand: string;
     model: string;
     wheelCount: number;
     vehicleCount: number;
+    vehicles?: VehicleDTO[];
 }
 
 interface VehicleDTO {
@@ -26,78 +30,63 @@ export default function EquiposPorModelo() {
     const { id } = useParams();
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
     const [model, setModel] = useState<VehicleModelDto>({} as VehicleModelDto);
-    // const [vehicleModelSelected, setVehicleModelSelected] = useState<VehicleModelDto | null>(null);
     const [loading, setLoading] = useState(true);
-    const fetchVehicleModels = async () => {
+    const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
+    const { user } = useAuth();
+
+    const fetchVehicleModels = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch(`https://inventory-service-emva.onrender.com/vehicleModels/withVehicles/${id}`);
+            const baseURL = `https://inventory-service-emva.onrender.com/vehicleModels/withVehicles/${id}/site/${user?.faena_id}`
+
+            const response = await fetch(baseURL);
             const data = await response.json();
-            console.log(data);
-            console.log("Vehiculos", data.vehicles)
+            console.log("Fetched vehicle model data:", data);
             setModel(data);
-            setVehicles(data.vehicles);
-            setLoading(false);
+            setVehicles(data.vehicles || data[0]?.vehicles || []);
         } catch (error) {
-            console.error("Error fetching reasons:", error);
+            console.error("Error fetching vehicle models:", error);
+        } finally {
+            setLoading(false);
         }
-    };
+    }, [id, user?.faena_id]);
 
     useEffect(() => {
+        if (!user?.faena_id) return;
         fetchVehicleModels();
-    }, []);
-
-    // const [mostrarEditar, setMostrarEditar] = useState(false);
-    const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
+    }, [fetchVehicleModels, user?.faena_id]);
 
     useEffect(() => {
+        if (!modalRegistarFaena || !user?.faena_id) return;
         fetchVehicleModels();
-    }, [modalRegistarFaena]);
+    }, [modalRegistarFaena, fetchVehicleModels, user?.faena_id]);
 
     return (
-        <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
+        <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-full pb-4 gap-4 flex flex-col">
             <Breadcrumb />
             <section className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Lista de Vehiculos de {model.brand} - {model.model}</h1>
+                <h1 className="text-2xl font-bold">
+                    Lista de Vehículos de {model.brand} - {model.model}
+                </h1>
             </section>
-            <main >
-                <div
-                    className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
+
+            <main>
+                <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
                     <table className="w-full text-left table-auto min-w-max">
-                        <thead className="text-xs text-black uppercase bg-amber-300  ">
+                        <thead className="text-xs text-black uppercase bg-amber-300">
                             <tr>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Codigo
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Horas
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Kilometraje
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Tipo de Equipo
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Acciones
-                                    </p>
-                                </th>
+                                <th className="p-4">Código</th>
+                                <th className="p-4">Horas</th>
+                                <th className="p-4">Kilometraje</th>
+                                <th className="p-4">Tipo de Equipo</th>
+                                <th className="p-4">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
-                                        <div className="flex flex-col items-center justify-center space-y-4">
+                                    <td colSpan={5} className="text-center p-8 dark:bg-neutral-900">
+                                        <div className="flex flex-col items-center space-y-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                             <p className="text-gray-600 dark:text-gray-400">
                                                 Cargando Equipos...
@@ -107,54 +96,24 @@ export default function EquiposPorModelo() {
                                 </tr>
                             ) : vehicles.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="text-center p-8">
-                                        <div className="flex flex-col items-center justify-center space-y-4  animate-pulse">
-                                            <svg
-                                                className="w-12 h-12 text-gray-400"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                                                />
+                                    <td colSpan={5} className="text-center p-8">
+                                        <div className="flex flex-col items-center space-y-4 animate-pulse">
+                                            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01M5.062 20h13.876c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                             </svg>
-                                            <p className="text-gray-600 dark:text-gray-400">
-                                                No se encontraron Equipos.
-                                            </p>
+                                            <p className="text-gray-600 dark:text-gray-400">No se encontraron Equipos.</p>
                                         </div>
                                     </td>
                                 </tr>
-                            ) : null}
-                            {
+                            ) : (
                                 vehicles.map((vehicle) => (
-                                    <tr key={vehicle.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {vehicle.code}
-                                            </p>
-                                        </td>
-                                        <td className="p-4 ">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {vehicle.hours}
-                                            </p>
-                                        </td>
-                                        <td className="p-4 ">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {vehicle.kilometrage}
-                                            </p>
-                                        </td>
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                CAEX
-                                            </p>
-                                        </td>
-                                        <td className="  bg-gray-50 dark:bg-neutral-900 px-2">
+                                    <tr key={vehicle.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300">
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-900">{vehicle.code}</td>
+                                        <td className="p-4">{vehicle.hours}</td>
+                                        <td className="p-4">{vehicle.kilometrage}</td>
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-900">CAEX</td>
+                                        <td className="px-2 bg-gray-50 dark:bg-neutral-900">
                                             <div className="flex gap-2">
-                                                {/* Boton de ver detalles */}
                                                 <Link href={`/maquinaria/${vehicle.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
                                                     <FaInfoCircle />
                                                 </Link>
@@ -162,25 +121,16 @@ export default function EquiposPorModelo() {
                                         </td>
                                     </tr>
                                 ))
-                            }
+                            )}
                         </tbody>
                     </table>
                 </div>
-                {/* Modal editar Faena */}
-                {/* <ModalEditarVehicleModel
-                    visible={mostrarEditar}
-                    onClose={() => setMostrarEditar(false)}
-                    vehicleModel={vehicleModelSelected}
-                    onGuardar={() => {
-                        setMostrarEditar(false);
-                    }} /> */}
 
                 <ModalRegistarModeloVehiculo
                     visible={modalRegistarFaena}
                     onClose={() => setModalRegistrarFaena(false)}
-                    onGuardar={() => {
-                        setModalRegistrarFaena(false);
-                    }} />
+                    onGuardar={() => setModalRegistrarFaena(false)}
+                />
             </main>
         </div>
     );

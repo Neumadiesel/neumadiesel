@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface VehicleModelDto {
@@ -43,10 +44,11 @@ export default function ModalRegistrarVehiculo({
     onClose,
     onGuardar,
 }: ModalRegistrarVehiculoProps) {
+    const { user } = useAuth();
     const [vehicleEdited, setVehicleEdited] = useState({
         code: "",
         modelId: null as number | null,
-        siteId: null as number | null,
+        siteId: user?.faena_id == 99 ? null : user?.faena_id as number | null,
         typeId: null as number | null,
         kilometrage: null as number | null,
         hours: null as number | null,
@@ -57,6 +59,7 @@ export default function ModalRegistrarVehiculo({
     const [vehicleModels, setVehicleModels] = useState<VehicleModelDto[]>([]);
     const [sites, setSites] = useState<FaenaDTO[]>([]);
     const [vehicleTypes, setVehicleTypes] = useState<VehicleTypeDTO[]>([]);
+
 
     const fetchData = async () => {
         setLoading(true);
@@ -85,7 +88,7 @@ export default function ModalRegistrarVehiculo({
     const handleSubmit = async () => {
         setError("");
         setLoading(true);
-
+        console.log("Submitting vehicle data:", vehicleEdited.siteId);
         const { code, modelId, typeId, siteId, hours, kilometrage } = vehicleEdited;
         if (!code || !modelId || !typeId || !siteId || hours === null || kilometrage === null) {
             setError("Por favor, completa todos los campos");
@@ -168,12 +171,13 @@ export default function ModalRegistrarVehiculo({
                     {/* Lista de faenas */}
                     <label className="text-sm mt-2 font-semibold mb-2">Faena</label>
                     <select
+                        disabled={user?.faena_id !== 99}
                         name="Faena"
                         value={vehicleEdited.siteId || ""}
                         onChange={
                             (e) => setVehicleEdited({ ...vehicleEdited, siteId: Number(e.target.value) })
                         }
-                        className="border border-gray-300 p-2 rounded"
+                        className={"border border-gray-300 p-2 rounded" + (user?.faena_id !== 99 ? " opacity-70 cursor-not-allowed" : "")}
                     >
                         <option value="">Selecciona una faena</option>
                         {sites.map((site) => (
