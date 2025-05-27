@@ -82,6 +82,8 @@ export default function NavBar() {
             children: [
                 { title: "Crear Modelo Neumático", path: "/modelos/modelo-neumatico" },
                 { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
+                { title: "Crear Modelo Cadena", path: "/modelos/modelo-cadena" },
+                { title: "Crear Modelo Sensor", path: "/modelos/modelo-sensor" },
             ],
         },
         {

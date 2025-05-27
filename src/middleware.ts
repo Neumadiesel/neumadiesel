@@ -34,6 +34,8 @@ const routePermissions = {
     modelos: [
         '/modelos/modelo-equipo',
         '/modelos/modelo-neumatico',
+        '/modelos/modelo-cadena',
+        '/modelos/modelo-sensor',
     ],
     // Rutas de mantenimiento
     mantenimiento: [
