@@ -140,7 +140,7 @@ export default function RootLayout({
                                             key={vehicle.id}
                                             className="flex h-20 justify-around border items-center p-2 bg-gray-100 dark:bg-[#111111] rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
                                         >
-                                            <p className="text-lg font-semibold font-mono dark:text-white">{vehicle.code}</p>
+                                            <p className="text-lg font-semibold   dark:text-white">{vehicle.code}</p>
                                             <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.model.brand} {vehicle.model.model}</p>
                                             <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.site.name}</p>
                                         </Link>

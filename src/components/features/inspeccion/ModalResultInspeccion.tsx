@@ -22,7 +22,7 @@ export default function ModalResultInspeccion({ isOpen, title, onClose, onConfir
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             {/* Fondo oscuro con opacidad */}
-            <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
+            <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
 
             <div className="relative p-6 rounded-lg">
                 {/* Cuadro blanco que muestre informacion */}

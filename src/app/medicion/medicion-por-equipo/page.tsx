@@ -122,7 +122,7 @@ export default function MedicionPorEquipo() {
     };
 
     return (
-        <div className="font-mono p-4 gap-y-2 bg-white">
+        <div className="  p-4 gap-y-2 bg-white">
             <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección del Neumático</h1>
             <section className=''>
                 <div className='flex items-center gap-x-2 border-b border-b-amber-300 pb-3'>

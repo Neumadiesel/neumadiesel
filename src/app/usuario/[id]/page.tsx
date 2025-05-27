@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Page() {
     return (
-        <div className=" p-3 h-screen bg-[#212121] text-white relative shadow-sm font-mono">
+        <div className=" p-3 h-screen bg-[#212121] text-white relative shadow-sm  ">
             <h2 className="text-3xl font-bold">Información de Usuario</h2>
             {/* Contenedor de la informacion */}
             <div className="p-2 h-screen ">
@@ -36,7 +36,7 @@ export default function Page() {
 
                 </section>
 
-                <h3 className=" font-mono text-2xl font-bold">Historial</h3>
+                <h3 className="   text-2xl font-bold">Historial</h3>
                 <section className="bg-white dark:bg-[#212121] h-[50%] rounded-md  text-black">
                     {/* tabla con historial de acciones */}
                     <table className="table-auto w-full mt-4 overflow-hidden rounded-t-md">

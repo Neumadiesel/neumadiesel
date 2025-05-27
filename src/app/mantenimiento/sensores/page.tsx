@@ -5,7 +5,7 @@ export default function Page() {
     return (
         <div className="m-4">
             <main className="bg-white p-4 rounded-md">
-                <h1 className="font-mono font-bold text-3xl mb-3 bg-amber-300 p-2 rounded-md">Informe de sensores</h1>
+                <h1 className="  font-bold text-3xl mb-3 bg-amber-300 p-2 rounded-md">Informe de sensores</h1>
                 <div className=" flex gap-x-4">
                     {/* Lista de camiones */}
                     <aside className="w-[30%] rounded-lg h-[70vh] bg-[#212121] p-2">

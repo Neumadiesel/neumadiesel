@@ -232,7 +232,7 @@ export default function ModalAsignarNeumatico({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
+            <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
             <section className="relative bg-white dark:bg-[#212121] dark:text-white placeholder:dark:text-white p-6 rounded-md flex shadow-lg h-[80dvh] overflow-y-scroll">
 
                 <main className="w-[60dvh] border-r border-gray-300 pr-4">

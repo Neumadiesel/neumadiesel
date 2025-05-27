@@ -84,7 +84,7 @@ export default function ListaNeumaticos() {
             <div className="flex justify-between h-[10%] items-center w-full">
                 <div className="gap-y-2  items-center justify-between w-full mx-auto my-2 dark:text-white">
                     <div className="lg:w-[40%] flex items-center justify-start">
-                        <h1 className="font-mono text-2xl font-bold">
+                        <h1 className="  text-2xl font-bold">
                             Lista de Neumáticos
                         </h1>
                     </div>
@@ -113,7 +113,7 @@ export default function ListaNeumaticos() {
                         <Button
                             text="Agregar Neumático"
                             onClick={() => setOpenRegisterModal(true)}
-                            className="w-full lg:w-52 h-10 font-mono font-semibold text-black bg-amber-300 hover:bg-amber-200"
+                            className="w-full lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
                         />
                     </div>
                 </div>
@@ -279,7 +279,7 @@ export default function ListaNeumaticos() {
                 <button
                     onClick={() => setCurrentPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`p-3 font-mono font-semibold h-10 border rounded-full ${currentPage === 1 ? "bg-gray-100 dark:bg-neutral-800 dark:text-white cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200"
+                    className={`p-3   font-semibold h-10 border rounded-full ${currentPage === 1 ? "bg-gray-100 dark:bg-neutral-800 dark:text-white cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200"
                         } text-black`}
                 >
                     <ArrowLeft className="w-4 h-4" />
@@ -290,7 +290,7 @@ export default function ListaNeumaticos() {
                 <button
                     onClick={() => setCurrentPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`p-3 font-mono h-10 font-semibold border rounded-full ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200 dark:border-black"
+                    className={`p-3   h-10 font-semibold border rounded-full ${currentPage === totalPages ? "bg-gray-200 cursor-not-allowed" : "bg-amber-300 hover:bg-amber-200 dark:border-black"
                         } text-black`}
                 >
                     <ArrowRight className="w-4 h-4" />

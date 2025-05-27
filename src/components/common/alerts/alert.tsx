@@ -12,7 +12,7 @@ export default function CustomModal({ isOpen, onClose, title, message }: ModalPr
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             {/* Fondo semitransparente detrás */}
-            <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
+            <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
 
             {/* Contenido del modal */}
             <div className="relative bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">

@@ -13,7 +13,7 @@ import { GiMineTruck } from "react-icons/gi";
 import { FaExclamationTriangle } from "react-icons/fa";
 export default function Page() {
     return (
-        <div className="flex flex-col overflow-x-hidden  h-full bg-[#f1f1f1] dark:bg-[#212121]   text-center w-full mx-auto font-mono lg:p-3">
+        <div className="flex flex-col overflow-x-hidden  h-full bg-[#f1f1f1] dark:bg-[#212121]   text-center w-full mx-auto   lg:p-3">
             <main className="w-[100%] lg:rounded-md mx-auto lg:p-4 h-[95%] ">
                 <div className="flex w-full justify-between gap-2">
                     <h1 className="text-2xl font-bold ">Estadísticas</h1>

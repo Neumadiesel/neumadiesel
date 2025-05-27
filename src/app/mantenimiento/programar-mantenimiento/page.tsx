@@ -1,6 +1,6 @@
 export default function page() {
     return (
-        <div className="font-mono p-5 gap-y-5">
+        <div className="  p-5 gap-y-5">
             <h1 className="text-2xl font-bold mb-4 border-b border-b-amber-200">Programar Mantenimiento</h1>
             <div className="flex flex-col">
                 <label htmlFor="" className="font-semibold">Semana a programar:</label>

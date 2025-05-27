@@ -9,7 +9,7 @@ export default function LoadingSpinner({ isOpen }: LoadingSpinnerProps) {
     return (
         <div className="fixed inset-0 z-20 flex items-center justify-center">
             {/* Fondo oscuro con opacidad */}
-            <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
+            <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
 
             <div className="relative p-6 rounded-lg">
                 <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>

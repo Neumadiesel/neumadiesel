@@ -111,7 +111,7 @@ export default function ModalAddKms({
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gray-900 opacity-80"></div>
+            <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
             <div className="relative bg-white dark:bg-[#212121] dark:text-white p-6 rounded-md shadow-lg max-w-2xl w-full">
                 <h2 className="text-xl font-bold mb-4">Agregar Horas y kilómetros al Equipo</h2>
                 <p className="text-sm mb-4">Ingrese las horas y los kilómetros acumulados para el equipo {vehicle.code}, se actualizarán las horas y los kilómetros de los neumáticos instalados.</p>
