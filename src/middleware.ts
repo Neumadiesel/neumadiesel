@@ -38,9 +38,9 @@ const routePermissions = {
     // Rutas de mantenimiento
     mantenimiento: [
         '/mantenimiento',
-        '/mantenimiento/Historial',
+        '/mantenimiento/cadenas',
+        '/mantenimiento/sensores',
         '/mantenimiento/orden-de-trabajo',
-        '/mantenimiento/programar-mantenimiento',
         '/mantenimiento/programas',
     ],
 

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaEllipsisV, FaEye, FaEyeSlash, FaPen, FaPlusSquare } from "react-icons/fa";
+import { FaEllipsisV, FaEye, FaEyeSlash, FaPen } from "react-icons/fa";
 import Modal from "@/components/common/modal/CustomModal";
 import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
 import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
