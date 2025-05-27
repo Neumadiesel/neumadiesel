@@ -85,7 +85,7 @@ export default function ListaNeumaticos() {
                 <div className="gap-y-2  items-center justify-between w-full mx-auto my-2">
                     <div className="lg:w-[40%] flex items-center justify-start">
                         <h1 className="font-mono text-2xl font-bold">
-                            Lista de Neumaticos
+                            Lista de Neumáticos
                         </h1>
                     </div>
                     <div className="w-full flex justify-between">
@@ -111,7 +111,7 @@ export default function ListaNeumaticos() {
                             }
                         </select>
                         <Button
-                            text="Agregar Neumatico"
+                            text="Agregar Neumático"
                             onClick={() => setOpenRegisterModal(true)}
                             className="w-full lg:w-52 h-10 font-mono font-semibold text-black bg-amber-300 hover:bg-amber-200"
                         />
@@ -128,22 +128,22 @@ export default function ListaNeumaticos() {
                             <tr>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Codigo
+                                        Código
                                     </p>
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Ubicacion
+                                        Ubicación
                                     </p>
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Posicion
+                                        Posición
                                     </p>
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Kilometros
+                                        Kilómetros
                                     </p>
                                 </th>
                                 <th className="p-4">

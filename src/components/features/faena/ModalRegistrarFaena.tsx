@@ -132,7 +132,7 @@ export default function ModalRegistrarFaena({
                         onChange={
                             (e) => setFaenaeditada({ ...faenaEditada, region: e.target.value })
                         }
-                        placeholder="Region"
+                        placeholder="Región"
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Chechbox para incluir contrato */}

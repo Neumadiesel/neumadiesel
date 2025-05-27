@@ -142,7 +142,7 @@ export default function ListaMaquinaria() {
                                     disabled={loading
                                         || id === undefined
                                     }
-                                    text="Instalar Neumatico"
+                                    text="Instalar Neumático"
                                     onClick={() => { setMostrarAsignarNeumatico(true) }}
                                 />
                                 {/* BOTON PARA AGREGAR HORAS Y KILOMETROS AL EQUIPO */}
@@ -159,6 +159,7 @@ export default function ListaMaquinaria() {
                                 </button>
                             </section>
                             {/* Info del camión */}
+
                             <div className="grid grid-cols-2 pt-2 bg-gray-100 dark:bg-[#111111] rounded-sm border  p-1 w-[100%] h-[65%] mb-2">
                                 <LabelLoading loading={loading} title={"Feana:"} text={vehicle.site?.name} />
                                 <LabelLoading loading={loading} title={"Marca:"} text={vehicle.model?.brand} />
@@ -181,7 +182,7 @@ export default function ListaMaquinaria() {
                                     <thead className="bg-gray-100 dark:bg-[#111111]">
                                         <tr>
                                             <th className="p-2 w-[5%]">Pos</th>
-                                            <th className="w-[10%] text-start">Codigo</th>
+                                            <th className="w-[10%] text-start">Código</th>
                                             <th className="w-[15%]  text-start">
                                                 <p className="hidden lg:block">Profundidad</p>
                                                 <p className="block lg:hidden ">Rem</p>

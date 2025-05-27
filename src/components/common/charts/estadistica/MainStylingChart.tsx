@@ -156,11 +156,11 @@ export default function MainStylingChart() {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>
             {/* Dame un titulo para el grafico con respecto a mi aplicacion  sobre administracion de neumaticos */}
-            Consumo de neumaticos
+            Consumo de neumáticos
           </CardTitle>
           <CardDescription>
             {/* Dame una descripcion para el grafico,mas larga que el titulo */}
-            Grafico de consumo de neumaticos
+            Gráfico de consumo de neumáticos
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>

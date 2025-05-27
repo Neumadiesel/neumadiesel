@@ -112,24 +112,24 @@ export default function ModalEditarNeumatico({
                 </div>}
                 <div className="grid grid-cols-2 gap-1">
                     {/* Codigo Neumatico */}
-                    <Label title="Codigo Neumatico" isNotEmpty={true} />
+                    <Label title="Código Neumático" isNotEmpty={true} />
                     <input
                         name="Codigo Neumatico"
                         value={tireEdited.code}
                         onChange={
                             (e) => setTireEdited({ ...tireEdited, code: e.target.value.toUpperCase() })
                         }
-                        placeholder="Codigo Neumatico"
+                        placeholder="Código Neumático"
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Ubicacion */}
-                    <Label title="Ubicacion" isNotEmpty={true} />
+                    <Label title="Ubicación" isNotEmpty={true} />
                     <select
                         value={tireEdited.locationId ?? ""}
                         onChange={(e) => setTireEdited({ ...tireEdited, locationId: Number(e.target.value) })}
                         className="border border-gray-300 p-2 rounded"
                     >
-                        <option value="">Seleccionar Ubicacion</option>
+                        <option value="">Seleccionar Ubicación</option>
                         {locations
                             .filter((location) => location.name !== "Operativo" && location.name !== "Baja")
                             .map((location) => (
