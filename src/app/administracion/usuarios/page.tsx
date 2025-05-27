@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaEllipsisV, FaEye, FaEyeSlash, FaPen, FaPlusSquare } from "react-icons/fa";
+import { FaEllipsisV, FaEye, FaEyeSlash, FaPen } from "react-icons/fa";
 import Modal from "@/components/common/modal/CustomModal";
 import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
 import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import CustomModal from "@/components/common/alerts/alert";
+import Button from "@/components/common/button/Button";
 interface Role {
     role_id: number;
     name: string;
@@ -195,7 +196,7 @@ export default function Page() {
 
 
                 <select
-                    className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white"
+                    className="bg-gray-100  dark:hover:bg-neutral-800 flex px-4 justify-center text-black p-2 rounded-sm border border-neutral-300 dark:border-neutral-400 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white"
                     value={filtroRol}
                     onChange={e => setFiltroRol(e.target.value)}
                 >
@@ -213,24 +214,21 @@ export default function Page() {
                         placeholder="Buscar..."
                         value={busqueda}
                         onChange={e => setBusqueda(e.target.value)}
-                        className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white placeholder:text-white"
+                        className="bg-gray-100  dark:hover:bg-neutral-800 flex px-4 justify-center text-black p-2 rounded-sm border border-neutral-300 dark:border-neutral-400 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white dark:placeholder:text-white placeholder:text-gray-500 outline-none"
                     />
                 </div>
-                <button
+                <Button
                     onClick={() => setMostrarModal(true)}
-                    className="bg-gray-100  hover:bg-neutral-700 flex px-4 justify-center text-black p-2 rounded-sm border-2 border-amber-300 items-center gap-2 text-md font-semibold dark:bg-[#212121] dark:text-white"
-                >
-                    <FaPlusSquare className="text-xl" />
-                    Registrar Usuario
-                </button>
+                    text="Registrar Usuario"
+                />
             </section>
 
             {/* Tabla */}
-            <table className="table-auto w-full border-collapse bg-white dark:bg-[#212121] shadow-md  overflow-hidden">
-                <thead className="text-xs text-black uppercase bg-amber-300">
+            <table className="table-auto w-full border-collapse bg-white dark:bg-[#212121] shadow-md rounded-md border overflow-hidden">
+                <thead className="text-xs text-black h-12 uppercase bg-amber-300">
                     <tr>
                         <th className="p-2 text-start ">Nombre</th>
-                        <th className="p-2 text-start w-[20%] hidden lg:block">Email</th>
+                        <th className="p-2 text-start">Email</th>
                         <th className="p-2 text-start">Rol</th>
                         <th className="p-2 text-start">Faena</th>
                         <th className="p-2 w-[20%]">Acciones</th>
@@ -273,25 +271,25 @@ export default function Page() {
                         </tr>
                     ) : null}
                     {usuariosPagina.map((usuario, index) => (
-                        <tr key={usuario.user_id} className="border-b dark:border-gray-700">
-                            <td className="px-4 p-2 bg-gray-50 dark:bg-neutral-900 text-start">
+                        <tr key={usuario.user_id} className="border-b dark:border-neutral-400 dark:bg-neutral-800">
+                            <td className="px-4 p-2 bg-gray-50 dark:bg-neutral-800 text-start">
                                 {usuario.name} {usuario.last_name}
                             </td>
-                            <td className="p-2 hidden lg:block">{usuario.email}</td>
-                            <td className="p-2 text-start bg-gray-50 dark:bg-neutral-900">
+                            <td className="p-2 hidden lg:block dark:bg-neutral-800">{usuario.email}</td>
+                            <td className="p-2 text-start bg-gray-50 dark:bg-neutral-800">
                                 {usuario.role?.name || "Sin Rol"}
                             </td>
 
-                            <td className="p-2 text-start bg-gray-50 dark:bg-neutral-900">
+                            <td className="p-2 text-start bg-gray-50 dark:bg-neutral-800">
                                 {faenas.find(faena => faena.id === usuario.faena_id)?.name || "Sin faena"}
                             </td>
 
-                            <td className="p-2 relative text-center bg-gray-50 dark:bg-neutral-900">
+                            <td className="p-2 relative text-center bg-gray-50 dark:bg-neutral-800">
                                 {/* Botones en escritorio */}
                                 <div className="hidden md:flex justify-center gap-2 ">
                                     <button
                                         onClick={() => abrirEditor(usuario)}
-                                        className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-50 text-black border border-amber-200 font-bold py-2 px-4 rounded"
+                                        className="bg-amber-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-neutral-900 text-black border border-amber-200 font-bold py-2 px-4 rounded"
                                     >
                                         <FaPen className="inline-block" />
                                     </button>
@@ -299,14 +297,14 @@ export default function Page() {
                                         usuario.is_active ? (
                                             <button
                                                 onClick={() => { setUserId(usuario.user_id); setIsOpen(true) }}
-                                                className="bg-gray-50 hover:bg-red-50 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded"
+                                                className="bg-red-50 hover:bg-red-100 dark:hover:bg-neutral-900 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded"
                                             >
                                                 <FaEyeSlash className="inline-block" />
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => { setUserId(usuario.user_id); setIsOpenReactivar(true) }}
-                                                className="bg-gray-50 hover:bg-emerald-50 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-4 rounded"
+                                                className="bg-emerald-50 hover:bg-emerald-100 dark:hover:bg-neutral-900 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-4 rounded"
                                             >
                                                 <FaEye className="inline-block" />
                                             </button>

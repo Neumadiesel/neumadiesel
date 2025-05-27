@@ -193,7 +193,7 @@ export default function Programas() {
             <div className="lg:p-3 bg-white dark:bg-[#212121] h-[95%]">
                 <div className="flex flex-col gap-y-2 p-2">
                     <section className="lg:flex items-center justify-between gap-x-2">
-                        <h1 className="text-2xl font-mono font-bold">Programa Semanal de Mantenciones</h1>
+                        <h1 className="text-2xl   font-bold">Programa Semanal de Mantenciones</h1>
 
                     </section>
 
