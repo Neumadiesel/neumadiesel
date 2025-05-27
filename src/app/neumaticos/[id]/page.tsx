@@ -68,12 +68,12 @@ export default function TirePage() {
     return (
         <div className="p-3 bg-white h-[110vh] dark:bg-[#212121] relative shadow-sm">
             <Breadcrumb />
-            <h1 className="text-2xl font-bold">Información del Neumático: {tire?.code}</h1>
+            <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code}</h1>
             {/* Add your tire details component here */}
             {/* Section cuadro de informacion */}
             <section className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-col gap-2">
-                    <div className="bg-gray-50 p-4 rounded-md border grid grid-cols-3">
+                    <div className="bg-gray-50 dark:bg-[#313131] dark:text-white p-4 rounded-md border grid grid-cols-3">
                         <div className="grid grid-cols-2 gap-2">
 
                             <LabelLoading loading={loading} title="Marca:" text={tire?.model.brand || ""} />
@@ -104,28 +104,28 @@ export default function TirePage() {
             </section>
             {/* Section historial */}
             <section
-                className=" flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white ">
+                className=" flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white dark:bg-[#212121] dark:text-white mt-2 rounded-md ">
                 <h2 className="text-xl font-bold mt-4 mb-2">Historial de Movimientos</h2>
                 <table className="w-full text-left table-auto min-w-max">
-                    <thead className="text-xs text-black uppercase bg-gray-100  ">
+                    <thead className="text-xs text-black uppercase bg-gray-100 dark:bg-neutral-800 dark:text-white">
                         <tr>
                             <th className="p-4">
-                                <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                <p className="block font-sans text-sm antialiased font-semibold leading-none ">
                                     Acción
                                 </p>
                             </th>
                             <th className="p-4">
-                                <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                <p className="block font-sans text-sm antialiased font-semibold leading-none ">
                                     Movimiento
                                 </p>
                             </th>
                             <th className="p-4">
-                                <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                <p className="block font-sans text-sm antialiased font-semibold leading-none ">
                                     Fecha
                                 </p>
                             </th>
                             <th className="p-4">
-                                <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
+                                <p className="block font-sans text-sm antialiased font-semibold leading-none ">
                                     Horas
                                 </p>
                             </th>
@@ -134,7 +134,7 @@ export default function TirePage() {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
+                                <td colSpan={6} className="text-center p-8 dark:bg-[#212121]">
                                     <div className="flex flex-col items-center justify-center space-y-4">
                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                         <p className="text-gray-600 dark:text-gray-400">

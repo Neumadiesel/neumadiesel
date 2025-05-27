@@ -71,8 +71,8 @@ export default function EquiposPorModelo() {
             </section>
 
             <main>
-                <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
-                    <table className="w-full text-left table-auto min-w-max">
+                <div className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 shadow-sm bg-clip-border">
+                    <table className="w-full text-left table-auto min-w-max overflow-hidden rounded-md border">
                         <thead className="text-xs text-black uppercase bg-amber-300">
                             <tr>
                                 <th className="p-4">Código</th>
@@ -85,7 +85,7 @@ export default function EquiposPorModelo() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan={5} className="text-center p-8 dark:bg-neutral-900">
+                                    <td colSpan={5} className="text-center p-8 dark:bg-neutral-800">
                                         <div className="flex flex-col items-center space-y-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                             <p className="text-gray-600 dark:text-gray-400">
@@ -107,12 +107,12 @@ export default function EquiposPorModelo() {
                                 </tr>
                             ) : (
                                 vehicles.map((vehicle) => (
-                                    <tr key={vehicle.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300">
-                                        <td className="p-4 bg-gray-50 dark:bg-neutral-900">{vehicle.code}</td>
+                                    <tr key={vehicle.id} className="bg-white dark:text-white border-b dark:bg-neutral-800 dark:border-amber-300">
+                                        <td className="p-4 ">{vehicle.code}</td>
                                         <td className="p-4">{vehicle.hours}</td>
                                         <td className="p-4">{vehicle.kilometrage}</td>
-                                        <td className="p-4 bg-gray-50 dark:bg-neutral-900">CAEX</td>
-                                        <td className="px-2 bg-gray-50 dark:bg-neutral-900">
+                                        <td className="p-4 ">CAEX</td>
+                                        <td className="px-2 ">
                                             <div className="flex gap-2">
                                                 <Link href={`/maquinaria/${vehicle.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
                                                     <FaInfoCircle />
