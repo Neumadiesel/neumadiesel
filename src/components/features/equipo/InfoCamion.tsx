@@ -13,15 +13,21 @@ import ModalAddKms from "./ModalAddKms";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import CardTire from "@/components/common/cards/CardTyre";
 import { VehicleDTO } from "@/types/Vehicle";
+import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
 
 export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
+    const { user } = useAuth();
+
+    const siteId = user?.faena_id
     const id = params.id;
     const { setHasChanged } = useLayoutContext();
 
     const [loading, setLoading] = useState(true);
     const [vehicle, setVehicle] = useState<VehicleDTO>({} as VehicleDTO);
     const [installedTires, setInstalledTires] = useState<installedTiresDTO[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     const fetchVehicleModels = async () => {
         setLoading(true);
@@ -29,16 +35,29 @@ export default function ListaMaquinaria() {
             setLoading(false);
             return;
         }
+        if (!siteId) {
+            setError("Vehículo no encontrado o no autorizado para esta faena.");
+            setLoading(false);
+            return;
+        }
         try {
-            const response = await fetch(`https://inventory-service-emva.onrender.com/vehicles/withTires/${id}`);
-            const data = await response.json();
+            const response = await axios.get(`https://inventory-service-emva.onrender.com/vehicles/withTires/${id}/site/${siteId}`,);
+            const data = await response.data;
             console.log("Installed tires", data);
             setLoading(false);
             setVehicle(data);
             setInstalledTires(data.installedTires);
         } catch (error) {
-            console.error("Error fetching reasons:", error);
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                setError(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
+        } finally {
+            setLoading(false);
         }
+
     };
 
     const [mostrarEditar, setMostrarEditar] = useState(false);
@@ -90,6 +109,7 @@ export default function ListaMaquinaria() {
                                 <Button
                                     disabled={loading
                                         || id === undefined
+                                        || error !== null
                                     }
                                     text="Instalar Neumático"
                                     onClick={() => { setMostrarAsignarNeumatico(true) }}
@@ -98,13 +118,14 @@ export default function ListaMaquinaria() {
                                 <Button
                                     disabled={loading
                                         || id === undefined
+                                        || error !== null
                                     }
                                     text="Agregar Horas/Kilometros"
                                     onClick={() => { setMostrarAddKms(true) }}
                                 />
                                 {/* Boton de editar */}
                                 <ToolTipCustom content="Editar Equipo">
-                                    <button disabled={loading || id === undefined} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  dark:bg-[#313131] border text-lg text-black dark:text-white p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined ? "opacity-50 " : "cursor-pointer hover:bg-gray-200 dark:hover:bg-[#141414]"}`}>
+                                    <button disabled={loading || id === undefined || error !== null} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  dark:bg-[#313131] border text-lg text-black dark:text-white p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined || error !== null ? "opacity-50 " : "cursor-pointer hover:bg-gray-200 dark:hover:bg-[#141414]"}`}>
                                         <FaEdit />
                                     </button>
                                 </ToolTipCustom>
@@ -125,6 +146,13 @@ export default function ListaMaquinaria() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 w-full">
+                        {
+                            error && (
+                                <div className="text-red-500 text-center col-span-2 row-span-3 bg-red-50 h-[40dvh] flex items-center justify-center rounded-md border border-red-300">
+                                    {error}
+                                </div>
+                            )
+                        }
                         {loading ? (
                             [...Array(6)].map((_, idx) => (
                                 <CardTire key={idx} position={idx + 1} loading={loading} />
