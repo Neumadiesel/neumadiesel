@@ -28,7 +28,6 @@ export default function ModalEditarVehicleModel({
     const [vehicleModelEdited, setVehicleModelEdited] = useState({
         brand: "",
         model: "",
-        wheelCount: null as number | null,
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -39,7 +38,6 @@ export default function ModalEditarVehicleModel({
             setVehicleModelEdited({
                 brand: vehicleModel.brand,
                 model: vehicleModel.model,
-                wheelCount: vehicleModel.wheelCount || 0,
             });
         }
     }, [vehicleModel]);
@@ -53,8 +51,8 @@ export default function ModalEditarVehicleModel({
         setError("");
         setLoading(true);
 
-        const { brand, model, wheelCount } = vehicleModelEdited;
-        if (!brand || !model || !wheelCount) {
+        const { brand, model } = vehicleModelEdited;
+        if (!brand || !model) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
@@ -67,7 +65,6 @@ export default function ModalEditarVehicleModel({
                 {
                     brand,
                     model,
-                    wheelCount,
                 },
             );
 
@@ -117,23 +114,6 @@ export default function ModalEditarVehicleModel({
                         placeholder="Modelo"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    <label className="text-sm mt-2 font-semibold mb-2">Cantidad de Ruedas</label>
-                    <input
-                        name="cantidadRuedas"
-                        type="number"
-                        min={0}
-                        value={vehicleModelEdited.wheelCount === null ? "" : vehicleModelEdited.wheelCount}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            setVehicleModelEdited({
-                                ...vehicleModelEdited,
-                                wheelCount: val === "" ? null : Number(val),
-                            });
-                        }}
-                        placeholder="Cantidad de Ruedas"
-                        className="border border-gray-300 p-2 rounded"
-                    />
-
 
                 </div>
 

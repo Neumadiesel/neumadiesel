@@ -2,9 +2,9 @@
 import { FaInfoCircle } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState } from "react";
-import ModalRegistrarTyreModel from "@/components/features/neumatico/ModalRegistrarTyreModel";
+import ModalRegistrarTyreModel from "@/components/features/neumatico/mod/model/ModalRegistrarTyreModel";
 import Link from "next/link";
-import ModaleditarTyreModel from "@/components/features/neumatico/ModalEditarTyreModel";
+import ModaleditarTyreModel from "@/components/features/neumatico/mod/model/ModalEditarTyreModel";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import Button from "@/components/common/button/Button";
 

@@ -2,7 +2,7 @@
 
 import { FaInfoCircle } from "react-icons/fa";
 import { useEffect, useState, useCallback } from "react";
-import ModalRegistarModeloVehiculo from "@/components/features/equipo/ModalRegistrarModeloVehiculo";
+import ModalRegistarModeloVehiculo from "@/components/features/equipo/mod/model/ModalRegistrarModeloVehiculo";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/layout/BreadCrumb";

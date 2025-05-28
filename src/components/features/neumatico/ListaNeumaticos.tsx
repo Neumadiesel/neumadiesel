@@ -5,10 +5,10 @@ import { Pencil, Info, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
-import ModalRegistrarNeumatico from "./ModalRegistrarNeumatico";
+import ModalRegistrarNeumatico from "./mod/tire/ModalRegistrarNeumatico";
 import { Location } from "@/types/Location";
 import { TireDTO } from "@/types/Tire";
-import ModalEditarNeumatico from "./ModalEditarNeumatico";
+import ModalEditarNeumatico from "./mod/tire/ModalEditarNeumatico";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 
 export default function ListaNeumaticos() {

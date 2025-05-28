@@ -26,7 +26,6 @@ export default function ModaleditarTyreModel({
         pattern: "",
         originalTread: null as number | null,
         TKPH: null as number | null,
-        cost: null as number | null,
         nominalHours: null as number | null,
         nominalKilometrage: null as number | null,
     });
@@ -44,7 +43,6 @@ export default function ModaleditarTyreModel({
                 pattern: tyreModel.pattern,
                 originalTread: tyreModel.originalTread || 0,
                 TKPH: tyreModel.TKPH || 0,
-                cost: tyreModel.cost || 0,
                 nominalHours: tyreModel.nominalHours || 0,
                 nominalKilometrage: tyreModel.nominalKilometrage || 0,
             });
@@ -60,7 +58,7 @@ export default function ModaleditarTyreModel({
         setError("");
         setLoading(true);
 
-        const { code, brand, dimensions, pattern, originalTread, TKPH, cost, nominalHours, nominalKilometrage } = tyreModelEdited;
+        const { code, brand, dimensions, pattern, originalTread, TKPH, nominalHours, nominalKilometrage } = tyreModelEdited;
         if (!code || !brand || !dimensions || !pattern || originalTread === null) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
@@ -78,7 +76,6 @@ export default function ModaleditarTyreModel({
                     pattern,
                     originalTread,
                     TKPH,
-                    cost,
                     nominalHours,
                     nominalKilometrage
                 },
@@ -184,24 +181,7 @@ export default function ModaleditarTyreModel({
                         placeholder="TKPH"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Costo */}
-                    <Label title="Costo" isNotEmpty={false} />
-                    <input
-                        name="costo"
-                        type="number"
-                        min={0}
-                        value={tyreModelEdited.cost === null ? "" : tyreModelEdited.cost}
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            setTyreModelEdited({
-                                ...tyreModelEdited,
-                                cost: val === "" ? null : Number(val),
-                            });
-                        }
-                        }
-                        placeholder="Costo"
-                        className="border border-gray-300 p-2 rounded"
-                    />
+
                     {/* Horas nominales */}
                     <Label title="Horas Nominales" isNotEmpty={false} />
                     <input

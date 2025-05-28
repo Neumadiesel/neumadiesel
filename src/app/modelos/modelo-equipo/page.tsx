@@ -3,8 +3,8 @@
 import { FaInfoCircle } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useEffect, useState, useCallback } from "react";
-import ModalEditarVehicleModel from "@/components/features/equipo/modaleditarModeloVehiculo";
-import ModalRegistarModeloVehiculo from "@/components/features/equipo/ModalRegistrarModeloVehiculo";
+import ModalEditarVehicleModel from "@/components/features/equipo/mod/model/modaleditarModeloVehiculo";
+import ModalRegistarModeloVehiculo from "@/components/features/equipo/mod/model/ModalRegistrarModeloVehiculo";
 import Link from "next/link";
 import Button from "@/components/common/button/Button";
 import { useAuth } from "@/contexts/AuthContext";
