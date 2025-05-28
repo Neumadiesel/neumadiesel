@@ -25,7 +25,6 @@ export default function Page() {
     const [modelos, setModelos] = useState<ModeloCadena[]>([]);
     const [modalCrearVisible, setModalCrearVisible] = useState(false);
     const [modalEditarVisible, setModalEditarVisible] = useState(false);
-    const [modalListaVisible, setModalListaVisible] = useState(false);
     const [modeloSeleccionado, setModeloSeleccionado] = useState<ModeloCadena | null>(null);
 
     // Función para obtener datos desde la API
@@ -48,7 +47,6 @@ export default function Page() {
     // Función para abrir el modal de Lista de Cadenas relacionadas con el modelo
     const abrirModalLista = (modelo: ModeloCadena) => {
         setModeloSeleccionado(modelo);
-        setModalListaVisible(true);
     };
 
     return (
