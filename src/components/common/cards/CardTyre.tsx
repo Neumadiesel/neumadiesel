@@ -32,7 +32,7 @@ export default function CardTire(props: CardTireProps) {
     } = props;
 
     return (
-        <div className="bg-white dark:bg-neutral-900 border shadow-md rounded-xl p-4 flex flex-col justify-center items-center w-full max-w-md mx-auto min-h-[160px]">
+        <div className="bg-white dark:bg-neutral-900 border dark:border-neutral-700 shadow-md rounded-xl p-4 flex flex-col justify-center items-center w-full max-w-md mx-auto min-h-[160px]">
             {loading ? (
                 <div className="animate-spin text-yellow-500">
                     <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none">

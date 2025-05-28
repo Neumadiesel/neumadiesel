@@ -106,7 +106,7 @@ export default function RootLayout({
             <div className="block lg:flex min-h-[100%]">
                 {/* Lista de camiones */}
                 <main className="w-full lg:w-[40%] lg:h-screen h-[45vh] flex justify-center items-center">
-                    <div className="bg-white dark:bg-[#212121] shadow-md w-full h-full relative">
+                    <div className="bg-white dark:bg-[#212121] w-full h-full relative">
                         <Breadcrumb />
 
                         {loading ? (
@@ -152,7 +152,7 @@ export default function RootLayout({
                 </main>
 
                 {/* Contenido de la página */}
-                <section className="w-full lg:w-[60%] lg:pl-4">{children}</section>
+                <section className="w-full lg:w-[60%]">{children}</section>
             </div>
 
             <ModalRegistrarVehiculo
