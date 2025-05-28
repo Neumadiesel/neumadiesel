@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
 import { Search } from "lucide-react";
-import { VehicleDTO } from '@/components/features/equipo/InfoCamion';
+import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
 export default function MedicionPorEquipo() {
     const [error, setError] = useState<string | null>(null);
