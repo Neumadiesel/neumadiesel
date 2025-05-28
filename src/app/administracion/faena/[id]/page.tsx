@@ -1,9 +1,9 @@
 "use client";
-import ListaCircuitos from "@/components/features/faena/ListaCircuitos";
+import Budget from "@/components/features/faena/budget/ListaBudget";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react";
-import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 
 interface FaenaDTO {
     id: number;
@@ -47,10 +47,8 @@ export default function Page() {
                 : "Cargando.."
             }</h1>
             <div className="flex justify-between items-center border-b px-4 py-2 border-gray-300 pb-4">
-                <div className="flex flex-col gap-2">
-                    <span className="text-md text-gray-600 font-semibold flex items-center gap-2">
-                        <FaMapMarkerAlt /> Región: {faena?.region ? faena.region : "Cargando.."}
-                    </span>
+                <div className="flex  gap-2">
+
                     <span className="text-md text-gray-600 font-semibold flex items-center gap-2">
                         <FaCalendarAlt className="text-3xl" />
                         <div className="flex flex-col">
@@ -69,8 +67,8 @@ export default function Page() {
                     </span>
                 </div>
             </div>
-            {/* Lista Circuitos */}
-            <ListaCircuitos />
+
+            <Budget siteId={Number(id)} />
         </div>
     );
 }
