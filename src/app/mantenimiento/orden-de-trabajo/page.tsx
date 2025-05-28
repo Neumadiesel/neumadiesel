@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import MultiSelect from "@/components/common/select/MultiSelect";
 import Link from "next/link";
+import Button from "@/components/common/button/Button";
 interface Orden {
     id: number;
     codigoOT: string;
@@ -73,7 +74,7 @@ export default function OrdenesTrabajoList() {
 
     return (
         <div className="p-4">
-            <div className="flex flex-row justify-between items-center mb-4">
+            <div className="flex flex-row justify-between items-center mb-4 dark:text-white">
                 <h2 className="text-xl font-bold mb-4">Órdenes de Trabajo</h2>
                 {/* seccion de botones y filtros */}
                 <div className="flex flex-row w-[70%] justify-between items-center mb-4">
@@ -84,7 +85,7 @@ export default function OrdenesTrabajoList() {
                             placeholder="Buscar por código..."
                             value={codigoBusqueda}
                             onChange={e => setCodigoBusqueda(e.target.value)}
-                            className="border px-3 py-2 rounded-md bg-white shadow-sm w-full sm:w-64"
+                            className="border  dark:border-neutral-700 px-3 py-2 rounded-md bg-white outline-none dark:bg-neutral-800 shadow-sm w-full sm:w-64"
                         />
                     </div>
                     {/* MultiSelect */}
@@ -111,16 +112,17 @@ export default function OrdenesTrabajoList() {
                     </div>
                     {/* boton de nueva orden de trabajo */}
                     <div className="flex flex-row justify-center items-center">
-                        <button className="bg-amber-300 text-black px-4 py-2 rounded-md flex flex-row justify-center items-center gap-x-2 font-bold">
-                            <FaPlusCircle className="w-4 h-4 mr-1" />
-                            Nueva Orden de Trabajo
-                        </button>
+
+                        <Button
+                            onClick={() => console.log("true")}
+                            text="Crear Orden de Trabajo"
+                        />
                     </div>
                 </div>
             </div>
             {/* seccion de tabla */}
-            <div className="overflow-x-auto rounded-md shadow">
-                <table className="min-w-full text-sm text-left border">
+            <div className="overflow-x-auto  shadow">
+                <table className="min-w-full text-sm text-left overflow-hidden rounded-md border">
                     <thead className="bg-amber-300 text-gray-700">
                         <tr>
                             <th className="px-4 py-2">Código OT</th>
@@ -133,7 +135,7 @@ export default function OrdenesTrabajoList() {
                     </thead>
                     <tbody>
                         {ordenesFiltradas.map(orden => (
-                            <tr key={orden.id} className="border-t bg-gray-100">
+                            <tr key={orden.id} className="border-t dark:border-neutral-700 bg-gray-100 dark:text-white dark:bg-neutral-800">
                                 <td className="px-4 py-2">{orden.codigoOT}</td>
                                 <td className="px-4 py-2">{orden.descripcion}</td>
                                 <td className="px-4 py-2">{orden.equipo}</td>

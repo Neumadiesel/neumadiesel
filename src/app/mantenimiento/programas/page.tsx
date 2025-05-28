@@ -190,7 +190,7 @@ export default function Programas() {
 
     return (
         <div className="bg-[#f1f1f1] dark:bg-[#313131]">
-            <div className="lg:p-3 bg-white dark:bg-[#212121] h-[95%]">
+            <div className="lg:p-3 bg-white dark:bg-[#212121] dark:text-white h-[95%]">
                 <div className="flex flex-col gap-y-2 p-2">
                     <section className="lg:flex items-center justify-between gap-x-2">
                         <h1 className="text-2xl   font-bold">Programa Semanal de Mantenciones</h1>
@@ -200,7 +200,7 @@ export default function Programas() {
                     <section className="lg:flex gap-y-2 items-center justify-between gap-x-2 md:w-[100%] mx-auto lg:mx-0">
                         <div className="flex items-center w-[100%] lg:w-[50%]">
                             <button
-                                className="bg-gray-100 border hover:bg-gray-200 font-bold py-1 px-2 rounded-l-md h-10"
+                                className="bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 border dark:border-neutral-700 hover:bg-gray-200 font-bold py-1 px-2 rounded-l-md h-10"
                                 onClick={() =>
                                     setStartDate(prev => {
                                         const nueva = new Date(prev);
@@ -211,11 +211,11 @@ export default function Programas() {
                             >
                                 <FaAngleLeft className="text-2xl" />
                             </button>
-                            <div className="text-center bg-gray-50 border-y p-2 px-4 w-[80%] md:my-2 md:w-[60%] lg:w-[40%] flex justify-around items-center h-10">
+                            <div className="text-center bg-gray-50 dark:bg-neutral-800   dark:border-neutral-700 border-y p-2 px-4 w-[80%] md:my-2 md:w-[60%] lg:w-[40%] flex justify-around items-center h-10">
                                 <p className="text-lg text-gray-600 dark:text-gray-300">{getRangoDeFechas(startDate)}</p>
                             </div>
                             <button
-                                className="bg-gray-100 border hover:bg-gray-200 text-black font-bold py-1 px-2 rounded-r-md h-10"
+                                className="bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700  dark:border-neutral-700 border hover:bg-gray-200 text-black dark:text-white font-bold py-1 px-2 rounded-r-md h-10"
                                 onClick={() =>
                                     setStartDate(prev => {
                                         const nueva = new Date(prev);

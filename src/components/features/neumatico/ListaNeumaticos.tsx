@@ -9,6 +9,7 @@ import ModalRegistrarNeumatico from "./ModalRegistrarNeumatico";
 import { Location } from "@/types/Location";
 import { TireDTO } from "@/types/Tire";
 import ModalEditarNeumatico from "./ModalEditarNeumatico";
+import ToolTipCustom from "@/components/ui/ToolTipCustom";
 
 export default function ListaNeumaticos() {
     const [codigo, setCodigo] = useState('');
@@ -222,6 +223,7 @@ export default function ListaNeumaticos() {
                                             </p>
                                         </td>
                                         <td className="p-4 ">
+
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tire.lastInspection.kilometrage}
                                             </p>
@@ -241,31 +243,31 @@ export default function ListaNeumaticos() {
                                                 {tire.lastInspection ? tire.lastInspection.externalTread : tire.initialTread}
                                             </p>
                                         </td>
+
                                         <td className="dark:bg-neutral-800 px-2">
                                             <div className="flex gap-2">
-                                                {/* Botón editar */}
-                                                <button
-                                                    onClick={() => {
-                                                        setTireSelected(tire);
-                                                        setEditarNeumatico(true);
-                                                    }
-                                                    }
-                                                    className="p-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
-                                                >
-                                                    <Pencil className="w-4 h-4" />
-                                                </button>
-
-                                                {/* Botón de ver detalles */}
-                                                <Link
-                                                    href={`/neumaticos/${tire.id}`}
-                                                    className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border dark:bg-neutral-800 border-blue-500 rounded-md flex items-center justify-center"
-                                                >
-                                                    <Info className="w-4 h-4" />
-                                                </Link>
-
-
+                                                <ToolTipCustom content="Editar Neumático">
+                                                    <button
+                                                        onClick={() => {
+                                                            setTireSelected(tire);
+                                                            setEditarNeumatico(true);
+                                                        }}
+                                                        className="p-2 px-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
+                                                    >
+                                                        <Pencil className="w-4 h-4" />
+                                                    </button>
+                                                </ToolTipCustom>
+                                                <ToolTipCustom content="Ver Detalles">
+                                                    <Link
+                                                        href={`/neumaticos/${tire.id}`}
+                                                        className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 dark:bg-neutral-800 border border-blue-500 rounded-md flex items-center justify-center"
+                                                    >
+                                                        <Info className="w-4 h-4" />
+                                                    </Link>
+                                                </ToolTipCustom>
                                             </div>
                                         </td>
+
                                     </tr>
                                 ))
                             }

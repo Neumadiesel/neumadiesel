@@ -1,9 +1,9 @@
 "use client";
-import { FaPen } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import ModalRegistrarRazon from "@/components/features/razon-retiro/ModalRegistrarRazon";
 import ModalEditarRazon from "@/components/features/razon-retiro/ModalEditarRazon";
 import Button from "@/components/common/button/Button";
+import { Pencil } from "lucide-react";
 
 
 interface RazonDto {
@@ -62,7 +62,7 @@ export default function Page() {
             {/* Lista de razones de retiro */}
 
             <div className="relative overflow-x-auto mt-4">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-white">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-white overflow-hidden rounded-md border">
                     <thead className="text-xs text-black uppercase bg-amber-300 ">
                         <tr>
                             <th scope="col" className="px-6 py-3">
@@ -80,7 +80,7 @@ export default function Page() {
                         {loading ? (
                             <tr>
                                 <td colSpan={6} className="text-center p-8">
-                                    <div className="flex flex-col items-center dark:bg-neutral-900 justify-center space-y-4">
+                                    <div className="flex flex-col items-center dark:bg-neutral-800 justify-center space-y-4">
                                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                         <p className="text-gray-600 dark:text-gray-400">
                                             Cargando razones de desintalación...
@@ -90,7 +90,7 @@ export default function Page() {
                             </tr>
                         ) : razones.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
+                                <td colSpan={3} className="text-center p-8 ">
                                     <div className="flex flex-col items-center justify-center space-y-4  animate-pulse">
                                         <svg
                                             className="w-12 h-12 text-gray-400"
@@ -123,7 +123,7 @@ export default function Page() {
                                 >
                                     {razon.name}
                                 </th>
-                                <td className="px-6 py-4 dark:bg-neutral-900 ">
+                                <td className="px-6 py-4 dark:bg-neutral-800 ">
                                     <p
                                         className={`  px-2 py-1 rounded-md `}
                                     >
@@ -133,9 +133,9 @@ export default function Page() {
                                 <td className="px-6 py-4 flex justify-center bg-gray-50 dark:bg-neutral-800">
                                     <button
                                         onClick={() => abrirEditor(razon)}
-                                        className="bg-gray-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-50 text-black border border-amber-200 font-bold py-2 px-4 rounded dark:hover:bg-neutral-800"
+                                        className="p-2 px-3 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
                                     >
-                                        <FaPen className="inline-block" />
+                                        <Pencil className="w-4 h-4" />
                                     </button>
                                 </td>
                             </tr>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaEllipsisV, FaEye, FaEyeSlash, FaPen } from "react-icons/fa";
+import { FaEllipsisV, FaEye, FaEyeSlash } from "react-icons/fa";
 import Modal from "@/components/common/modal/CustomModal";
 import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
 import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
@@ -9,6 +9,7 @@ import axios from "axios";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import CustomModal from "@/components/common/alerts/alert";
 import Button from "@/components/common/button/Button";
+import { ArrowLeft, ArrowRight, Pencil } from "lucide-react";
 interface Role {
     role_id: number;
     name: string;
@@ -289,22 +290,22 @@ export default function Page() {
                                 <div className="hidden md:flex justify-center gap-2 ">
                                     <button
                                         onClick={() => abrirEditor(usuario)}
-                                        className="bg-amber-50 dark:bg-[#212121] dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-neutral-900 text-black border border-amber-200 font-bold py-2 px-4 rounded"
+                                        className="p-2 px-3 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
                                     >
-                                        <FaPen className="inline-block" />
+                                        <Pencil className="w-4 h-4" />
                                     </button>
                                     {
                                         usuario.is_active ? (
                                             <button
                                                 onClick={() => { setUserId(usuario.user_id); setIsOpen(true) }}
-                                                className="bg-red-50 hover:bg-red-100 dark:hover:bg-neutral-900 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-4 rounded"
+                                                className="bg-red-50 hover:bg-red-100 dark:hover:bg-neutral-900 dark:bg-[#212121] dark:text-red-300 text-black border border-red-200 font-bold py-2 px-3 rounded-md"
                                             >
                                                 <FaEyeSlash className="inline-block" />
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => { setUserId(usuario.user_id); setIsOpenReactivar(true) }}
-                                                className="bg-emerald-50 hover:bg-emerald-100 dark:hover:bg-neutral-900 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-4 rounded"
+                                                className="bg-emerald-50 hover:bg-emerald-100 dark:hover:bg-neutral-900 dark:bg-[#212121] dark:text-emerald-300 text-black border border-emerald-200 font-bold py-2 px-3 rounded-md"
                                             >
                                                 <FaEye className="inline-block" />
                                             </button>
@@ -354,21 +355,23 @@ export default function Page() {
             {/* Paginación */}
             <div className="flex justify-center mt-4 gap-2">
                 <button
-                    className="px-3 py-1 bg-amber-300 text-black border rounded disabled:opacity-60"
+                    className={`p-3   font-semibold h-10 border rounded-full ${paginaActual === 1 ? "bg-gray-100 dark:bg-neutral-800 dark:text-white " : "bg-amber-300 dark:border-black hover:bg-amber-200"
+                        } text-black`}
                     onClick={() => setPaginaActual(paginaActual - 1)}
                     disabled={paginaActual === 1}
                 >
-                    Anterior
+                    <ArrowLeft className="w-4 h-4" />
                 </button>
                 <span className="px-3 py-1">
                     Página {paginaActual} de {totalPaginas}
                 </span>
                 <button
-                    className="px-3 bg-amber-300 text-black py-1 border rounded disabled:opacity-60"
+                    className={`p-3   h-10 font-semibold border rounded-full ${paginaActual === totalPaginas ? "bg-gray-200  dark:bg-neutral-800 dark:text-white" : "bg-amber-300 hover:bg-amber-200 dark:border-black"
+                        } text-black`}
                     onClick={() => setPaginaActual(paginaActual + 1)}
                     disabled={paginaActual === totalPaginas}
                 >
-                    Siguiente
+                    <ArrowRight className="w-4 h-4" />
                 </button>
             </div>
             <LoadingSpinner isOpen={isLoading} />

@@ -51,8 +51,8 @@ export default function ModelosNeumaticos() {
             </section>
             <main >
                 <div
-                    className="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-sm bg-clip-border">
-                    <table className="w-full text-left table-auto min-w-max">
+                    className="relative flex flex-col w-full h-full overflow-scroll text-gray-700  shadow-sm bg-clip-border">
+                    <table className="w-full text-left table-auto min-w-max overflow-hidden rounded-md">
                         <thead className="text-xs text-black uppercase bg-amber-300  ">
                             <tr>
                                 <th className="p-4">
@@ -90,7 +90,7 @@ export default function ModelosNeumaticos() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan={6} className="text-center p-8 dark:bg-neutral-900">
+                                    <td colSpan={6} className="text-center p-8 dark:bg-neutral-800">
                                         <div className="flex flex-col items-center justify-center space-y-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                             <p className="text-gray-600 dark:text-gray-400">
@@ -125,8 +125,8 @@ export default function ModelosNeumaticos() {
                             ) : null}
                             {
                                 tyreModels.map((tyreModel) => (
-                                    <tr key={tyreModel.id} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
+                                    <tr key={tyreModel.id} className="bg-white border-b dark:bg-neutral-800 dark:border-neutral-700 border-gray-200 dark:text-white">
+                                        <td className="p-4   ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tyreModel.code}
                                             </p>
@@ -136,7 +136,7 @@ export default function ModelosNeumaticos() {
                                                 {tyreModel.brand}
                                             </p>
                                         </td>
-                                        <td className="p-4  bg-gray-50 dark:bg-neutral-900">
+                                        <td className="p-4   ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tyreModel.dimensions}
                                             </p>
@@ -146,19 +146,19 @@ export default function ModelosNeumaticos() {
                                                 {tyreModel.pattern}
                                             </p>
                                         </td>
-                                        <td className="p-4 bg-gray-50">
+                                        <td className="p-4 ">
                                             <p className="block  font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tyreModel.originalTread}
                                             </p>
                                         </td>
-                                        <td className="dark:bg-neutral-900 px-2">
+                                        <td className=" px-2">
                                             <div className="flex gap-2">
                                                 {/* boton editar */}
-                                                <button onClick={() => handleEditTyreModel(tyreModel)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 border border-green-300 rounded-md flex items-center justify-center">
+                                                <button onClick={() => handleEditTyreModel(tyreModel)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-700 border border-green-300 rounded-md flex items-center justify-center">
                                                     <FaPencil />
                                                 </button>
                                                 {/* Boton de ver detalles */}
-                                                <Link href={`/modelos/modelo-neumatico/${tyreModel.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
+                                                <Link href={`/modelos/modelo-neumatico/${tyreModel.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border dark:bg-neutral-700 border-blue-300 rounded-md flex items-center justify-center">
                                                     <FaInfoCircle />
                                                 </Link>
                                             </div>

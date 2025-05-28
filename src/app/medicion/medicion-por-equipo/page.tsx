@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
 import { Search } from "lucide-react";
-import { VehicleDTO } from '@/components/features/equipo/InfoCamion';
+import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
 export default function MedicionPorEquipo() {
     const [error, setError] = useState<string | null>(null);
@@ -122,7 +122,7 @@ export default function MedicionPorEquipo() {
     };
 
     return (
-        <div className="  p-4 gap-y-2 bg-white">
+        <div className="  p-4 gap-y-2 bg-white dark:bg-[#212121] dark:text-white">
             <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección del Neumático</h1>
             <section className=''>
                 <div className='flex items-center gap-x-2 border-b border-b-amber-300 pb-3'>
@@ -183,7 +183,7 @@ export default function MedicionPorEquipo() {
 
 
                         <section key={tireSelected?.id} className={`
-                        border bg-gray-50 border-amber-300 rounded-lg p-2 my-2 w-full py-4
+                        border bg-gray-50 dark:bg-neutral-800 dark:text-white border-amber-300 rounded-lg p-2 my-2 w-full py-4
                             ${tireSelected ? "" : "opacity-50"}
                             `}>
                             <p className='text-xl font-bold'>Posición {tireSelected?.position}</p>
