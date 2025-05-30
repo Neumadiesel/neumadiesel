@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Pencil, Info, ArrowLeft, ArrowRight } from "lucide-react";
+import { Info, ArrowLeft, ArrowRight, CircleCheck, CircleOff, Donut } from "lucide-react";
 import Link from "next/link";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
@@ -246,17 +246,6 @@ export default function ListaNeumaticos() {
 
                                         <td className="dark:bg-neutral-800 px-2">
                                             <div className="flex gap-2">
-                                                <ToolTipCustom content="Editar Neumático">
-                                                    <button
-                                                        onClick={() => {
-                                                            setTireSelected(tire);
-                                                            setEditarNeumatico(true);
-                                                        }}
-                                                        className="p-2 px-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
-                                                    >
-                                                        <Pencil className="w-4 h-4" />
-                                                    </button>
-                                                </ToolTipCustom>
                                                 <ToolTipCustom content="Ver Detalles">
                                                     <Link
                                                         href={`/neumaticos/${tire.id}`}
@@ -264,6 +253,48 @@ export default function ListaNeumaticos() {
                                                     >
                                                         <Info className="w-4 h-4" />
                                                     </Link>
+                                                </ToolTipCustom>
+                                                {/* Condicionales */}
+                                                {/* Mandar a Mantencion */}
+
+
+                                                <ToolTipCustom content="Realizar Mantenimiento">
+                                                    <button
+                                                        disabled={tire.location.name === "Operativo" || tire.location.name === "Mantención"}
+                                                        onClick={() => {
+                                                            setTireSelected(tire);
+                                                            setEditarNeumatico(true);
+                                                        }}
+                                                        className={"p-2 px-2 text-yellow-500 bg-yellow-50 dark:bg-neutral-800 border border-yellow-400 rounded-md flex items-center justify-center" + (tire.location.name === "Operativo" || tire.location.name === "Mantención" ? " grayscale-100" : "hover:text-yellow-600")}
+                                                    >
+                                                        <Donut className="w-4 h-4" />
+                                                    </button>
+                                                </ToolTipCustom>
+                                                {/* Habilitar Stock */}
+                                                <ToolTipCustom content="Disponer para Stock">
+                                                    <button
+                                                        disabled={tire.location.name === "Operativo" || tire.location.name === "Baja"}
+                                                        onClick={() => {
+                                                            setTireSelected(tire);
+                                                            setEditarNeumatico(true);
+                                                        }}
+                                                        className={"p-2 px-2 text-emerald-500 bg-emerald-50 dark:bg-neutral-800 border border-emerald-300 rounded-md flex items-center justify-center" + (tire.location.name === "Operativo" || tire.location.name === "Baja" ? " grayscale-100" : "hover:text-emerald-600")}
+                                                    >
+                                                        <CircleCheck className="w-4 h-4" />
+                                                    </button>
+                                                </ToolTipCustom>
+                                                {/* Dar de Baja */}
+                                                <ToolTipCustom content="Dar de Baja">
+                                                    <button
+                                                        disabled={tire.location.name === "Baja" || tire.location.name === "Operativo"}
+                                                        onClick={() => {
+                                                            setTireSelected(tire);
+                                                            setEditarNeumatico(true);
+                                                        }}
+                                                        className={"p-2 px-2 text-red-400 bg-red-50 dark:bg-neutral-800 border border-red-300 rounded-md flex items-center justify-center" + (tire.location.name === "Baja" || tire.location.name === "Operativo" ? " grayscale-100" : "hover:text-red-600")}
+                                                    >
+                                                        <CircleOff className="w-4 h-4" />
+                                                    </button>
                                                 </ToolTipCustom>
                                             </div>
                                         </td>
