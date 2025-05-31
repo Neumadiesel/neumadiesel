@@ -11,6 +11,7 @@ import { TireDTO } from "@/types/Tire";
 import ModalEditarNeumatico from "./mod/tire/ModalEditarNeumatico";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import ModalStockDisponible from "./mod/tire/ModalStockDisponible";
+import ModalTireMaintenance from "./mod/tire/ModalTireMaintenance";
 
 export default function ListaNeumaticos() {
     const [codigo, setCodigo] = useState('');
@@ -26,6 +27,7 @@ export default function ListaNeumaticos() {
     // Modals
     const [editarNeumatico, setEditarNeumatico] = useState(false);
     const [stockDisponible, setStockDisponible] = useState(false);
+    const [maintenanceTire, setMaintenanceTire] = useState(false);
 
     const [tireSelected, setTireSelected] = useState<TireDTO | null>(null);
 
@@ -270,7 +272,7 @@ export default function ListaNeumaticos() {
                                                         disabled={tire.location.name === "Operativo" || tire.location.name === "Mantención"}
                                                         onClick={() => {
                                                             setTireSelected(tire);
-                                                            setEditarNeumatico(true);
+                                                            setMaintenanceTire(true);
                                                         }}
                                                         className={"p-2 px-2 text-yellow-500 bg-yellow-50 dark:bg-neutral-800 border border-yellow-400 rounded-md flex items-center justify-center" + (tire.location.name === "Operativo" || tire.location.name === "Mantención" ? " grayscale-100" : "hover:text-yellow-600")}
                                                     >
@@ -358,6 +360,15 @@ export default function ListaNeumaticos() {
                 onGuardar={() => {
                     fetchTires();
                     setStockDisponible(false);
+                }} />
+            {/* Mandar Nuematico a Mantencion */}
+            <ModalTireMaintenance
+                visible={maintenanceTire}
+                onClose={() => setMaintenanceTire(false)}
+                tire={tireSelected}
+                onGuardar={() => {
+                    fetchTires();
+                    setMaintenanceTire(false);
                 }} />
 
         </div>
