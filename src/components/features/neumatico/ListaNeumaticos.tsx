@@ -10,6 +10,7 @@ import { Location } from "@/types/Location";
 import { TireDTO } from "@/types/Tire";
 import ModalEditarNeumatico from "./mod/tire/ModalEditarNeumatico";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
+import ModalStockDisponible from "./mod/tire/ModalStockDisponible";
 
 export default function ListaNeumaticos() {
     const [codigo, setCodigo] = useState('');
@@ -22,7 +23,10 @@ export default function ListaNeumaticos() {
     const [loading, setLoading] = useState(false);
     const [locations, setLocations] = useState<Location[]>([]);
 
+    // Modals
     const [editarNeumatico, setEditarNeumatico] = useState(false);
+    const [stockDisponible, setStockDisponible] = useState(false);
+
     const [tireSelected, setTireSelected] = useState<TireDTO | null>(null);
 
     const fetchTires = async () => {
@@ -92,15 +96,18 @@ export default function ListaNeumaticos() {
                     <div className="w-full flex justify-between">
                         <input
                             type="text"
-                            placeholder="Buscar por código Neumático o Equipo"
+                            placeholder="Buscar por código de Neumático"
                             className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-sm outline-none dark:border-neutral-700 placeholder:text-gray-700 dark:placeholder:text-gray-200"
                             value={codigo.toUpperCase()}
-                            onChange={(e) => setCodigo(e.target.value)}
+                            onChange={(e) => { setCodigo(e.target.value); setCurrentPage(1); }}
                         />
                         <select
                             className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 placeholder:text-gray-700"
                             value={estado}
-                            onChange={(e) => setEstado(e.target.value)}
+                            onChange={(e) => {
+                                setEstado(e.target.value)
+                                setCurrentPage(1);
+                            }}
                         >
                             <option value="">Todos</option>
                             {
@@ -273,12 +280,12 @@ export default function ListaNeumaticos() {
                                                 {/* Habilitar Stock */}
                                                 <ToolTipCustom content="Disponer para Stock">
                                                     <button
-                                                        disabled={tire.location.name === "Operativo" || tire.location.name === "Baja"}
+                                                        disabled={tire.location.name === "Operativo" || tire.location.name === "Baja" || tire.location.name === "Stock Disponibles"}
                                                         onClick={() => {
                                                             setTireSelected(tire);
-                                                            setEditarNeumatico(true);
+                                                            setStockDisponible(true);
                                                         }}
-                                                        className={"p-2 px-2 text-emerald-500 bg-emerald-50 dark:bg-neutral-800 border border-emerald-300 rounded-md flex items-center justify-center" + (tire.location.name === "Operativo" || tire.location.name === "Baja" ? " grayscale-100" : "hover:text-emerald-600")}
+                                                        className={"p-2 px-2 text-emerald-500 bg-emerald-50 dark:bg-neutral-800 border border-emerald-300 rounded-md flex items-center justify-center" + (tire.location.name === "Operativo" || tire.location.name === "Baja" || tire.location.name === "Stock Disponibles" ? " grayscale-100" : "hover:text-emerald-600")}
                                                     >
                                                         <CircleCheck className="w-4 h-4" />
                                                     </button>
@@ -343,6 +350,16 @@ export default function ListaNeumaticos() {
                 onGuardar={() => {
                     setOpenRegisterModal(false);
                 }} />
+            {/* Mandar Neumatico a stock disponible */}
+            <ModalStockDisponible
+                visible={stockDisponible}
+                onClose={() => setStockDisponible(false)}
+                tire={tireSelected}
+                onGuardar={() => {
+                    fetchTires();
+                    setStockDisponible(false);
+                }} />
+
         </div>
     );
 }
