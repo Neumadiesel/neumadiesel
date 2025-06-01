@@ -12,6 +12,7 @@ import ModalEditarNeumatico from "./mod/tire/ModalEditarNeumatico";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import ModalStockDisponible from "./mod/tire/ModalStockDisponible";
 import ModalTireMaintenance from "./mod/tire/ModalTireMaintenance";
+import ModalRetireTire from "./mod/tire/ModalRetireTire";
 
 export default function ListaNeumaticos() {
     const [codigo, setCodigo] = useState('');
@@ -28,6 +29,7 @@ export default function ListaNeumaticos() {
     const [editarNeumatico, setEditarNeumatico] = useState(false);
     const [stockDisponible, setStockDisponible] = useState(false);
     const [maintenanceTire, setMaintenanceTire] = useState(false);
+    const [retireTire, setRetireTire] = useState(false);
 
     const [tireSelected, setTireSelected] = useState<TireDTO | null>(null);
 
@@ -298,7 +300,7 @@ export default function ListaNeumaticos() {
                                                         disabled={tire.location.name === "Baja" || tire.location.name === "Operativo"}
                                                         onClick={() => {
                                                             setTireSelected(tire);
-                                                            setEditarNeumatico(true);
+                                                            setRetireTire(true);
                                                         }}
                                                         className={"p-2 px-2 text-red-400 bg-red-50 dark:bg-neutral-800 border border-red-300 rounded-md flex items-center justify-center" + (tire.location.name === "Baja" || tire.location.name === "Operativo" ? " grayscale-100" : "hover:text-red-600")}
                                                     >
@@ -370,7 +372,15 @@ export default function ListaNeumaticos() {
                     fetchTires();
                     setMaintenanceTire(false);
                 }} />
-
+            {/* Modal Retirar neumatico */}
+            <ModalRetireTire
+                visible={retireTire}
+                onClose={() => setRetireTire(false)}
+                tire={tireSelected}
+                onGuardar={() => {
+                    fetchTires();
+                    setRetireTire(false);
+                }} />
         </div>
     );
 }

@@ -9,7 +9,7 @@ interface LocationDTO {
     name: string;
 }
 
-interface ModalTireMaintenanceProps {
+interface ModalRetireTireProps {
     visible: boolean;
     onClose: () => void;
     tire: TireDTO | null;
@@ -26,12 +26,12 @@ interface LocationMaintenanceDTO {
     description: string;
 }
 
-export default function ModalTireMaintenance({
+export default function ModalRetireTire({
     visible,
     onClose,
     tire,
     onGuardar,
-}: ModalTireMaintenanceProps) {
+}: ModalRetireTireProps) {
     const [tireEdited, setTireEdited] = useState({
         code: "",
         locationId: null as number | null,
@@ -139,10 +139,10 @@ export default function ModalTireMaintenance({
         }
         try {
             const response = await axios.post(
-                `https://inventory-service-emva.onrender.com/maintenance/`,
+                `https://inventory-service-emva.onrender.com/maintenance/retire`,
                 {
                     tireId: tire.id,
-                    locationMaintenanceId: tireEdited.locationMaintenanceId, // Asignar la primera ubicación de mantenimiento
+                    locationMaintenanceId: tireEdited.locationMaintenanceId,
                     maintenanceReasonId: tireEdited.maintenanceReasonId,
                     executionDate: tireEdited.date,
                     executionTime: 0,
@@ -171,9 +171,9 @@ export default function ModalTireMaintenance({
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
-            <div className="relative bg-white dark:text-white border-l-10 border-l-amber-300 dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
+            <div className="relative bg-white dark:text-white border-l-10 border-l-red-500 dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
                 <h2 className="text-xl font-bold mb-4">
-                    Disponer Neumático para Stock
+                    Dar De Baja Neumático
                 </h2>
 
                 {/* Mostrar error si existe */}
@@ -204,7 +204,7 @@ export default function ModalTireMaintenance({
                         className="border border-gray-300 p-2 rounded"
                     >
                         {locations
-                            .filter((location) => location.name === "Mantención")
+                            .filter((location) => location.name === "Baja")
                             .map((location) => (
                                 <option key={location.id} value={location.id}>
                                     {location.name}
@@ -212,7 +212,7 @@ export default function ModalTireMaintenance({
                             ))}
                     </select>
                     {/* Razon de mantencion */}
-                    <Label title="Razón de Mantenimiento" isNotEmpty={true} />
+                    <Label title="Razón de Baja" isNotEmpty={true} />
                     <select
                         value={tireEdited.maintenanceReasonId ?? ""}
                         onChange={(e) => setTireEdited({ ...tireEdited, maintenanceReasonId: Number(e.target.value) })}
@@ -226,7 +226,7 @@ export default function ModalTireMaintenance({
                         ))}
                     </select>
                     {/* Locacion de mantencion */}
-                    <Label title="Ubicación de Mantenimiento" isNotEmpty={true} />
+                    <Label title="Ubicación de Inspección" isNotEmpty={true} />
                     <select
                         value={tireEdited.locationMaintenanceId ?? ""}
                         onChange={(e) => setTireEdited({ ...tireEdited, locationMaintenanceId: Number(e.target.value) })}
