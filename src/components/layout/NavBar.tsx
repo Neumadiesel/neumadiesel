@@ -312,14 +312,36 @@ export default function NavBar() {
                                 ) : (
                                     <Link
                                         href={item.path || ""}
+                                        onClick={() => setMenuOpen(false)}
                                         className="block p-2 text-2xl hover:bg-gray-700 rounded"
                                     >
                                         <p onClick={() => setMenuOpen(false)}>{item.title}</p>
                                     </Link>
                                 )}
                             </li>
+
                         ))}
                     </ul>
+                    <div className="w-[100%] p-3">
+                        <Link
+                            href={user ? "#" : "/login"}
+                            onClick={e => {
+                                if (user) {
+                                    e.preventDefault();
+                                    logout();
+                                }
+                                setMenuOpen(false);
+                            }}
+                            className="flex items-center justify-around"
+                        >
+                            {user ? <FaSignOutAlt size={40} /> : <FaRegUserCircle size={40} />}
+                            {(!isCollapsed) && (
+                                <p className="hidden lg:block">
+                                    {user ? "Cerrar sesión" : "Iniciar sesion"}
+                                </p>
+                            )}
+                        </Link>
+                    </div>
                 </div>
             )}
         </div>
