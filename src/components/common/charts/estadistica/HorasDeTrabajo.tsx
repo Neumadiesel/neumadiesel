@@ -35,13 +35,13 @@ export default function HorasDeDisponible() {
   return (
     <Card className="flex flex-col shadow-none border-none dark:bg-neutral-900">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Horas trabajadas por flota</CardTitle>
-        <CardDescription>Marzo 2025</CardDescription>
+        <CardTitle className="dark:text-white">Horas trabajadas por flota</CardTitle>
+        <CardDescription className="dark:text-white">Marzo 2025</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-center pb-0 w-[100%] pt-10 mt-10  ">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto w-full flex items-center justify-center  max-w-[350px] h-[200px] text-md" 
+          className="mx-auto w-full flex items-center justify-center  max-w-[350px] h-[200px] text-md"
         >
           <RadialBarChart
             data={chartData}
@@ -62,14 +62,14 @@ export default function HorasDeDisponible() {
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) - 16}
-                          className="fill-foreground text-2xl font-bold"
+                          className="fill-foreground text-2xl font-bold dark:text-white"
                         >
                           {totalHours.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 4}
-                          className="fill-muted-foreground"
+                          className="fill-muted-foreground dark:text-white"
                         >
                           Horas totales
                         </tspan>
@@ -97,8 +97,8 @@ export default function HorasDeDisponible() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-                <p>Horas trabajadas</p>  <TrendingUp className="h-4 w-4" />
+        <div className="flex items-center gap-2 font-medium leading-none dark:text-white">
+          <p>Horas trabajadas</p>  <TrendingUp className="h-4 w-4" />
         </div>
       </CardFooter>
     </Card>

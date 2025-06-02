@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaCheckCircle } from "react-icons/fa";
+import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -12,8 +13,10 @@ export default function Login() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
     const { login } = useAuth();
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
+        setLoading(true);
         e.preventDefault();
         setError("");
         setSuccess(false);
@@ -27,6 +30,9 @@ export default function Login() {
             console.log(error);
             setError("Error al iniciar sesión. Por favor, verifica tus credenciales.");
         }
+        finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -34,7 +40,6 @@ export default function Login() {
             {/* Video de fondo */}
             <video
                 src="/video-1.mp4"
-                autoPlay
                 muted
                 loop
                 className="hidden lg:block absolute  w-full h-full object-cover"
@@ -106,6 +111,7 @@ export default function Login() {
                         </Link>
                     </form>
                 </div>
+                <LoadingSpinner isOpen={loading} />
             </div>
         </div>
     );

@@ -107,9 +107,9 @@ export default function Page() {
                     Ofrecemos un conjunto integral de servicios diseñados específicamente para
                     maximizar el rendimiento de sus neumáticos en operaciones mineras.
                 </p>
-                <div className=" grid grid-cols-1 lg:grid-cols-3 gap-4 w-4/5 gap-x-4">
+                <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-4/5 gap-x-4">
                     {/* Card de seguimiento de neumaticos */}
-                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72  h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
+                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 mx-auto  h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
                         <p className="text-xl font-bold">Seguimiento de NeumÁticos</p>
                         <p className="text-md ">
                             Control detallado del historial y estado actual de cada neumático en su
@@ -117,7 +117,7 @@ export default function Page() {
                         </p>
                     </div>
                     {/* Card de gestion de mantenimiento */}
-                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72  h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
+                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 mx-auto  h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
                         <p className="text-xl font-bold">Programación de Mantenimiento</p>
                         <p className="text-md ">
                             Planificación automatizada de inspecciones y rotaciones basadas en datos
@@ -125,14 +125,14 @@ export default function Page() {
                         </p>
                     </div>
                     {/* Card de gestion de inventario */}
-                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
+                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 mx-auto h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
                         <p className="text-xl font-bold">GestiÓn de Inventario</p>
                         <p className="text-md ">
                             Control de stock de neumáticos nuevos, reparados y fuera de servicio.
                         </p>
                     </div>
                     {/* Card de reportes y analisis */}
-                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
+                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 mx-auto h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
                         <p className="text-xl font-bold">Reportes y Analisis</p>
                         <p className="text-md ">
                             Informes detallados sobre costos, rendimiento y proyecciones de
@@ -140,7 +140,7 @@ export default function Page() {
                         </p>
                     </div>
                     {/* Card de Alertas y notificaciones */}
-                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
+                    <div className="flex flex-col gap-2 bg-white dark:bg-[#212121] w-72 mx-auto h-44 p-4 rounded-sm border border-gray-300 dark:border-gray-600 dark:text-white">
                         <p className="text-xl font-bold">Alertas y Notificaciones</p>
                         <p className="text-md ">
                             Notificaciones sobre umbrales críticos de desgaste o mantenimientos

@@ -153,17 +153,17 @@ export default function MainStylingChart() {
   return (
     <Card className="shadow-none border-none h-[100%] dark:bg-neutral-900">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1 text-center sm:text-left">
+        <div className="grid flex-1 gap-1 text-left dark:text-white">
           <CardTitle>
             {/* Dame un titulo para el grafico con respecto a mi aplicacion  sobre administracion de neumaticos */}
             Consumo de neumáticos
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="dark:text-white">
             {/* Dame una descripcion para el grafico,mas larga que el titulo */}
             Gráfico de consumo de neumáticos
           </CardDescription>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
+        <Select value={timeRange} onValueChange={setTimeRange} >
           <SelectTrigger
             className="w-[160px] rounded-lg sm:ml-auto"
             aria-label="Select a value"
@@ -258,7 +258,7 @@ export default function MainStylingChart() {
               stroke="#b69b30"
               stackId="a"
             />
-            <ChartLegend content={<ChartLegendContent />} />
+            <ChartLegend className="text-white font-semibold" content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
       </CardContent>

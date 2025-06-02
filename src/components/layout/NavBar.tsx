@@ -276,7 +276,7 @@ export default function NavBar() {
             </div>
 
             {menuOpen && (
-                <div className="absolute w-[100%] h-[100%] top-24 left-0 bg-[#212121] text-white flex flex-col items-center z-50 lg:hidden">
+                <div className="absolute w-[100%] h-[100%] top-16 left-0 bg-[#212121] text-white flex flex-col items-center z-50 lg:hidden">
                     <ul className="h-[50%] w-[80%]">
                         {filteredMenuItems.map((item, index) => (
                             <li key={index} className="mb-2">
