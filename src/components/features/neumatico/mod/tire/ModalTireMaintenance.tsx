@@ -55,7 +55,7 @@ export default function ModalTireMaintenance({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/locations");
+            const response = await fetch("https://inventory.neumasystem.site/locations");
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -67,7 +67,7 @@ export default function ModalTireMaintenance({
     const fetchLocationsMaintenance = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/location-maintenance/");
+            const response = await fetch("https://inventory.neumasystem.site/location-maintenance/");
             const data = await response.json();
             setLoading(false);
             setLocationMaintenance(data);
@@ -81,7 +81,7 @@ export default function ModalTireMaintenance({
     const fetchReasons = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/maintenance-reason");
+            const response = await fetch("https://inventory.neumasystem.site/maintenance-reason");
             const data = await response.json();
             setLoading(false);
             setMaintenanceReasons(data);
@@ -139,7 +139,7 @@ export default function ModalTireMaintenance({
         }
         try {
             const response = await axios.post(
-                `https://inventory-service-emva.onrender.com/maintenance/`,
+                `https://inventory.neumasystem.site/maintenance/`,
                 {
                     tireId: tire.id,
                     locationMaintenanceId: tireEdited.locationMaintenanceId, // Asignar la primera ubicación de mantenimiento

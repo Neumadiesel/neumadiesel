@@ -35,7 +35,7 @@ export default function ModalEditarNeumatico({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/locations");
+            const response = await fetch("https://inventory.neumasystem.site/locations");
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -79,7 +79,7 @@ export default function ModalEditarNeumatico({
 
         try {
             const response = await axios.patch(
-                `https://inventory-service-emva.onrender.com/tires/${tire.id}`,
+                `https://inventory.neumasystem.site/tires/${tire.id}`,
                 {
                     code,
                     locationId,

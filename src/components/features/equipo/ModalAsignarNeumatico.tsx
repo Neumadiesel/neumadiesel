@@ -96,7 +96,7 @@ export default function ModalAsignarNeumatico({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/tires/available");
+            const response = await fetch("https://inventory.neumasystem.site/tires/available");
             const data = await response.json();
             setTires(data);
             console.log("Neumáticos", data);
@@ -108,7 +108,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchReasons = async () => {
         try {
-            const response = await axios.get("https://inventory-service-emva.onrender.com/maintenance-reason");
+            const response = await axios.get("https://inventory.neumasystem.site/maintenance-reason");
             const data = response.data;
             setReasons(data);
         } catch (error) {
@@ -118,7 +118,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get("https://inventory-service-emva.onrender.com/location-maintenance/");
+            const response = await axios.get("https://inventory.neumasystem.site/location-maintenance/");
             setLocations(response.data);
         } catch (error) {
             console.error("Error fetching locations:", error);
@@ -127,7 +127,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchModels = async () => {
         try {
-            const response = await axios.get("https://inventory-service-emva.onrender.com/tireModels");
+            const response = await axios.get("https://inventory.neumasystem.site/tireModels");
             setModels(response.data);
         } catch (error) {
             console.error("Error fetching models:", error);
@@ -167,7 +167,7 @@ export default function ModalAsignarNeumatico({
         const utcDate = date.toISOString();
         try {
             const response = await axios.post(
-                `https://inventory-service-emva.onrender.com/maintenance/mount`,
+                `https://inventory.neumasystem.site/maintenance/mount`,
                 {
 
                     "tireCode": code,

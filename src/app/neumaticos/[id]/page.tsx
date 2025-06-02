@@ -23,7 +23,7 @@ export default function TirePage() {
     const fetchTires = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`https://inventory-service-emva.onrender.com/tires/${id}`);
+            const response = await fetch(`https://inventory.neumasystem.site/tires/${id}`);
             const data = await response.json();
             setTires(data);
             setLoading(false);
@@ -35,7 +35,7 @@ export default function TirePage() {
     const fetchHistory = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`https://inventory-service-emva.onrender.com/maintenance/tire/${id}`);
+            const response = await fetch(`https://inventory.neumasystem.site/maintenance/tire/${id}`);
             const data = await response.json();
             console.log("Historial", data);
             if (Array.isArray(data)) {

@@ -48,7 +48,7 @@ export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, m
             meshDesign: diseno,
             tireSize: tamano,
         };
-        await axios.patch(`https://inventory-service-emva.onrender.com/chain-model/${modeloCadena.id}`, payload);
+        await axios.patch(`https://inventory.neumasystem.site/chain-model/${modeloCadena.id}`, payload);
         onGuardar();
     };
 

@@ -64,7 +64,7 @@ export default function ModalRegistrarVehiculo({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/dataForm/registerVehicle");
+            const response = await fetch("https://inventory.neumasystem.site/dataForm/registerVehicle");
             const data = await response.json();
             setLoading(false);
             setSites(data.sites);
@@ -99,7 +99,7 @@ export default function ModalRegistrarVehiculo({
 
         try {
             const response = await axios.post(
-                `https://inventory-service-emva.onrender.com/vehicles/`,
+                `https://inventory.neumasystem.site/vehicles/`,
                 {
                     code,
                     modelId,

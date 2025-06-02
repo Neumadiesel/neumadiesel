@@ -61,7 +61,7 @@ export default function ModalEditarVehicleModel({
 
         try {
             const response = await axios.patch(
-                `https://inventory-service-emva.onrender.com/vehicleModels/${vehicleModel.id}`,
+                `https://inventory.neumasystem.site/vehicleModels/${vehicleModel.id}`,
                 {
                     brand,
                     model,

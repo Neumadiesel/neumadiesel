@@ -30,7 +30,7 @@ export default function Page() {
     const fetchRazones = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/retirement-reason");
+            const response = await fetch("https://inventory.neumasystem.site/retirement-reason");
             const data = await response.json();
             setLoading(false);
             setRazones(data);

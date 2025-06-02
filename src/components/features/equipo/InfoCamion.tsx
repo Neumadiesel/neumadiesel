@@ -41,7 +41,7 @@ export default function ListaMaquinaria() {
             return;
         }
         try {
-            const response = await axios.get(`https://inventory-service-emva.onrender.com/vehicles/withTires/${id}/site/${siteId}`,);
+            const response = await axios.get(`https://inventory.neumasystem.site/vehicles/withTires/${id}/site/${siteId}`,);
             const data = await response.data;
             console.log("Installed tires", data);
             setLoading(false);

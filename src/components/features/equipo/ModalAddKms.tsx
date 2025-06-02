@@ -80,7 +80,7 @@ export default function ModalAddKms({
 
         try {
             const response = await axios.patch(
-                `https://inventory-service-emva.onrender.com/vehicles/updateKms/${vehicle.id}`,
+                `https://inventory.neumasystem.site/vehicles/updateKms/${vehicle.id}`,
                 {
                     hours,
                     kilometrage,

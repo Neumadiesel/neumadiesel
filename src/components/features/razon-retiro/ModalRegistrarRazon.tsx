@@ -32,7 +32,7 @@ export default function ModalRegistrarRazon({
             return;
         }
         try {
-            const response = await axios.post('https://inventory-service-emva.onrender.com/retirement-reason', {
+            const response = await axios.post('https://inventory.neumasystem.site/retirement-reason', {
                 name,
                 description,
             });

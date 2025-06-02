@@ -98,7 +98,7 @@ export default function ModaleditarEquipo({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/dataForm/registerVehicle");
+            const response = await fetch("https://inventory.neumasystem.site/dataForm/registerVehicle");
             const data = await response.json();
             setLoading(false);
             setSites(data.sites);
@@ -130,7 +130,7 @@ export default function ModaleditarEquipo({
         }
         try {
             const response = await axios.patch(
-                `https://inventory-service-emva.onrender.com/vehicles/${vehicle.id}`,
+                `https://inventory.neumasystem.site/vehicles/${vehicle.id}`,
                 {
                     code,
                     modelId,

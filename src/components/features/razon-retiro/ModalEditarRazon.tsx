@@ -50,7 +50,7 @@ export default function ModalEditarRazon({
         const { name, description } = razonEditada;
 
         try {
-            const response = await axios.patch(`https://inventory-service-emva.onrender.com/retirement-reason/${razon.id}`, {
+            const response = await axios.patch(`https://inventory.neumasystem.site/retirement-reason/${razon.id}`, {
                 name,
                 description,
             });

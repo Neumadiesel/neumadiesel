@@ -42,7 +42,7 @@ export default function ModalRegistarModeloVehiculo({
             return;
         }
         try {
-            const response = await axios.post('https://inventory-service-emva.onrender.com/vehicleModels', {
+            const response = await axios.post('https://inventory.neumasystem.site/vehicleModels', {
                 brand,
                 model,
                 wheelCount,

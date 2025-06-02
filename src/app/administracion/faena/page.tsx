@@ -35,7 +35,7 @@ export default function Page() {
     const fetchFaenas = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/sites/with-contract");
+            const response = await fetch("https://inventory.neumasystem.site/sites/with-contract");
             const data = await response.json();
             setLoading(false);
             setRazones(data);
@@ -49,7 +49,7 @@ export default function Page() {
         try {
             setIsLoading(true);
             const response = await axios.patch(
-                `https://inventory-service-emva.onrender.com/sites/${faenaId}/deactivate`,
+                `https://inventory.neumasystem.site/sites/${faenaId}/deactivate`,
             );
             console.log("Desactivar usuario response", response);
             setIsOpen(false);
@@ -68,7 +68,7 @@ export default function Page() {
         try {
             setIsLoading(true);
             const response = await axios.patch(
-                `https://inventory-service-emva.onrender.com/sites/${faenaId}/activate`,
+                `https://inventory.neumasystem.site/sites/${faenaId}/activate`,
             );
             console.log("Usuario reactivado:", response.data);
             setIsOpenReactivar(false);

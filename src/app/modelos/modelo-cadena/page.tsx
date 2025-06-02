@@ -29,7 +29,7 @@ export default function Page() {
 
     // Función para obtener datos desde la API
     const fetchModelos = async () => {
-        const res = await axios.get("https://inventory-service-emva.onrender.com/chain-model");
+        const res = await axios.get("https://inventory.neumasystem.site/chain-model");
         setModelos(res.data);
     };
 

@@ -64,7 +64,7 @@ export default function ModAddBudget({
         }
         try {
             for (const mes of budgetData.meses) {
-                await axios.post('https://inventory-service-emva.onrender.com/montyhle-tire-budget/', {
+                await axios.post('https://inventory.neumasystem.site/montyhle-tire-budget/', {
                     siteId: siteId,
                     year: budgetData.year,
                     month: mes.numero,

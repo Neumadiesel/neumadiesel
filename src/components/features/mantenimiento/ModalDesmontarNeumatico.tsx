@@ -81,7 +81,7 @@ export default function ModalDesmontarNeumatico({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/location-maintenance");
+            const response = await fetch("https://inventory.neumasystem.site/location-maintenance");
             const data = await response.json();
             console.log("locations", data);
             setLoading(false);
@@ -94,7 +94,7 @@ export default function ModalDesmontarNeumatico({
     const fetchRazones = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory-service-emva.onrender.com/retirement-reason");
+            const response = await fetch("https://inventory.neumasystem.site/retirement-reason");
             const data = await response.json();
             console.log("razones", data);
             setLoading(false);
@@ -135,7 +135,7 @@ export default function ModalDesmontarNeumatico({
         });
         try {
             const response = await axios.post(
-                `https://inventory-service-emva.onrender.com/maintenance/dismount/`,
+                `https://inventory.neumasystem.site/maintenance/dismount/`,
                 {
 
                     "tireCode": code,

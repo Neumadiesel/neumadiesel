@@ -24,7 +24,7 @@ export default function ModalRegistrarModeloCadena({ visible, onClose, onGuardar
 
     // Acción para guardar nuevo modelo
     const handleGuardar = async () => {
-        await axios.post("https://inventory-service-emva.onrender.com/chain-model", {
+        await axios.post("https://inventory.neumasystem.site/chain-model", {
             code: codigo,
             model: modelo,
             meshPattern: patron,
