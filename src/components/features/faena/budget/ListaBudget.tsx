@@ -38,7 +38,7 @@ export default function Budget({ siteId }: BudgetProps) {
     const [modAddBudget, setModAddBudget] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [editedBudgets, setEditedBudgets] = useState<{ [id: number]: string }>({});
-
+    const [selectedYear, setSelectedYear] = useState<number>(2025);
 
 
     const fetchBudget = async () => {
@@ -56,6 +56,7 @@ export default function Budget({ siteId }: BudgetProps) {
     };
 
     const fetchBudgetByYear = async (year: number) => {
+        setSelectedYear(year);
         setLoading(true);
         try {
             const response = await fetch(`https://inventory.neumasystem.site/montyhle-tire-budget/site/${siteId}/year/${year}`);
@@ -92,14 +93,6 @@ export default function Budget({ siteId }: BudgetProps) {
         }
     }
 
-
-
-    const chartData = budgetByYear.map((item) => ({
-        month: monthNames[item.month - 1],
-        budget: item.tireCount,
-        consumo: item.tireCount,
-    }))
-
     useEffect(() => {
         fetchBudget();
     }, []);
@@ -107,7 +100,7 @@ export default function Budget({ siteId }: BudgetProps) {
     return (
         <div className="p-6 bg-white h-auto min-h-screen dark:bg-[#212121] shadow-md rounded-lg">
             <div className="flex flex-col h-full">
-                <div className="flex justify-between items-center w-2/3">
+                <div className="flex justify-between items-center  w-full lg:w-2/3 pb-3">
                     <h2 className="text-2xl font-bold mt-4">Control de Budget - Neumáticos</h2>
                     <Button text="Ingresar Nuevo Budget" onClick={() => setModAddBudget(true)} />
                 </div>
@@ -195,7 +188,7 @@ export default function Budget({ siteId }: BudgetProps) {
                         </div>
                     </div>
                     <div className="w-1/2 mt-4">
-                        <BudgetChart data={chartData} />
+                        <BudgetChart year={selectedYear} siteId={siteId} />
                     </div>
                 </div>
             </div>

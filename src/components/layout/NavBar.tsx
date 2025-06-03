@@ -245,6 +245,7 @@ export default function NavBar() {
                 </ul>
             </div>
 
+            {/* Cerrar sesion - cambiar la version para el */}
             <div className="w-[100%] p-3">
                 <Link
                     href={user ? "#" : "/login"}
