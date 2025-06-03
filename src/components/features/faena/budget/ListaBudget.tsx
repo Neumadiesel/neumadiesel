@@ -38,7 +38,7 @@ export default function Budget({ siteId }: BudgetProps) {
     const [modAddBudget, setModAddBudget] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [editedBudgets, setEditedBudgets] = useState<{ [id: number]: string }>({});
-
+    const [selectedYear, setSelectedYear] = useState<number>(2025);
 
 
     const fetchBudget = async () => {
@@ -56,6 +56,7 @@ export default function Budget({ siteId }: BudgetProps) {
     };
 
     const fetchBudgetByYear = async (year: number) => {
+        setSelectedYear(year);
         setLoading(true);
         try {
             const response = await fetch(`https://inventory.neumasystem.site/montyhle-tire-budget/site/${siteId}/year/${year}`);
@@ -91,14 +92,6 @@ export default function Budget({ siteId }: BudgetProps) {
             setIsEdit(false);
         }
     }
-
-
-
-    const chartData = budgetByYear.map((item) => ({
-        month: monthNames[item.month - 1],
-        budget: item.tireCount,
-        consumo: item.tireCount,
-    }))
 
     useEffect(() => {
         fetchBudget();
@@ -195,7 +188,7 @@ export default function Budget({ siteId }: BudgetProps) {
                         </div>
                     </div>
                     <div className="w-1/2 mt-4">
-                        <BudgetChart data={chartData} />
+                        <BudgetChart year={selectedYear} siteId={siteId} />
                     </div>
                 </div>
             </div>

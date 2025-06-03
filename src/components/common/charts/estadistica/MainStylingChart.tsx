@@ -151,7 +151,7 @@ export default function MainStylingChart() {
   })
 
   return (
-    <Card className="shadow-none border-none h-[100%] dark:bg-neutral-900">
+    <Card className="border-2 border-blue-600 h-[100%] dark:bg-neutral-900">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-left dark:text-white">
           <CardTitle>
