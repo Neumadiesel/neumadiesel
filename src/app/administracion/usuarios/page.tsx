@@ -229,7 +229,6 @@ export default function Page() {
                 <thead className="text-xs text-black h-12 uppercase bg-amber-300">
                     <tr>
                         <th className="p-2 text-start ">Nombre</th>
-                        <th className="p-2 text-start">Email</th>
                         <th className="p-2 text-start">Rol</th>
                         <th className="p-2 text-start">Faena</th>
                         <th className="p-2 w-[20%]">Acciones</th>

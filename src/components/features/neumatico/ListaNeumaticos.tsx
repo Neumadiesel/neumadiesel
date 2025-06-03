@@ -101,12 +101,12 @@ export default function ListaNeumaticos() {
                         <input
                             type="text"
                             placeholder="Buscar por código de Neumático"
-                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-sm outline-none dark:border-neutral-700 placeholder:text-gray-700 dark:placeholder:text-gray-200"
+                            className="border p-2 h-10 rounded-md bg-gray-100 w-1/3 text-black dark:bg-[#212121] dark:text-white text-sm outline-none dark:border-neutral-700 placeholder:text-gray-700 dark:placeholder:text-gray-200"
                             value={codigo.toUpperCase()}
                             onChange={(e) => { setCodigo(e.target.value); setCurrentPage(1); }}
                         />
                         <select
-                            className="border p-2 h-10 rounded-md bg-gray-100 lg:w-1/3 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 placeholder:text-gray-700"
+                            className="border p-2 h-10 rounded-md w-1/3 bg-gray-100 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 placeholder:text-gray-700"
                             value={estado}
                             onChange={(e) => {
                                 setEstado(e.target.value)
@@ -125,7 +125,7 @@ export default function ListaNeumaticos() {
                         <Button
                             text="Agregar Neumático"
                             onClick={() => setOpenRegisterModal(true)}
-                            className="w-full lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
+                            className="w-1/3 lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
                         />
                     </div>
                 </div>
@@ -134,7 +134,7 @@ export default function ListaNeumaticos() {
             {/* Tabla */}
             <main >
                 <div
-                    className="relative flex flex-col w-full h-full overflow-scroll border rounded-md text-gray-700 bg-white shadow-sm bg-clip-border dark:border-neutral-700 dark:text-white">
+                    className="relative flex flex-col w-full overflow-scroll border rounded-md text-gray-700 bg-white shadow-sm bg-clip-border dark:border-neutral-700 dark:text-white">
                     <table className="w-full text-left table-auto min-w-max ">
                         <thead className="text-xs text-black uppercase bg-amber-300  dark:bg-neutral-900 dark:text-white">
                             <tr>
@@ -149,12 +149,18 @@ export default function ListaNeumaticos() {
                                     </p>
                                 </th>
                                 <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none ">
+                                    <p className="block lg:hidden font-sans text-sm antialiased font-semibold leading-none ">
+                                        Pos
+                                    </p>
+                                    <p className="hidden lg:block font-sans text-sm antialiased font-semibold leading-none ">
                                         Posición
                                     </p>
                                 </th>
                                 <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none ">
+                                    <p className="block lg:hidden font-sans text-sm antialiased font-semibold leading-none ">
+                                        KM
+                                    </p>
+                                    <p className="hidden lg:block font-sans text-sm antialiased font-semibold leading-none ">
                                         Kilómetros
                                     </p>
                                 </th>
@@ -183,7 +189,7 @@ export default function ListaNeumaticos() {
                         <tbody>
                             {loading ? (
                                 <tr>
-                                    <td colSpan={8} className="text-center p-8 dark:bg-neutral-900">
+                                    <td colSpan={8} className="text-center p-8 dark:bg-neutral-800">
                                         <div className="flex flex-col items-center justify-center space-y-4">
                                             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
                                             <p className="text-gray-600 dark:text-gray-400">
@@ -194,7 +200,7 @@ export default function ListaNeumaticos() {
                                 </tr>
                             ) : paginatedNeumaticos.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="text-center  dark:bg-[#313131] p-8">
+                                    <td colSpan={8} className="text-center  dark:bg-neutral-800 p-8">
                                         <div className="flex flex-col items-center justify-center space-y-4  animate-pulse">
                                             <svg
                                                 className="w-12 h-12 text-gray-400"
@@ -225,7 +231,9 @@ export default function ListaNeumaticos() {
                                         </td>
                                         <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tire.location.name == "Operativo" ? tire.installedTires[0].vehicle.code : tire.location.name}
+                                                {tire.location.name == "Operativo"
+                                                    ? tire.installedTires[0].vehicle.code.split(" ")[0]
+                                                    : tire.location.name.split(" ")[0]}
                                             </p>
                                         </td>
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-800">

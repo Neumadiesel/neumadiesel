@@ -107,7 +107,7 @@ export default function Budget({ siteId }: BudgetProps) {
     return (
         <div className="p-6 bg-white h-auto min-h-screen dark:bg-[#212121] shadow-md rounded-lg">
             <div className="flex flex-col h-full">
-                <div className="flex justify-between items-center w-2/3">
+                <div className="flex justify-between items-center  w-full lg:w-2/3 pb-3">
                     <h2 className="text-2xl font-bold mt-4">Control de Budget - Neumáticos</h2>
                     <Button text="Ingresar Nuevo Budget" onClick={() => setModAddBudget(true)} />
                 </div>

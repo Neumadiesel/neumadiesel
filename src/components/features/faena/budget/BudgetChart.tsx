@@ -42,9 +42,9 @@ export function BudgetChart({ data }: BudgetChartProps) {
     return (
         <Card>
             <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-                <TrendingUp className="h-4 w-4" />
-                <CardTitle>Budget vs Consumo</CardTitle>
-                <CardDescription>
+                <TrendingUp className="h-10 lg:h-4 w-12 lg:w-4 dark:text-white" />
+                <CardTitle className="dark:text-white">Budget vs Consumo</CardTitle>
+                <CardDescription className="dark:text-white">
                     Comparación mensual del presupuesto y consumo de neumáticos.
                 </CardDescription>
             </CardHeader>
@@ -68,7 +68,7 @@ export function BudgetChart({ data }: BudgetChartProps) {
                     </BarChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex items-start gap-2 text-sm">
+            <CardFooter className="flex items-start gap-2 text-sm dark:text-white">
                 <div className="flex gap-2 font-medium leading-none">
                     <div className="bg-[#0370dd] h-4 w-4 rounded-sm"></div>
                     <span>Budget</span>

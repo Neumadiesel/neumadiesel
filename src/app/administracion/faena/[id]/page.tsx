@@ -40,7 +40,7 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="bg-white rounded-lg h-full ">
+        <div className="bg-white dark:bg-neutral-800 dark:text-white rounded-lg h-full ">
             <Breadcrumb />
             <h1 className="text-3xl font-bold px-4">Faena {faena?.name
                 ? faena.name
@@ -49,18 +49,18 @@ export default function Page() {
             <div className="flex justify-between items-center border-b px-4 py-2 border-gray-300 pb-4">
                 <div className="flex  gap-2">
 
-                    <span className="text-md text-gray-600 font-semibold flex items-center gap-2">
+                    <span className="text-md text-gray-600 dark:text-white font-semibold flex items-center gap-2">
                         <FaCalendarAlt className="text-3xl" />
                         <div className="flex flex-col">
                             <span>Inicio: </span>
-                            <span className="text-lg font-semibold text-neutral-900">
+                            <span className="text-lg font-semibold text-neutral-900 dark:text-white">
                                 {faena?.contract?.startDate ? new Date(faena.contract.startDate).toISOString().split("T")[0] : "Sin fecha"}
                             </span>
                         </div>
                         <FaCalendarAlt className="text-3xl ml-4" />
                         <div className="flex flex-col gap-1">
                             <span>Fecha: </span>
-                            <span className="text-lg font-semibold text-neutral-900">
+                            <span className="text-lg font-semibold text-neutral-900 dark:text-white">
                                 {faena?.contract?.endDate ? new Date(faena.contract.endDate).toISOString().split("T")[0] : "Sin fecha"}
                             </span>
                         </div>
