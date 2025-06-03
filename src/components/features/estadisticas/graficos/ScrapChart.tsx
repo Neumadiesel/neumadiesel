@@ -1,7 +1,7 @@
 "use client"
 
 // import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, LabelList, LabelProps, XAxis, YAxis } from "recharts"
 
 import {
     Card,
@@ -21,8 +21,8 @@ import { useState } from "react"
 
 export const description = "A multiple bar chart"
 
-function CustomLabel({ x, y, value }: any) {
-    if (value === 0) return null; // Don't render label if value is 0
+function CustomLabel({ x, y, value }: Pick<LabelProps, "x" | "y" | "value">) {
+    if (value === 0) return null;
     return (
         <text
             x={x}
@@ -31,7 +31,7 @@ function CustomLabel({ x, y, value }: any) {
             fontSize={12}
             fontWeight={800}
             textAnchor="middle"
-            transform={`rotate(-90, ${x + 13}, ${y + 4})`}
+            transform={`rotate(-90, ${x}, ${y})`}
         >
             {value}
         </text>

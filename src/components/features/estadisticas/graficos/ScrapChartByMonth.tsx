@@ -21,23 +21,6 @@ import { useState } from "react"
 
 export const description = "A multiple bar chart"
 
-function CustomLabel({ x, y, value }: any) {
-    if (value === 0) return null; // Don't render label if value is 0
-    return (
-        <text
-            x={x}
-            y={y}
-            fill="white"
-            fontSize={12}
-            fontWeight={800}
-            textAnchor="middle"
-            transform={`rotate(-90, ${x + 13}, ${y + 4})`}
-        >
-            {value}
-        </text>
-    );
-}
-
 const chartData = [
     { month: "Enero", corte: 5200, desgaste: 5127, impacto: 0, separacion: 3762, desgarro: 4955 },
     { month: "Febrero", corte: 5284, desgaste: 5127, impacto: 0, separacion: 0, desgarro: 4575 },
@@ -78,7 +61,6 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ScrapChartByMonth() {
-    const [viewLabel, setViewLabel] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState("Enero");
 
     const selectedData = chartData.find((d) => d.month === selectedMonth);
@@ -126,12 +108,6 @@ export function ScrapChartByMonth() {
                             content={<ChartTooltipContent indicator="dashed" />}
                         />
                         <Bar dataKey="corte" fill="var(--color-corte)" radius={3}>
-                            {/* {
-                                viewLabel && (
-                                    <LabelList dataKey="corte" content={<CustomLabel />} />
-
-                                )
-                            } */}
                             <LabelList
                                 position="top"
                                 offset={12}

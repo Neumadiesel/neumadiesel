@@ -1,13 +1,11 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -28,6 +26,7 @@ const chartData = [
   { browser: "impacto", visitors: 0, fill: "var(--color-impacto)" },
   { browser: "separacion", visitors: 0, fill: "var(--color-separacion)" },
 ]
+
 
 const chartConfig = {
   visitors: {
