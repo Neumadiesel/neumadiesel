@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { TireDTO } from "@/types/Tire";
 import Label from "@/components/common/forms/Label";
+import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 interface LocationDTO {
     id: number;
     name: string;
@@ -343,13 +344,9 @@ export default function ModalTireMaintenance({
                 </div>
 
                 <div className="flex justify-end gap-2 mt-6">
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        className="px-4 py-2 bg-amber-400 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50"
-                    >
-                        {loading ? "Procesando..." : "Guardar Cambios"}
-                    </button>
+                    <ButtonWithAuthControl loading={loading} onClick={handleSubmit}>
+                        Guardar Cambios
+                    </ButtonWithAuthControl>
                     <button
                         onClick={onClose}
                         className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
