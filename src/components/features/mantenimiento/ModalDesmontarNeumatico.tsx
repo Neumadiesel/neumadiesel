@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
+import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 
 // Extender con los plugins
 dayjs.extend(utc);
@@ -180,7 +181,7 @@ export default function ModalDesmontarNeumatico({
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
-            <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
+            <div className="relative bg-white dark:bg-[#212121] dark:text-white p-6 rounded-md shadow-lg max-w-2xl w-full">
                 <h2 className="text-xl font-bold mb-4">Desmontar Neumático del Equipo</h2>
 
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
@@ -304,13 +305,9 @@ export default function ModalDesmontarNeumatico({
                 </div>
 
                 <div className="flex justify-end gap-2 mt-6">
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        className="px-4 py-2 bg-amber-400 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50"
-                    >
-                        {loading ? "Procesando..." : "Guardar Cambios"}
-                    </button>
+                    <ButtonWithAuthControl loading={loading} onClick={handleSubmit}>
+                        Guardar Cambios
+                    </ButtonWithAuthControl>
                     <button
                         onClick={handleCancel}
                         className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface VehicleModelDto {
@@ -31,6 +32,9 @@ export default function ModalEditarVehicleModel({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+
+    // Rol del usuario
+    const { isDemo } = useAuth();
 
     useEffect(() => {
         if (vehicleModel) {
@@ -120,7 +124,7 @@ export default function ModalEditarVehicleModel({
                 <div className="flex justify-end gap-2 mt-6">
                     <button
                         onClick={handleSubmit}
-                        disabled={loading}
+                        disabled={loading || isDemo}
                         className="px-4 py-2 bg-amber-400 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50"
                     >
                         {loading ? "Procesando..." : "Guardar Cambios"}

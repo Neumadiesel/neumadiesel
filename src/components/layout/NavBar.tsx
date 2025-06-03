@@ -50,19 +50,19 @@ export default function NavBar() {
             title: "Reportabilidad",
             icon: <FaChartBar className="text-2xl" />,
             path: "/estadisticas",
-            allowedRoles: ["administrador", "planificador", "supervisor", "stakeholder"],
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor", "stakeholder"],
         },
         {
             title: "Equipos",
             icon: <FaTruck className="text-2xl" />,
             path: "/maquinaria",
-            allowedRoles: ["administrador", "planificador", "supervisor"],
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
         },
         {
             title: "Neumáticos",
             icon: <FaCircleDot className="text-2xl" />,
             path: "/neumaticos",
-            allowedRoles: ["administrador", "planificador", "supervisor"],
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
         },
         {
             title: "Administración",
@@ -78,7 +78,7 @@ export default function NavBar() {
         {
             title: "Modelos",
             icon: <FaWpforms className="text-2xl" />,
-            allowedRoles: ["administrador", "planificador", "supervisor"],
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
                 { title: "Crear Modelo Neumático", path: "/modelos/modelo-neumatico" },
                 { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
@@ -89,7 +89,7 @@ export default function NavBar() {
         {
             title: "Mantenimiento",
             icon: <FaWrench className="text-2xl" />,
-            allowedRoles: ["administrador", "planificador", "supervisor"],
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
                 { title: "Cadenas", path: "/mantenimiento/cadenas" },
                 { title: "Sensores", path: "/mantenimiento/sensores" },
@@ -100,7 +100,7 @@ export default function NavBar() {
         {
             title: "Mediciones",
             icon: <FaFile className="text-2xl" />,
-            allowedRoles: ["administrador", "planificador", "supervisor"],
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
                 { title: "Mediciones", path: "/medicion/" },
                 {

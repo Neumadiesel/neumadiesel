@@ -22,6 +22,7 @@ interface User {
 interface AuthContextType {
     user: User | null;
     token: string | null;
+    isDemo: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (
@@ -59,6 +60,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
+    const [isDemo, setIsDemo] = useState(false);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -76,7 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const response = await axios.post(`${API_URL}/auth/login`, { email, password });
             const { access_token, user } = response.data;
-
+            setIsDemo(user.role?.name === "Demo");
             // Guardar en cookies
             Cookies.set("auth-token", access_token, { expires: 7 }); // Expira en 7 días
             Cookies.set("user-data", JSON.stringify(user), { expires: 7 });
@@ -228,6 +230,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             value={{
                 user,
                 token,
+                isDemo,
                 login,
                 logout,
                 register,

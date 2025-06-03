@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 
 
 interface VehicleDTO {
@@ -180,13 +181,9 @@ export default function ModalAddKms({
                 </div>
 
                 <div className="flex justify-end gap-2 mt-6">
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        className="px-4 py-2 bg-amber-400 text-black font-bold rounded hover:bg-amber-500 disabled:opacity-50"
-                    >
-                        {loading ? "Procesando..." : "Guardar Cambios"}
-                    </button>
+                    <ButtonWithAuthControl loading={loading} onClick={handleSubmit}>
+                        Guardar Cambios
+                    </ButtonWithAuthControl>
                     <button
                         onClick={handleClose}
                         className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"

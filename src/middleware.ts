@@ -64,6 +64,14 @@ const rolePermissions = {
         ...routePermissions.mantenimiento,
         ...routePermissions.medicion,
     ],
+    demo: [
+        ...routePermissions.reportabilidad,
+        ...routePermissions.equipos,
+        ...routePermissions.neumaticos,
+        ...routePermissions.modelos,
+        ...routePermissions.mantenimiento,
+        ...routePermissions.medicion,
+    ],
     planificador: [
         ...routePermissions.reportabilidad,
         ...routePermissions.equipos,
