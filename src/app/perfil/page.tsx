@@ -31,10 +31,10 @@ export default function Perfil() {
                             height={120}
                             className="rounded-full"
                         />
-                        <h1 className="text-white text-2xl font-bold">
+                        <h2 className="text-white text-2xl font-bold ">
                             {user?.name} {user?.last_name}
-                        </h1>
-                        <p className="text-white text-sm font-semibold">
+                        </h2>
+                        <p className="text-white text-sm font-semibold hidden lg:block">
                             {user?.email.toUpperCase()}
                         </p>
                         <p className="text-white text-md">{user?.role.name}</p>

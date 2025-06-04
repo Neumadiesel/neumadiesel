@@ -246,7 +246,15 @@ export default function NavBar() {
             </div>
 
             {/* Cerrar sesion - cambiar la version para el */}
-            <div className="w-[100%] p-3">
+            <div className="w-[100%] flex gap-2 items-center justify-between p-3 mr-8 lg:mr-0">
+                {user && (
+                    <Link href={"/perfil"} onClick={() => {
+
+                        setMenuOpen(false);
+                    }} className="text-center text-lg lg:hidden hover:bg-neutral-900 transition-all ease-in-out p-2 rounded-md">
+                        {user.name} {user.last_name}
+                    </Link>
+                )}
                 <Link
                     href={user ? "#" : "/login"}
                     onClick={e => {
@@ -256,7 +264,7 @@ export default function NavBar() {
                         }
                         setMenuOpen(false);
                     }}
-                    className="flex items-center justify-around"
+                    className="flex items-center justify-around hover:bg-neutral-900  transition-all ease-in-out p-2 rounded-md lg:w-full"
                 >
                     {user ? <FaSignOutAlt size={40} /> : <FaRegUserCircle size={40} />}
                     {(!isCollapsed) && (
@@ -270,7 +278,7 @@ export default function NavBar() {
             <div className="lg:hidden flex items-center">
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="text-white focus:outline-none"
+                    className="text-white focus:outline-none hover:cursor-pointer p-2 rounded-md hover:bg-gray-900 transition-all ease-in-out"
                 >
                     <FaBars size={30} />
                 </button>
@@ -323,26 +331,7 @@ export default function NavBar() {
 
                         ))}
                     </ul>
-                    <div className="w-[100%] p-3">
-                        <Link
-                            href={user ? "#" : "/login"}
-                            onClick={e => {
-                                if (user) {
-                                    e.preventDefault();
-                                    logout();
-                                }
-                                setMenuOpen(false);
-                            }}
-                            className="flex items-center justify-around"
-                        >
-                            {user ? <FaSignOutAlt size={40} /> : <FaRegUserCircle size={40} />}
-                            {(!isCollapsed) && (
-                                <p className="hidden lg:block">
-                                    {user ? "Cerrar sesión" : "Iniciar sesion"}
-                                </p>
-                            )}
-                        </Link>
-                    </div>
+
                 </div>
             )}
         </div>

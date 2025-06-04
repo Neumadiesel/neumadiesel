@@ -7,6 +7,7 @@ import Modal from "@/components/common/modal/CustomModal";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import ModalResultInspeccion from '@/components/features/inspeccion/ModalResultInspeccion';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface RegistrosDTO {
     id: number;
@@ -48,6 +49,7 @@ type ExcelRow = {
 type InspectionField = "externalTread" | "internalTread" | "temperature" | "pressure";
 
 export default function Page() {
+    const { isDemo } = useAuth();
     const [data, setData] = useState<Inspection[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -281,7 +283,7 @@ export default function Page() {
 
             <div className='flex w-full justify-center items-center flex-col'>
                 <div className='lg:flex gap-x-4 w-full lg:justify-center'>
-                    <button disabled={data.length === 0} onClick={() => handleConfirm()} className={`bg-amber-300  text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4 ${data.length === 0 ? 'opacity-50 ' : 'hover:bg-amber-400 cursor-pointer'}`}>
+                    <button disabled={data.length === 0 || isDemo} onClick={() => handleConfirm()} className={`bg-amber-300  text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4 ${(data.length === 0 || isDemo) ? 'opacity-50 ' : 'hover:bg-amber-400 cursor-pointer'}`}>
                         Confirmar Datos
                     </button>
                     <button onClick={handleCancel} className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">

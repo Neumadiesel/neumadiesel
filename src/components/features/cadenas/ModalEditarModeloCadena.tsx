@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ModeloCadena {
     id: number;
@@ -23,6 +24,7 @@ interface ModalProps {
 }
 
 export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, modeloCadena }: ModalProps) {
+    const { isDemo } = useAuth();
     const [codigo, setCodigo] = useState("");
     const [modelo, setModelo] = useState("");
     const [patron, setPatron] = useState("");
@@ -57,7 +59,7 @@ export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, m
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
-            <div className="relative bg-white dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
+            <div className="relative bg-white dark:bg-[#212121] dark:text-white p-6 rounded-md shadow-lg max-w-2xl w-full">
                 <h2 className="text-xl font-bold mb-4">Editar Modelo de Cadena</h2>
 
                 <button
@@ -110,7 +112,8 @@ export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, m
                     />
                 </div>
                 <button
-                    className="mt-4 w-full bg-amber-400 hover:bg-amber-500 text-black py-2 rounded font-semibold"
+                    disabled={isDemo}
+                    className={"mt-4 w-full bg-amber-400  text-black py-2 rounded font-semibold" + (isDemo ? " cursor-not-allowed opacity-70" : "hover:bg-amber-500")}
                     onClick={handleGuardar}
                 >
                     Guardar Cambios

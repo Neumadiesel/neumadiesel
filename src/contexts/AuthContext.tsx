@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             // Guardar en cookies
             Cookies.set("auth-token", access_token, { expires: 7 }); // Expira en 7 días
             Cookies.set("user-data", JSON.stringify(user), { expires: 7 });
-
+            console.log("Es Demo:", user.role?.name === "Demo");
             setUser(user);
             setToken(access_token);
             router.push("/");

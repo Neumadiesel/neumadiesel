@@ -37,7 +37,7 @@ export default function EditarInfo() {
     return (
         <section className="flex flex-col dark:text-white">
             <h1 className="text-2xl font-bold ">Datos personales</h1>
-            <div className="grid mt-2 grid-cols-2 gap-4 items-center justify-center w-2/3 ">
+            <div className="grid mt-2 grid-cols-2 gap-4 items-center justify-center w-full ">
                 <div className="flex flex-col  w-full">
                     <label className="text-sm text-gray-500 dark:text-white">Nombre:</label>
                     <input

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ModalProps {
     visible: boolean;
@@ -12,6 +13,7 @@ interface ModalProps {
 }
 // Componente para registrar un nuevo modelo de cadena
 export default function ModalRegistrarModeloCadena({ visible, onClose, onGuardar }: ModalProps) {
+    const { isDemo } = useAuth();
     // Estados para los campos del formulario
     const [codigo, setCodigo] = useState("");
     const [modelo, setModelo] = useState("");
@@ -57,7 +59,10 @@ export default function ModalRegistrarModeloCadena({ visible, onClose, onGuardar
                     <input type="text" placeholder="Tamaño Neumático Recomendado" value={size} onChange={(e) => setSize(e.target.value)} className="w-full p-2 border rounded" />
                 </div>
 
-                <button onClick={handleGuardar} className="mt-4 w-full bg-amber-300 hover:bg-amber-500 text-black py-2 rounded font-semibold">
+
+
+
+                <button disabled={isDemo} onClick={handleGuardar} className={"mt-4 disabled:opacity-70 w-full bg-amber-300 text-black py-2 rounded font-semibold" + (isDemo ? " cursor-not-allowed" : "hover:bg-amber-500")}>
                     Guardar Cambios
                 </button>
             </div>
