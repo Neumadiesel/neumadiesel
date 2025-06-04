@@ -1,8 +1,6 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "@/contexts/AuthContext";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 
 
@@ -33,9 +31,6 @@ export default function ModalEditarVehicleModel({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-
-    // Rol del usuario
-    const { isDemo } = useAuth();
 
     useEffect(() => {
         if (vehicleModel) {
