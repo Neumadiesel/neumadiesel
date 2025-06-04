@@ -51,11 +51,6 @@ interface BudgetChartProps {
     year: number
 }
 
-const monthNames = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
-
 export function BudgetChart({ siteId, year }: BudgetChartProps) {
     const { user } = useAuth();
     const isAdmin = user?.role.name.toLowerCase() === "administrador";
@@ -64,7 +59,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
     const [sites, setSites] = useState<FaenaDTO[]>([]);
     const [siteSelected, setSiteSelected] = useState<number>(siteId);
 
-    const fetchBudgetByYear = async (year: number) => {
+    const fetchBudgetByYear = async () => {
         try {
             const response = await fetch(`https://inventory.neumasystem.site/maintenance/compareNewTires/${siteSelected}/${yearSelected}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
@@ -88,7 +83,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
     useEffect(() => {
         if (siteId && year) {
             fetchSites();
-            fetchBudgetByYear(year);
+            fetchBudgetByYear();
         }
     }, [siteId, year, yearSelected, siteSelected]);
 
