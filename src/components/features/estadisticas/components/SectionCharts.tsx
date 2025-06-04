@@ -16,7 +16,7 @@ export default function SectionCharts() {
         <div className="grid grid-cols-1 py-4 px-2 gap-2 w-full">
             <div className="flex flex-col lg:flex-row-reverse gap-2 mb-2 w-full h-full">
                 {/* KPI: arriba en móvil, derecha en escritorio */}
-                <div className="w-full lg:w-1/3 flex items-center justify-center rounded-md py-3">
+                <div className="w-full lg:w-1/3 h-[100%] flex items-center justify-center rounded-md">
                     <SectionKpi />
                 </div>
 

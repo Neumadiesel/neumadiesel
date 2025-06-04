@@ -4,6 +4,7 @@ import axios from "axios";
 import Label from "@/components/common/forms/Label";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface ModalRegistrarNeumaticoProps {
@@ -12,22 +13,41 @@ interface ModalRegistrarNeumaticoProps {
     onGuardar: () => void;
 }
 
+
+interface FaenaDTO {
+    id: number;
+    name: string;
+    region: string;
+    isActive: boolean;
+    contract: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        siteId: number;
+    };
+}
+
+
 export default function ModalRegistrarNeumatico({
     visible,
     onClose,
     onGuardar,
 }: ModalRegistrarNeumaticoProps) {
+    const { user } = useAuth();
+    const isAdmin = user?.role.name.toLowerCase() === "administrador"
     const [tyreModelEdited, setTyreModelEdited] = useState({
         code: "",
         modelId: null as number | null,
         initialTread: null as number | null,
         initialKilometrage: null as number | null,
-        initialHours: null as number | null
+        initialHours: null as number | null,
+        siteId: isAdmin ? null as number | null : user?.faena_id || null,
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [tireModels, setTireModels] = useState<TyreModelDto[]>([]);
     const [selectedModel, setSelectedModel] = useState<TyreModelDto | null>(null);
+    const [sites, setSites] = useState<FaenaDTO[]>([]);
 
     const fetchModelTire = async () => {
         setLoading(true);
@@ -41,9 +61,22 @@ export default function ModalRegistrarNeumatico({
         }
     };
 
+    const fetchSites = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch("https://inventory.neumasystem.site/sites/with-contract");
+            const data = await response.json();
+            setLoading(false);
+            setSites(data);
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+        }
+    };
+
+
     useEffect(() => {
         fetchModelTire();
-        console.log("selected", selectedModel)
+        fetchSites();
     }, []);
 
     const handleSubmit = async () => {
@@ -51,7 +84,7 @@ export default function ModalRegistrarNeumatico({
         setLoading(true);
 
         const {
-            code, modelId, initialTread, initialKilometrage, initialHours
+            code, modelId, initialTread, initialKilometrage, initialHours, siteId
         } = tyreModelEdited;
         console.log(tyreModelEdited);
         if (
@@ -59,7 +92,8 @@ export default function ModalRegistrarNeumatico({
             modelId === null ||
             initialTread === null ||
             initialKilometrage === null ||
-            initialHours === null
+            initialHours === null ||
+            siteId === null
         ) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
@@ -75,6 +109,17 @@ export default function ModalRegistrarNeumatico({
         const locationId = 2;
         const usedHours = 0;
         const usedKilometrage = 0;
+        console.log("Submitting tyre:", {
+            code,
+            modelId,
+            locationId,
+            initialTread,
+            initialKilometrage,
+            initialHours,
+            usedHours,
+            usedKilometrage,
+            siteId
+        });
         try {
             const response = await axios.post(
                 `https://inventory.neumasystem.site/tires/`,
@@ -87,6 +132,7 @@ export default function ModalRegistrarNeumatico({
                     initialHours,
                     usedHours,
                     usedKilometrage,
+                    siteId
                 },
             );
 
@@ -95,7 +141,8 @@ export default function ModalRegistrarNeumatico({
                 modelId: null,
                 initialTread: null,
                 initialKilometrage: null,
-                initialHours: null
+                initialHours: null,
+                siteId: null
             });
             onGuardar();
             onClose();
@@ -159,7 +206,34 @@ export default function ModalRegistrarNeumatico({
                             </option>
                         ))}
                     </select>
+                    {/* Feana */}
+                    {
+                        isAdmin && (
+                            <>                            <Label title="Faena" isNotEmpty={true} />
+                                <select
+                                    name="faena"
+                                    value={tyreModelEdited.siteId === null ? "" : tyreModelEdited.siteId}
+                                    onChange={(e) => {
+                                        const selectedId = Number(e.target.value);
+                                        setTyreModelEdited({
+                                            ...tyreModelEdited,
+                                            siteId: selectedId,
+                                        });
+                                    }}
+                                    disabled={loading}
+                                    className="border border-gray-300 p-2 rounded"
+                                >
+                                    <option value="">Seleccionar Faena</option>
+                                    {sites.map((site) => (
+                                        <option key={site.id} value={site.id}>
+                                            {site.name} - {site.region}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
 
+                        )
+                    }
                     {/* Goma original */}
                     <Label title="Goma Inicial" isNotEmpty={true} />
                     <input

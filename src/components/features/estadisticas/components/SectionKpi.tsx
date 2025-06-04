@@ -4,7 +4,7 @@ import { GiMineTruck } from "react-icons/gi";
 import { FaExclamationTriangle } from "react-icons/fa";
 export default function SectionKpi() {
     return (
-        <section className="grid grid-cols-2 lg:grid-cols-1 gap-3 w-[100%] h-[100%] justify-between mt-2">
+        <section className="grid grid-cols-2 lg:grid-cols-1 gap-3 w-[100%] h-full justify-between ">
             {/* Neumaticos Operativos */}
             <div className="flex flex-row gap-2 h-20 items-center w-full py-4 bg-neutral-50 dark:bg-neutral-900 border-2 border-blue-500  p-2 rounded-md">
                 <FaCircleDot className="text-4xl drop-shadow-md text-blue-500" />
