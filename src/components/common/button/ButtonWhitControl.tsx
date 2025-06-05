@@ -18,13 +18,13 @@ export default function ButtonWithAuthControl({
 
     const isDisabled = rest.disabled || loading || isDemo;
 
+    console.log("ButtonWithAuthControl isDemo:", isDisabled);
     return (
         <button
             {...rest}
             disabled={isDisabled}
-            className={`px-4 py-2 bg-amber-400 text-black font-bold rounded  disabled:opacity-75 ${isDisabled ? "" : "hover:bg-amber-500"} ${className}`}
+            className={`px-4 py-2  font-bold rounded  disabled:opacity-75 ${isDisabled ? "border border-neutral-200 dark:border-neutral-600 text-neutral-300 dark:text-neutral-700" : "bg-amber-400 hover:bg-amber-500 text-black"} ${className}`}
         >
-
             {loading ? "Procesando..." : children}
         </button>
     );

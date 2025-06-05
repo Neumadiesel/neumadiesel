@@ -99,11 +99,12 @@ export default function ModalAsignarNeumatico({
         try {
             const response = await fetch("https://inventory.neumasystem.site/tires/available");
             const data = await response.json();
-            setTires(data);
+            setTires(Array.isArray(data) ? data : []); // <-- Asegura que siempre sea un array
             console.log("Neumáticos", data);
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
+            setTires([]); // <-- En caso de error, también deja un array vacío
         }
     };
 
@@ -219,6 +220,7 @@ export default function ModalAsignarNeumatico({
     };
 
     const getFilteredTires = (): TireDTO[] => {
+        if (!Array.isArray(tires)) return [];
         return tires.filter((tire) => {
             // Excluir los neumáticos en la ubicación 1
             if (tire.locationId === 1) return false;
