@@ -134,7 +134,7 @@ export default function ListaNeumaticos() {
             {/* Tabla */}
             <main >
                 <div
-                    className="relative flex flex-col w-full overflow-scroll border rounded-md text-gray-700 bg-white shadow-sm bg-clip-border dark:border-neutral-700 dark:text-white">
+                    className="relative flex flex-col w-full overflow-scroll border rounded-md text-gray-700 bg-white dark:bg-neutral-800 shadow-sm bg-clip-border dark:border-neutral-700 dark:text-white">
                     <table className="w-full text-left table-auto min-w-max ">
                         <thead className="text-xs text-black uppercase bg-amber-300  dark:bg-neutral-900 dark:text-white">
                             <tr>
