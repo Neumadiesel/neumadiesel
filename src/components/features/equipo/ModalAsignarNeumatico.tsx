@@ -11,7 +11,7 @@ import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import MultiSelect from "@/components/common/select/MultiSelect";
 import { FaPlusCircle } from "react-icons/fa";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
-
+import Cross from "@/components/common/icons/Cross";
 interface VehicleDTO {
     id: number;
     code: string;
@@ -241,8 +241,18 @@ export default function ModalAsignarNeumatico({
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
             <section className="relative max-lg:w-full bg-white dark:bg-[#212121] dark:text-white placeholder:dark:text-white p-3 lg:p-6 rounded-md flex max-lg:flex-col shadow-lg h-full lg:h-[80dvh] overflow-y-scroll">
 
-                <main className=" w-full lg:w-[60dvh]  border-r border-gray-300 pr-4">
-                    <h2 className="text-xl font-bold mb-4">Instalar neumático</h2>
+                <main className=" w-full lg:w-[60dvh]  lg:border-r border-gray-300 lg:pr-4">
+                    <div>
+                        <h2 className="text-xl font-bold mb-4">Instalar neumático</h2>
+                        {/* x para cerrar el modal */}
+                        <button
+                            onClick={handleClose}
+                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                            title="Cerrar"
+                        >
+                            <Cross />
+                        </button>
+                    </div>
                     <p className="text-sm mb-4">
                         Seleccione el neumático a instalar y la posición en el equipo {vehicle.code}
                     </p>

@@ -6,6 +6,7 @@ import ModalRegistrarVehiculo from "@/components/features/equipo/ModalRegistrarV
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
 import { useAuth } from "@/contexts/AuthContext";
+import MineTruck from "@/components/common/icons/MineTruck";
 
 interface VehicleDTO {
     id: number;
@@ -105,7 +106,7 @@ export default function RootLayout({
         <LayoutProvider>
             <div className="block lg:flex min-h-[100%]">
                 {/* Lista de camiones */}
-                <main className="w-full lg:w-[40%] lg:h-screen h-[45vh] flex justify-center items-center">
+                <main className="w-full lg:w-[40%] lg:h-screen h-[40vh] flex justify-center items-center">
                     <div className="bg-white dark:bg-[#212121] w-full h-full relative">
                         <Breadcrumb />
 
@@ -133,16 +134,20 @@ export default function RootLayout({
                                     />
                                 </div>
 
-                                <div className="flex flex-col h-[80%] overflow-y-scroll gap-x-4 gap-y-2 px-4">
+                                <div className="flex lg:flex-col w-[100%] h-[25vh]   lg:h-[80%] overflow-x-scroll lg:overflow-y-scroll gap-x-4 gap-y-2 px-4">
                                     {filteredVehicles.map(vehicle => (
                                         <Link
                                             href={`/maquinaria/${vehicle.id}`}
                                             key={vehicle.id}
-                                            className="flex h-20 justify-around border items-center p-2 bg-gray-100 dark:border-neutral-700 dark:bg-[#111111] rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
+                                            className="lg:flex max-lg:flex-col grid grid-cols-2 min-w-52 h-[90%] lg:h-20 justify-around border items-center p-2 bg-gray-100 dark:border-neutral-700 dark:bg-[#111111] rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
                                         >
-                                            <p className="text-lg font-semibold   dark:text-white">{vehicle.code}</p>
-                                            <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.model.brand} {vehicle.model.model}</p>
-                                            <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.site.name}</p>
+                                            <MineTruck className="w-16 h-16 text-gray-500 dark:text-white" />
+                                            <p className="text-2xl font-semibold   dark:text-white">{vehicle.code}</p>
+                                            <div className="flex flex-col items-start justify-center min-w-[100%] col-span-2">
+
+                                                <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.model.brand} {vehicle.model.model}</p>
+                                                <p className="text-sm font-semibold text-gray-500 dark:text-white">{vehicle.site.name}</p>
+                                            </div>
                                         </Link>
                                     ))}
                                 </div>

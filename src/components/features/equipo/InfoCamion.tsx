@@ -36,7 +36,7 @@ export default function ListaMaquinaria() {
             return;
         }
         if (!siteId) {
-            setError("Vehículo no encontrado o no autorizado para esta faena.");
+            setError("Vehículo no encontrado o no autorizado para esta faena. Seleccione otro vehículo.");
             setLoading(false);
             return;
         }
@@ -148,7 +148,7 @@ export default function ListaMaquinaria() {
                     <div className="grid grid-cols-2 gap-2 w-full">
                         {
                             error && (
-                                <div className="text-red-500 text-center col-span-2 row-span-3 bg-red-50 h-[40dvh] flex items-center justify-center rounded-md border border-red-300">
+                                <div className="text-red-500 dark:text-red-400 text-center col-span-2 row-span-3 bg-red-50 dark:bg-neutral-800 px-10 h-[40dvh] flex items-center justify-center rounded-md border border-red-300">
                                     {error}
                                 </div>
                             )
