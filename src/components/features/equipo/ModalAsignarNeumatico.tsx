@@ -97,7 +97,7 @@ export default function ModalAsignarNeumatico({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/tires/available");
+            const response = await fetch(`https://inventory.neumasystem.site/tires/available/site/${vehicle?.siteId}`);
             const data = await response.json();
             setTires(Array.isArray(data) ? data : []); // <-- Asegura que siempre sea un array
             console.log("Neumáticos", data);
@@ -143,6 +143,9 @@ export default function ModalAsignarNeumatico({
         fetchData();
     }, []);
 
+    useEffect(() => {
+        fetchData();
+    }, [vehicle?.siteId]);
 
     if (!visible || !vehicle) return null;
 
@@ -236,9 +239,9 @@ export default function ModalAsignarNeumatico({
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
-            <section className="relative bg-white dark:bg-[#212121] dark:text-white placeholder:dark:text-white p-6 rounded-md flex shadow-lg h-[80dvh] overflow-y-scroll">
+            <section className="relative max-lg:w-full bg-white dark:bg-[#212121] dark:text-white placeholder:dark:text-white p-3 lg:p-6 rounded-md flex max-lg:flex-col shadow-lg h-full lg:h-[80dvh] overflow-y-scroll">
 
-                <main className="w-[60dvh] border-r border-gray-300 pr-4">
+                <main className=" w-full lg:w-[60dvh]  border-r border-gray-300 pr-4">
                     <h2 className="text-xl font-bold mb-4">Instalar neumático</h2>
                     <p className="text-sm mb-4">
                         Seleccione el neumático a instalar y la posición en el equipo {vehicle.code}
@@ -247,7 +250,7 @@ export default function ModalAsignarNeumatico({
 
                     <div className="grid grid-cols-2 gap-2">
                         {/* Lista de modelos */}
-                        <Label title="Modelo" isNotEmpty={true} />
+                        <Label title="Codigo Equipo" isNotEmpty={true} />
                         <input
                             name="Código Equipo"
                             value={vehicle.code}
@@ -332,7 +335,7 @@ export default function ModalAsignarNeumatico({
                             ))}
                         </select>
                         {/* Ubicacion */}
-                        <Label title="ubicación" isNotEmpty={true} />
+                        <Label title="Lugar de Trabajo" isNotEmpty={true} />
                         <select
                             value={locationId ?? ""}
                             onChange={(e) => setLocationId(Number(e.target.value))}
@@ -349,20 +352,10 @@ export default function ModalAsignarNeumatico({
                         </select>
                     </div>
 
-                    <div className="flex justify-end gap-2 mt-6">
-                        <ButtonWithAuthControl loading={loading} onClick={handleSubmit}>
-                            Guardar Cambios
-                        </ButtonWithAuthControl>
-                        <button
-                            onClick={handleClose}
-                            className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
-                        >
-                            Cancelar
-                        </button>
-                    </div>
                 </main>
+
                 {/* Lista de neumaticos */}
-                <aside className="w-[90dvh] pl-4">
+                <aside className=" w-full max-lg:border-t max-lg:mt-4 max-lg:pt-2 border-t-gray-200 lg:w-[90dvh] lg:pl-4">
                     <h2 className="text-xl font-bold mb-4">Neumáticos Disponibles</h2>
                     <div className="flex flex-row justify-center items-center w-[50%]">
                         <MultiSelect
@@ -438,6 +431,17 @@ export default function ModalAsignarNeumatico({
                                     ))}
                             </tbody>
                         </table>
+                    </div>
+                    <div className="flex justify-end gap-2 mt-6">
+                        <ButtonWithAuthControl loading={loading} onClick={handleSubmit}>
+                            Guardar Cambios
+                        </ButtonWithAuthControl>
+                        <button
+                            onClick={handleClose}
+                            className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
+                        >
+                            Cancelar
+                        </button>
                     </div>
                     {/* Mostrar error si existe */}
                     {error && <div className="text-red-500 flex justify-between text-sm h-[10dvh] mt-2 overflow-y-scroll bg-red-50 border border-red-300 p-2 rounded-sm">{error}
