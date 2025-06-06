@@ -17,8 +17,10 @@ export default function TirePhotoGallery() {
             const res = await fetch(`https://inventory.neumasystem.site/tires/photos/${tireId}`);
             const data = await res.json();
             setPhotos(data);
-        } catch (error) {
+        } catch {
             alert('Error al obtener fotos.');
+            // ...
+
         } finally {
             setLoading(false);
         }
@@ -36,8 +38,8 @@ export default function TirePhotoGallery() {
         formData.append('tireId', tireId.toString());
 
         console.log('Archivos seleccionados:', files);
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value); // ✅ aquí deberías ver "photos" y "tireId"
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);
         }
 
         setUploading(true);
@@ -52,9 +54,10 @@ export default function TirePhotoGallery() {
             alert('Fotos subidas correctamente');
             setFiles(null);
             fetchPhotos();
-        } catch (error) {
-            alert('No se pudieron subir las fotos.');
-            console.error(error);
+        } catch {
+            alert('Error al obtener fotos.');
+            // ...
+
         } finally {
             setUploading(false);
         }
