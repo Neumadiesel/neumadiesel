@@ -106,9 +106,9 @@ export default function TirePhotoGallery() {
                             <Image
                                 src={`https://inventory.neumasystem.site${photo.url}`}
                                 alt="logo"
-                                width={120}
-                                height={120}
-                                className="rounded-full"
+                                width={660}
+                                height={460}
+                                className=""
                             />
                             <div className="text-xs text-center p-1 bg-gray-100 dark:bg-gray-800">
                                 {new Date(photo.createdAt).toLocaleDateString()}
