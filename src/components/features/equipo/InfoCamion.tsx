@@ -118,7 +118,7 @@ export default function ListaMaquinaria() {
                                         || id === undefined
                                         || error !== null
                                     }
-                                    text="Agregar Horas/Kilometros"
+                                    text="Agregar Horas/Kilómetros"
                                     onClick={() => { setMostrarAddKms(true) }}
                                 />
                                 {/* Boton de editar */}

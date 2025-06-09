@@ -7,6 +7,7 @@ import Link from "next/link";
 import ModaleditarTyreModel from "@/components/features/neumatico/mod/model/ModalEditarTyreModel";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import Button from "@/components/common/button/Button";
+import ToolTipCustom from "@/components/ui/ToolTipCustom";
 
 export default function ModelosNeumaticos() {
     const [tyreModels, setTyreModels] = useState<TyreModelDto[]>([]);
@@ -46,7 +47,7 @@ export default function ModelosNeumaticos() {
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg  pb-4 gap-4 flex flex-col">
             <section className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Modelos de Neumaticos</h1>
+                <h1 className="text-2xl font-bold">Modelos de Neumáticos</h1>
                 <Button onClick={() => { setModalRegistrarModelo(true) }} text="Crear Nuevo Modelo" />
             </section>
             <main >
@@ -57,7 +58,7 @@ export default function ModelosNeumaticos() {
                             <tr>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Codigo
+                                        Código
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -72,7 +73,7 @@ export default function ModelosNeumaticos() {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Patron
+                                        Patrón
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -154,13 +155,17 @@ export default function ModelosNeumaticos() {
                                         <td className=" px-2">
                                             <div className="flex gap-2">
                                                 {/* boton editar */}
-                                                <button onClick={() => handleEditTyreModel(tyreModel)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-700 border border-green-300 rounded-md flex items-center justify-center">
-                                                    <FaPencil />
-                                                </button>
+                                                <ToolTipCustom content="Editar Modelo">
+                                                    <button onClick={() => handleEditTyreModel(tyreModel)} className="p-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-700 border border-green-300 rounded-md flex items-center justify-center">
+                                                        <FaPencil />
+                                                    </button>
+                                                </ToolTipCustom>
                                                 {/* Boton de ver detalles */}
-                                                <Link href={`/modelos/modelo-neumatico/${tyreModel.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border dark:bg-neutral-700 border-blue-300 rounded-md flex items-center justify-center">
-                                                    <FaInfoCircle />
-                                                </Link>
+                                                <ToolTipCustom content="Ver Detalles">
+                                                    <Link href={`/modelos/modelo-neumatico/${tyreModel.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border dark:bg-neutral-700 border-blue-300 rounded-md flex items-center justify-center">
+                                                        <FaInfoCircle />
+                                                    </Link>
+                                                </ToolTipCustom>
                                             </div>
                                         </td>
                                     </tr>
