@@ -94,11 +94,16 @@ const rolePermissions = {
         ...routePermissions.mantenimiento,
         ...routePermissions.medicion,
     ],
+    // Cambiar nombre a tecnico
     operador: [
         '/medicion/medicion-por-equipo',
     ],
+    // Modificar agregar Equipos y Neumáticos
     stakeholder: [
         ...routePermissions.reportabilidad,
+        ...routePermissions.equipos,
+        ...routePermissions.neumaticos,
+        ...routePermissions.modelos,
     ],
 };
 
