@@ -19,7 +19,7 @@ export default function ListaNeumaticos() {
     const [estado, setEstado] = useState('');
 
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+    const itemsPerPage = 20;
     const [tires, setTires] = useState<TireDTO[]>([]);
 
     const [loading, setLoading] = useState(false);

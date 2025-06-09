@@ -61,7 +61,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
 
     const fetchBudgetByYear = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/compareNewTires/${siteSelected}/${yearSelected}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteSelected}/year/${yearSelected}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
             setBudgetByYear(data);
@@ -128,7 +128,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
                         onChange={(e) => setYearSelected(Number(e.target.value))}
                         className="bg-white dark:bg-[#212121] border dark:text-white border-gray-300 dark:border-gray-600 rounded-md p-2 px-4 text-sm"
                     >
-                        {[2025, 2026, 2027, 2028].map((yearOption) => (
+                        {[2023, 2024, 2025, 2026, 2027, 2028].map((yearOption) => (
                             <option key={yearOption} value={yearOption}>
                                 {yearOption}
                             </option>
