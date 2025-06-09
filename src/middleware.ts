@@ -45,6 +45,9 @@ const routePermissions = {
         '/mantenimiento/orden-de-trabajo',
         '/mantenimiento/programas',
     ],
+    faena: [
+        '/faena',
+    ],
 
     // Rutas de ingreso de datos
     medicion: [
@@ -69,6 +72,7 @@ const rolePermissions = {
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
+        ...routePermissions.faena,
         ...routePermissions.mantenimiento,
         ...routePermissions.medicion,
     ],
@@ -77,6 +81,7 @@ const rolePermissions = {
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
+        ...routePermissions.faena,
         ...routePermissions.mantenimiento,
         ...routePermissions.medicion,
     ],
@@ -84,6 +89,7 @@ const rolePermissions = {
         ...routePermissions.reportabilidad,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
+        ...routePermissions.faena,
         ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
         ...routePermissions.medicion,

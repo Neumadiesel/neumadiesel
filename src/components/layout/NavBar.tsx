@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaCircleDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
+import { Mountain } from "lucide-react";
 
 interface MenuItem {
     title: string;
@@ -56,6 +57,12 @@ export default function NavBar() {
                 { title: "Faena", path: "/administracion/faena" },
                 { title: "Razón de desintalacion", path: "/administracion/razon-de-desintalacion" },
             ],
+        },
+        {
+            title: "Faena",
+            icon: <Mountain className="text-2xl" />,
+            path: "/faena",
+            allowedRoles: ["planificador", "demo", "supervisor"],
         },
         {
             title: "Reportabilidad",
