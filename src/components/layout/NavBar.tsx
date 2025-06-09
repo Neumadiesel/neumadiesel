@@ -46,11 +46,34 @@ export default function NavBar() {
     };
 
     const menuItems: MenuItem[] = [
+
+        {
+            title: "Administración",
+            icon: <FaUsersCog className="text-2xl" />,
+            allowedRoles: ["administrador"],
+            children: [
+                { title: "Usuarios", path: "/administracion/usuarios" },
+                { title: "Faena", path: "/administracion/faena" },
+                { title: "Razón de desintalacion", path: "/administracion/razon-de-desintalacion" },
+            ],
+        },
         {
             title: "Reportabilidad",
             icon: <FaChartBar className="text-2xl" />,
             path: "/estadisticas",
             allowedRoles: ["administrador", "planificador", "demo", "supervisor", "stakeholder"],
+        },
+        // modelos,
+        {
+            title: "Modelos",
+            icon: <FaWpforms className="text-2xl" />,
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
+            children: [
+                { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
+                { title: "Crear Modelo Neumático", path: "/modelos/modelo-neumatico" },
+                { title: "Crear Modelo Cadena", path: "/modelos/modelo-cadena" },
+                { title: "Crear Modelo Sensor", path: "/modelos/modelo-sensor" },
+            ],
         },
         {
             title: "Equipos",
@@ -65,28 +88,6 @@ export default function NavBar() {
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
         },
         {
-            title: "Administración",
-            icon: <FaUsersCog className="text-2xl" />,
-            allowedRoles: ["administrador"],
-            children: [
-                { title: "Usuarios", path: "/administracion/usuarios" },
-                { title: "Faena", path: "/administracion/faena" },
-                { title: "Razón de desintalacion", path: "/administracion/razon-de-desintalacion" },
-            ],
-        },
-        // modelos,
-        {
-            title: "Modelos",
-            icon: <FaWpforms className="text-2xl" />,
-            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
-            children: [
-                { title: "Crear Modelo Neumático", path: "/modelos/modelo-neumatico" },
-                { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
-                { title: "Crear Modelo Cadena", path: "/modelos/modelo-cadena" },
-                { title: "Crear Modelo Sensor", path: "/modelos/modelo-sensor" },
-            ],
-        },
-        {
             title: "Mantenimiento",
             icon: <FaWrench className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
@@ -96,6 +97,12 @@ export default function NavBar() {
                 { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
                 { title: "Programa semanal", path: "/mantenimiento/programas" },
             ],
+        },
+        {
+            title: "Ingresar Medición por Equipo",
+            icon: <FaFile className="text-2xl" />,
+            path: "/medicion/medicion-por-equipo",
+            allowedRoles: ["operador"],
         },
         {
             title: "Mediciones",
@@ -108,12 +115,6 @@ export default function NavBar() {
                     path: "/medicion/medicion-por-equipo",
                 },
             ],
-        },
-        {
-            title: "Ingresar Medición por Equipo",
-            icon: <FaFile className="text-2xl" />,
-            path: "/medicion/medicion-por-equipo",
-            allowedRoles: ["operador"],
         },
     ];
 

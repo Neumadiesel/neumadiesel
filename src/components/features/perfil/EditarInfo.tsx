@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 export default function EditarInfo() {
     const { user, updateUser, setUser } = useAuth();
     const [name, setName] = useState(user?.name);
@@ -92,13 +93,9 @@ export default function EditarInfo() {
                     </div>
                 )}
             </div>
-            <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="px-4 py-2 w-2/3 mt-4 bg-amber-300 text-black font-bold rounded hover:bg-amber-50 dark:bg-[#313131]0 disabled:opacity-50"
-            >
-                {loading ? "Procesando..." : "Guardar Cambios"}
-            </button>
+            <ButtonWithAuthControl loading={loading} onClick={handleSubmit}>
+                Guardar Cambios
+            </ButtonWithAuthControl>
         </section>
     );
 }
