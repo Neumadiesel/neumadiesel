@@ -139,7 +139,7 @@ export default function RootLayout({
                                         <Link
                                             href={`/maquinaria/${vehicle.id}`}
                                             key={vehicle.id}
-                                            className="lg:flex max-lg:flex-col grid grid-cols-3  min-w-52 h-[90%] lg:h-20 lg:justify-between border items-center p-2 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-950 lg:gap-4 rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
+                                            className="lg:flex max-lg:flex-col grid grid-cols-2  min-w-52 h-[90%] lg:h-20 lg:justify-between border items-center p-2 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-950 lg:gap-4 rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
                                         >
                                             <MineTruck className="w-16 h-16 text-gray-500  dark:text-white" />
                                             <p className="text-2xl font-semibold   dark:text-white">{vehicle.code}</p>

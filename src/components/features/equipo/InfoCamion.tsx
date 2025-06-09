@@ -124,11 +124,11 @@ export default function ListaMaquinaria() {
                                     onClick={() => { setMostrarAddKms(true) }}
                                 />
                                 {/* Boton de editar */}
-                                <ToolTipCustom content="Editar Equipo">
+                                {/* <ToolTipCustom content="Editar Equipo">
                                     <button disabled={loading || id === undefined || error !== null} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  dark:bg-[#313131] border text-lg text-black dark:text-white p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined || error !== null ? "opacity-50 " : "cursor-pointer hover:bg-gray-200 dark:hover:bg-[#141414]"}`}>
                                         <FaEdit />
                                     </button>
-                                </ToolTipCustom>
+                                </ToolTipCustom> */}
 
                             </section>
                             {/* Info del camión */}
