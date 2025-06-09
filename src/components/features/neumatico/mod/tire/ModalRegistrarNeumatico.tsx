@@ -40,6 +40,7 @@ export default function ModalRegistrarNeumatico({
         modelId: null as number | null,
         initialTread: null as number | null,
         initialKilometrage: null as number | null,
+        creationDate: new Date().toISOString(),
         initialHours: null as number | null,
         siteId: isAdmin ? null as number | null : user?.faena_id || null,
     });
@@ -84,7 +85,7 @@ export default function ModalRegistrarNeumatico({
         setLoading(true);
 
         const {
-            code, modelId, initialTread, initialKilometrage, initialHours, siteId
+            code, modelId, initialTread, initialKilometrage, initialHours, siteId, creationDate
         } = tyreModelEdited;
         console.log(tyreModelEdited);
         if (
@@ -106,7 +107,7 @@ export default function ModalRegistrarNeumatico({
             setLoading(false);
             return;
         }
-        const locationId = 2;
+        const locationId = 10;
         const usedHours = 0;
         const usedKilometrage = 0;
         console.log("Submitting tyre:", {
@@ -114,6 +115,7 @@ export default function ModalRegistrarNeumatico({
             modelId,
             locationId,
             initialTread,
+            creationDate,
             initialKilometrage,
             initialHours,
             usedHours,
@@ -129,6 +131,7 @@ export default function ModalRegistrarNeumatico({
                     locationId,
                     initialTread,
                     initialKilometrage,
+                    creationDate,
                     initialHours,
                     usedHours,
                     usedKilometrage,
@@ -140,6 +143,7 @@ export default function ModalRegistrarNeumatico({
                 code: "",
                 modelId: null,
                 initialTread: null,
+                creationDate: new Date().toISOString(),
                 initialKilometrage: null,
                 initialHours: null,
                 siteId: null
@@ -234,6 +238,20 @@ export default function ModalRegistrarNeumatico({
 
                         )
                     }
+                    {/* Fecha de creacion */}
+                    <Label title="Fecha de Creación" isNotEmpty={true} />
+                    <input
+                        name="fechaCreacion"
+                        type="date"
+                        value={tyreModelEdited.creationDate.split("T")[0]}
+                        onChange={(e) => {
+                            setTyreModelEdited({
+                                ...tyreModelEdited,
+                                creationDate: e.target.value,
+                            });
+                        }}
+                        className="border border-gray-300 p-2 rounded"
+                    />
                     {/* Goma original */}
                     <Label title="Goma Inicial" isNotEmpty={true} />
                     <input

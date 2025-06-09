@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { FaEdit } from "react-icons/fa";
 import ModaleditarEquipo from "./modaleditarEquipo";
 import { useLayoutContext } from "@/contexts/LayoutContext";
 import { installedTiresDTO } from "@/types/Tire";
@@ -10,7 +9,6 @@ import ModalAsignarNeumatico from "./ModalAsignarNeumatico";
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import ModalDesmontarNeumatico from "../mantenimiento/ModalDesmontarNeumatico";
 import ModalAddKms from "./ModalAddKms";
-import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import CardTire from "@/components/common/cards/CardTyre";
 import { VehicleDTO } from "@/types/Vehicle";
 import { useAuth } from "@/contexts/AuthContext";
