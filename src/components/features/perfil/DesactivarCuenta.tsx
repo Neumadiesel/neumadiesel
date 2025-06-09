@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 export default function DesactivarCuenta() {
 
-    const { deactivateUser, user, logout } = useAuth();
+    const { deactivateUser, user, isDemo, logout } = useAuth();
 
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export default function DesactivarCuenta() {
             </button>
             <LoadingSpinner isOpen={isLoading} />
             {error && <div className="text-red-500 flex justify-between text-sm w-full mt-4 bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                <button onClick={() => setError("")} className=" text-red-500">
+                <button disabled={isDemo} onClick={() => setError("")} className=" text-red-500">
                     X
                 </button>
             </div>}

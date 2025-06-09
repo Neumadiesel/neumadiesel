@@ -58,15 +58,19 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
     const [yearSelected, setYearSelected] = useState<number>(year);
     const [sites, setSites] = useState<FaenaDTO[]>([]);
     const [siteSelected, setSiteSelected] = useState<number>(siteId);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const fetchBudgetByYear = async () => {
         try {
+            setLoading(true);
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteSelected}/year/${yearSelected}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
             setBudgetByYear(data);
         } catch (error) {
             console.error("Error al obtener el presupuesto por año:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -137,24 +141,33 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
                 </div>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig}>
-                    <BarChart accessibilityLayer data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="month"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent indicator="dashed" />}
-                        />
-                        <Bar dataKey="budget" fill="#0370dd" radius={3} />
-                        <Bar dataKey="consumo" fill="#f1c40f" radius={3} />
-                    </BarChart>
-                </ChartContainer>
+                {
+                    loading ? (
+                        <div className="flex justify-center items-center h-48">
+                            <div className="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                        </div>
+                    )
+                        :
+                        <ChartContainer config={chartConfig}>
+                            <BarChart accessibilityLayer data={chartData}>
+                                <CartesianGrid vertical={false} />
+                                <XAxis
+                                    dataKey="month"
+                                    tickLine={false}
+                                    tickMargin={10}
+                                    axisLine={false}
+                                    tickFormatter={(value) => value.slice(0, 3)}
+                                />
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={<ChartTooltipContent indicator="dashed" />}
+                                />
+                                <Bar dataKey="budget" fill="#0370dd" radius={3} />
+                                <Bar dataKey="consumo" fill="#f1c40f" radius={3} />
+                            </BarChart>
+                        </ChartContainer>
+                }
+
             </CardContent>
             <CardFooter className="flex items-start gap-2 text-sm dark:text-white">
                 <div className="flex gap-2 font-medium leading-none">

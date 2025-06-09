@@ -6,6 +6,7 @@ import ModAddBudget from "../mod/ModAddBudget";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import { Check, Pencil } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface BudgetData {
     id: number;
@@ -31,6 +32,7 @@ const monthNames = [
 ];
 
 export default function Budget({ siteId }: BudgetProps) {
+    const { isDemo } = useAuth();
     const [budget, setBudget] = useState<BudgetData[]>([]);
     const [budgetByYear, setBudgetByYear] = useState<BudgetData[]>([]);
     const [editedBudgetByYear, setEditedBudgetByYear] = useState<BudgetData[]>([]);
@@ -95,6 +97,7 @@ export default function Budget({ siteId }: BudgetProps) {
 
     useEffect(() => {
         fetchBudget();
+        fetchBudgetByYear(selectedYear); // Cargar el presupuesto del año 2025 por defecto
     }, []);
 
     return (
@@ -121,6 +124,7 @@ export default function Budget({ siteId }: BudgetProps) {
                                 {!isEdit ? (
                                     <ToolTipCustom content="Editar Neumáticos">
                                         <button
+                                            disabled={isDemo}
                                             onClick={() => setIsEdit(true)}
                                             className="p-2 mb-2 px-2 text-green-500 hover:text-green-600 bg-green-50 dark:bg-neutral-800 border border-green-300 rounded-md flex items-center justify-center"
                                         >

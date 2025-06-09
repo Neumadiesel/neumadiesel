@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext"; // Assuming useAuth is defined and provides changePassword function
 export default function CambiarPassword() {
-    const { user, changePassword } = useAuth(); // Assuming useAuth is defined and provides changePassword function
+    const { user, isDemo, changePassword, logout } = useAuth(); // Assuming useAuth is defined and provides changePassword function
     const [password, setPassword] = useState({
         current: '',
         new: '',
@@ -22,6 +22,7 @@ export default function CambiarPassword() {
         try {
             await changePassword(user.user_id, password.current, password.new);
             alert("Contraseña cambiada exitosamente.");
+            logout();
         } catch (error) {
             console.error("Error al cambiar la contraseña:", error);
             alert("Error al cambiar la contraseña. Por favor, inténtelo de nuevo.");
@@ -64,8 +65,9 @@ export default function CambiarPassword() {
                             className="text-md bg-amber-50 dark:bg-[#313131] outline-amber-300 text-gray-950 dark:text-white font-semibold border border-amber-300 dark:border-yellow-600 rounded-sm p-2"
                         />
                     </div>
+
                     <button
-                        disabled={!password.confirm || !password.new || !password.current}
+                        disabled={!password.confirm || !password.new || !password.current || isDemo}
                         onClick={handleChangePassword}
                         className="bg-amber-300 text-black font-semibold rounded-sm p-2">
                         Cambiar contraseña

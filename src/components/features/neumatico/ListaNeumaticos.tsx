@@ -13,8 +13,11 @@ import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import ModalStockDisponible from "./mod/tire/ModalStockDisponible";
 import ModalTireMaintenance from "./mod/tire/ModalTireMaintenance";
 import ModalRetireTire from "./mod/tire/ModalRetireTire";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ListaNeumaticos() {
+    const { user } = useAuth();
+    const faenaId = user?.faena_id;
     const [codigo, setCodigo] = useState('');
     const [estado, setEstado] = useState('');
 
@@ -31,12 +34,25 @@ export default function ListaNeumaticos() {
     const [maintenanceTire, setMaintenanceTire] = useState(false);
     const [retireTire, setRetireTire] = useState(false);
 
+    // states por este ano
+    const [yearStart, setYearStart] = useState(2025);
+    const [yearEnd, setYearEnd] = useState(2025);
+
     const [tireSelected, setTireSelected] = useState<TireDTO | null>(null);
 
     const fetchTires = async () => {
+        if (yearStart > yearEnd) {
+            console.log("El año de inicio no puede ser mayor que el año de fin");
+            return;
+        }
         setLoading(true);
+        if (!faenaId) {
+            console.log("Faena ID is not defined");
+            setLoading(false);
+            return;
+        }
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/yearStart/${yearStart}/yearEnd/${yearEnd}/site/${faenaId}`);
             const data = await response.json();
             setLoading(false);
             console.log("INFORMACION NEUMATICOS ✅", data);
@@ -85,7 +101,7 @@ export default function ListaNeumaticos() {
 
     useEffect(() => {
         fetchTires();
-    }, [openRegisterModal, editarNeumatico]);
+    }, [openRegisterModal, editarNeumatico, yearStart, yearEnd, faenaId]);
     return (
         <div className="w-full">
             <Breadcrumb />
@@ -105,6 +121,27 @@ export default function ListaNeumaticos() {
                             value={codigo.toUpperCase()}
                             onChange={(e) => { setCodigo(e.target.value); setCurrentPage(1); }}
                         />
+                        <div className="flex gap-2 items-center w-1/4 mx-auto mr-4 mb-2">
+                            <select
+                                value={yearStart}
+                                onChange={(e) => setYearStart(Number(e.target.value))}
+                                className="border p-2 rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
+                            >
+                                {[2023, 2024, 2025, 2026, 2027].map((year) => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
+                            <span className="text-sm text-gray-800 dark:text-white">a</span>
+                            <select
+                                value={yearEnd}
+                                onChange={(e) => setYearEnd(Number(e.target.value))}
+                                className="border p-2 rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
+                            >
+                                {[2023, 2024, 2025, 2026, 2027].map((year) => (
+                                    <option key={year} value={year}>{year}</option>
+                                ))}
+                            </select>
+                        </div>
                         <select
                             className="border p-2 h-10 rounded-md w-1/3 bg-gray-100 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 placeholder:text-gray-700"
                             value={estado}
