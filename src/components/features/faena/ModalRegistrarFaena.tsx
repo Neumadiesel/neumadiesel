@@ -47,7 +47,7 @@ export default function ModalRegistrarFaena({
             if (registerContract) {
                 console.log("Checkbox is checked");
                 console.log(new Date(faenaEditada.startDate).toISOString());
-                const response = await axios.post('https://inventory.neumasystem.site/sites/with-contract', {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`, {
 
                     site: {
                         name,
@@ -73,7 +73,7 @@ export default function ModalRegistrarFaena({
             }
             // Si el checkbox no está marcado, crea la faena sin contrato
             else {
-                const response = await axios.post('https://inventory.neumasystem.site/sites', {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites`, {
                     name,
                     region,
                     isActive: true,

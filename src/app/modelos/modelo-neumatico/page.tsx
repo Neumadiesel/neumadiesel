@@ -16,7 +16,7 @@ export default function ModelosNeumaticos() {
     const fetchModelTyres = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/tiremodels");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels`);
             const data = await response.json();
             setLoading(false);
             setTyreModels(data);

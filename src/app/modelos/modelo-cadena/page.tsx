@@ -29,7 +29,7 @@ export default function Page() {
 
     // Función para obtener datos desde la API
     const fetchModelos = async () => {
-        const res = await axios.get("https://inventory.neumasystem.site/chain-model");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chain-model`);
         setModelos(res.data);
     };
 

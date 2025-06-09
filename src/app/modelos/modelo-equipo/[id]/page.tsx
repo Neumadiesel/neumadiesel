@@ -37,7 +37,7 @@ export default function EquiposPorModelo() {
     const fetchVehicleModels = useCallback(async () => {
         setLoading(true);
         try {
-            const baseURL = `https://inventory.neumasystem.site/vehicleModels/withVehicles/${id}/site/${user?.faena_id}`
+            const baseURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/withVehicles/${id}/site/${user?.faena_id}`
 
             const response = await fetch(baseURL);
             const data = await response.json();

@@ -36,7 +36,7 @@ export default function EquiposPorModelo() {
     const fetchVehicleModels = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`https://inventory.neumasystem.site/tiremodels/${id}/with-tires`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/${id}/with-tires`);
             const data = await response.json();
             console.log(data);
             console.log("Vehiculos", data.vehicles)

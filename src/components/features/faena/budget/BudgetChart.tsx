@@ -61,7 +61,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
 
     const fetchBudgetByYear = async () => {
         try {
-            const response = await fetch(`https://inventory.neumasystem.site/maintenance/compareNewTires/${siteSelected}/${yearSelected}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/compareNewTires/${siteSelected}/${yearSelected}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
             setBudgetByYear(data);
@@ -72,7 +72,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
 
     const fetchSites = async () => {
         try {
-            const response = await fetch("https://inventory.neumasystem.site/sites/");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/`);
             const data = await response.json();
             setSites(data);
         } catch (error) {

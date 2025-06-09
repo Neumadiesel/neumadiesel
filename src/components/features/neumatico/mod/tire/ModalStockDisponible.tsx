@@ -41,7 +41,7 @@ export default function ModalStockDisponible({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/locations");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -88,7 +88,7 @@ export default function ModalStockDisponible({
         console.log("Nueva Ubicacion:", locationId);
         try {
             const response = await axios.post(
-                `https://inventory.neumasystem.site/maintenance/available/`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/available/`,
                 {
                     tireId: tire.id,
                     locationId: 2,

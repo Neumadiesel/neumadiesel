@@ -43,7 +43,7 @@ export default function ModalRegistarModeloVehiculo({
             return;
         }
         try {
-            const response = await axios.post('https://inventory.neumasystem.site/vehicleModels', {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels`, {
                 brand,
                 model,
                 wheelCount,

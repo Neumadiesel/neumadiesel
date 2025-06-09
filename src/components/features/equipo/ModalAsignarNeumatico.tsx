@@ -97,7 +97,7 @@ export default function ModalAsignarNeumatico({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`https://inventory.neumasystem.site/tires/available/site/${vehicle?.siteId}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/available/site/${vehicle?.siteId}`);
             const data = await response.json();
             setTires(Array.isArray(data) ? data : []); // <-- Asegura que siempre sea un array
             console.log("Neumáticos", data);
@@ -110,7 +110,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchReasons = async () => {
         try {
-            const response = await axios.get("https://inventory.neumasystem.site/maintenance-reason");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-reason`);
             const data = response.data;
             setReasons(data);
         } catch (error) {
@@ -120,7 +120,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get("https://inventory.neumasystem.site/location-maintenance/");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance/`);
             setLocations(response.data);
         } catch (error) {
             console.error("Error fetching locations:", error);
@@ -129,7 +129,7 @@ export default function ModalAsignarNeumatico({
 
     const fetchModels = async () => {
         try {
-            const response = await axios.get("https://inventory.neumasystem.site/tireModels");
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
             setModels(response.data);
         } catch (error) {
             console.error("Error fetching models:", error);
@@ -172,7 +172,7 @@ export default function ModalAsignarNeumatico({
         const utcDate = date.toISOString();
         try {
             const response = await axios.post(
-                `https://inventory.neumasystem.site/maintenance/mount`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/mount`,
                 {
 
                     "tireCode": code,

@@ -52,7 +52,7 @@ export default function ModalRegistrarNeumatico({
     const fetchModelTire = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/tireModels");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
             const data = await response.json();
             setLoading(false);
             setTireModels(data);
@@ -64,7 +64,7 @@ export default function ModalRegistrarNeumatico({
     const fetchSites = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/sites/with-contract");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             setLoading(false);
             setSites(data);
@@ -122,7 +122,7 @@ export default function ModalRegistrarNeumatico({
         });
         try {
             const response = await axios.post(
-                `https://inventory.neumasystem.site/tires/`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/`,
                 {
                     code,
                     modelId,

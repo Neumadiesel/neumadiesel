@@ -44,7 +44,7 @@ export default function Budget({ siteId }: BudgetProps) {
     const fetchBudget = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`https://inventory.neumasystem.site/montyhle-tire-budget/site/${siteId}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto");
             const data = await response.json();
             setBudget(data);
@@ -59,7 +59,7 @@ export default function Budget({ siteId }: BudgetProps) {
         setSelectedYear(year);
         setLoading(true);
         try {
-            const response = await fetch(`https://inventory.neumasystem.site/montyhle-tire-budget/site/${siteId}/year/${year}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}/year/${year}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
             setBudgetByYear(data);
@@ -77,7 +77,7 @@ export default function Budget({ siteId }: BudgetProps) {
         try {
             const updatePromises = Object.entries(editedBudgets).map(([budgetId, tireCountStr]) => {
                 const tireCount = parseInt(tireCountStr);
-                return axios.patch(`https://inventory.neumasystem.site/montyhle-tire-budget/${budgetId}`, {
+                return axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/${budgetId}`, {
                     siteId,
                     tireCount: isNaN(tireCount) ? 0 : tireCount,
                 });

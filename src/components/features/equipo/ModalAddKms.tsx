@@ -81,7 +81,7 @@ export default function ModalAddKms({
 
         try {
             const response = await axios.patch(
-                `https://inventory.neumasystem.site/vehicles/updateKms/${vehicle.id}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/updateKms/${vehicle.id}`,
                 {
                     hours,
                     kilometrage,

@@ -74,7 +74,7 @@ export default function ModalEditarFaena({
 
         try {
             const response = await axios.patch(
-                `https://inventory.neumasystem.site/sites/${faena.id}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${faena.id}`,
                 {
                     name,
                     region,

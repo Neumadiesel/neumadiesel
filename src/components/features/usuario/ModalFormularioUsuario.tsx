@@ -75,7 +75,7 @@ export default function ModalFormularioUsuario({
     }, [visible, token]);
     const fetchFaenas = async () => {
         try {
-            const response = await fetch("https://inventory.neumasystem.site/sites/with-contract");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             console.log("Faenas Fetched:", data);
             setFaenas(data);

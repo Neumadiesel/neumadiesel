@@ -36,7 +36,7 @@ export default function ModalEditarNeumatico({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/locations");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -80,7 +80,7 @@ export default function ModalEditarNeumatico({
 
         try {
             const response = await axios.patch(
-                `https://inventory.neumasystem.site/tires/${tire.id}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/${tire.id}`,
                 {
                     code,
                     locationId,

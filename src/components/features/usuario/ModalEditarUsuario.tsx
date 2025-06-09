@@ -96,7 +96,7 @@ export default function ModalEditarUsuario({
     const fetchFaenas = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/sites/with-contract");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             console.log("Faenas Fetched:", data);
             setLoading(false);

@@ -99,7 +99,7 @@ export default function ModaleditarEquipo({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://inventory.neumasystem.site/dataForm/registerVehicle");
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dataForm/registerVehicle`);
             const data = await response.json();
             setLoading(false);
             setSites(data.sites);
@@ -131,7 +131,7 @@ export default function ModaleditarEquipo({
         }
         try {
             const response = await axios.patch(
-                `https://inventory.neumasystem.site/vehicles/${vehicle.id}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/${vehicle.id}`,
                 {
                     code,
                     modelId,

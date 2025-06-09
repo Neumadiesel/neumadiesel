@@ -46,7 +46,7 @@ export default function MedicionPorEquipo() {
         setError(null);
         setLoading(true);
         try {
-            const response = await axios.get(`https://inventory.neumasystem.site/vehicles/code/${vehicleCode}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/code/${vehicleCode}`);
             console.log("Vehículo", response.data);
             setVehicle(response.data);
         } catch (error) {
@@ -107,7 +107,7 @@ export default function MedicionPorEquipo() {
 
     const handleConfirm = async () => {
         try {
-            const response = await axios.post("https://inventory.neumasystem.site/inspections", tireInspected);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, tireInspected);
             setIsOpen(false);
             resetData();
             return response.data;

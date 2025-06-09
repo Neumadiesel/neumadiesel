@@ -180,7 +180,7 @@ export default function Page() {
         try {
             setLoading(true);
             console.log("Datos a enviar:", data);
-            const response = await axios.post('https://inventory.neumasystem.site/inspections/bulk', data);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/bulk`, data);
             console.log('Inspecciones enviadas exitosamente:', response.data);
             // tengo que destructurar el response.data para recibir solo data.equipmentCode, data.position, success, error
             console.log('Response:', response.data);

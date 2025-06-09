@@ -147,7 +147,7 @@ export default function Programas() {
     const handleDeleteProgram = async (id: number) => {
         try {
             setLoading(true);
-            const response = await axios.delete(`https://inventory.neumasystem.site/maintenance-program/${id}`);
+            const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/${id}`);
             fetchData();
             setLoading(false);
             return response.data;
@@ -171,7 +171,7 @@ export default function Programas() {
         try {
             console.log("Fechas:", isoInicio, isoFin);
             setLoading(true);
-            const response = await fetch(`https://inventory.neumasystem.site/maintenance-program/time-period/${isoInicio}/${isoFin}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
             const data = await response.json();
             console.log("Programas", data);
             setProgramMaintenance(data);

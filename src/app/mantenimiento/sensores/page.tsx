@@ -14,7 +14,7 @@ export default function TirePhotoGallery() {
         if (!tireId) return;
         setLoading(true);
         try {
-            const res = await fetch(`https://inventory.neumasystem.site/tires/photos/${tireId}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/photos/${tireId}`);
             const data = await res.json();
             setPhotos(data);
         } catch {
@@ -44,7 +44,7 @@ export default function TirePhotoGallery() {
 
         setUploading(true);
         try {
-            const res = await fetch('https://inventory.neumasystem.site/tires/upload-photos', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/upload-photos`, {
                 method: 'POST',
                 body: formData,
             });
@@ -104,7 +104,7 @@ export default function TirePhotoGallery() {
                     {photos.map((photo) => (
                         <div key={photo.id} className="border rounded overflow-hidden">
                             <Image
-                                src={`https://inventory.neumasystem.site${photo.url}`}
+                                src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${photo.url}`}
                                 alt="logo"
                                 width={660}
                                 height={460}

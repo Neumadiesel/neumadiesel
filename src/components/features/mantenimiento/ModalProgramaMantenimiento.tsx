@@ -48,7 +48,7 @@ export default function ModalProgramaMantenimiento({
 
         try {
             const response = await axios.post(
-                `https://inventory.neumasystem.site/maintenance-program/`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/`,
                 {
                     vehicleCode: code,
                     scheduledDate: date,

@@ -27,7 +27,7 @@ export default function Page() {
 
     const fetchFaenas = async () => {
         try {
-            const response = await fetch(`https://inventory.neumasystem.site/sites/${id}/with-contract`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${id}/with-contract`);
             const data = await response.json();
             setFaena(data);
         } catch (error) {

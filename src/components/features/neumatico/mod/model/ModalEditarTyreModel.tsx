@@ -69,7 +69,7 @@ export default function ModaleditarTyreModel({
 
         try {
             const response = await axios.patch(
-                `https://inventory.neumasystem.site/tiremodels/${tyreModel.id}`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/${tyreModel.id}`,
                 {
                     code,
                     brand,
