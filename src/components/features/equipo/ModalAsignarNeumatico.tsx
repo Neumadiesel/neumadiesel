@@ -78,7 +78,7 @@ export default function ModalAsignarNeumatico({
 }: ModalAsignarNeumaticoProps) {
     const [posicion, setPosition] = useState<number | null>(null);
     const [tireIdSelected, setTireIdSelected] = useState<number | null>(null);
-    const [tireCode, setTireCode] = useState<string | null>(null);
+    const [tireId, setTireId] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [otCode, setOtCode] = useState<string | null>(null);
@@ -155,7 +155,7 @@ export default function ModalAsignarNeumatico({
         setLoading(true);
 
 
-        if (!vehicle.code || !posicion || !tireCode || !otCode || !actionDate || !executeTime || !reasonId || !locationId
+        if (!vehicle.code || !posicion || !tireId || !otCode || !actionDate || !executeTime || !reasonId || !locationId
 
         ) {
             setError("Por favor, completa todos los campos");
@@ -165,7 +165,7 @@ export default function ModalAsignarNeumatico({
 
         const vehicleId = vehicle.id;
         const position = Number(posicion);
-        const { code, lastInspection } = tireSelected || {};
+        const { id, lastInspection } = tireSelected || {};
         const { externalTread, internalTread } = lastInspection || {};
 
         const date = new Date(actionDate.format('YYYY-MM-DDTHH:mm:ss'));
@@ -175,7 +175,7 @@ export default function ModalAsignarNeumatico({
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/mount`,
                 {
 
-                    "tireCode": code,
+                    "tireId": id,
                     "vehicleId": vehicleId,
                     "position": position,
                     "maintenanceReasonId": reasonId,
@@ -210,7 +210,7 @@ export default function ModalAsignarNeumatico({
         setTireIdSelected(null);
         setError(null);
         setOtCode(null);
-        setTireCode(null);
+        setTireId(null);
         setActionDate(dayjs().tz('America/Santiago'));
         setExecuteTime(null);
         setReasonId(null);
@@ -407,15 +407,15 @@ export default function ModalAsignarNeumatico({
                             <tbody>
                                 {getFilteredTires()
                                     .map((tire) => (
-                                        tire.locationId !== 1 && (
+                                        tire.locationId === 10 && (
                                             <tr key={tire.id} className={`border-b hover:bg-gray-100 dark:hover:bg-neutral-900 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}`}>
                                                 <td className="p-2 py-4 border-x bg-gray-100 dark:bg-[#121212]">
                                                     <input
                                                         type="checkbox"
                                                         className="mx-auto"
-                                                        checked={tireCode === tire.code}
+                                                        checked={tireId === tire.id}
                                                         onChange={() => {
-                                                            setTireCode(tire.code);
+                                                            setTireId(tire.id);
                                                             setTireSelected(tire);
                                                         }}
                                                     />
