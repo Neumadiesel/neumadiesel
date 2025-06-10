@@ -143,7 +143,7 @@ export default function ModalRetireTire({
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/retire`,
                 {
                     tireId: tire.id,
-                    locationMaintenanceId: tireEdited.locationMaintenanceId,
+                    locationId: tireEdited.locationMaintenanceId,
                     maintenanceReasonId: tireEdited.maintenanceReasonId,
                     executionDate: tireEdited.date,
                     executionTime: 0,

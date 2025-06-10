@@ -28,6 +28,7 @@ export default function ListaMaquinaria() {
     const [error, setError] = useState<string | null>(null);
 
     const fetchVehicleModels = async () => {
+        setError(null);
         setLoading(true);
         if (!id) {
             setLoading(false);
@@ -86,7 +87,7 @@ export default function ListaMaquinaria() {
     useEffect(() => {
         handleUpdate();
         fetchVehicleModels();
-    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarAddKms]);
+    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarAddKms, siteId]);
 
     return (
         <div className="p-2 h-[100%] w-full bg-white dark:bg-[#212121] relative shadow-md">
