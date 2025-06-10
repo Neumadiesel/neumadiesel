@@ -91,7 +91,6 @@ export default function ModalStockDisponible({
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/available/`,
                 {
                     tireId: tire.id,
-                    locationId: 2,
                     maintenanceReasonId: 2,
                     executionDate: tireEdited.date,
                     executionTime: 0,

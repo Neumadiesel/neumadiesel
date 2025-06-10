@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Info, ArrowLeft, ArrowRight, CircleCheck, CircleOff, Donut } from "lucide-react";
+import { Info, ArrowLeft, ArrowRight, CircleCheck, CircleOff, Donut, Plus } from "lucide-react";
 import Link from "next/link";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
@@ -14,6 +14,8 @@ import ModalStockDisponible from "./mod/tire/ModalStockDisponible";
 import ModalTireMaintenance from "./mod/tire/ModalTireMaintenance";
 import ModalRetireTire from "./mod/tire/ModalRetireTire";
 import { useAuth } from "@/contexts/AuthContext";
+import { VehicleDTO } from "@/types/Vehicle";
+import MultiSelect from "@/components/common/select/MultiSelect";
 
 export default function ListaNeumaticos() {
     const { user } = useAuth();
@@ -35,8 +37,22 @@ export default function ListaNeumaticos() {
     const [retireTire, setRetireTire] = useState(false);
 
     // states por este ano
-    const [yearStart, setYearStart] = useState(2025);
+    const [yearStart, setYearStart] = useState(2024);
     const [yearEnd, setYearEnd] = useState(2025);
+
+    const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
+    const [selectedVehicles, setSelectedVehicles] = useState<number[]>([]);
+
+    const fetchVehicles = async () => {
+        console.log("Fetching vehicles for faenaId:", faenaId);
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1`);
+            const data = await response.json();
+            setVehicles(data);
+        } catch (error) {
+            console.error("Error fetching vehicles:", error);
+        }
+    };
 
     const [tireSelected, setTireSelected] = useState<TireDTO | null>(null);
 
@@ -85,7 +101,12 @@ export default function ListaNeumaticos() {
                 ? tire.location.name === "Operativo"
                 : tire.location.name === estado);
 
-        return matchCode && matchEstado;
+        const matchVehiculo = selectedVehicles.length === 0 || (
+            tire.location.name === "Operativo" &&
+            selectedVehicles.includes(tire.installedTires[0]?.vehicleId)
+        );
+
+        return matchCode && matchEstado && matchVehiculo;
     });
 
     const totalPages = Math.ceil(filteredTires.length / itemsPerPage);
@@ -100,6 +121,10 @@ export default function ListaNeumaticos() {
     }, []);
 
     useEffect(() => {
+        fetchVehicles();
+    }, [faenaId]);
+
+    useEffect(() => {
         fetchTires();
     }, [openRegisterModal, editarNeumatico, yearStart, yearEnd, faenaId]);
     return (
@@ -108,24 +133,33 @@ export default function ListaNeumaticos() {
             {/* Header y filtros */}
             <div className="flex justify-between h-[10%] items-center w-full">
                 <div className="gap-y-2  items-center justify-between w-full mx-auto my-2 dark:text-white">
-                    <div className="lg:w-[40%] flex items-center justify-start">
+                    {/* Titulo y Agregar Neumático */}
+                    <div className=" flex items-center justify-between mb-2">
                         <h1 className=" mb-2 text-2xl font-bold">
                             Lista de Neumáticos
                         </h1>
+                        <Button
+                            text="Agregar Neumático"
+                            onClick={() => setOpenRegisterModal(true)}
+                            className="w-1/3 lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
+                        />
                     </div>
-                    <div className="w-full flex justify-between">
+                    {/* Filtros */}
+                    <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-2 items-center justify-between px-4">
+                        {/* Filtro por codigo de neumatico */}
                         <input
                             type="text"
                             placeholder="Buscar por código de Neumático"
-                            className="border p-2 h-10 rounded-md bg-gray-100 w-1/3 text-black dark:bg-[#212121] dark:text-white text-sm outline-none dark:border-neutral-700 placeholder:text-gray-700 dark:placeholder:text-gray-200"
+                            className="border p-2 h-10 rounded-md bg-gray-100  text-black dark:bg-[#212121] dark:text-white text-sm outline-none dark:border-neutral-700 placeholder:text-gray-700 dark:placeholder:text-gray-200"
                             value={codigo.toUpperCase()}
                             onChange={(e) => { setCodigo(e.target.value); setCurrentPage(1); }}
                         />
-                        <div className="flex gap-2 items-center w-1/4 mx-auto mr-4 mb-2">
+                        {/* Rango de fechas */}
+                        <div className="flex gap-2 items-center justify-between ">
                             <select
                                 value={yearStart}
                                 onChange={(e) => setYearStart(Number(e.target.value))}
-                                className="border p-2 rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
+                                className="border p-2 w-[50%] rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
                             >
                                 {[2023, 2024, 2025, 2026, 2027].map((year) => (
                                     <option key={year} value={year}>{year}</option>
@@ -135,22 +169,52 @@ export default function ListaNeumaticos() {
                             <select
                                 value={yearEnd}
                                 onChange={(e) => setYearEnd(Number(e.target.value))}
-                                className="border p-2 rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
+                                className="border w-[50%] p-2 rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
                             >
                                 {[2023, 2024, 2025, 2026, 2027].map((year) => (
                                     <option key={year} value={year}>{year}</option>
                                 ))}
                             </select>
                         </div>
+                        {/* Multiselect */}
+                        <div className="flex flex-row justify-center items-center ">
+                            <MultiSelect
+                                options={vehicles.map(vehicle => ({
+                                    label: vehicle.code,
+                                    value: vehicle.id.toString(),
+                                    color: "bg-gray-200"
+                                }))}
+                                selected={selectedVehicles.map(String)}
+                                onChange={(selected) => {
+                                    setSelectedVehicles(selected.map(Number));
+                                    setCurrentPage(1);
+                                }}
+                                placeholder="Filtrar Equipo..."
+                            />
+                            {selectedVehicles.length > 0 ? (
+                                <button
+                                    onClick={() => setSelectedVehicles([])}
+                                    className="text-black w-8 rounded-xl h-10 text-2xl flex justify-center items-center "
+                                    title="Limpiar filtros"
+                                >
+                                    <Plus className="text-2xl rotate-45 bg-white dark:bg-red-500 dark:text-white rounded-full" />
+                                </button>
+                            ) : (
+                                <div className="flex flex-row text-gray-500 font-bold w-8 rounded-xl h-10 justify-center items-center ">
+                                    <Plus className="text-2xl rotate-45 bg-gray-200 dark:bg-neutral-700  dark:text-neutral-400 rounded-full" />
+                                </div>
+                            )}
+                        </div>
+                        {/* Filtro por estado */}
                         <select
-                            className="border p-2 h-10 rounded-md w-1/3 bg-gray-100 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 placeholder:text-gray-700"
+                            className="border p-2 h-10 rounded-md bg-gray-100 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 placeholder:text-gray-700"
                             value={estado}
                             onChange={(e) => {
                                 setEstado(e.target.value)
                                 setCurrentPage(1);
                             }}
                         >
-                            <option value="">Todos</option>
+                            <option value="">Filtro por Estado</option>
                             {
                                 locations.map((location) => (
                                     <option key={location.id} value={location.name}>
@@ -159,11 +223,7 @@ export default function ListaNeumaticos() {
                                 ))
                             }
                         </select>
-                        <Button
-                            text="Agregar Neumático"
-                            onClick={() => setOpenRegisterModal(true)}
-                            className="w-1/3 lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
-                        />
+
                     </div>
                 </div>
             </div>
