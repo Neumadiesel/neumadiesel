@@ -138,6 +138,8 @@ export default function ModalRetireTire({
             setLoading(false);
             return;
         }
+
+        console.log("Locacion", tireEdited.locationId)
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/retire`,

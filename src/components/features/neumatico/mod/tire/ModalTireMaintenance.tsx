@@ -146,7 +146,7 @@ export default function ModalTireMaintenance({
                     locationMaintenanceId: tireEdited.locationMaintenanceId, // Asignar la primera ubicación de mantenimiento
                     maintenanceReasonId: tireEdited.maintenanceReasonId,
                     executionDate: tireEdited.date,
-                    executionTime: 0,
+                    executionTime: tireEdited.executionTime,
                     externalTread: tireEdited.externalTread,
                     internalTread: tireEdited.internalTread,
                     hours: Number(usedHours),
@@ -174,7 +174,7 @@ export default function ModalTireMaintenance({
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
             <div className="relative bg-white dark:text-white border-l-10 border-l-amber-300 dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-2xl w-full">
                 <h2 className="text-xl font-bold mb-4">
-                    Disponer Neumático para Stock
+                    Realizar Mantenimiento de Neumático: {tire.code}
                 </h2>
 
                 {/* Mostrar error si existe */}
@@ -241,7 +241,7 @@ export default function ModalTireMaintenance({
                         ))}
                     </select>
                     {/* Input de fecha de modificacion */}
-                    <Label title="Fecha de Modificación" isNotEmpty={true} />
+                    <Label title="Fecha de Mantenimiento" isNotEmpty={true} />
                     <input
                         type="date"
                         value={tireEdited.date}
@@ -267,7 +267,7 @@ export default function ModalTireMaintenance({
                     {/* Horas Usadas */}
                     <Label title="Horas Usadas" isNotEmpty={true} />
                     <input
-                        name="Horas Usadas"
+                        name="Horas del Neumático"
                         type="number"
                         min="0"
                         value={tireEdited.usedHours}
@@ -288,7 +288,7 @@ export default function ModalTireMaintenance({
                     {/* Kilometraje Usado */}
                     <Label title="Kilometraje Usado" isNotEmpty={true} />
                     <input
-                        name="Kilometraje Usado"
+                        name="Kilometraje del Neumático"
                         type="number"
                         min="0"
                         value={tireEdited.usedKilometrage}

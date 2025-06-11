@@ -105,7 +105,7 @@ export default function Budget({ siteId }: BudgetProps) {
             <div className="flex flex-col h-full">
                 <div className="flex justify-between items-center  w-full lg:w-2/3 pb-3">
                     <h2 className="text-2xl font-bold mt-4">Control de Budget - Neumáticos</h2>
-                    <Button text="Ingresar Nuevo Budget" onClick={() => setModAddBudget(true)} />
+                    <Button text="Ingresar Nuevo Budget" onClick={() => { setModAddBudget(true); fetchBudget() }} />
                 </div>
                 <div className="flex gap-2">
                     <div className="overflow-x-auto mt-2 w-1/2">
