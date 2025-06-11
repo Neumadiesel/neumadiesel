@@ -8,7 +8,6 @@ import {
     FaChartBar,
     FaFile,
     FaRegUserCircle,
-    FaTruck,
     FaUsersCog,
     FaWrench,
     FaSignOutAlt,
@@ -21,6 +20,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { FaCircleDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
 import { Mountain } from "lucide-react";
+import MineTruck from "../common/icons/MineTruck";
 
 interface MenuItem {
     title: string;
@@ -84,7 +84,7 @@ export default function NavBar() {
         },
         {
             title: "Equipos",
-            icon: <FaTruck className="text-2xl" />,
+            icon: <MineTruck className="w-6" />,
             path: "/maquinaria",
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
         },
@@ -99,9 +99,9 @@ export default function NavBar() {
             icon: <FaWrench className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
-                { title: "Cadenas", path: "/mantenimiento/cadenas" },
-                { title: "Sensores", path: "/mantenimiento/sensores" },
-                { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
+                // { title: "Cadenas", path: "/mantenimiento/cadenas" },
+                // { title: "Sensores", path: "/mantenimiento/sensores" },
+                // { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
                 { title: "Programa semanal", path: "/mantenimiento/programas" },
             ],
         },
@@ -116,7 +116,7 @@ export default function NavBar() {
             icon: <FaFile className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
-                { title: "Mediciones", path: "/medicion/" },
+                // { title: "Mediciones", path: "/medicion/" },
                 {
                     title: "Ingresar Medición por Equipo",
                     path: "/medicion/medicion-por-equipo",

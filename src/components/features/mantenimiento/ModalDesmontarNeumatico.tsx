@@ -39,6 +39,7 @@ export default function ModalDesmontarNeumatico({
 }: ModalDesmontarNeumaticoProps) {
     const [tireDesmonted, setTireDesmonted] = useState({
         code: "",
+        tireId: null as number | null,
         externalTread: 0,
         internalTread: 0,
     });
@@ -59,15 +60,18 @@ export default function ModalDesmontarNeumatico({
     useEffect(() => {
         if (tire) {
             if (tire.tire.lastInspection) {
-
+                console.log("tireId", tire.tire.id);
                 setTireDesmonted({
                     code: tire.tire.code,
+                    tireId: tire.tire.id,
                     externalTread: tire.tire.lastInspection.externalTread,
                     internalTread: tire.tire?.lastInspection.internalTread,
                 });
             } else {
+                console.log("tireId", tire.tire.id);
                 setTireDesmonted({
                     code: tire.tire.code,
+                    tireId: tire.tire.id,
                     externalTread: tire.tire.initialTread,
                     internalTread: tire.tire?.initialTread,
                 });
@@ -118,38 +122,36 @@ export default function ModalDesmontarNeumatico({
         setError("");
         setLoading(true);
 
-        const { code, internalTread, externalTread } = tireDesmonted;
-        if (!code || !internalTread || !externalTread || !actionDate || !executeTime || !otCode || !reasonId) {
+        const { tireId, internalTread, externalTread } = tireDesmonted;
+        if (!tireId || !internalTread || !externalTread || !actionDate || !executeTime || !otCode || !reasonId) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
         }
 
         console.log("Data a enviar", {
-            code,
+            tireId,
             internalTread,
             externalTread,
-            actionDate,
+            vehicleId: tire.vehicleId,
+            actionDate: actionDate.toISOString(),
+            locationId,
             executeTime,
             reasonId,
             otCode,
         });
         try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/dismount/`,
-                {
-
-                    "tireCode": code,
-                    "maintenanceReasonId": reasonId,
-                    "executionDate": actionDate,
-                    "executionTime": executeTime,
-                    "internalTread": internalTread,
-                    "externalTread": externalTread,
-                    "locationId": locationId
-                }
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/dismount`, {
+                tireId,
+                retirementReasonId: reasonId,  // ✅ CORREGIDO
+                locationId,
+                executionDate: actionDate.toISOString(),
+                executionTime: executeTime,    // ✅ CORREGIDO
+                internalTread,
+                externalTread,
+            }
 
             );
-
 
             onGuardar();
             onClose();
@@ -167,6 +169,7 @@ export default function ModalDesmontarNeumatico({
     const handleCancel = () => {
         setTireDesmonted({
             code: "",
+            tireId: null,
             externalTread: 0,
             internalTread: 0,
         });
@@ -196,9 +199,6 @@ export default function ModalDesmontarNeumatico({
                         disabled
                         name="Codigo Neumatico"
                         value={tireDesmonted.code}
-                        onChange={
-                            (e) => setTireDesmonted({ ...tireDesmonted, code: e.target.value.toUpperCase() })
-                        }
                         placeholder="Código Neumático"
                         className="border border-gray-300 p-2 rounded"
                     />
