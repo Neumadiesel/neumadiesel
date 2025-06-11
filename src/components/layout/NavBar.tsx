@@ -21,6 +21,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { FaCircleDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
 import { Mountain } from "lucide-react";
+import MineTruck from "../common/icons/MineTruck";
 
 interface MenuItem {
     title: string;
@@ -84,7 +85,7 @@ export default function NavBar() {
         },
         {
             title: "Equipos",
-            icon: <FaTruck className="text-2xl" />,
+            icon: <MineTruck className="w-6" />,
             path: "/maquinaria",
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
         },
