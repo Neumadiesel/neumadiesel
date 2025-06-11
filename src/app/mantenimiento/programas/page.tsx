@@ -10,7 +10,7 @@ import Modal from "@/components/common/modal/CustomModal";
 import Button from "@/components/common/button/Button";
 import ModalProgramaMantenimiento from "@/components/features/mantenimiento/ModalProgramaMantenimiento";
 import axios from "axios";
-import { CircleX } from "lucide-react";
+import { CheckCircle, CircleX } from "lucide-react";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 
 interface ProgramasDTO {
@@ -21,6 +21,12 @@ interface ProgramasDTO {
         id: number;
         code: string;
     }
+    tyreCode: string;
+    date: string;
+    status?: string; // Programada, En ejecución, Completada, Cancelada
+    scheduledTime?: number; // Time in hours for the scheduled maintenance
+    workDate?: string; // Date when the maintenance work was actually performed
+    siteId?: number; // ID of the site where the maintenance is scheduled
 }
 
 export default function Programas() {
@@ -249,14 +255,17 @@ export default function Programas() {
                             <tr>
                                 <th scope="col" className="px-6 py-3">Equipo</th>
                                 <th scope="col" className="px-6 py-3">Motivo</th>
-                                <th scope="col" className="px-2 py-3">Fecha</th>
+                                <th scope="col" className="px-6 py-3">Neumático</th>
+                                <th scope="col" className="px-2 py-3">Programado</th>
+                                <th scope="col" className="px-6 py-3 w-32">Realizado</th>
+                                <th scope="col" className="px-6 py-3 w-32">Estado</th>
                                 <th scope="col" className="px-6 py-3 w-32">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {programMaintenance.length === 0 ? (
                                 <tr className="text-center">
-                                    <td colSpan={6} className="py-4 h-[60vh]">
+                                    <td colSpan={7} className="py-4 h-[60vh]">
                                         <div className="flex flex-col items-center justify-center gap-y-4">
                                             <FaFileAlt size={96} />
                                             <p className="text-lg">No hay mantenimientos programados para este rango.</p>
@@ -265,7 +274,7 @@ export default function Programas() {
                                 </tr>
                             ) : (
                                 programMaintenance.map((programa, index) => (
-                                    <tr key={index} className="bg-gray-50 dark:bg-[#0b0a0a] h-16 dark:text-white border-b text-center hover:bg-slate-100 dark:hover:bg-gray-800 ease-in transition-all border-gray-200">
+                                    <tr key={index} className="bg-gray-50 dark:bg-neutral-800 h-16 dark:text-white border-b text-center border-gray-200 dark:border-neutral-700">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="ml-4">
@@ -273,18 +282,37 @@ export default function Programas() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 bg-white py-4 whitespace-nowrap">
+                                        <td className="px-6 bg-white dark:bg-neutral-800 py-4 whitespace-nowrap">
                                             <div className="text-sm">{programa.description}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm">{programa.tyreCode}</div>
+                                        </td>
+                                        <td className="px-6 bg-white dark:bg-neutral-800 py-4 whitespace-nowrap">
                                             <div className="text-sm">{new Date(programa.scheduledDate).toLocaleDateString("es-CL", {
                                                 day: "2-digit",
                                                 month: "2-digit",
                                                 year: "numeric"
                                             })}</div>
                                         </td>
-                                        <td className="px-6 bg-white  py-4 whitespace-nowrap">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm">{programa.workDate
+                                                ? new Date(programa.workDate).toLocaleDateString("es-CL", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric"
+                                                })
+                                                : "—"}</div>
+                                        </td>
+                                        <td className="px-6 bg-white dark:bg-neutral-800 py-4 whitespace-nowrap">
+                                            <div className="text-sm">{programa.status}</div>
+                                        </td>
+                                        <td className="px-6  py-4 whitespace-nowrap">
                                             <div className="text-sm flex justify-center items-center">
+                                                {/* button check */}
+                                                <button className="text-emerald-500 hover:text-emerald-600 font-bold rounded-full p-1 transition-all mr-2" onClick={() => setIsOpenModal(true)}>
+                                                    <CheckCircle size={25} />
+                                                </button>
                                                 <button className="text-red-500 hover:text-red-600 font-bold rounded-full p-1 transition-all" onClick={() => handleDeleteProgram(programa.id)}>
                                                     <CircleX size={25} />
                                                 </button>

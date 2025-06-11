@@ -4,6 +4,7 @@ import Modal from "@/components/common/modal/CustomModal";
 import { Search } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
+import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 export default function MedicionPorEquipo() {
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +47,7 @@ export default function MedicionPorEquipo() {
         setError(null);
         setLoading(true);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/code/${vehicleCode}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
             console.log("Vehículo", response.data);
             setVehicle(response.data);
         } catch (error) {
@@ -204,6 +205,7 @@ export default function MedicionPorEquipo() {
                                     {/* Input numérico */}
                                     <input
                                         type="number"
+                                        min={0}
                                         value={tireInspected.externalTread}
                                         onChange={
                                             (e) => handleInputChange("ext", parseFloat(e.target.value) || 0)
@@ -232,6 +234,7 @@ export default function MedicionPorEquipo() {
                                     {/* Input numérico */}
                                     <input
                                         type="number"
+                                        min={0}
                                         value={tireInspected.internalTread}
                                         onChange={(e) => handleInputChange("int", parseFloat(e.target.value) || 0)}
                                         className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
@@ -257,6 +260,7 @@ export default function MedicionPorEquipo() {
                                     {/* Input numérico */}
                                     <input
                                         type="number"
+                                        min={0}
                                         value={tireInspected.pressure}
                                         onChange={(e) => handleInputChange("pre", parseFloat(e.target.value) || 0)}
                                         className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
@@ -283,6 +287,7 @@ export default function MedicionPorEquipo() {
                                     {/* Input numérico */}
                                     <input
                                         type="number"
+                                        min={0}
                                         value={tireInspected.temperature}
                                         onChange={(e) => handleInputChange("tem", parseFloat(e.target.value) || 0)}
                                         className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
@@ -325,6 +330,7 @@ export default function MedicionPorEquipo() {
                 </Modal>
 
             </section>
+            <LoadingSpinner isOpen={loading} />
 
         </div>
     );
