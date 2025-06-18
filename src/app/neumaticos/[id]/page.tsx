@@ -1,5 +1,6 @@
 'use client';
 import LabelLoading from "@/components/common/forms/LabelLoading";
+import ExportTireReport from "@/components/features/neumatico/data/ExportDataToExcel";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { TireDTO } from "@/types/Tire";
 import { useParams } from "next/navigation";
@@ -9,6 +10,18 @@ interface UnifiedRecord {
     id: number;
     type: "inspection" | "procedure";
     date: string;
+    position: number | string;
+    description: string;
+    internalTread?: number;
+    externalTread?: number;
+    procedureName?: string;
+}
+
+interface normalizedInspectionDTO {
+    id: number;
+    type: string
+    inspectionDate?: string;
+    startDate?: string;
     position: number | string;
     description: string;
     internalTread?: number;
@@ -34,7 +47,8 @@ export default function TirePage() {
             const inspections = await inspectionsRes.json();
             const procedures = await proceduresRes.json();
 
-            const normalizedInspections: UnifiedRecord[] = inspections.map((item: any) => ({
+            const normalizedInspections: UnifiedRecord[] = inspections.map((item: normalizedInspectionDTO
+            ) => ({
                 id: item.id,
                 type: "inspection",
                 date: item.inspectionDate,
@@ -44,7 +58,7 @@ export default function TirePage() {
                 externalTread: item.externalTread,
             }));
 
-            const normalizedProcedures: UnifiedRecord[] = procedures.map((item: any) => ({
+            const normalizedProcedures: UnifiedRecord[] = procedures.map((item: normalizedInspectionDTO) => ({
                 id: item.id,
                 type: "procedure",
                 date: item.startDate,
@@ -91,7 +105,27 @@ export default function TirePage() {
     return (
         <div className="p-3 bg-white h-[110vh] dark:bg-[#212121] relative shadow-sm">
             <Breadcrumb />
-            <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code}</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code}</h1>
+                {tire && (
+                    <ExportTireReport
+                        tire={tire}
+                        records={unifiedRecords.map(r => ({
+                            ...r, // includes id, type, etc.
+                            description: r.description,
+                            action:
+                                r.type === 'inspection'
+                                    ? 'Chequeo'
+                                    : r.type === 'procedure'
+                                        ? r.procedureName ?? 'Otro'
+                                        : 'Otro',
+                            date: new Date(r.date).toISOString().split('T')[0],
+                            position: r.position === 0 ? 'Stock' : r.position.toString(),
+                            remanente: `${r.internalTread ?? '-'} / ${r.externalTread ?? '-'}`,
+                        }))}
+                    />
+                )}
+            </div>
             <section className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-col gap-2">
                     <div className="bg-gray-50 dark:bg-[#313131] dark:text-white p-4 rounded-md border grid grid-cols-1 lg:grid-cols-3">
@@ -106,7 +140,7 @@ export default function TirePage() {
                             <LabelLoading loading={loading} title="Desgaste Interior:" text={tire?.lastInspection?.internalTread.toString() || ""} />
                             <LabelLoading loading={loading} title="Desgaste Exterior:" text={tire?.lastInspection?.externalTread.toString() || ""} />
                             <LabelLoading loading={loading} title="Kilometraje:" text={tire?.lastInspection?.kilometrage?.toString() || ""} />
-                            <LabelLoading loading={loading} title="Horas:" text={tire?.usedHours?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Horas:" text={tire?.lastInspection.hours?.toString() || ""} />
                             {tire && <LabelLoading loading={loading} title="% de Desgaste:" text={`${calculateWearPercentage(tire?.initialTread, tire?.lastInspection?.externalTread)}%`} />}
                         </div>
                         <div className="max-lg:pt-2 lg:px-4 flex flex-col gap-2">
@@ -159,7 +193,7 @@ export default function TirePage() {
                                     </td>
                                     <td className="p-4 dark:bg-neutral-900">
                                         {/* Acción */}
-                                        {record.type === "inspection" ? "Chequeo" : (record as any).procedureName || "Procedimiento"}
+                                        {record.type === "inspection" ? "Chequeo" : (record as UnifiedRecord).procedureName ? (record as UnifiedRecord).procedureName : "Otro"}
                                     </td>
                                     <td className="p-4 dark:bg-neutral-800">
                                         {/* Fecha UTC */}
@@ -179,6 +213,7 @@ export default function TirePage() {
                     </tbody>
                 </table>
             </section>
+
         </div>
     );
 }
