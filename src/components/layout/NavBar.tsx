@@ -99,9 +99,9 @@ export default function NavBar() {
             icon: <FaWrench className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
-                // { title: "Cadenas", path: "/mantenimiento/cadenas" },
-                // { title: "Sensores", path: "/mantenimiento/sensores" },
-                // { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
+                { title: "Cadenas", path: "/mantenimiento/cadenas" },
+                { title: "Sensores", path: "/mantenimiento/sensores" },
+                { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
                 { title: "Programa semanal", path: "/mantenimiento/programas" },
             ],
         },
@@ -116,7 +116,7 @@ export default function NavBar() {
             icon: <FaFile className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
-                // { title: "Mediciones", path: "/medicion/" },
+                { title: "Mediciones", path: "/medicion/" },
                 {
                     title: "Ingresar Medición por Equipo",
                     path: "/medicion/medicion-por-equipo",

@@ -320,12 +320,14 @@ export default function ListaNeumaticos() {
                                 </tr>
                             ) :
                                 paginatedNeumaticos.map((tire) => (
+
                                     <tr key={tire.id} className="bg-white border-b dark:bg-neutral-800 dark:border-neutral-700 border-gray-200 dark:text-white">
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-800">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tire.code}
                                             </p>
                                         </td>
+
                                         <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tire.location.name == "Operativo"
@@ -341,7 +343,7 @@ export default function ListaNeumaticos() {
                                         <td className="p-4 ">
 
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                {tire.lastInspection.kilometrage}
+                                                {tire.lastInspection?.kilometrage ?? 'No definido'}
                                             </p>
                                         </td>
                                         <td className="p-4  bg-gray-50 dark:bg-neutral-800">
