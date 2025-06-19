@@ -31,6 +31,7 @@ export interface TireDTO {
         position: number;
         externalTread: number;
         internalTread: number;
+        hours: number;
         kilometrage: number;
         inspectionDate: string;
         pressure: number;

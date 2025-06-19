@@ -117,7 +117,7 @@ export default function ModalRegistrarVehiculo({
                 code: "",
                 modelId: null,
                 typeId: null,
-                siteId: null,
+                siteId: user?.faena_id == 99 ? null : user?.faena_id as number | null,
                 kilometrage: 0,
                 hours: 0,
             });
