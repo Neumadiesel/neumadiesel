@@ -9,7 +9,7 @@ export default function MedicionPage() {
     const params = useParams<{ id: string }>();
     const id = params.id
     return (
-        <div className="bg-white dark:bg-[#212121] dark:text-white flex flex-col  p-4">
+        <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col  p-4">
             {/* Titulo y botones de exportar */}
             <div className="w-full flex justify-between mb-4">
                 <h1 className="text-4xl dark:text-white font-semibold">Medición de Neumáticos {id}</h1>
@@ -23,7 +23,7 @@ export default function MedicionPage() {
                 </div>
             </div>
             {/* Seccion de informacion general */}
-            <section className="w-full bg-gray-100 dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
+            <section className="w-full bg-white shadow-sm dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
                 <h2 className="text-2xl font-semibold mb-8 items-center flex">
                     <FileCheck size={32} className="inline mr-2" />
                     Información General
@@ -56,7 +56,7 @@ export default function MedicionPage() {
                 </div>
             </section>
             {/* Seccion de Cards de Neumaticos */}
-            <section className="w-full bg-gray-100 dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
+            <section className="w-full bg-white shadow-sm dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
                 <h3 className="text-2xl font-semibold mb-4 flex items-center">
                     <Gauge size={32} className="inline mr-2" />
                     Estado de los Neumáticos
@@ -74,7 +74,7 @@ export default function MedicionPage() {
                 </div>
             </section>
             {/* Seccion de Fotografias */}
-            <section className="w-full bg-gray-100 dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
+            <section className="w-full bg-white shadow-sm dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
                 <h3 className="text-2xl font-semibold mb-4 flex items-center">
                     <Camera size={32} className="inline mr-2" />
                     Fotografías
@@ -90,19 +90,56 @@ export default function MedicionPage() {
                 </div>
             </section>
             {/* Seccion de comentarios */}
-            <section className="w-full bg-gray-100 dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
+            <section className="w-full bg-white shadow-sm dark:bg-neutral-800  border dark:border-neutral-600 p-4 rounded-lg mb-4">
                 <h3 className="text-2xl font-semibold mb-4 flex items-center">
                     <MessageCircle size={32} className="inline mr-2" />
                     Comentarios
                 </h3>
-                <p>
-                    Aquí puedes agregar comentarios adicionales sobre la medición.
+                {/* Seccion de comentarios */}
+                <div className="border-b">
+                    {/* Comentario 1 */}
+                    <div className="flex items-center gap-4 mb-2 bg-neutral-50 rounded-md p-2">
+                        <div className="bg-white text-2xl font-bold border rounded-full p-4 h-12 w-12 flex items-center justify-center">
+                            C
+                        </div>
+                        <p className="text-xl font-semibold">
+                            Carlos Pizarro
+                        </p>
+                        <span className="text-gray-800 text-md">
+                            {new Date().toLocaleDateString()}
+                        </span>
+                        <p className="text-gray-700 dark:text-gray-300">
+                            Buen estado del neumático, presión y temperatura dentro de los parámetros normales.
+                        </p>
+                    </div>
+                    {/* Comentario 2 */}
+                    <div className="flex items-center gap-4 mb-4 bg-neutral-50 rounded-md p-2">
+                        <div className="bg-white text-2xl font-bold border rounded-full p-4 h-12 w-12 flex items-center justify-center">
+                            J
+                        </div>
+                        <p className="text-xl font-semibold">
+                            Juan Nilo
+                        </p>
+                        <span className="text-gray-800 text-md">
+                            {new Date().toLocaleDateString()}
+                        </span>
+                        <p className="text-gray-700 dark:text-gray-300">
+                            Buen estado del neumático, presión y temperatura dentro de los parámetros normales.
+                        </p>
+                    </div>
+
+                </div>
+                <p className="mt-2">
+                    Agregue comentarios adicionales sobre el estado de los neumáticos o cualquier observación relevante.
                 </p>
                 {/* Aquí iría el componente para agregar comentarios */}
                 <textarea
                     className="w-full h-24 p-2 mt-2 border dark:border-neutral-600 rounded-md"
                     placeholder="Escribe tus comentarios aquí..."
                 ></textarea>
+                <button className="mt-2 bg-amber-300 text-black font-semibold px-4 py-2 rounded hover:bg-amber-400 transition-colors">
+                    Enviar Comentario
+                </button>
             </section>
         </div>
     );
