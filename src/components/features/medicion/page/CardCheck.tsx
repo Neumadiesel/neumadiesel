@@ -1,7 +1,7 @@
 import { CircleDot, Gauge, Thermometer } from "lucide-react";
 export default function CardCheck() {
     return (
-        <div className="bg-white dark:bg-[#212121] border dark:border-neutral-800 h-full flex flex-col rounded-md p-2">
+        <div className="bg-white dark:bg-[#212121] border-2 dark:border-neutral-800 h-full flex flex-col rounded-md p-2">
             <div className="flex items-center justify-between w-full ">
 
                 <p className="text-xl font-bold mt-4">
