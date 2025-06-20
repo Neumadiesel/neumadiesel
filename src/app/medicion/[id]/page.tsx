@@ -1,5 +1,5 @@
 import MineTruck from "@/components/common/icons/MineTruck";
-import { AlertTriangle, Calendar, Check, CircleCheck, CircleDot, Donut, File, FileDown, FileText, Gauge, MessageCircle, Thermometer, TriangleAlert, User } from "lucide-react";
+import { AlertTriangle, Calendar, CircleDot, Donut, FileDown, FileText, Gauge, MessageCircle, Thermometer, TriangleAlert, User } from "lucide-react";
 
 export default function Page() {
     return (
