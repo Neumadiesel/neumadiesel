@@ -17,7 +17,6 @@ export default function Page() {
 
     const [error, setError] = useState<string | null>(null);
 
-    const [inspectionId, setInspectionId] = useState<number | null>(id ? parseInt(id) : null);
     // state to hold inspection data
     const [inspectionData, setInspectionData] = useState<InspectionDTO | null>(null);
     const fetchInspectionData = async () => {
@@ -50,19 +49,20 @@ export default function Page() {
 
     const [comment, setComment] = useState('');
     const submitComment = async () => {
-        if (!inspectionId || !comment.trim()) return;
+        if (!comment.trim()) return;
         const userName = user?.name + ' ' + user?.last_name || 'Usuario Anónimo';
 
-        console.log("Datos a enviar", inspectionId, user?.user_id, userName, comment);
 
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-comments`, {
-                inspectionId,
+                inspectionId: id,
                 userId: user?.user_id,
                 userName,
                 message: comment,
                 isVisible: true,
             });
+            console.log('Comentario guardado:', res.data);
+
             fetchInspectionData(); // Refresh inspection data after adding comment
             setComment('');
         } catch (err) {
@@ -178,6 +178,13 @@ export default function Page() {
             </div>
             {/* Seccion con dos columnas, loa izquierda para informacion general que usara 2/3 y la derecha para detalles como un aside que usara 1/3 */}
             <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Cuadro de error */}
+                {error && (
+                    <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+                        <p className="font-semibold">Error:</p>
+                        <p>{error}</p>
+                    </div>
+                )}
                 {/* Columna izquierda: Información General */}
                 <div className="col-span-2 ">
                     {/* div de informacion del equipo */}
@@ -348,7 +355,7 @@ export default function Page() {
                             />
                             <button
                                 onClick={submitComment}
-                                disabled={!inspectionId || !comment.trim()}
+                                disabled={!id || !comment.trim()}
                                 className="px-4 py-2 bg-purple-600 text-white rounded"
                             >
                                 Enviar Comentario
@@ -409,7 +416,7 @@ export default function Page() {
                         </button>
 
                         <Link href={`/neumaticos/${inspectionData?.tireId}`} className="">
-                            <div className="bg-white text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors mb-2 w-full flex items-center justify-center"> 
+                            <div className="bg-white text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors mb-2 w-full flex items-center justify-center">
                                 <CircleDot size={24} className="inline mr-2" />
                                 Ver Neumático
                             </div>

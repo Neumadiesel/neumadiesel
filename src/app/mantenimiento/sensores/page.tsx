@@ -52,6 +52,7 @@ export default function UploadInspectionPhoto() {
                 tempId,
             });
             console.log('Asignado:', res.data);
+            setTempId(crypto.randomUUID()); // Generar nuevo ID temporal
             alert('Foto asociada a la inspección');
         } catch (err) {
             console.error(err);
@@ -75,8 +76,14 @@ export default function UploadInspectionPhoto() {
             console.log('Comentario guardado:', res.data);
             alert('Comentario enviado');
             setComment('');
-        } catch (err: any) {
-            console.error(err.response?.data || err);
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                console.error(err.response?.data || err.message);
+            } else if (err instanceof Error) {
+                console.error(err.message);
+            } else {
+                console.error(err);
+            }
             alert('Error al enviar comentario');
         }
     };
