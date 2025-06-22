@@ -16,6 +16,7 @@ export default function Page() {
     const id = params.id
 
     const [error, setError] = useState<string | null>(null);
+    const [errorComment, setErrorComment] = useState<string | null>(null);
 
     // state to hold inspection data
     const [inspectionData, setInspectionData] = useState<InspectionDTO | null>(null);
@@ -73,8 +74,8 @@ export default function Page() {
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 const errorMessage = err.response?.data?.message || "Error desconocido";
-                console.error("Error al enviar el comentario:", errorMessage);
-                setError(errorMessage);
+                // console.error("Error al enviar el comentario:", errorMessage);
+                setErrorComment(errorMessage);
             } else {
                 console.error("Error inesperado:", err);
             }
@@ -117,6 +118,8 @@ export default function Page() {
 
         return { percentage, color };
     }
+
+    console.log("Inspection Id: ", id);
 
     function getGeneralStatusAlert(position: number, external: number, internal: number) {
         const alerts = [];
@@ -179,7 +182,7 @@ export default function Page() {
             <div className="w-full flex justify-between items-center mb-4">
                 <div>
                     <h1 className="text-3xl font-bold">Medición de Neumático</h1>
-                    <p className="text-gray-700 font-semibold">Código: {inspectionData?.tire.code} <span className="font-normal text-gray-500">| Posición {inspectionData?.position}</span></p>
+                    <p className="text-gray-700 font-semibold">Código: {inspectionData?.tire?.code || "No Disponible"} <span className="font-normal text-gray-500">| Posición {inspectionData?.position}</span></p>
                 </div>
                 {/* Bototn de exportar */}
                 <div className="flex justify-end mt-2">
@@ -192,21 +195,20 @@ export default function Page() {
                 </div>
             </div>
             {/* Seccion con dos columnas, loa izquierda para informacion general que usara 2/3 y la derecha para detalles como un aside que usara 1/3 */}
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Cuadro de error */}
-                {error && (
-                    <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-                        <p className="font-semibold">Error:</p>
-                        <p>{error}</p>
-                    </div>
-                )}
+            <section className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+
                 {/* Columna izquierda: Información General */}
                 <div className="col-span-2 ">
+                    {/* Cuadro de error */}
+                    {error && (
+                        <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+                            <p className="font-semibold">Error:</p>
+                            <p>{error}</p>
+                        </div>
+                    )}
                     {/* div de informacion del equipo */}
                     <section className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg ">
-
                         <div className="flex items-center mb-4 gap-2">
-
                             <MineTruck className="w-10" />
                             <h2 className="text-2xl font-semibold">
                                 Información General</h2>
@@ -316,18 +318,15 @@ export default function Page() {
                         {/* Galería de fotos */}
                         <div className="flex gap-4 w-full overflow-x-auto">
                             {/* Aquí se pueden mapear las fotos */}
-                            {
-                                inspectionData?.photos.length === 0 && (
-                                    <p className="text-gray-500 dark:text-gray-300">No hay fotos disponibles.</p>
-                                )
-                            }
-                            {
-                                inspectionData?.photos.map((photo) => (
-                                    <div key={photo.id} className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 rounded-md shadow-sm w-[35vh] flex flex-col">
-                                        <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${photo.url}`} alt="Foto del Neumático" className="rounded-t-md object-cover w-full " />
+                            {(inspectionData?.photos?.length ?? 0) === 0 && (
+                                <p className="text-gray-500 dark:text-gray-300">No hay fotos disponibles.</p>
+                            )}
+                            {(inspectionData?.photos ?? []).map(photo => (
+                                <div key={photo.id} className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 rounded-md shadow-sm w-[35vh] flex flex-col">
+                                    <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${photo.url}`} alt="Foto del Neumático" className="rounded-t-md object-cover w-full " />
 
-                                    </div>
-                                ))
+                                </div>
+                            ))
                             }
                         </div>
                     </section>
@@ -340,12 +339,10 @@ export default function Page() {
                         {/* Seccion de comentarios */}
                         <div className="border-b pb-4 mb-2">
                             {/* Comentario 1 */}
-                            {
-                                inspectionData?.comments?.length === 0 && (
-                                    <p className="text-gray-500 dark:text-gray-300">No hay comentarios disponibles.</p>
-                                )
-                            }
-                            {inspectionData?.comments?.map((comment) => (
+                            {(inspectionData?.comments?.length ?? 0) === 0 && (
+                                <p className="text-gray-500 dark:text-gray-300">No hay comentarios disponibles.</p>
+                            )}
+                            {(inspectionData?.comments ?? []).map(comment => (
                                 <div key={comment.id} className="flex items-center gap-4 mb-4 bg-neutral-50 rounded-md p-2">
                                     <div className="bg-white text-xl font-bold border rounded-full p-4 h-12 w-12 flex items-center justify-center">
                                         {comment.userName.charAt(0).toUpperCase()}
@@ -373,6 +370,12 @@ export default function Page() {
                         {/* Formulario para agregar un nuevo comentario */}
                         <div className="mt-4 flex flex-col gap-2">
                             <h3 className="text-lg font-bold">Agregar Comentario</h3>
+                            {/* Div de error */}
+                            {errorComment && (
+                                <div className="bg-red-100 text-red-800 p-2 rounded-lg mb-2">
+                                    <p className="font-semibold">Error: <span className="font-normal">{errorComment}</span></p>
+                                </div>
+                            )}
                             <textarea
                                 placeholder="Agregar comentario"
                                 value={comment}
@@ -395,7 +398,7 @@ export default function Page() {
                 {/* ------------------------------------ */}
 
                 {/* Columna derecha: Detalles del Neumático */}
-                <aside className="flex flex-col gap-4">
+                <aside className="flex flex-col col-span-2 lg:col-span-1 gap-4">
                     <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg ">
                         <h3 className="text-xl font-semibold mb-2">Estado General</h3>
                         <p className="text-gray-700 font-semibold dark:text-gray-300 mb-2">Condición</p>
@@ -430,7 +433,7 @@ export default function Page() {
 
                     </div>
                     {/* Panel de acciones programar mantenimiento, ver neumatico, generar informe */}
-                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg font-semibold ">
+                    <div className="  bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg font-semibold ">
                         <div className="flex items-center mb-4">
                             <FileText size={32} className="inline mr-2 text-black" />
                             <h3 className="text-xl font-semibold ">Acciones</h3>
@@ -441,8 +444,19 @@ export default function Page() {
                             Programar Mantenimiento
                         </button>
 
-                        <Link href={`/neumaticos/${inspectionData?.tireId}`} className="">
-                            <div className="bg-white text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors mb-2 w-full flex items-center justify-center">
+                        <Link
+                            href={inspectionData?.tireId ? `/neumaticos/${inspectionData.tireId}` : "#"}
+                            className=""
+                            tabIndex={inspectionData?.tireId ? 0 : -1}
+                            aria-disabled={!inspectionData?.tireId}
+                            onClick={e => {
+                                if (!inspectionData?.tireId) e.preventDefault();
+                            }}
+                        >
+                            <div
+                                className={`bg-white text-black border border-gray-200 px-4 py-2 rounded-md mb-2 w-full flex items-center justify-center ${!inspectionData?.tireId ? "opacity-50 cursor-not-allowed pointer-events-none" : "hover:bg-white transition-colors"
+                                    }`}
+                            >
                                 <CircleDot size={24} className="inline mr-2" />
                                 Ver Neumático
                             </div>

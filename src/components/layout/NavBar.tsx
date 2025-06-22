@@ -119,6 +119,10 @@ export default function NavBar() {
                 { title: "Mediciones", path: "/medicion/" },
                 { title: "Equipo", path: "/medicion/equipo" },
                 {
+                    title: "Ingresar Medición por Neumático",
+                    path: "/medicion/medicion-por-neumatico",
+                },
+                {
                     title: "Ingresar Medición por Equipo",
                     path: "/medicion/medicion-por-equipo",
                 },

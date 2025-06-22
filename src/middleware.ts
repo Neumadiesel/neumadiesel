@@ -53,6 +53,7 @@ const routePermissions = {
     medicion: [
         '/medicion',
         '/medicion/medicion-por-equipo',
+        '/medicion/medicion-por-neumatico',
         '/medicion/equipo',
     ],
 };

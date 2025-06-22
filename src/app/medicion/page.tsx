@@ -19,19 +19,19 @@ export default function MedicionPage() {
             {/* Seccion de principales estadisticas */}
             <section className="w-full p-4 rounded-lg mb-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 flex flex-col items-center">
+                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 dark:shadow-neutral-800  flex flex-col items-center">
                         <h2 className="text-xl font-semibold mb-2">Chequeos Pendientes</h2>
                         <p className="text-3xl font-bold">5</p>
                     </div>
-                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 flex flex-col items-center">
+                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 dark:shadow-neutral-800 flex flex-col items-center">
                         <h2 className="text-xl font-semibold mb-2">Chequeos de esta Semana</h2>
                         <p className="text-3xl font-bold">20</p>
                     </div>
-                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 flex flex-col items-center">
+                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 dark:shadow-neutral-800 flex flex-col items-center">
                         <h2 className="text-xl font-semibold mb-2">Neumáticos en Alerta</h2>
                         <p className="text-3xl font-bold">15</p>
                     </div>
-                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 flex flex-col items-center">
+                    <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 dark:shadow-neutral-800 flex flex-col items-center">
                         <h2 className="text-xl font-semibold mb-2">Neumáticos Críticos</h2>
                         <p className="text-3xl font-bold">15</p>
                     </div>
