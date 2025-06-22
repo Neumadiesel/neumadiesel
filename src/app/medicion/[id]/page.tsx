@@ -1,6 +1,6 @@
 'use client'
 import MineTruck from "@/components/common/icons/MineTruck";
-import { AlertTriangle, Calendar, Check, CircleDot, Donut, FileDown, FileText, Gauge, MessageCircle, Thermometer, TriangleAlert, User } from "lucide-react";
+import { AlertTriangle, Calendar, Check, CircleDot, Donut, FileText, Gauge, MessageCircle, Thermometer, TriangleAlert, User } from "lucide-react";
 import { InspectionDTO } from "@/types/Inspection";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
