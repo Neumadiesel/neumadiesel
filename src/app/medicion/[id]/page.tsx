@@ -1,14 +1,170 @@
+'use client'
 import MineTruck from "@/components/common/icons/MineTruck";
-import { AlertTriangle, Calendar, CircleDot, Donut, FileDown, FileText, Gauge, MessageCircle, Thermometer, TriangleAlert, User } from "lucide-react";
+import { AlertTriangle, Calendar, Check, CircleDot, Donut, FileDown, FileText, Gauge, MessageCircle, Thermometer, TriangleAlert, User } from "lucide-react";
+import { InspectionDTO } from "@/types/Inspection";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
+import Link from "next/link";
+
 
 export default function Page() {
+
+    const { user } = useAuth();
+    const params = useParams<{ id: string }>();
+    const id = params.id
+
+    const [error, setError] = useState<string | null>(null);
+
+    // state to hold inspection data
+    const [inspectionData, setInspectionData] = useState<InspectionDTO | null>(null);
+    const fetchInspectionData = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos de la inspección');
+            }
+            const data = await response.json();
+            console.log('Datos de la inspección:', data);
+            setInspectionData(data);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                console.error("Error al obtener los datos de la inspección:", message);
+                setError(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
+        }
+    };
+
+    // Funcion para subir comentario
+
+
+    const [comment, setComment] = useState('');
+    const submitComment = async () => {
+        if (!comment.trim()) return;
+        const userName = user?.name + ' ' + user?.last_name || 'Usuario Anónimo';
+
+
+        try {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-comments`, {
+                inspectionId: id,
+                userId: user?.user_id,
+                userName,
+                message: comment,
+                isVisible: true,
+            });
+            console.log('Comentario guardado:', res.data);
+
+            fetchInspectionData(); // Refresh inspection data after adding comment
+            setComment('');
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                const errorMessage = err.response?.data?.message || "Error desconocido";
+                console.error("Error al enviar el comentario:", errorMessage);
+                setError(errorMessage);
+            } else {
+                console.error("Error inesperado:", err);
+            }
+        }
+    };
+    const getInternalLifePercent = () => {
+        if (!inspectionData) return 0;
+        const { tire, internalTread } = inspectionData;
+        if (!tire?.initialTread || internalTread == null) return 0;
+        return Math.round((internalTread / tire.initialTread) * 100);
+    };
+
+    const getExternalLifePercent = () => {
+        if (!inspectionData) return 0;
+        const { tire, externalTread } = inspectionData;
+        if (!tire?.initialTread || externalTread == null) return 0;
+        return Math.round((externalTread / tire.initialTread) * 100);
+    };
+
+    function getBarColor(percent: number) {
+        if (percent > 85) return 'bg-green-500';
+        if (percent < 15) return 'bg-red-500';
+        if (percent < 40) return 'bg-yellow-400';
+        return 'bg-blue-500'; // Color neutro
+    }
+
+    function calculateAverageTread(external: number, internal: number) {
+        const average = (external + internal) / 2;
+        const percentage = Math.round((average / 97) * 100);
+
+        let color = 'bg-blue-500'; // Por defecto, color neutro
+
+        if (percentage > 85) {
+            color = 'bg-green-500';
+        } else if (percentage <= 15) {
+            color = 'bg-red-600';
+        } else if (percentage <= 40) {
+            color = 'bg-yellow-400';
+        }
+
+        return { percentage, color };
+    }
+
+    function getGeneralStatusAlert(position: number, external: number, internal: number) {
+        const alerts = [];
+
+        if (position === 1 || position === 2 && Math.min(external, internal) <= 70) {
+            alerts.push({
+                icon: <AlertTriangle size={24} className="inline" />,
+                color: 'bg-yellow-400',
+                message: 'Rotación requerida por desgaste en posición 1',
+            });
+        }
+
+        if (external <= 20 || internal <= 20) {
+            alerts.push({
+                icon: <TriangleAlert size={24} className="inline" />,
+                color: 'bg-red-600',
+                message: 'Neumático llegando al fin de su vida útil',
+            });
+        }
+
+        // Si no hay alertas, devolver un estado neutro
+        if (alerts.length === 0) {
+            return {
+                icon: <Check size={24} className="inline" />,
+                color: 'bg-green-600',
+                message: 'Condición óptima',
+            };
+        }
+
+        // Prioriza mostrar la alerta más grave (última evaluada)
+        return alerts[alerts.length - 1];
+    }
+
+    const position = inspectionData?.position ?? 0;
+
+
+    const external = inspectionData?.externalTread ?? 0;
+    const internal = inspectionData?.internalTread ?? 0;
+
+    const { percentage, color } = calculateAverageTread(external, internal);
+
+    const alert = getGeneralStatusAlert(position, external, internal);
+
+    useEffect(() => {
+        fetchInspectionData();
+    }, []);
     return (
         <div className="p-3 bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col gap-4">
             {/* Seccion de titulo y boton de exportación */}
             <div className="w-full flex justify-between items-center mb-4">
                 <div>
                     <h1 className="text-3xl font-bold">Medición de Neumático</h1>
-                    <p className="text-gray-700 font-semibold">Código: AB232032 <span className="font-normal text-gray-500">| Posición 2</span></p>
+                    <p className="text-gray-700 font-semibold">Código: {inspectionData?.tire.code} <span className="font-normal text-gray-500">| Posición {inspectionData?.position}</span></p>
                 </div>
                 {/* Bototn de exportar */}
                 <div className="flex justify-end mt-2">
@@ -20,28 +176,15 @@ export default function Page() {
                     </button>
                 </div>
             </div>
-            {/* Seccion de alerta */}
-            <section className="bg-red-100 dark:bg-red-800 border border-red-300 p-4 rounded-lg mb-4 flex gap-2 items-center justify-between">
-                <aside className="flex items-center gap-4">
-
-                    <TriangleAlert size={32} className="text-red-600" />
-                    <div>
-                        <div className="flex items-center">
-                            <h2 className="text-xl font-semibold text-red-700">Alerta de Neumático</h2>
-                        </div>
-                        <p className="text-red-700 dark:text-gray-300 text-md">
-                            Este neumático presenta una anomalía crítica. Por favor, revisa los datos y toma las acciones necesarias.
-                        </p>
-                    </div>
-                </aside>
-                <div>
-                    <button className="bg-red-500 text-white px-6 py-2 font-semibold rounded-md hover:bg-red-700 transition-colors">
-                        Revisar
-                    </button>
-                </div>
-            </section>
             {/* Seccion con dos columnas, loa izquierda para informacion general que usara 2/3 y la derecha para detalles como un aside que usara 1/3 */}
             <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Cuadro de error */}
+                {error && (
+                    <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
+                        <p className="font-semibold">Error:</p>
+                        <p>{error}</p>
+                    </div>
+                )}
                 {/* Columna izquierda: Información General */}
                 <div className="col-span-2 ">
                     {/* div de informacion del equipo */}
@@ -64,16 +207,22 @@ export default function Page() {
                                     <User size={20} className="inline mr-1" />
                                     Inspeccionado por:
                                 </p>
-                                <span className="font-bold text-xl"> Juan Perez</span>
+                                <span className="font-bold text-xl"> {inspectionData?.operatorId || "Sistema"}</span>
                             </div>
                             <div className="flex flex-col">
                                 <p className="text-gray-500 dark:text-gray-300">Posición:</p>
-                                <span className="font-bold text-xl">2</span>
+                                <span className="font-bold text-xl">{inspectionData?.position}</span>
                             </div>
                             <div className="flex flex-col">
 
                                 <p className="text-gray-500 dark:text-gray-300"><Calendar size={20} className="inline mr-1" /> Fecha de Inspección:</p>
-                                <span className="font-bold text-xl">{new Date().toLocaleDateString()}</span>
+                                <span className="font-bold text-xl">
+                                    {inspectionData?.inspectionDate
+                                        ? new Date(inspectionData.inspectionDate).toLocaleDateString()
+                                        : "Fecha no disponible"
+                                    }
+
+                                </span>
                             </div>
                         </div>
                     </section>
@@ -88,26 +237,17 @@ export default function Page() {
                         </p>
                         {/* Seccion de datos */}
                         <section className="grid grid-cols-1 gap-4 mt-4">
-                            {/* Presion */}
-                            <div className="flex flex-col gap-4 border-b pb-4 mb-2">
-                                <div className="flex items-center gap-2">
+                            {/* Presion y temperatura */}
+                            <div className="grid grid-cols-2 gap-4 border-b pb-4 mb-2">
+                                <div className="flex flex-col gap-2">
                                     <Gauge size={28} className="inline mr-2 text-blue-500" />
                                     <p className="text-blue-700 dark:text-gray-300">Presión:</p>
-                                    <span className="text-xl font-bold">32 PSI</span>
+                                    <span className="text-xl font-semibold">{inspectionData?.pressure || "No Disponible"} PSI</span>
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                    <div className="bg-blue-700 h-2.5 rounded-full w-[45%]" ></div>
-                                </div>
-                            </div>
-                            {/* Temperatura */}
-                            <div className="flex flex-col gap-4 border-b pb-4 mb-2">
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-col gap-2">
                                     <Thermometer size={28} className="inline mr-2 text-red-500" />
                                     <p className="text-gray-700 dark:text-gray-300">Temperatura:</p>
-                                    <span className="text-xl font-bold">75 °C</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                    <div className="bg-red-500 h-2.5 rounded-full w-[45%]" ></div>
+                                    <span className="text-xl font-semibold">{inspectionData?.temperature || "No Disponible"} °C</span>
                                 </div>
                             </div>
 
@@ -116,30 +256,35 @@ export default function Page() {
                                 <div className="flex items-center gap-2">
                                     <CircleDot size={28} className="inline mr-2 text-amber-600" />
                                     <p className="text-gray-700 dark:text-gray-300">Remanente Interno:</p>
-                                    <span className="text-xl font-bold">43</span>
+                                    <span className="text-xl font-bold">{inspectionData?.internalTread}</span>
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                    <div className="bg-amber-400 h-2.5 rounded-full w-[45%]" ></div>
-                                </div>
+
+                                {inspectionData?.internalTread !== undefined && (
+                                    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                        <div
+                                            className={`h-2.5 rounded-full ${getBarColor(getInternalLifePercent())}`}
+                                            style={{ width: `${getInternalLifePercent()}%` }}
+                                        ></div>
+                                    </div>
+                                )}
                             </div>
                             {/* Remanente Externo */}
                             <div className="flex flex-col gap-4 border-b pb-4 mb-2">
                                 <div className="flex items-center gap-2">
                                     <CircleDot size={28} className="inline mr-2 text-amber-600" />
                                     <p className="text-gray-700 dark:text-gray-300">Remanente Externo:</p>
-                                    <span className="text-xl font-bold">38</span>
+                                    <span className="text-xl font-bold">{inspectionData?.externalTread}</span>
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                    <div className="bg-amber-400 h-2.5 rounded-full w-[45%]" ></div>
-                                </div>
-                            </div>
-                            {/* Fecha de instalacion */}
-                            <div className="flex items-center gap-2">
-                                <Calendar size={28} className="inline mr-2 text-gray-500" />
-                                <p className="text-gray-700 dark:text-gray-300">Fecha de Instalación:</p>
-                                <span className="text-xl font-bold">01/01/2023</span>
-                            </div>
 
+                                {inspectionData?.externalTread !== undefined && (
+                                    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                        <div
+                                            className={`h-2.5 rounded-full ${getBarColor(getExternalLifePercent())}`}
+                                            style={{ width: `${getExternalLifePercent()}%` }}
+                                        ></div>
+                                    </div>
+                                )}
+                            </div>
                         </section>
                     </section>
                     {/* Seccion de fotograficas */}
@@ -154,26 +299,15 @@ export default function Page() {
                         {/* Galería de fotos */}
                         <div className="flex gap-4 w-full overflow-x-auto">
                             {/* Aquí se pueden mapear las fotos */}
-                            <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 rounded-md shadow-sm w-[40vh] flex flex-col">
-                                <img src="https://www.codelco.com/prontus_codelco/site/artic/20170509/imag/foto_0000000220170509095542.jpg" alt="Foto del Neumático" className="rounded-t-md object-cover w-full h-[20vh]" />
-                                <div className="p-2">
-                                    <h3 className="text-xl font-semibold mt-4">Foto del Neumático</h3>
-                                    <p className="text-gray-700 dark:text-gray-300 mt-2">
-                                        Esta imagen muestra el estado actual del neumático. Asegúrate de verificar la presión y la temperatura antes de continuar.
-                                    </p>
-                                </div>
-                            </div>
-                            {/* Repetir para más fotos */}
-                            <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 rounded-md shadow-sm w-[40vh] flex flex-col">
-                                <img src="https://www.codelco.com/prontus_codelco/site/artic/20170509/imag/foto_0000000220170509095542.jpg" alt="Foto del Neumático" className="rounded-t-md object-cover w-full h-[20vh]" />
-                                <div className="p-2">
-                                    <h3 className="text-xl font-semibold mt-4">Foto del Neumático</h3>
-                                    <p className="text-gray-700 dark:text-gray-
-300 mt-2">
-                                        Esta imagen muestra el estado actual del neumático. Asegúrate de verificar la presión y la temperatura antes de continuar.
-                                    </p>
-                                </div>
-                            </div>
+
+                            {
+                                inspectionData?.photos.map((photo) => (
+                                    <div key={photo.id} className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 rounded-md shadow-sm w-[35vh] flex flex-col">
+                                        <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}${photo.url}`} alt="Foto del Neumático" className="rounded-t-md object-cover w-full " />
+
+                                    </div>
+                                ))
+                            }
                         </div>
                     </section>
                     {/* Seccion de comentarios */}
@@ -185,51 +319,48 @@ export default function Page() {
                         {/* Seccion de comentarios */}
                         <div className="border-b pb-4 mb-2">
                             {/* Comentario 1 */}
-                            <div className="flex items-center gap-4 mb-2 bg-neutral-50 rounded-md p-2">
-                                <div className="bg-white text-2xl font-bold border rounded-full p-4 h-12 w-12 flex items-center justify-center">
-                                    C
+                            {inspectionData?.comments?.map((comment) => (
+                                <div key={comment.id} className="flex items-center gap-4 mb-4 bg-neutral-50 rounded-md p-2">
+                                    <div className="bg-white text-xl font-bold border rounded-full p-4 h-12 w-12 flex items-center justify-center">
+                                        {comment.userName.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center gap-2">
+
+                                            <p className="text-xl font-semibold">
+                                                {comment.userName}
+                                            </p>
+
+                                            <span className="text-gray-800  font-semibold text-lg">
+                                                {comment.createdAt
+                                                    ? new Date(comment.createdAt).toLocaleDateString()
+                                                    : "Fecha no disponible"}
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-700 dark:text-gray-300">
+                                            {comment.message}
+                                        </p>
+                                    </div>
                                 </div>
-                                <p className="text-xl font-semibold">
-                                    Carlos Pizarro
-                                </p>
-                                <span className="text-gray-800 text-md">
-                                    {new Date().toLocaleDateString()}
-                                </span>
-                                <p className="text-gray-700 dark:text-gray-300">
-                                    Buen estado del neumático, presión y temperatura dentro de los parámetros normales.
-                                </p>
-                            </div>
-                            {/* Comentario 2 */}
-                            <div className="flex items-center gap-4 mb-4 bg-neutral-50 rounded-md p-2">
-                                <div className="bg-white text-2xl font-bold border rounded-full p-4 h-12 w-12 flex items-center justify-center">
-                                    J
-                                </div>
-                                <p className="text-xl font-semibold">
-                                    Juan Nilo
-                                </p>
-                                <span className="text-gray-800 text-md">
-                                    {new Date().toLocaleDateString()}
-                                </span>
-                                <p className="text-gray-700 dark:text-gray-300">
-                                    Buen estado del neumático, presión y temperatura dentro de los parámetros normales.
-                                </p>
-                            </div>
+                            ))}
                         </div>
                         {/* Formulario para agregar un nuevo comentario */}
-                        <form className="mt-4 flex flex-col gap-2">
+                        <div className="mt-4 flex flex-col gap-2">
+                            <h3 className="text-lg font-bold">Agregar Comentario</h3>
                             <textarea
-                                rows={3}
-                                placeholder="Agregar un comentario..."
-                                className="w-full p-2 border border-gray-300 rounded-md dark:bg-neutral-700 dark:text-white"
-                            ></textarea>
-                            <
-                                button
-                                type="submit"
-                                className="bg-amber-300 text-black font-semibold px-4 py-2 rounded hover:bg-amber-400 transition-colors"
+                                placeholder="Agregar comentario"
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                className="w-full p-2 border rounded"
+                            />
+                            <button
+                                onClick={submitComment}
+                                disabled={!id || !comment.trim()}
+                                className="px-4 py-2 bg-purple-600 text-white rounded"
                             >
                                 Enviar Comentario
                             </button>
-                        </form>
+                        </div>
                     </section>
 
                 </div>
@@ -243,18 +374,22 @@ export default function Page() {
                         <h3 className="text-xl font-semibold mb-2">Estado General</h3>
                         <p className="text-gray-700 font-semibold dark:text-gray-300 mb-2">Condición</p>
                         <div className="flex items-center gap-2 mb-4">
-                            <AlertTriangle size={24} className="text-red-500" />
-                            <span className="bg-red-500 font-semibold text-white px-2 py-1 rounded-full">Nuemático Requiere Mantenimiento</span>
+                            <span className={`text-white px-2 py-1 rounded-full ${alert.color}`}>
+                                {alert.icon} {alert.message}
+                            </span>
                         </div>
-
                         <div className="flex flex-col gap-2 mt-4">
-                            {/* Barra de progresion del remanente */}
                             <div className="w-full flex justify-between items-center">
-                                <h3 className="text-xl font-semibold mb-2">Remanente</h3>
-                                <p className="text-gray-700 font-semibold dark:text-gray-300 mb-2">45%</p>
+                                <h3 className="text-xl font-semibold mb-2">Promedio Remanente</h3>
+                                <p className="text-gray-700 font-semibold dark:text-gray-300 mb-2">
+                                    {percentage}%
+                                </p>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                <div className="bg-amber-400 h-2.5 rounded-full w-[45%]" ></div>
+                                <div
+                                    className={`h-2.5 rounded-full ${color}`}
+                                    style={{ width: `${percentage}%` }}
+                                />
                             </div>
                         </div>
                         {/* Problemas indentificados */}
@@ -279,10 +414,13 @@ export default function Page() {
                             <Donut size={24} className="inline mr-2" />
                             Programar Mantenimiento
                         </button>
-                        <button className="bg-white text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors mb-2 w-full">
-                            <CircleDot size={24} className="inline mr-2" />
-                            Ver Neumático
-                        </button>
+
+                        <Link href={`/neumaticos/${inspectionData?.tireId}`} className="">
+                            <div className="bg-white text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors mb-2 w-full flex items-center justify-center">
+                                <CircleDot size={24} className="inline mr-2" />
+                                Ver Neumático
+                            </div>
+                        </Link>
                         <button className="bg-white text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors mb-2 w-full">
                             <FileText size={24} className="inline mr-2" />
                             Generar Informe

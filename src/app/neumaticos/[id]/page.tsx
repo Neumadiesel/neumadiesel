@@ -3,6 +3,7 @@ import LabelLoading from "@/components/common/forms/LabelLoading";
 import ExportTireReport from "@/components/features/neumatico/data/ExportDataToExcel";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { TireDTO } from "@/types/Tire";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -107,24 +108,33 @@ export default function TirePage() {
             <Breadcrumb />
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code}</h1>
-                {tire && (
-                    <ExportTireReport
-                        tire={tire}
-                        records={unifiedRecords.map(r => ({
-                            ...r, // includes id, type, etc.
-                            description: r.description,
-                            action:
-                                r.type === 'inspection'
-                                    ? 'Chequeo'
-                                    : r.type === 'procedure'
-                                        ? r.procedureName ?? 'Otro'
-                                        : 'Otro',
-                            date: new Date(r.date).toISOString().split('T')[0],
-                            position: r.position === 0 ? 'Stock' : r.position.toString(),
-                            remanente: `${r.internalTread ?? '-'} / ${r.externalTread ?? '-'}`,
-                        }))}
-                    />
-                )}
+                <div className="flex flex-row justify-between items-center gap-2">
+                    <Link href={`/medicion/${tire?.lastInspectionId}`}>
+                        <div className="bg-neutral-100 text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors w-full flex items-center justify-center font-bold">
+
+                            Ver Inspección
+                        </div>
+                    </Link>
+
+                    {tire && (
+                        <ExportTireReport
+                            tire={tire}
+                            records={unifiedRecords.map(r => ({
+                                ...r, // includes id, type, etc.
+                                description: r.description,
+                                action:
+                                    r.type === 'inspection'
+                                        ? 'Chequeo'
+                                        : r.type === 'procedure'
+                                            ? r.procedureName ?? 'Otro'
+                                            : 'Otro',
+                                date: new Date(r.date).toISOString().split('T')[0],
+                                position: r.position === 0 ? 'Stock' : r.position.toString(),
+                                remanente: `${r.internalTread ?? '-'} / ${r.externalTread ?? '-'}`,
+                            }))}
+                        />
+                    )}
+                </div>
             </div>
             <section className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-col gap-2">

@@ -180,7 +180,7 @@ export default function ExportTireReport({ tire, records }: Props) {
     };
 
     return (
-        <button onClick={exportToExcel} className="mt-4 bg-amber-300 font-semibold p-2 rounded-md hover:bg-amber-400 transition-colors">
+        <button onClick={exportToExcel} className=" bg-amber-300 font-semibold p-2 rounded-md hover:bg-amber-400 transition-colors">
             <FileDown className="inline mr-2" />
             Exportar Excel
         </button>
