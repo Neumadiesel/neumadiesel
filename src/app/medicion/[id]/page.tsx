@@ -52,10 +52,15 @@ export default function Page() {
         if (!comment.trim()) return;
         const userName = user?.name + ' ' + user?.last_name || 'Usuario Anónimo';
 
+        if (!id) {
+            console.error("ID de inspección no disponible");
+            setError("ID de inspección no disponible");
+            return;
+        }
 
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-comments`, {
-                inspectionId: id,
+                inspectionId: Number(id),
                 userId: user?.user_id,
                 userName,
                 message: comment,
@@ -116,10 +121,12 @@ export default function Page() {
     function getGeneralStatusAlert(position: number, external: number, internal: number) {
         const alerts = [];
 
+
+        const averageTread = (external + internal) / 2;
         if (position === 1 || position === 2 && Math.min(external, internal) <= 70) {
             alerts.push({
                 icon: <AlertTriangle size={24} className="inline" />,
-                color: 'bg-yellow-400',
+                color: 'bg-yellow-400 text-black',
                 message: 'Rotación requerida por desgaste en posición 1',
             });
         }
@@ -129,6 +136,14 @@ export default function Page() {
                 icon: <TriangleAlert size={24} className="inline" />,
                 color: 'bg-red-600',
                 message: 'Neumático llegando al fin de su vida útil',
+            });
+        }
+
+        if (averageTread <= 50) {
+            alerts.push({
+                icon: <Donut size={24} className="inline" />,
+                color: 'bg-yellow-400',
+                message: 'Alerta de desgaste avanzado',
             });
         }
 
@@ -168,12 +183,12 @@ export default function Page() {
                 </div>
                 {/* Bototn de exportar */}
                 <div className="flex justify-end mt-2">
-                    <button className="bg-amber-300 text-black px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-amber-400 transition-colors">
+                    {/* <button className="bg-amber-300 text-black px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-amber-400 transition-colors">
                         <FileDown size={32} />
                         <p className="text-lg font-semibold">
                             Exportar a Excel
                         </p>
-                    </button>
+                    </button> */}
                 </div>
             </div>
             {/* Seccion con dos columnas, loa izquierda para informacion general que usara 2/3 y la derecha para detalles como un aside que usara 1/3 */}
@@ -199,7 +214,9 @@ export default function Page() {
                         <div className=" w-full grid grid-cols-2 gap-2">
                             <div className="flex flex-col">
                                 <p className="text-gray-500 dark:text-gray-300">Equipo:</p>
-                                <span className="font-bold text-xl">H36</span>
+                                <span className="font-bold text-xl">
+                                    {inspectionData?.tire?.installedTires?.[0]?.vehicle?.code || "No Disponible"}
+                                </span>
                             </div>
                             {/* Insoeccionado por */}
                             <div className="flex flex-col">
@@ -299,7 +316,11 @@ export default function Page() {
                         {/* Galería de fotos */}
                         <div className="flex gap-4 w-full overflow-x-auto">
                             {/* Aquí se pueden mapear las fotos */}
-
+                            {
+                                inspectionData?.photos.length === 0 && (
+                                    <p className="text-gray-500 dark:text-gray-300">No hay fotos disponibles.</p>
+                                )
+                            }
                             {
                                 inspectionData?.photos.map((photo) => (
                                     <div key={photo.id} className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 rounded-md shadow-sm w-[35vh] flex flex-col">
@@ -319,6 +340,11 @@ export default function Page() {
                         {/* Seccion de comentarios */}
                         <div className="border-b pb-4 mb-2">
                             {/* Comentario 1 */}
+                            {
+                                inspectionData?.comments?.length === 0 && (
+                                    <p className="text-gray-500 dark:text-gray-300">No hay comentarios disponibles.</p>
+                                )
+                            }
                             {inspectionData?.comments?.map((comment) => (
                                 <div key={comment.id} className="flex items-center gap-4 mb-4 bg-neutral-50 rounded-md p-2">
                                     <div className="bg-white text-xl font-bold border rounded-full p-4 h-12 w-12 flex items-center justify-center">
@@ -393,14 +419,14 @@ export default function Page() {
                             </div>
                         </div>
                         {/* Problemas indentificados */}
-                        <div className="mt-4">
+                        {/* <div className="mt-4">
                             <h3 className="text-xl font-semibold mb-2">Problemas Identificados</h3>
                             <ul className="list-image-none pl-5 text-gray-700 dark:text-gray-300">
                                 <li>Llegando al final de su vida util</li>
                                 <li>Temperatura elevada</li>
                                 <li>Desgaste irregular</li>
                             </ul>
-                        </div>
+                        </div> */}
 
                     </div>
                     {/* Panel de acciones programar mantenimiento, ver neumatico, generar informe */}

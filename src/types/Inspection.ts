@@ -27,6 +27,22 @@ export interface InspectionDTO {
         usedKilometrage: number;
         siteId: number;
         creationDate: string; // ISO date string
+        installedTires?: Array<{
+            id: number;
+            vehicleId: number;
+            tireId: number;
+            sensorId?: number | null; // Optional, can be null
+            position: number;
+            vehicle: {
+                id: number;
+                code: string;
+                modelId: number;
+                siteId: number;
+                kilometrage: number;
+                hours: number;
+                typeId: number;
+            };
+        }> | null; // Optional, can be null
     };
     photos: Array<{
         id: number;
