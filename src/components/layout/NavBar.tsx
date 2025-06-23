@@ -19,7 +19,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaCircleDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
-import { Mountain } from "lucide-react";
+import { FileText, Mountain } from "lucide-react";
 import MineTruck from "../common/icons/MineTruck";
 
 interface MenuItem {
@@ -63,6 +63,12 @@ export default function NavBar() {
             icon: <Mountain className="text-2xl" />,
             path: "/faena",
             allowedRoles: ["planificador", "demo", "supervisor"],
+        },
+        {
+            title: "Resumen",
+            icon: <FileText className="text-2xl" />,
+            path: "/resumen",
+            allowedRoles: ["administrador", "planificador", "demo", "supervisor", "stakeholder"],
         },
         {
             title: "Reportabilidad",

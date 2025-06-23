@@ -97,8 +97,8 @@ export default function Page() {
 
     function getBarColor(percent: number) {
         if (percent > 85) return 'bg-green-500';
-        if (percent < 15) return 'bg-red-500';
-        if (percent < 40) return 'bg-yellow-400';
+        if (percent <= 40) return 'bg-red-500';
+        if (percent < 60) return 'bg-yellow-400';
         return 'bg-blue-500'; // Color neutro
     }
 
@@ -110,7 +110,7 @@ export default function Page() {
 
         if (percentage > 85) {
             color = 'bg-green-500';
-        } else if (percentage <= 15) {
+        } else if (percentage <= 20) {
             color = 'bg-red-600';
         } else if (percentage <= 40) {
             color = 'bg-yellow-400';
@@ -242,6 +242,16 @@ export default function Page() {
                                     }
 
                                 </span>
+                            </div>
+                            {/* HORAS */}
+                            <div className="flex flex-col">
+                                <p className="text-gray-500 dark:text-gray-300">Horas:</p>
+                                <span className="font-bold text-xl">{inspectionData?.hours || "No Disponible"}</span>
+                            </div>
+                            {/* Kilometraje */}
+                            <div className="flex flex-col">
+                                <p className="text-gray-500 dark:text-gray-300">Kilometraje:</p>
+                                <span className="font-bold text-xl">{inspectionData?.kilometrage || "No Disponible"}</span>
                             </div>
                         </div>
                     </section>
