@@ -7,46 +7,20 @@ import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import MineTruck from '@/components/common/icons/MineTruck';
 import { useAuth } from '@/contexts/AuthContext';
+import { CreateInspectionDTO } from '@/types/CreateInspection';
 
 export default function MedicionPorEquipo() {
     const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
-    const [isOpen, setIsOpen] = useState(false);
+    const [inspections, setInspections] = useState<CreateInspectionDTO[]>([]);
 
+
+
+    const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [vehicleCode, setVehicleCode] = useState<string | null>(null);
-    const [tireSelected, setTireSelected] = useState<VehicleDTO["installedTires"][0] | null>(null);
-
-
-    const [tireInspected, setTireInspected] = useState({
-        position: 0,
-        externalTread: 0,
-        internalTread: 0,
-        kilometrage: 0,
-        pressure: 0,
-        temperature: 0,
-        observation: "",
-        inspectionDate: new Date().toISOString(),
-        tireId: 0
-    });
-
-    useEffect(() => {
-        if (tireSelected) {
-            setTireInspected({
-                position: tireSelected.position,
-                externalTread: tireSelected.tire.lastInspection.externalTread,
-                internalTread: tireSelected.tire.lastInspection.internalTread,
-                kilometrage: vehicle?.kilometrage || 0,
-                pressure: tireSelected.tire.lastInspection.pressure,
-                temperature: tireSelected.tire.lastInspection.temperature,
-                observation: tireSelected.tire.lastInspection.observation,
-                inspectionDate: new Date().toISOString(),
-                tireId: tireSelected.tire.id
-            });
-        }
-    }, [tireSelected, vehicle]);
+    const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
 
     const fetchVehicle = async () => {
         setError(null);
@@ -67,56 +41,58 @@ export default function MedicionPorEquipo() {
         }
     };
 
-    const handleInputChange = (
-        type: "ext" | "int" | "pre" | "tem",
-        value: number
+    const updateInspection = (
+        tire: VehicleDTO["installedTires"][0],
+        field: keyof CreateInspectionDTO,
+        value: string | number
     ) => {
-        setTireInspected((prev) => ({
-            ...prev,
-            ...(type === "ext" && { externalTread: value }),
-            ...(type === "int" && { internalTread: value }),
-            ...(type === "pre" && { pressure: value }),
-            ...(type === "tem" && { temperature: value }),
-        }));
-    };
-    const resetData = () => {
-        setTireSelected(null);
-        setTireInspected({
-            position: 0,
-            externalTread: 0,
-            internalTread: 0,
-            kilometrage: 0,
-            pressure: 0,
-            temperature: 0,
-            observation: "",
-            inspectionDate: new Date().toISOString(),
-            tireId: 0
-        });
-    }
-
-    useEffect(() => {
-        console.log(loading)
-        if (!tireSelected) {
-            setTireInspected({
-                position: 0,
-                externalTread: 0,
-                internalTread: 0,
-                kilometrage: 0,
-                pressure: 0,
-                temperature: 0,
-                observation: "",
+        setInspections(prev => {
+            const existing = prev.find(i => i.tireId === tire.tire.id);
+            const newInspection: CreateInspectionDTO = {
+                position: tire.position,
+                externalTread: field === 'externalTread' ? Number(value) : existing?.externalTread ?? tire.tire.lastInspection.externalTread,
+                internalTread: field === 'internalTread' ? Number(value) : existing?.internalTread ?? tire.tire.lastInspection.internalTread,
+                pressure: field === 'pressure' ? Number(value) : existing?.pressure ?? tire.tire.lastInspection.pressure,
+                temperature: field === 'temperature' ? Number(value) : existing?.temperature ?? tire.tire.lastInspection.temperature,
+                observation: field === 'observation' ? String(value) : existing?.observation ?? tire.tire.lastInspection.observation,
                 inspectionDate: new Date().toISOString(),
-                tireId: 0
-            });
-        }
-    }, [tireSelected]);
+                kilometrage: vehicle?.kilometrage ?? 0,
+                hours: vehicle?.hours ?? 0,
+                tireId: tire.tire.id,
+                inspectorId: user?.user_id || 0,
+                inspectorName: `${user?.name} ${user?.last_name}`,
+            };
+
+            const filtered = prev.filter(i => i.tireId !== tire.tire.id);
+            return [...filtered, newInspection];
+        });
+    };
+
+    const totalTires = vehicle?.installedTires.length ?? 0;
+    const completed = inspections.length;
+    const progress = totalTires > 0 ? Math.round((completed / totalTires) * 100) : 0;
+
 
     const handleConfirm = async () => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, tireInspected);
+            if (inspections.length === 0) {
+                setError("Debes registrar al menos una inspección.");
+                return;
+            }
+
+            // Enviar todas las inspecciones en paralelo
+            await Promise.all(
+                inspections.map((insp) =>
+                    axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, insp)
+                )
+            );
+
+            // Limpieza posterior
             setIsOpen(false);
-            resetData();
-            return response.data;
+            setInspections([]);
+            setVehicle(null);
+            setVehicleCode(null);
+
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const message = error.response?.data?.message || "Error desconocido";
@@ -223,7 +199,15 @@ export default function MedicionPorEquipo() {
                     </section>
 
                 </div>
-
+                <div className="my-4 w-full">
+                    <label className="text-sm font-semibold">Progreso de inspección: {progress}%</label>
+                    <div className="w-full bg-gray-200 rounded-full h-4 mt-1">
+                        <div
+                            className="bg-amber-400 h-4 rounded-full transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
+                </div>
                 {/* Seccion de mediciones de los neumaticos */}
                 <section className='flex flex-col gap-y-2 my-5 w-full border bg-white p-3 rounded-md shadow-sm shadow-gray-200 dark:bg-neutral-800 dark:text-white dark:shadow-neutral-800'>
                     {/* Titulo */}
@@ -235,122 +219,119 @@ export default function MedicionPorEquipo() {
                     {/* Seccion para las cards de los neumaticos */}
                     <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'>
                         {
-                            vehicle?.installedTires.map((tire) => (
-                                <div
-                                    key={tire.id}
-                                    className={`p-4 rounded-lg border cursor-pointer transition-colors ${tireSelected?.id === tire.id ? "bg-gray-50 dark:bg-neutral-900" : "bg-white dark:bg-neutral-800"} hover:bg-gray-100 dark:hover:bg-neutral-900`}
-                                    onClick={() => {
-                                        setTireSelected(tire);
-                                        setTireInspected({
-                                            position: tire.position,
-                                            externalTread: tire.tire.lastInspection.externalTread,
-                                            internalTread: tire.tire.lastInspection.internalTread,
-                                            kilometrage: vehicle?.kilometrage || 0,
-                                            pressure: tire.tire.lastInspection.pressure,
-                                            temperature: tire.tire.lastInspection.temperature,
-                                            observation: tire.tire.lastInspection.observation,
-                                            inspectionDate: new Date().toISOString(),
-                                            tireId: tire.tire.id
-                                        });
-                                    }}
-                                >
-                                    <h3 className='text-lg font-semibold'>Neumático {tire.position}</h3>
-                                    <p className='text-sm text-gray-600 dark:text-gray-300'>Código: {tire.tire.code}</p>
-                                    {/* Input de presion */}
-                                    <div className='flex flex-col gap-y-2 mt-2'>
-                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                            <Gauge size={24} className="inline mr-2 text-blue-400" />
-                                            Presión:</label>
-                                        <input
-                                            type="number"
-                                            value={tireInspected.pressure}
-                                            disabled={!tireSelected}
-                                            onChange={(e) => handleInputChange("pre", parseFloat(e.target.value))}
-                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 ${tireSelected ? "" : "opacity-50"}`}
-                                        />
-                                    </div>
-                                    {/* Input de temperatura */}
-                                    <div className='flex flex-col gap-y-2 mt-2'>
-                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                            <Thermometer size={24} className="inline mr-2 text-red-500" />
-                                            Temperatura:</label>
-                                        <input
-                                            type="number"
-                                            value={tireInspected.temperature}
-                                            disabled={!tireSelected}
-                                            onChange={(e) => handleInputChange("tem", parseFloat(e.target.value))}
-                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 ${tireSelected ? "" : "opacity-50"}`}
-                                        />
-                                    </div>
-                                    {/* Input de remanente, en el mismo contenedor deben estar el interno y el externo */}
-                                    <div className='flex items-center gap-x-2 mt-2'>
-                                        <div className='flex flex-col gap-y-2 w-full'>
+                            vehicle?.installedTires.map((tire) => {
+                                const existing = inspections.find(i => i.tireId === tire.tire.id);
 
+                                const values = existing ?? {
+                                    pressure: tire.tire.lastInspection.pressure,
+                                    temperature: tire.tire.lastInspection.temperature,
+                                    externalTread: tire.tire.lastInspection.externalTread,
+                                    internalTread: tire.tire.lastInspection.internalTread,
+                                    observation: tire.tire.lastInspection.observation,
+                                };
+                                return (
+
+                                    <div
+                                        key={tire.id}
+                                        className={`p-4 rounded-lg border cursor-pointer transition-colors bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-900`}
+
+                                    >
+                                        <h3 className='text-lg font-semibold'>Neumático {tire.position}</h3>
+                                        <p className='text-sm text-gray-600 dark:text-gray-300'>Código: {tire.tire.code}</p>
+                                        {/* Input de presion */}
+                                        <div className='flex flex-col gap-y-2 mt-2'>
                                             <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                                <Waves size={24} className="inline mr-2 text-green-500" />
-                                                Rem. Int.:</label>
+                                                <Gauge size={24} className="inline mr-2 text-blue-400" />
+                                                Presión:</label>
                                             <input
                                                 type="number"
-                                                value={tireInspected.externalTread}
-                                                disabled={!tireSelected}
-                                                onChange={(e) => handleInputChange("ext", parseFloat(e.target.value))}
-                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 ${tireSelected ? "" : "opacity-50"}`}
-                                                placeholder="Externo"
+                                                min={0}
+                                                value={values.pressure ?? ""}
+                                                onChange={(e) => updateInspection(tire, 'pressure', parseFloat(e.target.value))}
+                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
                                             />
                                         </div>
-                                        <div className='flex flex-col gap-y-2 w-full'>
+                                        {/* Input de temperatura */}
+                                        <div className='flex flex-col gap-y-2 mt-2'>
                                             <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                                <Waves size={24} className="inline mr-2 text-green-500" />
-                                                Rem. Ext.:</label>
+                                                <Thermometer size={24} className="inline mr-2 text-red-500" />
+                                                Temperatura:</label>
                                             <input
                                                 type="number"
-                                                value={tireInspected.internalTread}
-                                                disabled={!tireSelected}
-                                                onChange={(e) => handleInputChange("int", parseFloat(e.target.value))}
-                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 ${tireSelected ? "" : "opacity-50"}`}
-                                                placeholder="Interno"
+                                                min={0}
+                                                value={values.temperature ?? ""}
+                                                onChange={(e) => updateInspection(tire, 'temperature', parseFloat(e.target.value))}
+                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
                                             />
                                         </div>
-                                    </div>
-                                    {/* Input para agregar comentario a cada neumatico */}
-                                    <div className='flex flex-col gap-y-2 mt-2'>
-                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>Comentario adicional:</label>
-                                        <input
-                                            type="text"
-                                            value={""}
-                                            disabled={!tireSelected}
-                                            onChange={(e) =>
-                                                setTireInspected((prev) => ({ ...prev, observation: e.target.value }))
-                                            }
-                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 ${tireSelected ? "" : "opacity-50"}`}
-                                            placeholder="Ingrese observaciones"
-                                        />
+                                        {/* Input de remanente, en el mismo contenedor deben estar el interno y el externo */}
+                                        <div className='flex items-center gap-x-2 mt-2'>
+                                            <div className='flex flex-col gap-y-2 w-full'>
+                                                <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                                    <Waves size={24} className="inline mr-2 text-green-500" />
+                                                    Rem. Int.:</label>
+                                                <input
+                                                    type="number"
+                                                    min={0}
+                                                    max={tire.tire.lastInspection.internalTread + 5}
+                                                    value={values.internalTread}
+                                                    onChange={(e) => updateInspection(tire, 'internalTread', parseFloat(e.target.value))}
+                                                    className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                                    placeholder="Interno"
+                                                />
+                                            </div>
+                                            <div className='flex flex-col gap-y-2 w-full'>
+                                                <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                                    <Waves size={24} className="inline mr-2 text-green-500" />
+                                                    Rem. Ext.:</label>
+                                                <input
+                                                    type="number"
+                                                    min={0}
+                                                    max={tire.tire.lastInspection.externalTread + 5}
+                                                    value={values.externalTread}
+                                                    onChange={(e) => updateInspection(tire, 'externalTread', parseFloat(e.target.value))}
+                                                    className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                                    placeholder="Externo"
+                                                />
+                                            </div>
 
-                                    </div>
+                                        </div>
+                                        {/* Input para agregar comentario a cada neumatico */}
+                                        <div className='flex flex-col gap-y-2 mt-2'>
+                                            <label className='text-md font-semibold text-gray-700 dark:text-white'>Comentario adicional:</label>
+                                            <input
+                                                type="text"
+                                                value={values.observation ?? ""}
+                                                onChange={(e) => updateInspection(tire, 'observation', e.target.value)}
+                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                                placeholder="Ingrese observaciones"
+                                            />
 
-                                </div>
-                            ))
+                                        </div>
+                                    </div>
+                                )
+                            })
                         }
 
                     </section>
-
                 </section>
-
-                <div className={`${tireSelected ? "" : "opacity-50"}`}>
-                    <label className="text-md mb-1 text-black font-semibold dark:text-white ">Observaciones:</label>
-                    <textarea
-                        disabled={!tireSelected}
-                        value={tireInspected.observation}
-                        onChange={(e) =>
-                            setTireInspected((prev) => ({ ...prev, observation: e.target.value }))
-                        }
-                        className="w-full bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2"
-                    />
-
+                {/* Barra de progreso */}
+                <div className="my-4 w-full">
+                    <label className="text-sm font-semibold">Progreso de inspección: {progress}%</label>
+                    <div className="w-full bg-gray-200 rounded-full h-4 mt-1">
+                        <div
+                            className="bg-amber-400 h-4 rounded-full transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
                 </div>
-
+                {/* Botones de confirmación */}
                 <div className='lg:flex gap-x-4 lg:justify-around'>
-                    <button onClick={() => setIsOpen(true)} className="bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4">Confirmar Datos</button>
+                    <button
+                        disabled={progress < 80}
+                        onClick={() => setIsOpen(true)} className={`bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4
+                        ${progress < 80 ? 'opacity-50 ' : ''}
+                        `}>Confirmar Datos</button>
                     <button className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
                 </div>
                 <small className="text-gray-700 dark:text-white text-xs">*Datos erróneos no serán aceptados por el sistema, <span className='font-bold'>Recuerde verificar sus datos</span></small>

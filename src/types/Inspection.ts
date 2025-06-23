@@ -4,6 +4,8 @@ export interface InspectionDTO {
     externalTread: number;
     internalTread: number;
     kilometrage: number;
+    inspectorId: number;
+    inspectorName: string;
     hours: number;
     tireId: number;
     inspectionDate: string; // ISO date string

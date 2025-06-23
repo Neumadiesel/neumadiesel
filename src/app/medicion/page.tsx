@@ -1,7 +1,37 @@
+"use client"
 import { FileCheck } from "lucide-react";
 import Link from "next/link";
-
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { InspectionDTO } from "@/types/Inspection";
 export default function MedicionPage() {
+
+    const [pendingInspections, setPendingInspections] = useState<InspectionDTO[]>([]);
+    // Funcion de axios que pide las inspecciones pendientes
+    const fetchPendingInspections = async () => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/1/disapproved`);
+            setPendingInspections(response.data);
+        } catch (error) {
+            console.error("Error fetching pending inspections:", error);
+            return []; // Retorna un array vacío en caso de error
+        }
+    };
+
+    const aproveInspection = async (inspectionId: number) => {
+        try {
+            const response = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/approve/${inspectionId}`);
+            console.log("Inspección aprobada:", response.data);
+            // Actualizar la lista de inspecciones pendientes
+            fetchPendingInspections();
+        } catch (error) {
+            console.error("Error approving inspection:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPendingInspections()
+    }, []);
     return (
         <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col  p-4">
             <div className="w-full flex justify-between mb-2">
@@ -21,7 +51,9 @@ export default function MedicionPage() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                     <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 dark:shadow-neutral-800  flex flex-col items-center">
                         <h2 className="text-xl font-semibold mb-2">Chequeos Pendientes</h2>
-                        <p className="text-3xl font-bold">5</p>
+                        <p className="text-3xl font-bold">
+                            {pendingInspections.length}
+                        </p>
                     </div>
                     <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 dark:shadow-neutral-800 flex flex-col items-center">
                         <h2 className="text-xl font-semibold mb-2">Chequeos de esta Semana</h2>
@@ -54,45 +86,43 @@ export default function MedicionPage() {
                         <tr className="border-b dark:border-neutral-600">
                             <th className="px-4 py-2 text-left">Neumático</th>
                             <th className="px-4 py-2 text-left">Fecha</th>
-                            <th className="px-4 py-2 text-left">Operador</th>
                             <th className="px-4 py-2 text-left">Remanente</th>
-                            <th className="px-4 py-2 text-left">Estado</th>
+                            <th className="px-4 py-2 text-left">Inspector</th>
+                            <th className="px-4 py-2 text-left">Observacion</th>
                             <th className="px-4 py-2 text-left">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {/* Aquí se pueden mapear las inspecciones pendientes */}
-                        <tr className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
-                            <td className="px-4 py-2">AB231459</td>
-                            <td className="px-4 py-2">01/01/2023</td>
-                            <td className="px-4 py-2">Juan Perez</td>
-                            <td className="px-4 py-2">78/74</td>
-                            <td className="px-4 py-2">Pendiente</td>
-                            <td className="px-4 py-2 gap-2 flex">
-                                <Link href={"/medicion/1"} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
-                                    Revisar
-                                </Link>
-                                <button className="bg-amber-300 text-black hover:cursor-pointer px-4 py-2 rounded hover:bg-amber-400 transition-colors font-semibold">
-                                    Aprobar
-                                </button>
-                            </td>
-                        </tr>
-                        <tr className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
-                            <td className="px-4 py-2">AB231459</td>
-                            <td className="px-4 py-2">01/01/2023</td>
-                            <td className="px-4 py-2">Juan Perez</td>
-                            <td className="px-4 py-2">78/74</td>
-                            <td className="px-4 py-2">Pendiente</td>
-                            <td className="px-4 py-2 gap-2 flex">
-                                <Link href={"/medicion/1"} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
-                                    Revisar
-                                </Link>
-                                <button className="bg-amber-300 text-black hover:cursor-pointer px-4 py-2 rounded hover:bg-amber-400 transition-colors font-semibold">
-                                    Aprobar
-                                </button>
-                            </td>
-                        </tr>
-                        {/* Más filas según sea necesario */}
+                        {
+                            pendingInspections.length === 0 && (
+                                <tr className="border-b dark:border-neutral-600">
+                                    <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
+                                        No hay inspecciones pendientes
+                                    </td>
+                                </tr>
+                            )
+                        }
+                        {
+                            pendingInspections.map((inspection) => (
+                                <tr key={inspection.id} className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
+                                    <td className="px-4 py-2">{inspection.tire.code}</td>
+                                    <td className="px-4 py-2">{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2">{`${inspection.externalTread}/${inspection.internalTread}`}</td>
+                                    <td className="px-4 py-2">{inspection.inspectorName}</td>
+                                    <td className="px-4 py-2">{inspection.observation || "N/A"}</td>
+                                    <td className="px-4 py-2 gap-2 flex">
+                                        <Link href={`/medicion/${inspection.id}`} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
+                                            Revisar
+                                        </Link>
+                                        <button
+                                            onClick={() => aproveInspection(inspection.id)}
+                                            className="bg-amber-300 text-black hover:cursor-pointer px-4 py-2 rounded hover:bg-amber-400 transition-colors font-semibold">
+                                            Aprobar
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
             </section>

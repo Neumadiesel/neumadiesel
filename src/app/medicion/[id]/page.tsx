@@ -421,15 +421,13 @@ export default function Page() {
                                 />
                             </div>
                         </div>
-                        {/* Problemas indentificados */}
-                        {/* <div className="mt-4">
-                            <h3 className="text-xl font-semibold mb-2">Problemas Identificados</h3>
-                            <ul className="list-image-none pl-5 text-gray-700 dark:text-gray-300">
-                                <li>Llegando al final de su vida util</li>
-                                <li>Temperatura elevada</li>
-                                <li>Desgaste irregular</li>
-                            </ul>
-                        </div> */}
+                        {/* Observaciones */}
+                        <div className="mt-4">
+                            <h3 className="text-xl font-semibold mb-2">Observaciones</h3>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                {inspectionData?.observation || "No hay observaciones disponibles."}
+                            </p>
+                        </div>
 
                     </div>
                     {/* Panel de acciones programar mantenimiento, ver neumatico, generar informe */}
