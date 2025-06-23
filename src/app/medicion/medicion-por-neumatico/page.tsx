@@ -1,117 +1,58 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
-import { Search } from "lucide-react";
+import { File, Gauge, Search, Thermometer, Waves } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
+import { useAuth } from '@/contexts/AuthContext';
+import { CreateInspectionDTO } from '@/types/CreateInspection';
+import { TireDTO } from '@/types/Tire';
+
 export default function MedicionPorEquipo() {
+    const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
 
     const [loading, setLoading] = useState(false);
+    const [inspection, setInspeciton] = useState<CreateInspectionDTO | null>(null);
 
-    const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
-    const [vehicleCode, setVehicleCode] = useState<string | null>(null);
-    const [tireSelected, setTireSelected] = useState<VehicleDTO["installedTires"][0] | null>(null);
+    // Buscar neumatico por codigo
 
-    const [tireInspected, setTireInspected] = useState({
-        position: 0,
-        externalTread: 0,
-        internalTread: 0,
-        kilometrage: 0,
-        pressure: 0,
-        temperature: 0,
-        observation: "",
-        inspectionDate: new Date().toISOString(),
-        tireId: 0
-    });
+    const [tireCode, setTireCode] = useState<string | null>(null);
+    const [tire, setTire] = useState<TireDTO | null>(null);
 
-    useEffect(() => {
-        if (tireSelected) {
-            setTireInspected({
-                position: tireSelected.position,
-                externalTread: tireSelected.tire.lastInspection.externalTread,
-                internalTread: tireSelected.tire.lastInspection.internalTread,
-                kilometrage: vehicle?.kilometrage || 0,
-                pressure: tireSelected.tire.lastInspection.pressure,
-                temperature: tireSelected.tire.lastInspection.temperature,
-                observation: tireSelected.tire.lastInspection.observation,
-                inspectionDate: new Date().toISOString(),
-                tireId: tireSelected.tire.id
-            });
+    const fetchTire = async () => {
+        if (!tireCode) {
+            setError("Por favor, ingrese un código de neumático.");
+            return;
         }
-    }, [tireSelected, vehicle]);
-
-    const fetchVehicle = async () => {
-        setError(null);
         setLoading(true);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
-            console.log("Vehículo", response.data);
-            setVehicle(response.data);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/code/${tireCode}/site/1`);
+            setTire(response.data);
+            setError(null);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const message = error.response?.data?.message || "Error desconocido";
                 setError(message);
             } else {
                 console.error("Error inesperado:", error);
+                setError("Error inesperado al buscar el neumático.");
             }
         } finally {
             setLoading(false);
         }
     };
 
-    const handleInputChange = (
-        type: "ext" | "int" | "pre" | "tem",
-        value: number
-    ) => {
-        setTireInspected((prev) => ({
-            ...prev,
-            ...(type === "ext" && { externalTread: value }),
-            ...(type === "int" && { internalTread: value }),
-            ...(type === "pre" && { pressure: value }),
-            ...(type === "tem" && { temperature: value }),
-        }));
-    };
-    const resetData = () => {
-        setTireSelected(null);
-        setTireInspected({
-            position: 0,
-            externalTread: 0,
-            internalTread: 0,
-            kilometrage: 0,
-            pressure: 0,
-            temperature: 0,
-            observation: "",
-            inspectionDate: new Date().toISOString(),
-            tireId: 0
-        });
-    }
-
-    useEffect(() => {
-        console.log(loading)
-        if (!tireSelected) {
-            setTireInspected({
-                position: 0,
-                externalTread: 0,
-                internalTread: 0,
-                kilometrage: 0,
-                pressure: 0,
-                temperature: 0,
-                observation: "",
-                inspectionDate: new Date().toISOString(),
-                tireId: 0
-            });
-        }
-    }, [tireSelected]);
-
     const handleConfirm = async () => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, tireInspected);
+            const response = axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspection)
             setIsOpen(false);
-            resetData();
-            return response.data;
+            setInspeciton(null);
+            setTire(null);
+            setTireCode(null);
+            console.log("Inspección creada:", (await response));
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const message = error.response?.data?.message || "Error desconocido";
@@ -122,21 +63,56 @@ export default function MedicionPorEquipo() {
         }
     };
 
+    const updateInspection = (
+        tire: TireDTO,
+        field: keyof CreateInspectionDTO,
+        value: string | number
+    ) => {
+        setInspeciton(prev => {
+            const newInspection: CreateInspectionDTO = {
+                position: tire.lastInspection?.position ?? "",
+                externalTread: field === 'externalTread' ? Number(value) : prev?.externalTread ?? tire.lastInspection.externalTread,
+                internalTread: field === 'internalTread' ? Number(value) : prev?.internalTread ?? tire.lastInspection.internalTread,
+                pressure: field === 'pressure' ? Number(value) : prev?.pressure ?? tire.lastInspection.pressure,
+                temperature: field === 'temperature' ? Number(value) : prev?.temperature ?? tire.lastInspection.temperature,
+                observation: field === 'observation' ? String(value) : prev?.observation ?? tire.lastInspection.observation,
+                inspectionDate: new Date().toISOString(),
+                kilometrage: tire.lastInspection.kilometrage ?? 0,
+                hours: tire.lastInspection.hours ?? 0,
+                tireId: tire.id,
+                inspectorId: user?.user_id || 0,
+                inspectorName: `${user?.name ?? ""} ${user?.last_name ?? ""}`.trim(),
+            };
+            return newInspection;
+        });
+    };
+
     return (
         <div className="  p-4 gap-y-2 bg-white dark:bg-[#212121] dark:text-white">
-            <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección del Neumático</h1>
-            <section className=''>
-                <div className='flex items-center gap-x-2 border-b border-b-amber-300 pb-3'>
-                    <label className="text-lg mb-1 text-black font-semibold dark:text-white ">Ingrese código del equipo:</label>
-                    <input
-                        onChange={(e) => setVehicleCode(e.target.value.toUpperCase())}
-                        value={vehicleCode || ""}
-                        placeholder="Código equipo"
+            <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección Individual de Neumático</h1>
+            <p className='text-gray-700 dark:text-white text-sm mb-4'>
+                Ingresa el código para inspeccionar un neumático específico
+            </p>
+            <section className='lg:w-4/5 max-auto'>
+                {/* Seccion buscador */}
+                <section className='flex flex-col gap-2 bg-neutral-800 p-3 rounded-md border dark:border-neutral-700'>
+                    {/* Subtitulo de busqueda */}
+                    <h3 className="text-2xl mb-1 text-black font-semibold dark:text-white ">
+                        <Search className="w-6 h-6 inline mr-1" />
+                        Buscar Neumático
+                    </h3>
+                    <p className="text-sm text-gray-700 dark:text-white">Ingrese el código del equipo para inspeccionar un neumático específico</p>
+                    <div className='flex gap-x-2 items-center mt-4'>
+                        <input
+                            onChange={(e) => setTireCode(e.target.value.toUpperCase())}
+                            value={tireCode || ""}
+                            placeholder="Código Neumático"
 
-                        type="text" className="w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2" />
-                    <button onClick={() => fetchVehicle()} className="bg-amber-300 hover:bg-amber-400 hover:cursor-pointer text-black p-2 font-bold rounded-lg">
-                        <Search className="w-6 h-6" />
-                    </button>
+                            type="text" className="w-2/3 bg-gray-50 dark:bg-[#414141] rounded-lg border dark:border-neutral-700 p-2" />
+                        <button onClick={() => fetchTire()} className="bg-amber-300 hover:bg-amber-400 hover:cursor-pointer text-black p-2 font-bold rounded-lg">
+                            <Search className="w-6 h-6" />
+                        </button>
+                    </div>
                     <div>
                         {error && <div className="text-red-500 flex justify-between text-sm w-80 bg-red-50 border border-red-300 p-2 rounded-sm">{error}
                             <button onClick={() => setError("")} className=" text-red-500">
@@ -145,179 +121,128 @@ export default function MedicionPorEquipo() {
                         </div>
                         }
                     </div>
-                </div>
+                </section>
 
-                {/* Fecha medicion anterior */}
-                <div className='flex gap-x-4 my-2'>
-                    <p className="text-sm text-gray-700 dark:text-white">Kilometraje del Equipo: <span className='font-semibold'>{vehicle?.kilometrage}</span></p>
-                    <p className="text-sm text-gray-700 dark:text-white">Modelo: <span className='font-semibold'>{vehicle?.model.model}</span></p>
-                    <p className="text-sm text-gray-700 dark:text-white">Código: <span className='font-semibold'>{vehicle?.code}</span></p>
-                    <p className="text-sm text-gray-700 dark:text-white">Faena: <span className='font-semibold'>{vehicle?.site.name}</span></p>
-
-                </div>
-                {/* Selecotr de neumaticos instalados */}
-                <div className="flex gap-x-4 my-2">
-                    <select
-                        disabled={!vehicle}
-                        className={`w-[40%] bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2 ${!vehicle ? "opacity-50" : ""}`}
-                        onChange={(e) => {
-                            const selectedTireId = parseInt(e.target.value, 10);
-                            const selected = vehicle?.installedTires.find(
-                                (installed) => installed.tire.id === selectedTireId
-                            );
-                            setTireSelected(selected || null);
-                        }}
-                        value={tireSelected?.tire.id || ""}
-                    >
-                        <option value="">Seleccione un neumático</option>
-                        {vehicle?.installedTires.map((installed) => (
-                            <option key={installed.id} value={installed.tire.id}>
-                                Posición {installed.position} - {installed.tire.code}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="overflow-x-auto  mt-4 w-[100%]">
-                    <div className='flex gap-x-2 justify-between mb-2'>
-
-
-
-                        <section key={tireSelected?.id} className={`
-                        border bg-gray-50 dark:bg-neutral-800 dark:text-white border-amber-300 rounded-lg p-2 my-2 w-full py-4
-                            ${tireSelected ? "" : "opacity-50"}
-                            `}>
-                            <p className='text-xl font-bold'>Posición {tireSelected?.position}</p>
-                            <p className='font-semibold'>Código del neumático: {tireSelected?.tire.code}</p>
-
-                            {/* Medicion exterior */}
-                            <div className='flex flex-col'>
-                                <div className="flex items-center mt-2 ">
-                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Exterior:</label>
-                                    {/* Botón de disminuir */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("ext", tireInspected.externalTread - 1)}
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                    >
-                                        -
-                                    </button>
-
-                                    {/* Input numérico */}
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={tireInspected.externalTread}
-                                        onChange={
-                                            (e) => handleInputChange("ext", parseFloat(e.target.value) || 0)
-                                        }
-                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                    />
-
-                                    {/* Botón de aumentar */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("ext", tireInspected.externalTread + 1)}
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                                {/* Medicion interior */}
-                                <div className="flex items-center mt-2">
-                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Interior:</label>
-                                    {/* Botón de disminuir */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("int", tireInspected.internalTread - 1)}
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                    >
-                                        -
-                                    </button>
-                                    {/* Input numérico */}
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={tireInspected.internalTread}
-                                        onChange={(e) => handleInputChange("int", parseFloat(e.target.value) || 0)}
-                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                    />
-                                    {/* Botón de aumentar */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("int", tireInspected.internalTread + 1)}
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                                {/* medicion presion */}
-                                <div className="flex items-center mt-2">
-                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Presión:</label>
-                                    {/* Botón de disminuir */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("pre", tireInspected.pressure - 1)}
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                    >
-                                        -
-                                    </button>
-                                    {/* Input numérico */}
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={tireInspected.pressure}
-                                        onChange={(e) => handleInputChange("pre", parseFloat(e.target.value) || 0)}
-                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                    />
-                                    {/* Botón de aumentar */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("pre", tireInspected.pressure + 1)}
-
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                                {/* medicion temperatura */}
-                                <div className="flex items-center mt-2">
-                                    <label className="text-md mb-1 text-black font-semibold dark:text-white w-[60%]">Temperatura:</label>
-                                    {/* Botón de disminuir */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("tem", tireInspected.temperature - 1)}
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-l-lg text-sm"
-                                    >
-                                        -
-                                    </button>
-                                    {/* Input numérico */}
-                                    <input
-                                        type="number"
-                                        min={0}
-                                        value={tireInspected.temperature}
-                                        onChange={(e) => handleInputChange("tem", parseFloat(e.target.value) || 0)}
-                                        className="w-24 text-center bg-amber-50 dark:bg-[#414141] border-y border-y-amber-300 h-10 p-2"
-                                    />
-                                    {/* Botón de aumentar */}
-                                    <button disabled={!tireSelected}
-                                        onClick={() => handleInputChange("tem", tireInspected.temperature + 1)}
-                                        className="bg-amber-50 border border-amber-500 text-black h-10 w-20 p-2 rounded-r-lg text-sm"
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
-
+                {/* Seccion detalles de la inspeccion, nombre del inspector, fecha de hoy */}
+                <section className='flex flex-col gap-4 bg-neutral-800 p-3 rounded-md border dark:border-neutral-700 mt-4'>
+                    <h3 className="text-2xl mb-1 text-black items-center font-semibold dark:text-white ">
+                        <File className="w-6 h-6 inline mr-1" />
+                        Detalles de Inspección
+                    </h3>
+                    <p className="text-sm text-gray-700 dark:text-white">Seleccione un neumático para inspeccionar</p>
+                    <div className='flex justify-between gap-x-2 items-center mt-4'>
+                        <div className=' flex flex-col gap-y-2'>
+                            <p className='text-black dark:text-white '>Inspector:</p>
+                            <p className='text-black dark:text-white font-semibold'>{user?.name || "Usuario No Disponible"}
+                                {user?.last_name ? ` ${user.last_name}` : ""}
+                            </p>
+                        </div>
+                        {/* Fecha de inspeccion */}
+                        <div className='flex flex-col gap-y-2'>
+                            <p className='text-black dark:text-white '>Fecha de Inspección:</p>
+                            <p className='text-black dark:text-white font-semibold'>{new Date().toLocaleDateString("es-ES", {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                            })}</p>
+                        </div>
+                        {/* Posicion del neumatico */}
+                        <div className='flex flex-col gap-y-2'>
+                            <p className='text-black dark:text-white'>Posición:</p>
+                            <p className='text-black dark:text-white font-semibold'>
+                                {tire ? tire.lastInspection.position : "Seleccione un neumático"}
+                            </p>
+                        </div>
+                        {/* Equipo */}
+                        <div className='flex flex-col gap-y-2'>
+                            <p className='text-black dark:text-white'>Equipo:</p>
+                            <p className='text-black dark:text-white font-semibold'>
+                                {tire?.installedTires[0] ? tire.installedTires[0].vehicle.code : "Equipo No Disponible"}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </section>
+                {
+                    tire &&
 
-                <div className={`${tireSelected ? "" : "opacity-50"}`}>
-                    <label className="text-md mb-1 text-black font-semibold dark:text-white ">Observaciones:</label>
-                    <textarea
-                        disabled={!tireSelected}
-                        value={tireInspected.observation}
-                        onChange={(e) =>
-                            setTireInspected((prev) => ({ ...prev, observation: e.target.value }))
-                        }
-                        className="w-full bg-gray-50 dark:bg-[#414141] rounded-lg border border-amber-300 p-2"
-                    />
+                    <main
+                        className={`p-4 rounded-lg mt-3 border cursor-pointer transition-colors bg-white dark:bg-neutral-800 dark:border-neutral-700`}
 
-                </div>
+                    >
+                        <h3 className='text-lg font-semibold'>Neumático {tire?.lastInspection.position}</h3>
+                        <p className='text-sm text-gray-600 dark:text-gray-300'>Código: {tire?.code}</p>
+                        {/* Input de presion */}
+                        <div className='flex flex-col gap-y-2 mt-2'>
+                            <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                <Gauge size={24} className="inline mr-2 text-blue-400" />
+                                Presión:</label>
+                            <input
+                                type="number"
+                                min={0}
+                                value={inspection?.pressure ?? ""}
+                                onChange={(e) => updateInspection(tire, 'pressure', parseFloat(e.target.value))}
+                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                            />
+                        </div>
+                        {/* Input de temperatura */}
+                        <div className='flex flex-col gap-y-2 mt-2'>
+                            <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                <Thermometer size={24} className="inline mr-2 text-red-500" />
+                                Temperatura:</label>
+                            <input
+                                type="number"
+                                min={0}
+                                value={inspection?.temperature ?? ""}
+                                onChange={(e) => updateInspection(tire, 'temperature', parseFloat(e.target.value))}
+                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                            />
+                        </div>
+                        {/* Input de remanente, en el mismo contenedor deben estar el interno y el externo */}
+                        <div className='flex items-center gap-x-2 mt-2'>
+                            <div className='flex flex-col gap-y-2 w-full'>
+                                <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                    <Waves size={24} className="inline mr-2 text-green-500" />
+                                    Rem. Int.:</label>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={(tire?.lastInspection.internalTread ?? 0) + 5}
+                                    value={inspection?.internalTread ?? ""}
+                                    onChange={(e) => updateInspection(tire, 'internalTread', parseFloat(e.target.value))}
+                                    className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                    placeholder="Interno"
+                                />
+                            </div>
+                            <div className='flex flex-col gap-y-2 w-full'>
+                                <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                    <Waves size={24} className="inline mr-2 text-green-500" />
+                                    Rem. Ext.:</label>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    max={(tire?.lastInspection.externalTread ?? 0) + 5}
+                                    value={inspection?.externalTread ?? ""}
+                                    onChange={(e) => updateInspection(tire, 'externalTread', parseFloat(e.target.value))}
+                                    className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                    placeholder="Externo"
+                                />
+                            </div>
+
+                        </div>
+                        {/* Input para agregar comentario a cada neumatico */}
+                        <div className='flex flex-col gap-y-2 mt-2'>
+                            <label className='text-md font-semibold text-gray-700 dark:text-white'>Comentario adicional:</label>
+                            <input
+                                type="text"
+                                value={inspection?.observation ?? ""}
+                                onChange={(e) => updateInspection(tire, 'observation', e.target.value)}
+                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                placeholder="Ingrese observaciones"
+                            />
+
+                        </div>
+                    </main>
+                }
 
                 <div className='lg:flex gap-x-4 lg:justify-around'>
                     <button onClick={() => setIsOpen(true)} className="bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4">Confirmar Datos</button>

@@ -226,7 +226,7 @@ export default function Page() {
                                     <User size={20} className="inline mr-1" />
                                     Inspeccionado por:
                                 </p>
-                                <span className="font-bold text-xl"> {inspectionData?.operatorId || "Sistema"}</span>
+                                <span className="font-bold text-xl"> {inspectionData?.inspectorName || "Sistema"}</span>
                             </div>
                             <div className="flex flex-col">
                                 <p className="text-gray-500 dark:text-gray-300">Posición:</p>

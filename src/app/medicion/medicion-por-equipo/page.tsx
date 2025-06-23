@@ -223,11 +223,11 @@ export default function MedicionPorEquipo() {
                                 const existing = inspections.find(i => i.tireId === tire.tire.id);
 
                                 const values = existing ?? {
-                                    pressure: tire.tire.lastInspection.pressure,
-                                    temperature: tire.tire.lastInspection.temperature,
-                                    externalTread: tire.tire.lastInspection.externalTread,
-                                    internalTread: tire.tire.lastInspection.internalTread,
-                                    observation: tire.tire.lastInspection.observation,
+                                    pressure: tire.tire.lastInspection.pressure ?? 0,
+                                    temperature: tire.tire.lastInspection.temperature ?? 0,
+                                    externalTread: tire.tire.lastInspection.externalTread ?? 0,
+                                    internalTread: tire.tire.lastInspection.internalTread ?? 0,
+                                    observation: tire.tire.lastInspection.observation ?? "",
                                 };
                                 return (
 

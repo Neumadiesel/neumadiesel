@@ -117,13 +117,13 @@ export default function NavBar() {
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
                 { title: "Mediciones", path: "/medicion/" },
-                { title: "Equipo", path: "/medicion/equipo" },
+                // { title: "Equipo", path: "/medicion/equipo" },
                 {
-                    title: "Ingresar Medición por Neumático",
+                    title: "Medición por Neumático",
                     path: "/medicion/medicion-por-neumatico",
                 },
                 {
-                    title: "Ingresar Medición por Equipo",
+                    title: "Medición por Equipo",
                     path: "/medicion/medicion-por-equipo",
                 },
             ],

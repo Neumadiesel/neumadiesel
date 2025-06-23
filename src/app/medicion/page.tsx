@@ -4,9 +4,18 @@ import Link from "next/link";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { InspectionDTO } from "@/types/Inspection";
+import { TireDTO } from "@/types/Tire";
+import OldTyres from "@/components/common/charts/neumatico/OldTyres";
+
+interface LastInspectionsDTO {
+    vehicleId: number;
+    code: string;
+    inspectionDate: string; // ISO date string
+}
 export default function MedicionPage() {
 
     const [pendingInspections, setPendingInspections] = useState<InspectionDTO[]>([]);
+    const [lastInspectedVehicle, setLastInspectedVehicle] = useState<LastInspectionsDTO[]>([]);
     // Funcion de axios que pide las inspecciones pendientes
     const fetchPendingInspections = async () => {
         try {
@@ -26,11 +35,25 @@ export default function MedicionPage() {
             fetchPendingInspections();
         } catch (error) {
             console.error("Error approving inspection:", error);
+            return []
+        }
+    };
+
+    const lastVehicleInspected = async () => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/last-inspected-equipment`);
+            setLastInspectedVehicle(response.data);
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching last inspected vehicle:", error);
+            return null; // Retorna null en caso de error
         }
     };
 
     useEffect(() => {
-        fetchPendingInspections()
+        fetchPendingInspections();
+        lastVehicleInspected();
     }, []);
     return (
         <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col  p-4">
@@ -126,37 +149,52 @@ export default function MedicionPage() {
                     </tbody>
                 </table>
             </section>
-            {/* Seccion de mediciones semanales */}
+            {/* Seccion de ultimos equipos inspeccionados */}
             <section className="w-full bg-white shadow-sm dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg mb-4">
                 <h2 className="text-3xl font-semibold mb-4 flex items-center">
                     <FileCheck size={32} className="inline mr-2 text-emerald-400" />
-                    Mediciones Semanales
+                    Ultimos Equipos Inspeccionados
                 </h2>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    Aquí puedes ver las mediciones semanales de los neumáticos.
+                    Aquí puedes ver los últimos equipos inspeccionados y sus fechas de inspección.
                 </p>
                 {/* Tabla de mediciones semanales */}
                 <table className="min-w-full bg-white dark:bg-neutral-800 border dark:border-neutral-600">
                     <thead>
                         <tr className="border-b dark:border-neutral-600">
-                            <th className="px-4 py-2 text-left">Neumático</th>
+                            <th className="px-4 py-2 text-left">Equipo</th>
                             <th className="px-4 py-2 text-left">Fecha</th>
-                            <th className="px-4 py-2 text-left">Remanente</th>
-                            <th className="px-4 py-2 text-left">Estado</th>
+                            <th className="px-4 py-2 text-left">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {/* Aquí se pueden mapear las mediciones semanales */}
-                        <tr className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
-                            <td className="px-4 py-2">AB231459</td>
-                            <td className="px-4 py-2">01/01/2023</td>
-                            <td className="px-4 py-2">78/74</td>
-                            <td className="px-4 py-2">Bueno</td>
-                        </tr>
-                        {/* Más filas según sea necesario */}
+                        {
+                            lastInspectedVehicle.length === 0 && (
+                                <tr className="border-b dark:border-neutral-600">
+                                    <td colSpan={3} className="px-4 py-2 text-center text-gray-500">
+                                        No hay mediciones semanales registradas
+                                    </td>
+                                </tr>
+                            )
+                        }
+                        {
+                            lastInspectedVehicle.map((vehicle, index) => (
+                                <tr key={index} className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
+                                    <td className="px-4 py-2">{vehicle.code}</td>
+                                    <td className="px-4 py-2">{new Date(vehicle.inspectionDate).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2">
+                                        <Link href={`/maquinaria/${vehicle.vehicleId}`} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
+                                            Ver Detalles
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
             </section>
+            {/* Seccion para ver los neumaticos criticos */}
+            <OldTyres />
         </div>
     );
 }
