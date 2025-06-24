@@ -7,6 +7,7 @@ import { InspectionDTO } from "@/types/Inspection";
 import OldTyres from "@/components/common/charts/neumatico/OldTyres";
 import { useAuth } from "@/contexts/AuthContext";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
+import Modal from "@/components/common/modal/CustomModal";
 
 interface LastInspectionsDTO {
     vehicleId: number;
@@ -26,6 +27,8 @@ export default function MedicionPage() {
     const [lastInspectedVehicle, setLastInspectedVehicle] = useState<LastInspectionsDTO[]>([]);
     const [lastApprovedInspection, setLastApprovedInspection] = useState<InspectionDTO[]>([]);
     const [kpi, setKpi] = useState<KpiDTO>(); // Puedes definir un tipo más específico si lo deseas
+    const [isDenyModalOpen, setIsDenyModalOpen] = useState(false);
+    const [inspectionIdToDeny, setInspectionIdToDeny] = useState<number | null>(null);
 
     // Funcion de axios que pide las inspecciones pendientes
     const fetchPendingInspections = async () => {
@@ -82,6 +85,34 @@ export default function MedicionPage() {
         }
     };
 
+    const handleDenyInspection = (inspectionId: number) => {
+        setInspectionIdToDeny(inspectionId);
+        setIsDenyModalOpen(true);
+    };
+
+    // Denegar inspección
+    const denyInspection = async () => {
+        if (inspectionIdToDeny === null) {
+            console.error("No inspection ID provided for denial.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${inspectionIdToDeny}/deny`
+            );
+            console.log("Inspección denegada:", response.data);
+            // Actualizar la lista de inspecciones pendientes
+            fetchLastInspections();
+            fetchPendingInspections();
+            setIsDenyModalOpen(false); // Cerrar el modal después de denegar
+            setInspectionIdToDeny(null); // Resetear el ID de inspección a den
+        } catch (error) {
+            console.error("Error denying inspection:", error);
+            return [];
+        }
+    }
+
     const lastVehicleInspected = async () => {
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/last-inspected-equipment`);
@@ -94,6 +125,7 @@ export default function MedicionPage() {
         }
     };
 
+
     useEffect(() => {
         fetchPendingInspections();
         fetchLastInspections();
@@ -105,23 +137,20 @@ export default function MedicionPage() {
             <div className="w-full flex justify-between mb-2">
 
                 <h1 className="text-4xl dark:text-white font-semibold">Panel de Inspecciones</h1>
-                <button className="bg-amber-300 text-black px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-amber-400 transition-colors">
-                    <p className="text-lg font-semibold">
-                        Realizar Inspección
-                    </p>
-                </button>
-                {/* Inspeccionar equipo */}
-                <Link href="/medicion/medicion-por-equipo" className="bg-emerald-500 text-white px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-emerald-600 transition-colors">
-                    <p className="text-lg font-semibold">
-                        Inspeccionar Equipo
-                    </p>
-                </Link>
-                {/* Inspeccionar neumatico */}
-                <Link href="/medicion/medicion-por-neumatico" className="bg-blue-500 text-white px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-blue-600 transition-colors">
-                    <p className="text-lg font-semibold">
-                        Inspeccionar Neumático
-                    </p>
-                </Link>
+                <div className="flex items-center gap-2">
+                    {/* Inspeccionar equipo */}
+                    <Link href="/medicion/medicion-por-equipo" className="bg-emerald-500 text-white px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-emerald-600 transition-colors">
+                        <p className="text-lg font-semibold">
+                            Inspeccionar Equipo
+                        </p>
+                    </Link>
+                    {/* Inspeccionar neumatico */}
+                    <Link href="/medicion/medicion-por-neumatico" className="bg-blue-500 text-white px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-blue-600 transition-colors">
+                        <p className="text-lg font-semibold">
+                            Inspeccionar Neumático
+                        </p>
+                    </Link>
+                </div>
             </div>
             <p className="text-gray-700 dark:text-gray-300 mb-4">
                 Aquí puedes realizar inspecciones de neumáticos, verificar su estado y registrar cualquier anomalía.
@@ -199,10 +228,17 @@ export default function MedicionPage() {
                                             className="bg-amber-300 text-black hover:cursor-pointer px-4 py-2 rounded hover:bg-amber-400 transition-colors font-semibold">
                                             Aprobar
                                         </button>
+                                        {/* Denegar */}
+                                        <button
+                                            onClick={() => handleDenyInspection(inspection.id)}
+                                            className="bg-red-500 text-white hover:cursor-pointer px-4 py-2 rounded hover:bg-red-600 transition-colors font-semibold">
+                                            Denegar
+                                        </button>
                                     </td>
                                 </tr>
                             ))
                         }
+
                     </tbody>
                 </table>
             </section>
@@ -264,6 +300,11 @@ export default function MedicionPage() {
                     </tbody>
                 </table>
             </section>
+            <Modal isOpen={isDenyModalOpen} onClose={() => setIsDenyModalOpen(false)} onConfirm={denyInspection} title="¿Estás seguro?">
+                <p>
+                    Esta Inspección será denegada y no podrá ser aprobada nuevamente. ¿Deseas continuar?
+                </p>
+            </Modal>
         </div>
     );
 }

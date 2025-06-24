@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
-import { Camera, CircleX, Cross, File, Gauge, Search, Thermometer, Waves } from "lucide-react";
-import { VehicleDTO } from "@/types/Vehicle";
+import { Camera, CircleX, File, Gauge, Search, Thermometer, Waves } from "lucide-react";
+
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
