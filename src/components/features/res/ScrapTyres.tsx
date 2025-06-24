@@ -142,10 +142,11 @@ export default function ScrapTyres() {
                 <Select
                     options={motivoOptions}
                     isMulti
+
                     value={motivoOptions.filter((opt) => selectedMotivos.includes(opt.value))}
                     onChange={(selected) => setSelectedMotivos(selected.map((opt) => opt.value))}
                     placeholder="Selecciona tipos de baja..."
-                    className="text-black"
+                    className="text-black "
                 />
             </div>
 

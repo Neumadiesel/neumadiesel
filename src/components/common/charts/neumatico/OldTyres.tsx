@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { TireDTO } from "@/types/Tire";
 import axios from "axios";
-import { FileCheck } from "lucide-react";
+import { FileCheck, Info } from "lucide-react";
 import Link from "next/link";
 import {
     BarChart,
@@ -15,7 +15,7 @@ import {
 
 export default function OldTyres() {
     const [tireCritical, setTireCritical] = useState<TireDTO[]>([]);
-    const [showChart, setShowChart] = useState(false);
+    const [showChart, setShowChart] = useState(true);
 
     function calculateWearPercentage(
         internalTread?: number,
@@ -147,20 +147,18 @@ export default function OldTyres() {
                                                 {tire.lastInspection?.hours ?? "—"}
                                             </td>
                                             <td className="px-4 py-2">{tire.location?.name ?? "—"}</td>
-                                            <td className="px-4 py-2">
-                                                <Link
-                                                    href={`/neumaticos/${tire.id}`}
-                                                    className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold"
-                                                >
-                                                    Ver Detalles
-                                                </Link>
+                                            <td className="px-4 py-2 flex items-center gap-2">
+                                                <ToolTipCustom content="Ver Neumático">
+                                                    <Link href={`/neumaticos/${tire.id}`}>
+                                                        <Info className="w-6 h-6 text-blue-500 hover:text-blue-700 transition-colors" />
+                                                    </Link>
+                                                </ToolTipCustom>
                                                 {/* Ver ultima inspeccion */}
-                                                <Link
-                                                    href={`/medicion/${tire.lastInspectionId}`}
-                                                    className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold ml-2"
-                                                >
-                                                    Ver Inspecciones
-                                                </Link>
+                                                <ToolTipCustom content="Ver Ultima Inspección">
+                                                    <Link href={`medicion/${tire.lastInspectionId}`}>
+                                                        <FileCheck className="w-6 h-6 text-amber-500 hover:text-amber-700 transition-colors" />
+                                                    </Link>
+                                                </ToolTipCustom>
                                             </td>
                                         </tr>
                                     ))
@@ -185,6 +183,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart"
 import ExportOldTyresReport from "@/components/features/neumatico/data/ExportOldTyreesToExcel";
+import ToolTipCustom from "@/components/ui/ToolTipCustom";
 
 export const description = "A bar chart with a custom label"
 

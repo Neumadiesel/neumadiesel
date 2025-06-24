@@ -93,7 +93,7 @@ export default function MedicionPorEquipo() {
             <p className='text-gray-700 dark:text-white text-sm mb-4'>
                 Ingresa el código para inspeccionar un neumático específico
             </p>
-            <section className='lg:w-4/5 max-auto'>
+            <section className=' max-auto'>
                 {/* Seccion buscador */}
                 <section className='flex flex-col gap-2 bg-neutral-800 p-3 rounded-md border dark:border-neutral-700'>
                     {/* Subtitulo de busqueda */}
@@ -245,7 +245,9 @@ export default function MedicionPorEquipo() {
                 }
 
                 <div className='lg:flex gap-x-4 lg:justify-around'>
-                    <button onClick={() => setIsOpen(true)} className="bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4">Confirmar Datos</button>
+                    <button disabled={tire == null} onClick={() => setIsOpen(true)} className={`bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4
+                        ${tire == null ? "opacity-50 " : "hover:bg-amber-400 hover:cursor-pointer"}
+                        `}>Confirmar Datos</button>
                     <button className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
                 </div>
                 <small className="text-gray-700 dark:text-white text-xs">*Datos erróneos no serán aceptados por el sistema, <span className='font-bold'>Recuerde verificar sus datos</span></small>
