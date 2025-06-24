@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
 import { Gauge, Search, Thermometer, Waves } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
@@ -14,7 +14,8 @@ export default function MedicionPorEquipo() {
     const [error, setError] = useState<string | null>(null);
     const [inspections, setInspections] = useState<CreateInspectionDTO[]>([]);
 
-
+    const [initialKilometrage, setInitialKilometrage] = useState<number>(0);
+    const [initialHours, setInitialHours] = useState<number>(0);
 
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -22,12 +23,24 @@ export default function MedicionPorEquipo() {
     const [vehicleCode, setVehicleCode] = useState<string | null>(null);
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
 
+    const [skippedTires, setSkippedTires] = useState<number[]>([]);
+
+    const toggleSkipTire = (tireId: number) => {
+        setSkippedTires((prev) =>
+            prev.includes(tireId)
+                ? prev.filter((id) => id !== tireId)
+                : [...prev, tireId]
+        );
+    };
+
     const fetchVehicle = async () => {
         setError(null);
         setLoading(true);
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
             console.log("Vehículo", response.data);
+            setInitialKilometrage(response.data.kilometrage);
+            setInitialHours(response.data.hours);
             setVehicle(response.data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -46,18 +59,26 @@ export default function MedicionPorEquipo() {
         field: keyof CreateInspectionDTO,
         value: string | number
     ) => {
+        const kmDiff = (vehicle?.kilometrage ?? 0) - initialKilometrage;
+        const hoursDiff = (vehicle?.hours ?? 0) - initialHours;
+
+        const last = tire.tire.lastInspection;
+
         setInspections(prev => {
             const existing = prev.find(i => i.tireId === tire.tire.id);
             const newInspection: CreateInspectionDTO = {
                 position: tire.position,
-                externalTread: field === 'externalTread' ? Number(value) : existing?.externalTread ?? tire.tire.lastInspection.externalTread,
-                internalTread: field === 'internalTread' ? Number(value) : existing?.internalTread ?? tire.tire.lastInspection.internalTread,
-                pressure: field === 'pressure' ? Number(value) : existing?.pressure ?? tire.tire.lastInspection.pressure,
-                temperature: field === 'temperature' ? Number(value) : existing?.temperature ?? tire.tire.lastInspection.temperature,
-                observation: field === 'observation' ? String(value) : existing?.observation ?? tire.tire.lastInspection.observation,
+                externalTread: field === 'externalTread' ? Number(value) : existing?.externalTread ?? last.externalTread,
+                internalTread: field === 'internalTread' ? Number(value) : existing?.internalTread ?? last.internalTread,
+                pressure: field === 'pressure' ? Number(value) : existing?.pressure ?? last.pressure,
+                temperature: field === 'temperature' ? Number(value) : existing?.temperature ?? last.temperature,
+                observation: field === 'observation' ? String(value) : existing?.observation ?? last.observation,
                 inspectionDate: new Date().toISOString(),
-                kilometrage: vehicle?.kilometrage ?? 0,
-                hours: vehicle?.hours ?? 0,
+
+                // Acá está lo que pediste:
+                kilometrage: (last.kilometrage ?? 0) + kmDiff,
+                hours: (last.hours ?? 0) + hoursDiff,
+
                 tireId: tire.tire.id,
                 inspectorId: user?.user_id || 0,
                 inspectorName: `${user?.name} ${user?.last_name}`,
@@ -67,11 +88,20 @@ export default function MedicionPorEquipo() {
             return [...filtered, newInspection];
         });
     };
-
     const totalTires = vehicle?.installedTires.length ?? 0;
-    const completed = inspections.length;
-    const progress = totalTires > 0 ? Math.round((completed / totalTires) * 100) : 0;
 
+    const inspectedIds = inspections.map(i => i.tireId);
+    const manuallySkippedIds = skippedTires;
+
+    const autoSkippedCount = vehicle?.installedTires.filter(
+        tire =>
+            !inspectedIds.includes(tire.tire.id) &&
+            !manuallySkippedIds.includes(tire.tire.id)
+    ).length ?? 0;
+
+    const completed = inspectedIds.length + manuallySkippedIds.length + autoSkippedCount;
+
+    const progress = totalTires > 0 ? Math.round((completed / totalTires) * 100) : 0;
 
     const handleConfirm = async () => {
         try {
@@ -82,9 +112,15 @@ export default function MedicionPorEquipo() {
 
             // Enviar todas las inspecciones en paralelo
             await Promise.all(
-                inspections.map((insp) =>
-                    axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, insp)
-                )
+                inspections
+                    .filter(insp =>
+                        !skippedTires.includes(insp.tireId) &&
+                        // asegurarte de que al menos un campo fue modificado
+                        (insp.pressure !== undefined || insp.temperature !== undefined || insp.internalTread !== undefined || insp.externalTread !== undefined)
+                    )
+                    .map((insp) =>
+                        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, insp)
+                    )
             );
 
             // Limpieza posterior
@@ -199,15 +235,6 @@ export default function MedicionPorEquipo() {
                     </section>
 
                 </div>
-                <div className="my-4 w-full">
-                    <label className="text-sm font-semibold">Progreso de inspección: {progress}%</label>
-                    <div className="w-full bg-gray-200 rounded-full h-4 mt-1">
-                        <div
-                            className="bg-amber-400 h-4 rounded-full transition-all duration-300"
-                            style={{ width: `${progress}%` }}
-                        ></div>
-                    </div>
-                </div>
                 {/* Seccion de mediciones de los neumaticos */}
                 <section className='flex flex-col gap-y-2 my-5 w-full border bg-white p-3 rounded-md shadow-sm shadow-gray-200 dark:bg-neutral-800 dark:text-white dark:shadow-neutral-800'>
                     {/* Titulo */}
@@ -236,6 +263,15 @@ export default function MedicionPorEquipo() {
                                         className={`p-4 rounded-lg border cursor-pointer transition-colors bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-900`}
 
                                     >
+                                        <input
+                                            type="checkbox"
+                                            checked={skippedTires.includes(tire.tire.id)}
+                                            onChange={() => toggleSkipTire(tire.tire.id)}
+                                        />
+
+                                        <label className="text-sm text-gray-700 dark:text-white">
+                                            No inspeccionar este neumático
+                                        </label>
                                         <h3 className='text-lg font-semibold'>Neumático {tire.position}</h3>
                                         <p className='text-sm text-gray-600 dark:text-gray-300'>Código: {tire.tire.code}</p>
                                         {/* Input de presion */}
@@ -246,6 +282,7 @@ export default function MedicionPorEquipo() {
                                             <input
                                                 type="number"
                                                 min={0}
+                                                disabled={skippedTires.includes(tire.tire.id)}
                                                 value={values.pressure ?? ""}
                                                 onChange={(e) => updateInspection(tire, 'pressure', parseFloat(e.target.value))}
                                                 className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
@@ -257,6 +294,7 @@ export default function MedicionPorEquipo() {
                                                 <Thermometer size={24} className="inline mr-2 text-red-500" />
                                                 Temperatura:</label>
                                             <input
+                                                disabled={skippedTires.includes(tire.tire.id)}
                                                 type="number"
                                                 min={0}
                                                 value={values.temperature ?? ""}
@@ -271,6 +309,7 @@ export default function MedicionPorEquipo() {
                                                     <Waves size={24} className="inline mr-2 text-green-500" />
                                                     Rem. Int.:</label>
                                                 <input
+                                                    disabled={skippedTires.includes(tire.tire.id)}
                                                     type="number"
                                                     min={0}
                                                     max={tire.tire.lastInspection.internalTread + 5}
@@ -285,6 +324,7 @@ export default function MedicionPorEquipo() {
                                                     <Waves size={24} className="inline mr-2 text-green-500" />
                                                     Rem. Ext.:</label>
                                                 <input
+                                                    disabled={skippedTires.includes(tire.tire.id)}
                                                     type="number"
                                                     min={0}
                                                     max={tire.tire.lastInspection.externalTread + 5}
@@ -300,6 +340,7 @@ export default function MedicionPorEquipo() {
                                         <div className='flex flex-col gap-y-2 mt-2'>
                                             <label className='text-md font-semibold text-gray-700 dark:text-white'>Comentario adicional:</label>
                                             <input
+                                                disabled={skippedTires.includes(tire.tire.id)}
                                                 type="text"
                                                 value={values.observation ?? ""}
                                                 onChange={(e) => updateInspection(tire, 'observation', e.target.value)}
@@ -312,25 +353,20 @@ export default function MedicionPorEquipo() {
                                 )
                             })
                         }
-
+                        {autoSkippedCount > 0 && (
+                            <p className="text-yellow-600 text-md font-semibold">
+                                {autoSkippedCount} neumático(s) serán omitidos automáticamente por falta de datos.
+                            </p>
+                        )}
                     </section>
                 </section>
-                {/* Barra de progreso */}
-                <div className="my-4 w-full">
-                    <label className="text-sm font-semibold">Progreso de inspección: {progress}%</label>
-                    <div className="w-full bg-gray-200 rounded-full h-4 mt-1">
-                        <div
-                            className="bg-amber-400 h-4 rounded-full transition-all duration-300"
-                            style={{ width: `${progress}%` }}
-                        ></div>
-                    </div>
-                </div>
+
                 {/* Botones de confirmación */}
                 <div className='lg:flex gap-x-4 lg:justify-around'>
                     <button
-                        disabled={progress < 80}
+                        disabled={autoSkippedCount == 6}
                         onClick={() => setIsOpen(true)} className={`bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4
-                        ${progress < 80 ? 'opacity-50 ' : ''}
+                        ${autoSkippedCount == 6 ? 'opacity-50 ' : ''}
                         `}>Confirmar Datos</button>
                     <button className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
                 </div>
@@ -338,6 +374,9 @@ export default function MedicionPorEquipo() {
 
                 <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} title="¿Estás seguro?">
                     <p>¿Quieres confirmar esta acción?</p>
+                    <p className="text-yellow-600 text-md font-semibold">
+                        {autoSkippedCount} neumático(s) serán omitidos automáticamente por falta de datos.
+                    </p>
                 </Modal>
 
             </section>

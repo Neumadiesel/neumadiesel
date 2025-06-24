@@ -42,6 +42,7 @@ export interface VehicleDTO {
                 externalTread: number;
                 internalTread: number;
                 kilometrage: number;
+                hours: number;
                 inspectionDate: string;
                 pressure: number;
                 temperature: number;
