@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
-import { File, Gauge, Search, Thermometer, Waves } from "lucide-react";
+import { Camera, File, Gauge, Search, Thermometer, Waves } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
@@ -128,6 +128,8 @@ export default function MedicionPorEquipo() {
         setTire(null);
         setInspeciton(null);
         setError(null);
+        setFile(null);
+        setPreview(null);
     };
 
     useEffect(() => {
@@ -304,20 +306,47 @@ export default function MedicionPorEquipo() {
 
                         </div>
                         {/* Input para fotos,  */}
-                        <div className="flex flex-col gap-y-2 mt-2">
-                            <label className="text-md font-semibold text-gray-700 dark:text-white">Foto del neumático:</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    const selected = e.target.files?.[0] || null;
-                                    setFile(selected);
-                                    if (selected) setPreview(URL.createObjectURL(selected));
-                                }}
-                                className="text-sm text-black dark:text-white"
-                            />
+                        <div className="flex gap-x-4 mt-4 w-full justify-between">
+                            <div className='flex flex-col gap-y-2 w-1/2'>
+
+                                <label className="text-md font-semibold text-gray-700 dark:text-white">
+                                    Foto del Neumático
+                                </label>
+
+                                {/* Botón de carga */}
+                                <div className="relative w-full h-full hover:bg-amber-50 dark:hover:bg-neutral-900 transition-colors">
+                                    <input
+                                        id="fileInput"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            const selected = e.target.files?.[0] || null;
+                                            setFile(selected);
+                                            if (selected) setPreview(URL.createObjectURL(selected));
+                                        }}
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    />
+                                    <label
+                                        htmlFor="fileInput"
+                                        className="flex flex-col border-dashed justify-center items-center h-[100%] w-full border-2 border-amber-300 text-center py-2 font-semibold rounded-md cursor-pointer text-amber-300 hover:bg-amber-400 transition-colors"
+                                    >
+                                        <Camera size={45} className="inline mr-2 " />
+                                        {file ? "Cambiar Foto" : "Subir Foto"}
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            {/* Vista previa */}
                             {preview && (
-                                <img src={preview} alt="Preview" className="w-48 border rounded mt-2" />
+                                <div className="mt-2 w-1/2">
+                                    <p className="text-sm text-gray-500 dark:text-gray-300 mb-1">Vista previa:</p>
+                                    <img
+                                        src={preview}
+                                        alt="Preview"
+                                        className="w-48 h-auto border rounded shadow-md"
+                                    />
+                                </div>
                             )}
                         </div>
                     </main>
