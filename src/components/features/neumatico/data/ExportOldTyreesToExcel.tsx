@@ -5,17 +5,6 @@ import ExcelJS from 'exceljs';
 import { TireDTO } from '@/types/Tire';
 import { FileDown } from 'lucide-react';
 
-interface UnifiedRecord {
-    id: number;
-    type: 'inspection' | 'procedure';
-    date: string;
-    position: number | string;
-    description: string;
-    internalTread?: number;
-    externalTread?: number;
-    procedureName?: string;
-}
-
 interface Props {
     tireCritical: TireDTO[];
 }

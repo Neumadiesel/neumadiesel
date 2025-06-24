@@ -4,7 +4,6 @@ import Link from "next/link";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { InspectionDTO } from "@/types/Inspection";
-import OldTyres from "@/components/common/charts/neumatico/OldTyres";
 import { useAuth } from "@/contexts/AuthContext";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import Modal from "@/components/common/modal/CustomModal";
@@ -24,7 +23,6 @@ interface KpiDTO {
 export default function MedicionPage() {
     const { user } = useAuth();
     const [pendingInspections, setPendingInspections] = useState<InspectionDTO[]>([]);
-    const [lastInspectedVehicle, setLastInspectedVehicle] = useState<LastInspectionsDTO[]>([]);
     const [lastApprovedInspection, setLastApprovedInspection] = useState<InspectionDTO[]>([]);
     const [kpi, setKpi] = useState<KpiDTO>(); // Puedes definir un tipo más específico si lo deseas
     const [isDenyModalOpen, setIsDenyModalOpen] = useState(false);
@@ -113,25 +111,12 @@ export default function MedicionPage() {
         }
     }
 
-    const lastVehicleInspected = async () => {
-        try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/last-inspected-equipment`);
-            setLastInspectedVehicle(response.data);
-            console.log(response.data);
-            return response.data;
-        } catch (error) {
-            console.error("Error fetching last inspected vehicle:", error);
-            return null; // Retorna null en caso de error
-        }
-    };
-
-
     useEffect(() => {
         fetchPendingInspections();
         fetchLastInspections();
         fetchKpi();
-        lastVehicleInspected();
     }, []);
+
     return (
         <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col  p-4">
             <div className="w-full flex justify-between mb-2">

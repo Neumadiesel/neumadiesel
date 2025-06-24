@@ -9,7 +9,6 @@ import {
     Bar,
     XAxis,
     YAxis,
-    Tooltip,
     ResponsiveContainer,
 } from "recharts";
 

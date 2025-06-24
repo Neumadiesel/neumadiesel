@@ -26,7 +26,6 @@ export default function MedicionPorEquipo() {
     const [files, setFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
     const [uploading, setUploading] = useState(false);
-    const [tempId, setTempId] = useState<string>(() => crypto.randomUUID());
 
     const fetchTire = async () => {
         if (!tireCode) {
@@ -54,7 +53,7 @@ export default function MedicionPorEquipo() {
     const handleConfirm = async () => {
         if (!inspection) return;
         try {
-            setUploading(true);
+            setUploading(!uploading);
 
             const tempIds: string[] = []; // ✅ debe estar acá arriba
 

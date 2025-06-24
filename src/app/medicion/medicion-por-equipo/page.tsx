@@ -101,7 +101,6 @@ export default function MedicionPorEquipo() {
 
     const completed = inspectedIds.length + manuallySkippedIds.length + autoSkippedCount;
 
-    const progress = totalTires > 0 ? Math.round((completed / totalTires) * 100) : 0;
 
     const handleConfirm = async () => {
         try {

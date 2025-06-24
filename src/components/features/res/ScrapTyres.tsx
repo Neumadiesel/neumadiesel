@@ -53,8 +53,23 @@ export interface RetirementTyreDTO {
     };
 }
 
-const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload?.length > 0) {
+type ScatterPoint = {
+    horas: number;
+    desgaste: number;
+    codigo: string;
+    motivo: string;
+    descripcionMotivo: string;
+    fecha: string;
+};
+
+
+interface CustomTooltipProps {
+    active?: boolean;
+    payload?: { payload: ScatterPoint }[];
+}
+
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+    if (active && payload?.length) {
         const data = payload[0].payload;
         return (
             <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white max-w-xs">
