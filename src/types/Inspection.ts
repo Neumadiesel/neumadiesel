@@ -4,6 +4,8 @@ export interface InspectionDTO {
     externalTread: number;
     internalTread: number;
     kilometrage: number;
+    inspectorId: number;
+    inspectorName: string;
     hours: number;
     tireId: number;
     inspectionDate: string; // ISO date string
@@ -12,6 +14,8 @@ export interface InspectionDTO {
     description: string;
     approved: boolean;
     approvedAt?: string | null; // Optional, can be null
+    aprovedById?: number | null; // Optional, can be null
+    approvedByName?: string | null; // Optional, can be null
     operatorId?: number | null; // Optional, can be null
     observation: string;
     tire: {

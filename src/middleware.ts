@@ -16,6 +16,11 @@ const routePermissions = {
         '/administracion/razon-de-desintalacion',
     ],
 
+    // Rutas de Resumen
+    resumen: [
+        '/resumen',
+    ],
+
     // Rutas de reportabilidad
     reportabilidad: [
         '/estadisticas',
@@ -53,6 +58,7 @@ const routePermissions = {
     medicion: [
         '/medicion',
         '/medicion/medicion-por-equipo',
+        '/medicion/medicion-por-neumatico',
         '/medicion/equipo',
     ],
 };
@@ -62,6 +68,7 @@ const rolePermissions = {
     administrador: [
         ...routePermissions.administrador,
         ...routePermissions.reportabilidad,
+        ...routePermissions.resumen,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
@@ -70,6 +77,7 @@ const rolePermissions = {
     ],
     demo: [
         ...routePermissions.reportabilidad,
+        ...routePermissions.resumen,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
@@ -79,6 +87,7 @@ const rolePermissions = {
     ],
     planificador: [
         ...routePermissions.reportabilidad,
+        ...routePermissions.resumen,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
@@ -87,6 +96,7 @@ const rolePermissions = {
         ...routePermissions.medicion,
     ],
     supervisor: [
+        ...routePermissions.resumen,
         ...routePermissions.reportabilidad,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,
@@ -101,6 +111,7 @@ const rolePermissions = {
     ],
     // Modificar agregar Equipos y Neumáticos
     stakeholder: [
+        ...routePermissions.resumen,
         ...routePermissions.reportabilidad,
         ...routePermissions.equipos,
         ...routePermissions.neumaticos,

@@ -35,6 +35,7 @@ export interface TireDTO {
         kilometrage: number;
         inspectionDate: string;
         pressure: number;
+        observation: string;
         temperature: number;
         tireId: number;
     };

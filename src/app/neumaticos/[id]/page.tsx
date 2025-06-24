@@ -2,11 +2,22 @@
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import ExportTireReport from "@/components/features/neumatico/data/ExportDataToExcel";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import { TireDTO } from "@/types/Tire";
+import { Info } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { ReferenceLine } from 'recharts';
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer
+} from 'recharts';
 interface UnifiedRecord {
     id: number;
     type: "inspection" | "procedure";
@@ -16,6 +27,7 @@ interface UnifiedRecord {
     internalTread?: number;
     externalTread?: number;
     procedureName?: string;
+    observation?: string;
 }
 
 interface normalizedInspectionDTO {
@@ -28,6 +40,8 @@ interface normalizedInspectionDTO {
     internalTread?: number;
     externalTread?: number;
     procedureName?: string;
+    approved?: boolean;
+    observation?: string;
 }
 
 export default function TirePage() {
@@ -36,6 +50,8 @@ export default function TirePage() {
     const [tire, setTires] = useState<TireDTO>();
     const [loading, setLoading] = useState(true);
     const [unifiedRecords, setUnifiedRecords] = useState<UnifiedRecord[]>([]);
+
+    const [chartData, setChartData] = useState<{ date: string; avgRemanente: number }[]>([]);
 
     const fetchUnifiedRecords = async () => {
         setLoading(true);
@@ -47,17 +63,20 @@ export default function TirePage() {
 
             const inspections = await inspectionsRes.json();
             const procedures = await proceduresRes.json();
+            console.log("Procedures:", procedures);
 
-            const normalizedInspections: UnifiedRecord[] = inspections.map((item: normalizedInspectionDTO
-            ) => ({
-                id: item.id,
-                type: "inspection",
-                date: item.inspectionDate,
-                position: item.position,
-                description: item.description || "",
-                internalTread: item.internalTread,
-                externalTread: item.externalTread,
-            }));
+            const normalizedInspections: UnifiedRecord[] = inspections
+                .filter((item: normalizedInspectionDTO) => item.approved === true)
+                .map((item: normalizedInspectionDTO) => ({
+                    id: item.id,
+                    type: "inspection",
+                    date: item.inspectionDate,
+                    position: item.position,
+                    description: item.description || "",
+                    internalTread: item.internalTread,
+                    externalTread: item.externalTread,
+                    observation: item.observation,
+                }));
 
             const normalizedProcedures: UnifiedRecord[] = procedures.map((item: normalizedInspectionDTO) => ({
                 id: item.id,
@@ -73,6 +92,18 @@ export default function TirePage() {
             const merged = [...normalizedInspections, ...normalizedProcedures];
             const sorted = merged.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
             setUnifiedRecords(sorted);
+
+            const chartData = inspections
+                .filter((item: normalizedInspectionDTO) => item.approved === true)
+                .map((item: normalizedInspectionDTO) => {
+                    const avgRemanente = ((item.internalTread ?? 0) + (item.externalTread ?? 0)) / 2;
+                    return {
+                        date: new Date(item.inspectionDate!).toISOString().split("T")[0], // formato yyyy-mm-dd
+                        avgRemanente,
+                    };
+                });
+
+            setChartData(chartData);
         } catch (error) {
             console.error("Error fetching combined records:", error);
         } finally {
@@ -103,16 +134,19 @@ export default function TirePage() {
         return (((initialTread - currentTread) / initialTread) * 100).toFixed(2);
     };
 
+    const criticalThreshold = tire?.model.originalTread
+        ? tire.initialTread * 0.2
+        : 5; // valor por defecto si no está definido
+
     return (
-        <div className="p-3 bg-white h-[110vh] dark:bg-[#212121] relative shadow-sm">
+        <div className="p-3 bg-white dark:bg-[#212121] relative shadow-sm">
             <Breadcrumb />
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code}</h1>
+                <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code} - {tire?.model.dimensions}</h1>
                 <div className="flex flex-row justify-between items-center gap-2">
                     <Link href={`/medicion/${tire?.lastInspectionId}`}>
                         <div className="bg-neutral-100 text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors w-full flex items-center justify-center font-bold">
-
-                            Ver Inspección
+                            Ver Última Inspección
                         </div>
                     </Link>
 
@@ -161,67 +195,130 @@ export default function TirePage() {
                     </div>
                 </div>
             </section>
-            <section className="flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white dark:bg-[#212121] dark:text-white mt-2 rounded-md">
+            <section className="flex flex-col w-full h-full text-gray-700 bg-white dark:bg-[#212121] dark:text-white mt-2 rounded-md">
                 <h2 className="text-xl font-bold mt-4 mb-2">Historial de Movimientos</h2>
-                <table className="w-full text-left table-auto min-w-max">
-                    <thead className="text-xs text-black uppercase bg-gray-100 dark:bg-neutral-900 dark:text-white">
-                        <tr>
-                            <th className="p-4">Descripción</th>
-                            <th className="p-4">Acción</th>
-                            <th className="p-4">Fecha</th>
-                            <th className="p-4">Posición</th>
-                            <th className="p-4">Remanente</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
+
+                <div className=" h-[65dvh] bg-emerald-50 overflow-y-scroll border  mb-4">
+
+                    <table className="w-full text-left table-auto min-w-max">
+                        <thead className="text-xs text-black uppercase sticky top-0 z-10 bg-gray-100 dark:bg-neutral-900 dark:text-white">
                             <tr>
-                                <td colSpan={6} className="text-center p-8 dark:bg-[#212121]">
-                                    <div className="flex flex-col items-center justify-center space-y-4">
-                                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
-                                        <p className="text-gray-600 dark:text-gray-400">Cargando movimientos...</p>
-                                    </div>
-                                </td>
+                                <th className="p-4">Fecha</th>
+                                <th className="p-4">Acción</th>
+                                <th className="p-4">Posición</th>
+                                <th className="p-4">Remanente</th>
+                                <th className="p-4">Ver</th>
+                                <th className="p-4">Descripción</th>
+                                <th className="p-4">Observaciones</th>
                             </tr>
-                        ) : unifiedRecords.length === 0 ? (
-                            <tr>
-                                <td colSpan={6} className="text-center p-8">
-                                    <div className="flex flex-col items-center justify-center space-y-4 animate-pulse">
-                                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        <p className="text-gray-600 dark:text-gray-400">No se han encontrado movimientos.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        ) : (
-                            unifiedRecords.map((record) => (
-                                <tr key={`${record.type}-${record.id}`} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
-                                    <td className="p-4 bg-gray-50 dark:bg-neutral-800">
-                                        {/* Descripción */}
-                                        {record.description}
-                                    </td>
-                                    <td className="p-4 dark:bg-neutral-900">
-                                        {/* Acción */}
-                                        {record.type === "inspection" ? "Chequeo" : (record as UnifiedRecord).procedureName ? (record as UnifiedRecord).procedureName : "Otro"}
-                                    </td>
-                                    <td className="p-4 dark:bg-neutral-800">
-                                        {/* Fecha UTC */}
-                                        {new Date(record.date).toISOString().split("T")[0]}
-                                    </td>
-                                    <td className="p-4 bg-gray-50 dark:bg-neutral-900">
-                                        {/* Posición */}
-                                        {record.position === 0 ? "Stock" : record.position}
-                                    </td>
-                                    <td className="p-4 bg-gray-50 dark:bg-neutral-800">
-                                        {/* Remanente */}
-                                        {(record.internalTread ?? "-")} / {(record.externalTread ?? "-")}
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center p-8 dark:bg-[#212121]">
+                                        <div className="flex flex-col items-center justify-center space-y-4">
+                                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
+                                            <p className="text-gray-600 dark:text-gray-400">Cargando movimientos...</p>
+                                        </div>
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                            ) : unifiedRecords.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center p-8">
+                                        <div className="flex flex-col items-center justify-center space-y-4 animate-pulse">
+                                            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            <p className="text-gray-600 dark:text-gray-400">No se han encontrado movimientos.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                unifiedRecords.map((record) => (
+                                    <tr key={`${record.type}-${record.id}`} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-800">
+                                            {/* Fecha UTC */}
+                                            {new Date(record.date).toISOString().split("T")[0]}
+                                        </td>
+                                        <td className="p-4 dark:bg-neutral-900">
+                                            {record.type === "inspection" ? "Chequeo" : (record as UnifiedRecord).procedureName ? (record as UnifiedRecord).procedureName : "Otro"}
+                                        </td>
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-900">
+                                            {/* Posición */}
+                                            {record.position === 0 ? "Stock" : record.position}
+                                        </td>
+                                        <td className="p-4 dark:bg-neutral-800">
+                                            {/* Remanente */}
+                                            {record.type === "procedure" && record.procedureName === "Ingreso al sistema"
+                                                ? `${tire?.model.originalTread ?? "-"} / ${tire?.model.originalTread ?? "-"}`
+                                                : `${record.internalTread ?? "-"} / ${record.externalTread ?? "-"}`
+                                            }
+                                        </td>
+                                        {/* link para las inspecciones */}
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-800">
+                                            {record.type === "inspection" ? (
+                                                <ToolTipCustom content="Ver Inspección">
+                                                    <Link href={`/medicion/${record.id}`}>
+                                                        <Info className="w-6 h-6 text-blue-500 hover:text-blue-700 transition-colors" />
+                                                    </Link>
+                                                </ToolTipCustom>
+                                            ) : null}
+                                        </td>
+
+                                        <td className="p-4 dark:bg-neutral-800">
+                                            {/* Descripción */}
+                                            {record.description || "N/A"}
+                                        </td>
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-800">
+                                            {/* Descripción */}
+                                            {record.observation}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section className="my-4">
+                <h2 className="text-xl font-bold mb-2 dark:text-white">Evolución del Remanente Promedio</h2>
+                <div className="w-full h-96 bg-white dark:bg-[#313131] rounded-md p-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                            <defs>
+                                <linearGradient id="colorRemanente" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="10%" stopColor="#fbbf24" stopOpacity={0.8} />
+                                    <stop offset="90%" stopColor="#fbbf24" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" stroke="#888" />
+                            <YAxis stroke="#888" />
+                            <Tooltip />
+
+                            <ReferenceLine
+                                y={criticalThreshold}
+                                stroke="#ef4444"
+                                strokeDasharray="4 4"
+                                label={{
+                                    value: 'Remanente Bajo (20%)',
+                                    position: 'insideTopLeft',
+                                    fill: '#ef4444',
+                                    fontSize: 12,
+                                }}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="avgRemanente"
+                                stroke="#f59e0b"
+                                fillOpacity={1}
+                                fill="url(#colorRemanente)"
+                                name="Remanente Prom."
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </div>
             </section>
 
         </div>
