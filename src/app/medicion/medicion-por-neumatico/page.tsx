@@ -137,6 +137,11 @@ export default function MedicionPorEquipo() {
         setPreviews([]);
     };
 
+    const removePhoto = (index: number) => {
+        setFiles(prev => prev.filter((_, i) => i !== index));
+        setPreviews(prev => prev.filter((_, i) => i !== index));
+    };
+
     useEffect(() => {
         if (tire?.lastInspection) {
             setInspeciton({
@@ -311,14 +316,12 @@ export default function MedicionPorEquipo() {
 
                         </div>
                         {/* Input para fotos,  */}
-                        <div className="flex gap-x-4 mt-4 w-full justify-between">
-                            <div className='flex flex-col gap-y-2 w-1/2'>
-
+                        <section className="flex gap-x-4 mt-4 w-full">
+                            {/* Columna izquierda: selector de archivo */}
+                            <div className="flex flex-col gap-y-2 w-1/3">
                                 <label className="text-md font-semibold text-gray-700 dark:text-white">
                                     Foto del Neumático
                                 </label>
-
-                                {/* Botón de carga */}
                                 <div className="relative w-full h-full hover:bg-amber-50 dark:hover:bg-neutral-900 transition-colors">
                                     <input
                                         id="fileInput"
@@ -336,37 +339,40 @@ export default function MedicionPorEquipo() {
                                         htmlFor="fileInput"
                                         className="flex flex-col border-dashed justify-center items-center h-[100%] w-full border-2 border-amber-300 text-center py-2 font-semibold rounded-md cursor-pointer text-amber-300 hover:bg-amber-400 transition-colors"
                                     >
-                                        <Camera size={45} className="inline mr-2 " />
-                                        {files ? "Cambiar Foto" : "Subir Foto"}
+                                        <Camera size={45} className="inline mr-2" />
+                                        {files.length > 0 ? "Cambiar Foto" : "Subir Foto"}
                                     </label>
                                 </div>
                             </div>
 
-
-                            {/* Vista previa */}
-                            {/* {preview && (
-                                <div className="mt-2 w-1/2">
-                                    <p className="text-sm text-gray-500 dark:text-gray-300 mb-1">Vista previa:</p>
-                                    <img
-                                        src={preview}
-                                        alt="Preview"
-                                        className="w-48 h-auto border rounded shadow-md"
-                                    />
-                                </div>
-                            )} */}
-                            {previews.length > 0 && (
-                                <div className="mt-2 w-1/2 overflow-x-auto flex gap-2 flex-wrap">
-                                    {previews.map((src, i) => (
-                                        <img
-                                            key={i}
-                                            src={src}
-                                            alt={`Preview ${i}`}
-                                            className="w-32 h-auto border rounded shadow-md"
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                            {/* Columna derecha: carrusel horizontal de previews */}
+                            <div className="w-2/3 overflow-x-auto">
+                                {previews.length > 0 && (
+                                    <div className="flex gap-2 flex-nowrap min-w-max mt-1">
+                                        {previews.map((src, i) => (
+                                            <div
+                                                key={i}
+                                                className="relative group w-[120px] h-[100px] flex-shrink-0"
+                                            >
+                                                <img
+                                                    src={src}
+                                                    alt={`Preview ${i}`}
+                                                    className="object-cover w-full h-full border rounded shadow-md"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removePhoto(i)}
+                                                    className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 text-xs opacity-80 group-hover:opacity-100 transition"
+                                                    title="Eliminar foto"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </section>
                     </main>
                 }
 
