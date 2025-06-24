@@ -232,6 +232,14 @@ export default function Page() {
                                 <p className="text-gray-500 dark:text-gray-300">Posición:</p>
                                 <span className="font-bold text-xl">{inspectionData?.position}</span>
                             </div>
+                            {/* Aprobado por */}
+                            <div className="flex flex-col">
+                                <p className="text-gray-500 dark:text-gray-300">
+                                    <User size={20} className="inline mr-1" />
+                                    Aprobado por:
+                                </p>
+                                <span className="font-bold text-xl"> {inspectionData?.approvedByName || "Sistema"}</span>
+                            </div>
                             <div className="flex flex-col">
 
                                 <p className="text-gray-500 dark:text-gray-300"><Calendar size={20} className="inline mr-1" /> Fecha de Inspección:</p>

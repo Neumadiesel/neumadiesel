@@ -2,7 +2,9 @@
 import LabelLoading from "@/components/common/forms/LabelLoading";
 import ExportTireReport from "@/components/features/neumatico/data/ExportDataToExcel";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import { TireDTO } from "@/types/Tire";
+import { Info } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,6 +18,7 @@ interface UnifiedRecord {
     internalTread?: number;
     externalTread?: number;
     procedureName?: string;
+    observation?: string;
 }
 
 interface normalizedInspectionDTO {
@@ -28,6 +31,8 @@ interface normalizedInspectionDTO {
     internalTread?: number;
     externalTread?: number;
     procedureName?: string;
+    approved?: boolean;
+    observation?: string;
 }
 
 export default function TirePage() {
@@ -47,17 +52,20 @@ export default function TirePage() {
 
             const inspections = await inspectionsRes.json();
             const procedures = await proceduresRes.json();
+            console.log("Procedures:", procedures);
 
-            const normalizedInspections: UnifiedRecord[] = inspections.map((item: normalizedInspectionDTO
-            ) => ({
-                id: item.id,
-                type: "inspection",
-                date: item.inspectionDate,
-                position: item.position,
-                description: item.description || "",
-                internalTread: item.internalTread,
-                externalTread: item.externalTread,
-            }));
+            const normalizedInspections: UnifiedRecord[] = inspections
+                .filter((item: normalizedInspectionDTO) => item.approved === true)
+                .map((item: normalizedInspectionDTO) => ({
+                    id: item.id,
+                    type: "inspection",
+                    date: item.inspectionDate,
+                    position: item.position,
+                    description: item.description || "",
+                    internalTread: item.internalTread,
+                    externalTread: item.externalTread,
+                    observation: item.observation,
+                }));
 
             const normalizedProcedures: UnifiedRecord[] = procedures.map((item: normalizedInspectionDTO) => ({
                 id: item.id,
@@ -104,15 +112,14 @@ export default function TirePage() {
     };
 
     return (
-        <div className="p-3 bg-white h-[110vh] dark:bg-[#212121] relative shadow-sm">
+        <div className="p-3 bg-white dark:bg-[#212121] relative shadow-sm">
             <Breadcrumb />
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code}</h1>
+                <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code} - {tire?.model.dimensions}</h1>
                 <div className="flex flex-row justify-between items-center gap-2">
                     <Link href={`/medicion/${tire?.lastInspectionId}`}>
                         <div className="bg-neutral-100 text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors w-full flex items-center justify-center font-bold">
-
-                            Ver Inspección
+                            Ver Última Inspección
                         </div>
                     </Link>
 
@@ -161,67 +168,87 @@ export default function TirePage() {
                     </div>
                 </div>
             </section>
-            <section className="flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white dark:bg-[#212121] dark:text-white mt-2 rounded-md">
+            <section className="flex flex-col w-full h-full text-gray-700 bg-white dark:bg-[#212121] dark:text-white mt-2 rounded-md">
                 <h2 className="text-xl font-bold mt-4 mb-2">Historial de Movimientos</h2>
-                <table className="w-full text-left table-auto min-w-max">
-                    <thead className="text-xs text-black uppercase bg-gray-100 dark:bg-neutral-900 dark:text-white">
-                        <tr>
-                            <th className="p-4">Descripción</th>
-                            <th className="p-4">Acción</th>
-                            <th className="p-4">Fecha</th>
-                            <th className="p-4">Posición</th>
-                            <th className="p-4">Remanente</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
+
+                <div className=" h-[65dvh] bg-emerald-50 overflow-y-scroll border  mb-4">
+
+                    <table className="w-full text-left table-auto min-w-max">
+                        <thead className="text-xs text-black uppercase sticky top-0 z-10 bg-gray-100 dark:bg-neutral-900 dark:text-white">
                             <tr>
-                                <td colSpan={6} className="text-center p-8 dark:bg-[#212121]">
-                                    <div className="flex flex-col items-center justify-center space-y-4">
-                                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
-                                        <p className="text-gray-600 dark:text-gray-400">Cargando movimientos...</p>
-                                    </div>
-                                </td>
+                                <th className="p-4">Fecha</th>
+                                <th className="p-4">Acción</th>
+                                <th className="p-4">Posición</th>
+                                <th className="p-4">Remanente</th>
+                                <th className="p-4">Ver</th>
+                                <th className="p-4">Descripción</th>
+                                <th className="p-4">Observaciones</th>
                             </tr>
-                        ) : unifiedRecords.length === 0 ? (
-                            <tr>
-                                <td colSpan={6} className="text-center p-8">
-                                    <div className="flex flex-col items-center justify-center space-y-4 animate-pulse">
-                                        <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        <p className="text-gray-600 dark:text-gray-400">No se han encontrado movimientos.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        ) : (
-                            unifiedRecords.map((record) => (
-                                <tr key={`${record.type}-${record.id}`} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
-                                    <td className="p-4 bg-gray-50 dark:bg-neutral-800">
-                                        {/* Descripción */}
-                                        {record.description}
-                                    </td>
-                                    <td className="p-4 dark:bg-neutral-900">
-                                        {/* Acción */}
-                                        {record.type === "inspection" ? "Chequeo" : (record as UnifiedRecord).procedureName ? (record as UnifiedRecord).procedureName : "Otro"}
-                                    </td>
-                                    <td className="p-4 dark:bg-neutral-800">
-                                        {/* Fecha UTC */}
-                                        {new Date(record.date).toISOString().split("T")[0]}
-                                    </td>
-                                    <td className="p-4 bg-gray-50 dark:bg-neutral-900">
-                                        {/* Posición */}
-                                        {record.position === 0 ? "Stock" : record.position}
-                                    </td>
-                                    <td className="p-4 bg-gray-50 dark:bg-neutral-800">
-                                        {/* Remanente */}
-                                        {(record.internalTread ?? "-")} / {(record.externalTread ?? "-")}
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center p-8 dark:bg-[#212121]">
+                                        <div className="flex flex-col items-center justify-center space-y-4">
+                                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
+                                            <p className="text-gray-600 dark:text-gray-400">Cargando movimientos...</p>
+                                        </div>
                                     </td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                            ) : unifiedRecords.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center p-8">
+                                        <div className="flex flex-col items-center justify-center space-y-4 animate-pulse">
+                                            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            <p className="text-gray-600 dark:text-gray-400">No se han encontrado movimientos.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                unifiedRecords.map((record) => (
+                                    <tr key={`${record.type}-${record.id}`} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-800">
+                                            {/* Fecha UTC */}
+                                            {new Date(record.date).toISOString().split("T")[0]}
+                                        </td>
+                                        <td className="p-4 dark:bg-neutral-900">
+                                            {record.type === "inspection" ? "Chequeo" : (record as UnifiedRecord).procedureName ? (record as UnifiedRecord).procedureName : "Otro"}
+                                        </td>
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-900">
+                                            {/* Posición */}
+                                            {record.position === 0 ? "Stock" : record.position}
+                                        </td>
+                                        <td className="p-4 dark:bg-neutral-800">
+                                            {/* Remanente */}
+                                            {(record.internalTread ?? "-")} / {(record.externalTread ?? "-")}
+                                        </td>
+                                        {/* link para las inspecciones */}
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-800">
+                                            {record.type === "inspection" ? (
+                                                <ToolTipCustom content="Ver Inspección">
+                                                    <Link href={`/medicion/${record.id}`}>
+                                                        <Info className="w-6 h-6 text-blue-500 hover:text-blue-700 transition-colors" />
+                                                    </Link>
+                                                </ToolTipCustom>
+                                            ) : null}
+                                        </td>
+
+                                        <td className="p-4 dark:bg-neutral-800">
+                                            {/* Descripción */}
+                                            {record.description || "N/A"}
+                                        </td>
+                                        <td className="p-4 bg-gray-50 dark:bg-neutral-800">
+                                            {/* Descripción */}
+                                            {record.observation}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
         </div>

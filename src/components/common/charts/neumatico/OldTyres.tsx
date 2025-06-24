@@ -17,14 +17,41 @@ export default function OldTyres() {
     const [tireCritical, setTireCritical] = useState<TireDTO[]>([]);
     const [showChart, setShowChart] = useState(false);
 
+    function calculateWearPercentage(
+        internalTread?: number,
+        externalTread?: number,
+        originalTread?: number
+    ): number | null {
+        if (
+            typeof internalTread !== "number" ||
+            typeof externalTread !== "number" ||
+            typeof originalTread !== "number" ||
+            originalTread === 0
+        ) {
+            return null;
+        }
+        const avgTread = (internalTread + externalTread) / 2;
+        const wear = ((originalTread - avgTread) / originalTread) * 100;
+        return Math.round(wear * 10) / 10;
+    }
+
+
     const fetchCriticalTires = async () => {
         try {
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/more-than-4500-hours/site/1`
             );
             const sortedTires = response.data.sort(
-                (a: TireDTO, b: TireDTO) =>
-                    (b.lastInspection?.hours ?? 0) - (a.lastInspection?.hours ?? 0)
+                (a: TireDTO, b: TireDTO) => {
+                    // Helper to calculate wear percentage for sorting
+                    const getWear = (tire: TireDTO) =>
+                        calculateWearPercentage(
+                            tire.lastInspection?.internalTread,
+                            tire.lastInspection?.externalTread,
+                            tire.initialTread
+                        ) ?? 0;
+                    return getWear(b) - getWear(a);
+                }
             );
             setTireCritical(sortedTires);
         } catch (error) {
@@ -35,6 +62,7 @@ export default function OldTyres() {
     useEffect(() => {
         fetchCriticalTires();
     }, []);
+
 
     return (
         <section className="w-full h-[65dvh] bg-white shadow-sm dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg mb-4">
@@ -70,6 +98,8 @@ export default function OldTyres() {
                                 <tr className="border-b dark:border-neutral-600">
                                     <th className="px-4 py-2 text-left">Neumático</th>
                                     <th className="px-4 py-2 text-left">Equipo</th>
+                                    <th className="px-4 py-2 text-left">% de Desgaste</th>
+                                    <th className="px-4 py-2 text-left">Dimensiones</th>
                                     <th className="px-4 py-2 text-left">Posición</th>
                                     <th className="px-4 py-2 text-left">Horas</th>
                                     <th className="px-4 py-2 text-left">Ubicación</th>
@@ -95,6 +125,20 @@ export default function OldTyres() {
                                             <td className="px-4 py-2">{tire.code}</td>
                                             <td className="px-4 py-2">
                                                 {tire.installedTires[0]?.vehicle?.code ?? "—"}
+                                            </td>
+                                            {/* Porcentaje de desgaste  */}
+                                            <td className="px-4 py-2">
+                                                {calculateWearPercentage(
+                                                    tire.lastInspection?.internalTread,
+                                                    tire.lastInspection.externalTread,
+                                                    tire.initialTread)
+                                                    || "—"
+                                                }
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {tire.model.dimensions
+                                                    ? `${tire.model.dimensions}`
+                                                    : "—"}
                                             </td>
                                             <td className="px-4 py-2">
                                                 {tire.lastInspection?.position ?? "—"}

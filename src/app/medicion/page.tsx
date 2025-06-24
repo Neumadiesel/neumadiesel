@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { InspectionDTO } from "@/types/Inspection";
 import { TireDTO } from "@/types/Tire";
 import OldTyres from "@/components/common/charts/neumatico/OldTyres";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LastInspectionsDTO {
     vehicleId: number;
@@ -13,7 +14,7 @@ interface LastInspectionsDTO {
     inspectionDate: string; // ISO date string
 }
 export default function MedicionPage() {
-
+    const { user } = useAuth();
     const [pendingInspections, setPendingInspections] = useState<InspectionDTO[]>([]);
     const [lastInspectedVehicle, setLastInspectedVehicle] = useState<LastInspectionsDTO[]>([]);
     // Funcion de axios que pide las inspecciones pendientes
@@ -28,14 +29,23 @@ export default function MedicionPage() {
     };
 
     const aproveInspection = async (inspectionId: number) => {
+
+        const approvedById = user?.user_id; // ID del usuario que aprueba la inspección, puedes obtenerlo del contexto o estado global
+        const approvedByName = user?.name + " " + user?.last_name; // Nombre del usuario que aprueba la inspección
         try {
-            const response = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/approve/${inspectionId}`);
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${inspectionId}/approve`,
+                {
+                    approvedUserId: approvedById, // ID del usuario que aprueba la inspección
+                    approvedUserName: approvedByName, // Nombre del usuario que aprueba la inspección
+                }
+            );
             console.log("Inspección aprobada:", response.data);
             // Actualizar la lista de inspecciones pendientes
             fetchPendingInspections();
         } catch (error) {
             console.error("Error approving inspection:", error);
-            return []
+            return [];
         }
     };
 
@@ -192,6 +202,7 @@ export default function MedicionPage() {
                         }
                     </tbody>
                 </table>
+
             </section>
             {/* Seccion para ver los neumaticos criticos */}
             <OldTyres />
