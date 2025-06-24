@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
-import { Camera, File, Gauge, Search, Thermometer, Waves } from "lucide-react";
+import { Camera, CircleX, Cross, File, Gauge, Search, Thermometer, Waves } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
@@ -316,12 +316,10 @@ export default function MedicionPorEquipo() {
 
                         </div>
                         {/* Input para fotos,  */}
-                        <section className="flex gap-x-4 mt-4 w-full">
+                        <section className="flex gap-x-4 mt-4 w-full h-[20dvh]">
                             {/* Columna izquierda: selector de archivo */}
                             <div className="flex flex-col gap-y-2 w-1/3">
-                                <label className="text-md font-semibold text-gray-700 dark:text-white">
-                                    Foto del Neumático
-                                </label>
+
                                 <div className="relative w-full h-full hover:bg-amber-50 dark:hover:bg-neutral-900 transition-colors">
                                     <input
                                         id="fileInput"
@@ -340,7 +338,7 @@ export default function MedicionPorEquipo() {
                                         className="flex flex-col border-dashed justify-center items-center h-[100%] w-full border-2 border-amber-300 text-center py-2 font-semibold rounded-md cursor-pointer text-amber-300 hover:bg-amber-400 transition-colors"
                                     >
                                         <Camera size={45} className="inline mr-2" />
-                                        {files.length > 0 ? "Cambiar Foto" : "Subir Foto"}
+                                        Subir Foto
                                     </label>
                                 </div>
                             </div>
@@ -352,7 +350,7 @@ export default function MedicionPorEquipo() {
                                         {previews.map((src, i) => (
                                             <div
                                                 key={i}
-                                                className="relative group w-[120px] h-[100px] flex-shrink-0"
+                                                className="relative group w-[250px] h-[180px] flex-shrink-0"
                                             >
                                                 <img
                                                     src={src}
@@ -365,7 +363,7 @@ export default function MedicionPorEquipo() {
                                                     className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1 text-xs opacity-80 group-hover:opacity-100 transition"
                                                     title="Eliminar foto"
                                                 >
-                                                    ✕
+                                                    <CircleX className="w-10 h-10" />
                                                 </button>
                                             </div>
                                         ))}
