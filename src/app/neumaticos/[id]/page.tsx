@@ -8,7 +8,16 @@ import { Info } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
+import { ReferenceLine } from 'recharts';
+import {
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer
+} from 'recharts';
 interface UnifiedRecord {
     id: number;
     type: "inspection" | "procedure";
@@ -41,6 +50,8 @@ export default function TirePage() {
     const [tire, setTires] = useState<TireDTO>();
     const [loading, setLoading] = useState(true);
     const [unifiedRecords, setUnifiedRecords] = useState<UnifiedRecord[]>([]);
+
+    const [chartData, setChartData] = useState<{ date: string; avgRemanente: number }[]>([]);
 
     const fetchUnifiedRecords = async () => {
         setLoading(true);
@@ -81,6 +92,18 @@ export default function TirePage() {
             const merged = [...normalizedInspections, ...normalizedProcedures];
             const sorted = merged.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
             setUnifiedRecords(sorted);
+
+            const chartData = inspections
+                .filter((item: normalizedInspectionDTO) => item.approved === true)
+                .map((item: normalizedInspectionDTO) => {
+                    const avgRemanente = ((item.internalTread ?? 0) + (item.externalTread ?? 0)) / 2;
+                    return {
+                        date: new Date(item.inspectionDate!).toISOString().split("T")[0], // formato yyyy-mm-dd
+                        avgRemanente,
+                    };
+                });
+
+            setChartData(chartData);
         } catch (error) {
             console.error("Error fetching combined records:", error);
         } finally {
@@ -110,6 +133,10 @@ export default function TirePage() {
         if (initialTread === 0) return 0;
         return (((initialTread - currentTread) / initialTread) * 100).toFixed(2);
     };
+
+    const criticalThreshold = tire?.model.originalTread
+        ? tire.initialTread * 0.2
+        : 5; // valor por defecto si no está definido
 
     return (
         <div className="p-3 bg-white dark:bg-[#212121] relative shadow-sm">
@@ -222,7 +249,10 @@ export default function TirePage() {
                                         </td>
                                         <td className="p-4 dark:bg-neutral-800">
                                             {/* Remanente */}
-                                            {(record.internalTread ?? "-")} / {(record.externalTread ?? "-")}
+                                            {record.type === "procedure" && record.procedureName === "Ingreso al sistema"
+                                                ? `${tire?.model.originalTread ?? "-"} / ${tire?.model.originalTread ?? "-"}`
+                                                : `${record.internalTread ?? "-"} / ${record.externalTread ?? "-"}`
+                                            }
                                         </td>
                                         {/* link para las inspecciones */}
                                         <td className="p-4 bg-gray-50 dark:bg-neutral-800">
@@ -248,6 +278,46 @@ export default function TirePage() {
                             )}
                         </tbody>
                     </table>
+                </div>
+            </section>
+
+            <section className="my-4">
+                <h2 className="text-xl font-bold mb-2 dark:text-white">Evolución del Remanente Promedio</h2>
+                <div className="w-full h-96 bg-white dark:bg-[#313131] rounded-md p-4">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                            <defs>
+                                <linearGradient id="colorRemanente" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="10%" stopColor="#fbbf24" stopOpacity={0.8} />
+                                    <stop offset="90%" stopColor="#fbbf24" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" stroke="#888" />
+                            <YAxis stroke="#888" />
+                            <Tooltip />
+
+                            <ReferenceLine
+                                y={criticalThreshold}
+                                stroke="#ef4444"
+                                strokeDasharray="4 4"
+                                label={{
+                                    value: 'Remanente Bajo (20%)',
+                                    position: 'insideTopLeft',
+                                    fill: '#ef4444',
+                                    fontSize: 12,
+                                }}
+                            />
+                            <Area
+                                type="monotone"
+                                dataKey="avgRemanente"
+                                stroke="#f59e0b"
+                                fillOpacity={1}
+                                fill="url(#colorRemanente)"
+                                name="Remanente Prom."
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
                 </div>
             </section>
 

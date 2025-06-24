@@ -10,69 +10,46 @@ import {
     Tooltip,
 } from "recharts";
 import { useState, useEffect } from "react";
-import MultiSelect from "@/components/common/select/MultiSelect";
-import { FaPlusCircle } from "react-icons/fa";
+import Select from "react-select";
 
-interface TireProcedure {
+export interface RetirementTyreDTO {
     id: number;
-    tireId: number;
-    position: number;
-    tireHours: number;
-    tireKilometres: number;
-    internalTread: number;
-    description: string;
-    externalTread: number;
-    procedureName: string;
-    startDate: string;
-    endDate: string;
-    vehicleId: number;
-    siteId: number;
     retirementReasonId: number;
-    retirementReason: {
-        id: number;
-        name: string;
-        description: string;
-    };
-}
-
-interface ScrapTireDTO {
-    id: number;
-    code: string;
-    modelId: number;
-    initialTread: number;
-    initialKilometrage: number;
-    initialHours: number;
-    lastInspectionId: number;
-    locationId: number;
-    usedHours: number;
-    usedKilometrage: number;
-    siteId: number;
-    creationDate: string;
-    model: {
+    tireId: number;
+    finalExternalTread: number;
+    finalInternalTread: number;
+    finalKilometrage: number;
+    finalHours: number;
+    lastVehicleId: number;
+    lastPosition: number;
+    retirementDate: string;
+    tire: {
         id: number;
         code: string;
-        dimensions: string;
-        brand: string;
-        pattern: string;
-        originalTread: number;
+        modelId: number;
+        initialTread: number;
+        initialKilometrage: number;
+        initialHours: number;
+        lastInspectionId: number;
+        locationId: number;
+        usedHours: number;
+        usedKilometrage: number;
+        siteId: number;
+        creationDate: string;
     };
-    location: {
-        id: number;
-        name: string;
-    };
-    lastInspection: {
-        id: number;
-        externalTread: number;
-        internalTread: number;
-        kilometrage: number;
-        hours: number;
-        inspectionDate: string;
-    };
-    procedures: TireProcedure[];
     retirementReason: {
         id: number;
         name: string;
         description: string;
+    };
+    lastVehicle: {
+        id: number;
+        code: string;
+        modelId: number;
+        siteId: number;
+        kilometrage: number;
+        hours: number;
+        typeId: number;
     };
 }
 
@@ -93,45 +70,42 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 export default function ScrapTyres() {
-    const [tires, setTires] = useState<ScrapTireDTO[]>([]);
+    const [retirementRecords, setRetirementRecords] = useState<RetirementTyreDTO[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedMotivos, setSelectedMotivos] = useState<string[]>([]);
 
     useEffect(() => {
-        const fetchRetiredTires = async () => {
+        const fetchRetirements = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1/initialTread/97'`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tire-retirement/site/1/initial-tread/97`);
                 const data = await response.json();
-                setTires(data);
+                setRetirementRecords(data);
             } catch (error) {
-                console.error("Error fetching scrap tire data:", error);
+                console.error("Error fetching tyre retirement data:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchRetiredTires();
+        fetchRetirements();
     }, []);
 
-    const scatterData = tires.flatMap((tire) => {
-        const procedure = tire.procedures?.[0];
-        if (!procedure) return [];
-
-        const initialTread = tire.initialTread;
-        const finalTread = (procedure.internalTread + procedure.externalTread) / 2;
+    const scatterData = retirementRecords.map((record) => {
+        const initialTread = record.tire.initialTread;
+        const finalTread = (record.finalInternalTread + record.finalExternalTread) / 2;
         const desgaste = initialTread
             ? Number((((initialTread - finalTread) / initialTread) * 100).toFixed(2))
             : 0;
 
-        return [{
-            horas: procedure.tireHours,
+        return {
+            horas: record.finalHours,
             desgaste,
-            codigo: tire.code,
-            motivo: procedure.retirementReason?.name ?? 'Desconocido',
-            descripcionMotivo: procedure.retirementReason?.description ?? 'Desconocido',
-            fecha: new Date(procedure.endDate).toISOString().split("T")[0],
-        }];
+            codigo: record.tire.code,
+            motivo: record.retirementReason?.name ?? "Desconocido",
+            descripcionMotivo: record.retirementReason?.description ?? "Desconocido",
+            fecha: new Date(record.retirementDate).toISOString().split("T")[0],
+        };
     });
 
     const groupedData: Record<string, typeof scatterData> = {};
@@ -163,28 +137,16 @@ export default function ScrapTyres() {
                 Desgaste vs. Horas de Operación al Momento de la Baja
             </h2>
 
-            <div className="flex flex-row justify-start items-center gap-2 w-full mb-4">
-                <div className="flex flex-row justify-center items-center w-[30%]">
-                    <MultiSelect
-                        options={motivoOptions}
-                        selected={selectedMotivos}
-                        onChange={setSelectedMotivos}
-                        placeholder="Filtrar por tipo de baja..."
-                    />
-                    {selectedMotivos.length > 0 ? (
-                        <button
-                            onClick={() => setSelectedMotivos([])}
-                            className="text-black w-8 rounded-xl h-10 text-2xl flex justify-center items-center "
-                            title="Limpiar filtros"
-                        >
-                            <FaPlusCircle className="text-2xl rotate-45 bg-white rounded-full" />
-                        </button>
-                    ) : (
-                        <div className="flex flex-row text-gray-500 font-bold w-8 rounded-xl h-10 justify-center items-center ">
-                            <FaPlusCircle className="text-2xl rotate-45 bg-gray-200 rounded-full" />
-                        </div>
-                    )}
-                </div>
+            <div className="mb-4">
+                <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por tipo de baja:</label>
+                <Select
+                    options={motivoOptions}
+                    isMulti
+                    value={motivoOptions.filter((opt) => selectedMotivos.includes(opt.value))}
+                    onChange={(selected) => setSelectedMotivos(selected.map((opt) => opt.value))}
+                    placeholder="Selecciona tipos de baja..."
+                    className="text-black"
+                />
             </div>
 
             <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md shadow">

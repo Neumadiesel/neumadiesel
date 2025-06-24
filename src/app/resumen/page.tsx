@@ -1,4 +1,5 @@
 import OldTyres from "@/components/common/charts/neumatico/OldTyres";
+import ScrapTyres from "@/components/features/res/ScrapTyres";
 
 export default function Page() {
     return (
@@ -12,6 +13,7 @@ export default function Page() {
                 </p>
             </main>
             <OldTyres />
+            <ScrapTyres />
         </div>
     );
 }
