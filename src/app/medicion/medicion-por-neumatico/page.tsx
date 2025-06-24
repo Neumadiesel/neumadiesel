@@ -87,6 +87,32 @@ export default function MedicionPorEquipo() {
         });
     };
 
+    const resetData = () => {
+        setTireCode(null);
+        setTire(null);
+        setInspeciton(null);
+        setError(null);
+    };
+
+    useEffect(() => {
+        if (tire?.lastInspection) {
+            setInspeciton({
+                position: tire.lastInspection.position ?? "",
+                externalTread: tire.lastInspection.externalTread ?? 0,
+                internalTread: tire.lastInspection.internalTread ?? 0,
+                pressure: tire.lastInspection.pressure ?? 0,
+                temperature: tire.lastInspection.temperature ?? 0,
+                observation: tire.lastInspection.observation ?? "",
+                inspectionDate: new Date().toISOString(),
+                kilometrage: tire.lastInspection.kilometrage ?? 0,
+                hours: tire.lastInspection.hours ?? 0,
+                tireId: tire.id,
+                inspectorId: user?.user_id || 0,
+                inspectorName: `${user?.name ?? ""} ${user?.last_name ?? ""}`.trim(),
+            });
+        }
+    }, [tire, user]);
+
     return (
         <div className="  p-4 gap-y-2 bg-white dark:bg-[#212121] dark:text-white">
             <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección Individual de Neumático</h1>
@@ -107,7 +133,7 @@ export default function MedicionPorEquipo() {
                             onChange={(e) => setTireCode(e.target.value.toUpperCase())}
                             value={tireCode || ""}
                             placeholder="Código Neumático"
-
+                            name='tireCode'
                             type="text" className="w-2/3 bg-gray-50 dark:bg-[#414141] rounded-lg border dark:border-neutral-700 p-2" />
                         <button onClick={() => fetchTire()} className="bg-amber-300 hover:bg-amber-400 hover:cursor-pointer text-black p-2 font-bold rounded-lg">
                             <Search className="w-6 h-6" />
@@ -245,11 +271,16 @@ export default function MedicionPorEquipo() {
                 }
 
                 <div className='lg:flex gap-x-4 lg:justify-around'>
+                    {/* Boton de confirmar */}
                     <button disabled={tire == null} onClick={() => setIsOpen(true)} className={`bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4
                         ${tire == null ? "opacity-50 " : "hover:bg-amber-400 hover:cursor-pointer"}
-                        `}>Confirmar Datos</button>
-                    <button className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
+                        `}>Confirmar Datos
+                    </button>
+                    {/* Boton de cancelar */}
+                    <button onClick={resetData} className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
                 </div>
+
+                {/* Disclaimer */}
                 <small className="text-gray-700 dark:text-white text-xs">*Datos erróneos no serán aceptados por el sistema, <span className='font-bold'>Recuerde verificar sus datos</span></small>
 
                 <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} title="¿Estás seguro?">
