@@ -23,8 +23,8 @@ export default function MedicionPorEquipo() {
     const [tire, setTire] = useState<TireDTO | null>(null);
 
     // Estados para las fotos
-    const [file, setFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
+    const [files, setFiles] = useState<File[]>([]);
+    const [previews, setPreviews] = useState<string[]>([]);
     const [uploading, setUploading] = useState(false);
     const [tempId, setTempId] = useState<string>(() => crypto.randomUUID());
 
@@ -56,33 +56,38 @@ export default function MedicionPorEquipo() {
         try {
             setUploading(true);
 
-            // Subir foto temporal si hay archivo
-            if (file) {
-                const formData = new FormData();
-                formData.append("file", file);
-                formData.append("tempId", tempId);
-                formData.append("uploadedById", String(user?.user_id || 1));
+            const tempIds: string[] = []; // ✅ debe estar acá arriba
 
-                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
-                console.log("✅ Foto subida temporalmente");
+            // Subir todas las fotos temporalmente
+            if (files.length > 0) {
+                for (const file of files) {
+                    const fileTempId = crypto.randomUUID(); // ✅ distinto para cada archivo
+                    tempIds.push(fileTempId);
+
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    formData.append("tempId", fileTempId);
+                    formData.append("uploadedById", String(user?.user_id || 1));
+
+                    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
+                }
             }
 
             // Crear inspección
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspection);
             const createdInspection = response.data;
 
-            // Asociar foto si fue subida
-            if (file) {
+            // Asociar todas las fotos al ID de inspección
+            for (const tempId of tempIds) {
                 await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${createdInspection.id}`, {
                     tempId
                 });
-                console.log("✅ Foto asociada a inspección");
             }
+            console.log("✅ Fotos asociadas a la inspección");
 
             // Reset
-            setTempId(crypto.randomUUID()); // nuevo tempId para futuras inspecciones
-            setFile(null);
-            setPreview(null);
+            setFiles([]);
+            setPreviews([]);
             setIsOpen(false);
             setInspeciton(null);
             setTire(null);
@@ -128,8 +133,8 @@ export default function MedicionPorEquipo() {
         setTire(null);
         setInspeciton(null);
         setError(null);
-        setFile(null);
-        setPreview(null);
+        setFiles([]);
+        setPreviews([]);
     };
 
     useEffect(() => {
@@ -319,10 +324,11 @@ export default function MedicionPorEquipo() {
                                         id="fileInput"
                                         type="file"
                                         accept="image/*"
+                                        multiple
                                         onChange={(e) => {
-                                            const selected = e.target.files?.[0] || null;
-                                            setFile(selected);
-                                            if (selected) setPreview(URL.createObjectURL(selected));
+                                            const selected = Array.from(e.target.files || []);
+                                            setFiles(prev => [...prev, ...selected]);
+                                            setPreviews(prev => [...prev, ...selected.map((file) => URL.createObjectURL(file))]);
                                         }}
                                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                     />
@@ -331,14 +337,14 @@ export default function MedicionPorEquipo() {
                                         className="flex flex-col border-dashed justify-center items-center h-[100%] w-full border-2 border-amber-300 text-center py-2 font-semibold rounded-md cursor-pointer text-amber-300 hover:bg-amber-400 transition-colors"
                                     >
                                         <Camera size={45} className="inline mr-2 " />
-                                        {file ? "Cambiar Foto" : "Subir Foto"}
+                                        {files ? "Cambiar Foto" : "Subir Foto"}
                                     </label>
                                 </div>
                             </div>
 
 
                             {/* Vista previa */}
-                            {preview && (
+                            {/* {preview && (
                                 <div className="mt-2 w-1/2">
                                     <p className="text-sm text-gray-500 dark:text-gray-300 mb-1">Vista previa:</p>
                                     <img
@@ -346,6 +352,18 @@ export default function MedicionPorEquipo() {
                                         alt="Preview"
                                         className="w-48 h-auto border rounded shadow-md"
                                     />
+                                </div>
+                            )} */}
+                            {previews.length > 0 && (
+                                <div className="mt-2 w-1/2 overflow-x-auto flex gap-2 flex-wrap">
+                                    {previews.map((src, i) => (
+                                        <img
+                                            key={i}
+                                            src={src}
+                                            alt={`Preview ${i}`}
+                                            className="w-32 h-auto border rounded shadow-md"
+                                        />
+                                    ))}
                                 </div>
                             )}
                         </div>
