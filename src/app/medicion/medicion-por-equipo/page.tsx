@@ -88,7 +88,6 @@ export default function MedicionPorEquipo() {
             return [...filtered, newInspection];
         });
     };
-    const totalTires = vehicle?.installedTires.length ?? 0;
 
     const inspectedIds = inspections.map(i => i.tireId);
     const manuallySkippedIds = skippedTires;
@@ -99,7 +98,6 @@ export default function MedicionPorEquipo() {
             !manuallySkippedIds.includes(tire.tire.id)
     ).length ?? 0;
 
-    const completed = inspectedIds.length + manuallySkippedIds.length + autoSkippedCount;
 
 
     const handleConfirm = async () => {

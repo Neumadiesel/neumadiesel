@@ -8,11 +8,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import Modal from "@/components/common/modal/CustomModal";
 
-interface LastInspectionsDTO {
-    vehicleId: number;
-    code: string;
-    inspectionDate: string; // ISO date string
-}
 
 interface KpiDTO {
     operationalTires: number;
