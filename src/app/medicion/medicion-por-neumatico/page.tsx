@@ -22,6 +22,12 @@ export default function MedicionPorEquipo() {
     const [tireCode, setTireCode] = useState<string | null>(null);
     const [tire, setTire] = useState<TireDTO | null>(null);
 
+    // Estados para las fotos
+    const [file, setFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
+    const [tempId, setTempId] = useState<string>(() => crypto.randomUUID());
+
     const fetchTire = async () => {
         if (!tireCode) {
             setError("Por favor, ingrese un código de neumático.");
@@ -46,13 +52,41 @@ export default function MedicionPorEquipo() {
     };
 
     const handleConfirm = async () => {
+        if (!inspection) return;
         try {
-            const response = axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspection)
+            setUploading(true);
+
+            // Subir foto temporal si hay archivo
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("tempId", tempId);
+                formData.append("uploadedById", String(user?.user_id || 1));
+
+                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
+                console.log("✅ Foto subida temporalmente");
+            }
+
+            // Crear inspección
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspection);
+            const createdInspection = response.data;
+
+            // Asociar foto si fue subida
+            if (file) {
+                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${createdInspection.id}`, {
+                    tempId
+                });
+                console.log("✅ Foto asociada a inspección");
+            }
+
+            // Reset
+            setTempId(crypto.randomUUID()); // nuevo tempId para futuras inspecciones
+            setFile(null);
+            setPreview(null);
             setIsOpen(false);
             setInspeciton(null);
             setTire(null);
             setTireCode(null);
-            console.log("Inspección creada:", (await response));
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const message = error.response?.data?.message || "Error desconocido";
@@ -60,6 +94,8 @@ export default function MedicionPorEquipo() {
             } else {
                 console.error("Error inesperado:", error);
             }
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -266,6 +302,23 @@ export default function MedicionPorEquipo() {
                                 placeholder="Ingrese observaciones"
                             />
 
+                        </div>
+                        {/* Input para fotos,  */}
+                        <div className="flex flex-col gap-y-2 mt-2">
+                            <label className="text-md font-semibold text-gray-700 dark:text-white">Foto del neumático:</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const selected = e.target.files?.[0] || null;
+                                    setFile(selected);
+                                    if (selected) setPreview(URL.createObjectURL(selected));
+                                }}
+                                className="text-sm text-black dark:text-white"
+                            />
+                            {preview && (
+                                <img src={preview} alt="Preview" className="w-48 border rounded mt-2" />
+                            )}
                         </div>
                     </main>
                 }
