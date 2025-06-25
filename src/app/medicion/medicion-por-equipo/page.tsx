@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
 import { Gauge, Info, Search, Thermometer, Waves } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
@@ -23,6 +23,7 @@ export default function MedicionPorEquipo() {
     const [vehicleCode, setVehicleCode] = useState<string | null>(null);
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
 
+    const [disableKms, setDisableKms] = useState(false);
     const [skippedTires, setSkippedTires] = useState<number[]>([]);
 
     const toggleSkipTire = (tireId: number) => {
@@ -31,6 +32,79 @@ export default function MedicionPorEquipo() {
                 ? prev.filter((id) => id !== tireId)
                 : [...prev, tireId]
         );
+    };
+
+    // Estado para las horas y kilometraje
+
+    const [kilometrage, setKilometrage] = useState<number | null>(vehicle?.kilometrage || null);
+    const [hours, setHours] = useState<number | null>(vehicle?.hours || null);
+    const [success, setSuccess] = useState<boolean>(false);
+
+    const hasChanges =
+        vehicle &&
+        (kilometrage !== vehicle.kilometrage || hours !== vehicle.hours);
+
+    // Enviar al backend
+    const handleSave = async () => {
+        setError(null);
+        setSuccess(false);
+        if (!vehicle || hours === null || kilometrage === null) {
+            setError("Por favor, completa todos los campos.");
+            return;
+        }
+
+        const isInvalid = (val: any) =>
+            val === null ||
+            isNaN(val) ||
+            typeof val !== "number" ||
+            val < 0 ||
+            val.toString().includes("-") ||         // negativo
+            val.toString().startsWith("000") ||     // ceros no naturales
+            val.toString().endsWith(".");           // formato incompleto
+
+        if (isInvalid(kilometrage) || isInvalid(hours)) {
+            setError("Formato inválido. Se restauraron los valores originales.");
+            setKilometrage(vehicle.kilometrage);
+            setHours(vehicle.hours);
+            return;
+        }
+
+        if (kilometrage < vehicle.kilometrage) {
+
+            setKilometrage(vehicle.kilometrage);
+            setHours(vehicle.hours);
+            setError("El kilometraje no puede ser menor al actual.");
+            return;
+        }
+
+        if (hours < vehicle.hours) {
+
+            setKilometrage(vehicle.kilometrage);
+            setHours(vehicle.hours);
+            setError("Las horas no pueden ser menores a las actuales.");
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            await axios.patch(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/updateKms/${vehicle.id}`,
+                {
+                    hours,
+                    kilometrage,
+                    hoursAdded: hours - vehicle.hours,
+                    kilometrageAdded: kilometrage - vehicle.kilometrage,
+                }
+            );
+            setSuccess(true);
+        } catch (err) {
+            setError("Error al actualizar. Intenta nuevamente.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const fetchVehicle = async () => {
@@ -98,6 +172,12 @@ export default function MedicionPorEquipo() {
             !manuallySkippedIds.includes(tire.tire.id)
     ).length ?? 0;
 
+    useEffect(() => {
+        if (vehicle) {
+            setKilometrage(vehicle.kilometrage);
+            setHours(vehicle.hours);
+        }
+    }, [vehicle]);
 
 
     const handleConfirm = async () => {
@@ -145,23 +225,33 @@ export default function MedicionPorEquipo() {
                     <div className='flex gap-2 items-center w-full'>
 
                         {/* contenedor del input y boton */}
-                        <div className=' flex gap-x-2 items-center w-full'>
+                        <div className='flex gap-x-2 items-center w-full'>
                             <input
                                 onChange={(e) => setVehicleCode(e.target.value.toUpperCase())}
+                                onKeyDown={(e) => {
+                                    console.log("Key pressed:", e.key);
+                                    if (e.key === "Enter") {
+                                        fetchVehicle();
+                                    }
+                                }}
                                 value={vehicleCode || ""}
                                 placeholder="Código equipo"
-
-                                type="text" className="w-[70%] bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-100 p-2" />
-                            <button onClick={() => fetchVehicle()} className="bg-amber-300 hover:bg-amber-400 hover:cursor-pointer text-black p-2 font-bold rounded-lg">
+                                type="text"
+                                className="w-[70%] bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-100 p-2"
+                            />
+                            <button
+                                onClick={() => fetchVehicle()}
+                                className="bg-amber-300 hover:bg-amber-400 hover:cursor-pointer text-black p-2 font-bold rounded-lg"
+                            >
                                 <Search className="w-6 h-6" />
                             </button>
                         </div>
                         {/* Error */}
 
-                        <div className='w-full flex justify-end items-center'>
-                            {error && <div className="text-red-500 font-semibold flex justify-between text-sm w-[80%] bg-red-50 border border-red-300 p-3 rounded-sm">{error}
-                                <button onClick={() => setError("")} className=" text-red-500">
-                                    X
+                        <div className='w-full flex justify-end items-center bg-emeral-400'>
+                            {error && <div className="text-red-500 dark:text-red-50 font-semibold flex justify-between items-center text-sm w-full bg-red-50 dark:bg-[#212121] dark:border-red-500 border border-red-300 p-3 rounded-sm">{error}
+                                <button onClick={() => setError("")} className=" text-xl text-red-500">
+                                    x
                                 </button>
                             </div>
                             }
@@ -217,15 +307,15 @@ export default function MedicionPorEquipo() {
                                 <label className="text-sm text-gray-700 dark:text-white">Kilometraje Actual:</label>
                                 <input
                                     type="number"
-                                    disabled={!vehicle}
-                                    value={vehicle?.kilometrage || ""}
-                                    onChange={(e) =>
-                                        setVehicle((prev) =>
-                                            prev
-                                                ? { ...prev, kilometrage: parseFloat(e.target.value) }
-                                                : prev // or null
-                                        )
-                                    }
+                                    min={vehicle?.kilometrage || 0}
+                                    disabled={!vehicle || disableKms}
+                                    value={kilometrage === null ? "" : kilometrage}
+                                    onChange={(e) => {
+                                        setError(null);
+                                        const val = e.target.value;
+                                        setKilometrage(val === "" ? null : Number(val));
+                                        setSuccess(false);
+                                    }}
                                     className="w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2"
                                 />
                             </div>
@@ -233,21 +323,65 @@ export default function MedicionPorEquipo() {
                                 <label className="text-sm text-gray-700 dark:text-white">Horas de Trabajo:</label>
                                 <input
                                     type="number"
-                                    disabled={!vehicle}
-                                    value={vehicle?.hours || ""}
-                                    onChange={(e) =>
-                                        setVehicle((prev) =>
-                                            prev
-                                                ? { ...prev, hours: parseFloat(e.target.value) }
-                                                : prev // or null
-                                        )
-                                    }
+                                    min={vehicle?.hours || 0}
+                                    disabled={!vehicle || disableKms}
+                                    value={hours === null ? "" : hours}
+                                    onChange={(e) => {
+                                        setError(null);
+                                        const val = e.target.value;
+                                        setHours(val === "" ? null : Number(val));
+                                        setSuccess(false);
+                                    }}
                                     className="w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2"
                                 />
                             </div>
                         </section>
+                        <section className='flex justify-between w-full gap-x-2 my-5'>
+                            <div className="flex gap-2 mt-2">
+                                <button
+                                    onClick={handleSave}
+                                    disabled={loading || !vehicle || !hasChanges || disableKms}
+                                    className={`bg-amber-300  text-black font-semibold px-4 py-2 rounded
+                                    ${loading || !vehicle || !hasChanges || disableKms ? 'opacity-50 ' : 'hover:bg-amber-400'}
+                                    `}
+                                >
+                                    {loading ? "Guardando..." : "Guardar Cambios"}
+                                </button>
 
+                                <button
+                                    onClick={() => {
+                                        if (vehicle) {
+                                            setKilometrage(vehicle.kilometrage);
+                                            setHours(vehicle.hours);
+                                            setError(null);
+                                            setSuccess(false);
+                                        }
+                                    }}
+                                    className={`bg-gray-300  dark:bg-neutral-700  font-semibold dark:text-white text-black px-4 py-2 rounded
+                                    ${loading || !vehicle || !hasChanges || disableKms ? 'opacity-50 ' : 'hover:cursor-pointer hover:bg-gray-400 dark:hover:bg-neutral-600'}
+                                    `}
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+
+
+                            {error && <p className="text-sm text-red-500 mb-2">{error}</p>}
+                            {success && <p className="text-sm text-green-600 mb-2">Cambios guardados correctamente.</p>}
+                        </section>
                     </main>
+                </div>
+                <div className="flex items-center mt-4 gap-x-2">
+                    <input
+                        type="checkbox"
+                        id="disableKms"
+                        checked={disableKms}
+                        onChange={(e) => setDisableKms(e.target.checked)}
+                        className="accent-amber-500 w-4 h-4"
+                    />
+                    <label htmlFor="disableKms" className="text-sm text-gray-700 dark:text-white">
+                        No quiero modificar las horas y los kilómetros
+                    </label>
                 </div>
                 {/* Seccion de mediciones de los neumaticos */}
                 {
@@ -278,7 +412,7 @@ export default function MedicionPorEquipo() {
 
                                             <div
                                                 key={tire.id}
-                                                className={`p-4 rounded-lg border cursor-pointer transition-colors bg-white dark:bg-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-900`}
+                                                className={`p-4 rounded-lg border cursor-pointer transition-colors bg-white dark:bg-neutral-800 `}
 
                                             >
                                                 <input
@@ -404,9 +538,9 @@ export default function MedicionPorEquipo() {
                     }
                 </Modal>
 
-            </section>
+            </section >
             <LoadingSpinner isOpen={loading} />
 
-        </div>
+        </div >
     );
 }
