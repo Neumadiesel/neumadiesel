@@ -149,7 +149,7 @@ export default function ScrapTyres() {
     return (
         <section className="my-6">
             <h2 className="text-xl font-bold mb-2 dark:text-white">
-                Desgaste vs. Horas de Operación al Momento de la Baja
+                % Desgaste vs. Horas de Operación al Momento de la Baja
             </h2>
 
             <div className="mb-4">
