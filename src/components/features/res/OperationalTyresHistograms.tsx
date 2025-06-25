@@ -47,6 +47,7 @@ type HistogramBin = {
     count: number;
     binStart: number;
     binEnd: number;
+    range: string;
 };
 
 // Tooltip personalizado para los histogramas
@@ -55,59 +56,115 @@ const CustomHistogramTooltip = ({ active, payload }: { active?: boolean; payload
         const data = payload[0].payload;
         return (
             <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white">
-                <p><strong>Rango:</strong> {data.bin}</p>
-                <p><strong>Frecuencia:</strong> {data.count}</p>
+                <p><strong>Rango:</strong> {data.range}</p>
+                <p><strong>Frecuencia:</strong> {data.count} neumáticos</p>
             </div>
         );
     }
     return null;
 };
 
-// Función para generar datos de histograma a partir de un arreglo de números
-function createHistogram(values: number[], numBins: number = 10): HistogramBin[] {
+// Función para generar histograma con bins de tamaño fijo
+function createFixedHistogram(values: number[], binSize: number, dataType: string): HistogramBin[] {
     if (values.length === 0) return [];
-    const min = Math.min(...values);
+
     const max = Math.max(...values);
-    const binSize = (max - min) / numBins || 1; // evitar division por cero
+    const numBins = Math.ceil(max / binSize);
     const bins: HistogramBin[] = [];
 
     for (let i = 0; i < numBins; i++) {
-        const binStart = min + i * binSize;
-        // En el último bin, incluimos el máximo
-        const binEnd = (i === numBins - 1) ? max : binStart + binSize;
-        const label = `${binStart.toFixed(1)} - ${binEnd.toFixed(1)}`;
-        const count = values.filter(v => {
-            // Incluir el valor máximo solo en el último bin
-            if (i === numBins - 1) return v >= binStart && v <= binEnd;
-            return v >= binStart && v < binEnd;
-        }).length;
-        bins.push({ bin: label, count, binStart, binEnd });
+        const binStart = i * binSize;
+        const binEnd = (i + 1) * binSize;
+
+        // Etiqueta del bin (inicio del rango)
+        const binLabel = binStart.toString();
+
+        // Formatear el rango según el tipo de dato
+        let rangeLabel = "";
+        if (dataType === "horas") {
+            rangeLabel = `${binStart} - ${binEnd - 1}h`;
+        } else if (dataType === "kilometros") {
+            rangeLabel = `${(binStart / 1000).toFixed(0)}k - ${((binEnd - 1) / 1000).toFixed(0)}k km`;
+        } else if (dataType === "goma") {
+            rangeLabel = `${binStart} - ${binEnd - 1}mm`;
+        }
+
+        const count = values.filter(v => v >= binStart && v < binEnd).length;
+
+        bins.push({
+            bin: binLabel,
+            count,
+            binStart,
+            binEnd,
+            range: rangeLabel
+        });
     }
-    return bins;
+
+    return bins.filter(bin => bin.count > 0); // Solo mostrar bins con datos
 }
 
-// Función para renderizar un histograma dado el campo (dataKey), etiqueta, color y datos filtrados
+// Función para renderizar un histograma con bins fijos
 const renderHistogram = (
     data: HistData[],
     dataKey: keyof HistData,
     label: string,
-    color: string
+    color: string,
+    binSize: number,
+    dataType: string
 ) => {
-    // Extraer los valores numéricos correspondientes al dataKey
-    const values: number[] = data.map(d => Number(d[dataKey]));
-    const histogramData = createHistogram(values, 10);
+    const values: number[] = data.map(d => Number(d[dataKey])).filter(v => !isNaN(v));
+    const histogramData = createFixedHistogram(values, binSize, dataType);
+
+    // Determinar etiquetas de los ejes según el tipo de dato
+    let xAxisLabel = "";
+    let yAxisLabel = "Frecuencia (cantidad de neumáticos)";
+    
+    switch (dataType) {
+        case "horas":
+            xAxisLabel = "Horas Acumuladas";
+            break;
+        case "kilometros":
+            xAxisLabel = "Kilómetros Recorridos";
+            break;
+        case "goma":
+            xAxisLabel = "Goma Remanente (mm)";
+            break;
+    }
 
     return (
-        <div className="w-full h-[300px] bg-white dark:bg-[#313131] p-4 rounded-md shadow">
-            <h3 className="text-md font-semibold dark:text-white mb-2">{label}</h3>
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={histogramData}>
+        <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md shadow">
+            <h3 className="text-md font-semibold dark:text-white mb-2 text-center">{label}</h3>
+            <ResponsiveContainer width="100%" height="90%">
+                <BarChart data={histogramData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="bin" stroke="#888" />
-                    <YAxis stroke="#888" allowDecimals={false} />
+                    <XAxis
+                        dataKey="bin"
+                        stroke="#888"
+                        tick={{ fontSize: 11 }}
+                        interval={0}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        label={{ 
+                            value: xAxisLabel, 
+                            position: 'insideBottom', 
+                            offset: -10,
+                            style: { textAnchor: 'middle', fill: '#666', fontSize: '12px', fontWeight: 'bold' }
+                        }}
+                    />
+                    <YAxis
+                        stroke="#888"
+                        allowDecimals={false}
+                        tick={{ fontSize: 12 }}
+                        label={{ 
+                            value: yAxisLabel, 
+                            angle: -90, 
+                            position: 'insideLeft',
+                            style: { textAnchor: 'middle', fill: '#666', fontSize: '12px', fontWeight: 'bold' }
+                        }}
+                    />
                     <Tooltip content={<CustomHistogramTooltip />} />
-                    <Legend />
-                    <Bar dataKey="count" fill={color} name={label} />
+                    <Bar dataKey="count" fill={color} name="Frecuencia" />
                 </BarChart>
             </ResponsiveContainer>
         </div>
@@ -136,70 +193,100 @@ export default function OperationalTyresHistograms() {
         fetchTires();
     }, []);
 
-    // Transformamos los datos a un formato más manejable para las gráficas
-    const histogramData: HistData[] = tires.map(t => ({
-        codigo: t.code,
-        dimension: t.model.dimensions,
-        posicion: t.lastInspection.position.toString(),
-        horas: t.lastInspection.hours,
-        kilometros: t.lastInspection.kilometrage,
-        gomaInterna: t.lastInspection.internalTread,
-        gomaExterna: t.lastInspection.externalTread,
-        fecha: new Date(t.lastInspection.inspectionDate).toISOString().split("T")[0],
-    }));
+    // Transformar datos y excluir posición 0
+    const histogramData: HistData[] = tires
+        .filter(t => t.lastInspection.position !== 0) // Excluir posición 0
+        .map(t => {
+            const inspectionDate = new Date(t.lastInspection.inspectionDate);
+            return {
+                codigo: t.code,
+                dimension: t.model.dimensions,
+                posicion: t.lastInspection.position.toString(),
+                horas: t.lastInspection.hours,
+                kilometros: t.lastInspection.kilometrage,
+                gomaInterna: t.lastInspection.internalTread,
+                gomaExterna: t.lastInspection.externalTread,
+                fecha: inspectionDate.toISOString().split("T")[0],
+            };
+        });
 
-    // Opciones de filtro para dimensión y posición
+    // Opciones para filtros (solo dimensión y posición)
     const dimensionOptions = Array.from(new Set(histogramData.map(d => d.dimension)))
+        .sort()
         .map(dim => ({ value: dim, label: dim }));
+
     const posicionOptions = Array.from(new Set(histogramData.map(d => d.posicion)))
+        .sort((a, b) => parseInt(a) - parseInt(b))
         .map(pos => ({ value: pos, label: `Posición ${pos}` }));
 
-    const filteredData = histogramData.filter(d =>
-        (selectedDims.length === 0 || selectedDims.includes(d.dimension)) &&
-        (selectedPositions.length === 0 || selectedPositions.includes(d.posicion))
-    );
+    // Aplicar filtros (solo dimensión y posición)
+    const filteredData = histogramData.filter(d => {
+        // Filtro por dimensión
+        if (selectedDims.length > 0 && !selectedDims.includes(d.dimension)) {
+            return false;
+        }
+
+        // Filtro por posición
+        if (selectedPositions.length > 0 && !selectedPositions.includes(d.posicion)) {
+            return false;
+        }
+
+        return true;
+    });
 
     return (
         <section className="my-6">
-            <h2 className="text-xl font-bold mb-4 dark:text-white">Histogramas de Últimos Chequeos</h2>
+            <h2 className="text-xl font-bold mb-4 dark:text-white">
+                Histogramas de Frecuencia - Últimos Chequeos
+            </h2>
 
+            {/* Filtros en grid de 2 columnas */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                     <label className="block mb-2 font-semibold text-sm dark:text-white">
-                        Filtrar por Dimensión:
+                        Dimensión:
                     </label>
                     <Select
                         isMulti
                         options={dimensionOptions}
                         value={dimensionOptions.filter(opt => selectedDims.includes(opt.value))}
-                        onChange={opts => setSelectedDims(opts.map(o => o.value))}
-                        placeholder="Selecciona dimensiones..."
+                        onChange={opts => setSelectedDims(opts?.map(o => o.value) || [])}
+                        placeholder="Todas las dimensiones"
                         className="text-black"
                     />
                 </div>
+
                 <div>
                     <label className="block mb-2 font-semibold text-sm dark:text-white">
-                        Filtrar por Posición:
+                        Posición:
                     </label>
                     <Select
                         isMulti
                         options={posicionOptions}
                         value={posicionOptions.filter(opt => selectedPositions.includes(opt.value))}
-                        onChange={opts => setSelectedPositions(opts.map(o => o.value))}
-                        placeholder="Selecciona posiciones..."
+                        onChange={opts => setSelectedPositions(opts?.map(o => o.value) || [])}
+                        placeholder="Todas las posiciones"
                         className="text-black"
                     />
                 </div>
             </div>
 
+            {/* Información de datos filtrados */}
+            <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                    <strong>Datos analizados:</strong> {filteredData.length} neumáticos de {histogramData.length} total
+                    (excluidos los de posición 0)
+                </p>
+            </div>
+
             {loading ? (
                 <p className="text-gray-600 dark:text-gray-300">Cargando datos...</p>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {renderHistogram(filteredData, "horas", "Duración en Horas", "#4F46E5")}
-                    {renderHistogram(filteredData, "kilometros", "Kilómetros Recorridos", "#10B981")}
-                    {renderHistogram(filteredData, "gomaInterna", "Goma Remanente Interna (mm)", "#F59E0B")}
-                    {renderHistogram(filteredData, "gomaExterna", "Goma Remanente Externa (mm)", "#EF4444")}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {renderHistogram(filteredData, "horas", "Distribución de Horas Acumuladas (bins de 700h)", "#4F46E5", 700, "horas")}
+                    {renderHistogram(filteredData, "kilometros", "Distribución de Kilómetros Recorridos (bins de 10k km)", "#10B981", 10000, "kilometros")}
+                    {renderHistogram(filteredData, "gomaInterna", "Distribución de Goma Remanente Interna (bins de 10mm)", "#F59E0B", 10, "goma")}
+                    {renderHistogram(filteredData, "gomaExterna", "Distribución de Goma Remanente Externa (bins de 10mm)", "#EF4444", 10, "goma")}
                 </div>
             )}
         </section>
