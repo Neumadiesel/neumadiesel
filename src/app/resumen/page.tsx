@@ -2,6 +2,7 @@ import OldTyres from "@/components/common/charts/neumatico/OldTyres";
 import OperationalTyresHistograms from "@/components/features/res/OperationalTyresHistograms";
 import OperationalTyres from "@/components/features/res/OperationalTyres";
 import ScrapTyres from "@/components/features/res/ScrapTyres";
+import ScrappedTyresChart from "@/components/features/res/ScrappedTyresChart";
 
 export default function Page() {
     return (
@@ -18,6 +19,7 @@ export default function Page() {
             <ScrapTyres />
             <OperationalTyres />
             <OperationalTyresHistograms />
+            <ScrappedTyresChart />
         </div>
     );
 }
