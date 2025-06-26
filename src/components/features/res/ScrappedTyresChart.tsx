@@ -78,7 +78,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           <span className="font-medium">Neumáticos:</span> {data.count}
         </p>
         <p className="text-green-600 dark:text-green-400">
-          <span className="font-medium">Km/Hora:</span> {(data.promedioKm / data.promedioHrs).toFixed(1)}
+          <span className="font-medium">Km/Hora:</span> {data.promedioHrs > 0 ? (data.promedioKm / data.promedioHrs).toFixed(1) : '0'}
         </p>
       </div>
     </div>
@@ -88,6 +88,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export default function ScrappedTyresChart() {
   const [tires, setTires] = useState<ScrappedTire[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false); // 🎯 ESTADO PARA HIDRATACIÓN
   const [filters, setFilters] = useState<Filters>({
     year: new Date().getFullYear(),
     dimension: null,
@@ -98,16 +99,50 @@ export default function ScrappedTyresChart() {
   const [metaKm, setMetaKm] = useState<number | null>(null);
   const [metaHrs, setMetaHrs] = useState<number | null>(null);
 
-  // 🎯 FETCH CON LOADING
+  // 🎯 EVITAR PROBLEMAS DE HIDRATACIÓN
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // 🎯 ESTILOS PARA REACT-SELECT (SSR SAFE)
+  const selectStyles = useMemo(() => ({
+    control: (base: any) => ({
+      ...base,
+      minHeight: '48px',
+      borderColor: '#D1D5DB',
+      zIndex: 10,
+    }),
+    menuPortal: (base: any) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+    menu: (base: any) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+  }), []);
+
+  // 🎯 FETCH CON MANEJO DE ERRORES MEJORADO
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error('Los datos recibidos no son un array válido');
+        }
+
         setTires(data);
       } catch (error) {
         console.error("Error al cargar datos:", error);
+        setTires([]); // Fallback seguro
       } finally {
         setLoading(false);
       }
@@ -306,11 +341,26 @@ export default function ScrappedTyresChart() {
     </div>
   );
 
+  // 🎯 LOADING STATE
   if (loading) {
     return (
       <section className="my-6">
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="flex justify-center items-center h-64 bg-white dark:bg-[#313131] rounded-lg shadow">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-300">Cargando datos...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 🎯 PREVENIR RENDERIZADO HASTA QUE ESTÉ MONTADO (EVITA ERRORES DE HIDRATACIÓN)
+  if (!isMounted) {
+    return (
+      <section className="my-6">
+        <div className="flex justify-center items-center h-64 bg-white dark:bg-[#313131] rounded-lg shadow">
+          <div className="animate-pulse text-gray-500">Inicializando componente...</div>
         </div>
       </section>
     );
@@ -324,7 +374,7 @@ export default function ScrappedTyresChart() {
         Rendimiento de Neumáticos Dados de Baja
       </h2>
 
-      {/* 🎯 FILTROS INTELIGENTES */}
+      {/* 🎯 FILTROS INTELIGENTES CON SSR SAFE */}
       <div className="bg-white dark:bg-[#313131] p-6 rounded-lg shadow space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <div>
@@ -341,11 +391,11 @@ export default function ScrappedTyresChart() {
           </div>
 
           <div>
-            {/* 🎯 REMOVIDO: {options.dimensions.length > 0 && `(${options.dimensions.length})`} */}
             <label className="block mb-2 text-sm font-semibold dark:text-white">
               Dimensión:
             </label>
             <Select
+              instanceId="dimension-select" // 🎯 IMPORTANTE: ID único para SSR
               options={options.dimensions.map((d) => ({ value: d, label: d }))}
               isClearable
               value={filters.dimension ? { value: filters.dimension, label: filters.dimension } : null}
@@ -353,18 +403,18 @@ export default function ScrappedTyresChart() {
               placeholder={options.dimensions.length > 0 ? "Todas" : "Sin opciones"}
               isDisabled={options.dimensions.length === 0}
               className="text-black"
-              styles={{
-                control: (base) => ({ ...base, minHeight: '48px' }),
-              }}
+              classNamePrefix="react-select"
+              menuPortalTarget={typeof window !== 'undefined' ? document.body : null} // 🎯 SSR SAFE
+              styles={selectStyles}
             />
           </div>
 
           <div>
-            {/* 🎯 REMOVIDO: {options.patterns.length > 0 && `(${options.patterns.length})`} */}
             <label className="block mb-2 text-sm font-semibold dark:text-white">
               Patrón:
             </label>
             <Select
+              instanceId="pattern-select" // 🎯 IMPORTANTE: ID único para SSR
               options={options.patterns.map((p) => ({ value: p, label: p }))}
               isClearable
               value={filters.pattern ? { value: filters.pattern, label: filters.pattern } : null}
@@ -372,18 +422,18 @@ export default function ScrappedTyresChart() {
               placeholder={options.patterns.length > 0 ? "Todos" : "Sin opciones"}
               isDisabled={options.patterns.length === 0}
               className="text-black"
-              styles={{
-                control: (base) => ({ ...base, minHeight: '48px' }),
-              }}
+              classNamePrefix="react-select"
+              menuPortalTarget={typeof window !== 'undefined' ? document.body : null} // 🎯 SSR SAFE
+              styles={selectStyles}
             />
           </div>
 
           <div>
-            {/* 🎯 REMOVIDO: {options.fleets.length > 0 && `(${options.fleets.length})`} */}
             <label className="block mb-2 text-sm font-semibold dark:text-white">
               Flota:
             </label>
             <Select
+              instanceId="fleet-select" // 🎯 IMPORTANTE: ID único para SSR
               options={options.fleets.map((f) => ({ value: f, label: f }))}
               isClearable
               value={filters.fleet ? { value: filters.fleet, label: filters.fleet } : null}
@@ -391,9 +441,9 @@ export default function ScrappedTyresChart() {
               placeholder={options.fleets.length > 0 ? "Todas" : "Sin opciones"}
               isDisabled={options.fleets.length === 0}
               className="text-black"
-              styles={{
-                control: (base) => ({ ...base, minHeight: '48px' }),
-              }}
+              classNamePrefix="react-select"
+              menuPortalTarget={typeof window !== 'undefined' ? document.body : null} // 🎯 SSR SAFE
+              styles={selectStyles}
             />
           </div>
 
