@@ -27,6 +27,7 @@ export default function MedicionPorEquipo() {
 
     const [disableKms, setDisableKms] = useState(false);
     const [skippedTires, setSkippedTires] = useState<number[]>([]);
+    const [originalInspections, setOriginalInspections] = useState<Record<number, CreateInspectionDTO>>({});
 
     const toggleSkipTire = (tireId: number) => {
         setSkippedTires((prev) =>
@@ -120,6 +121,25 @@ export default function MedicionPorEquipo() {
             setInitialKilometrage(response.data.kilometrage);
             setInitialHours(response.data.hours);
             setVehicle(response.data);
+            const originals: Record<number, CreateInspectionDTO> = {};
+            response.data.installedTires.forEach((tire: any) => {
+                const last = tire.tire.lastInspection;
+                originals[tire.tire.id] = {
+                    tireId: tire.tire.id,
+                    position: tire.position,
+                    pressure: last?.pressure ?? 0,
+                    temperature: last?.temperature ?? 0,
+                    internalTread: last?.internalTread ?? 0,
+                    externalTread: last?.externalTread ?? 0,
+                    observation: last?.observation ?? "",
+                    kilometrage: last?.kilometrage ?? 0,
+                    hours: last?.hours ?? 0,
+                    inspectionDate: new Date().toISOString(),
+                    inspectorId: user?.user_id || 0,
+                    inspectorName: `${user?.name} ${user?.last_name}`,
+                };
+            });
+            setOriginalInspections(originals);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const message = error.response?.data?.message || "Error desconocido";
@@ -222,6 +242,26 @@ export default function MedicionPorEquipo() {
                 setError(message);
             }
         }
+    };
+
+    const isModified = (field: keyof CreateInspectionDTO, id: number) => {
+        const original = originalInspections[id];
+        const edited = inspections.find(i => i.tireId === id);
+        return original && edited && original[field] !== edited[field];
+    };
+
+    const isCardModified = (tireId: number): boolean => {
+        const original = originalInspections[tireId];
+        const current = inspections.find(i => i.tireId === tireId);
+        if (!original || !current) return false;
+
+        return (
+            original.pressure !== current.pressure ||
+            original.temperature !== current.temperature ||
+            original.internalTread !== current.internalTread ||
+            original.externalTread !== current.externalTread ||
+            original.observation !== current.observation
+        );
     };
 
     return (
@@ -451,11 +491,13 @@ export default function MedicionPorEquipo() {
                                                 observation: tire.tire.lastInspection.observation ?? "",
                                             };
                                             return (
-
                                                 <div
                                                     key={tire.id}
-                                                    className={`p-4 rounded-lg border cursor-pointer transition-colors bg-white dark:bg-neutral-800 `}
-
+                                                    className={`p-4 rounded-lg border cursor-pointer transition-colors
+    ${isCardModified(tire.tire.id)
+                                                            ? 'border-green-400 bg-yellow-50 dark:border-green-500 dark:bg-neutral-900'
+                                                            : 'bg-white dark:bg-neutral-800 opacity-80'}
+  `}
                                                 >
                                                     <input
                                                         type="checkbox"
@@ -480,7 +522,7 @@ export default function MedicionPorEquipo() {
                                                             min={0}
                                                             value={values.pressure ?? ""}
                                                             onChange={(e) => updateInspection(tire, 'pressure', parseFloat(e.target.value))}
-                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 ${isModified('pressure', tire.tire.id) ? 'border-yellow-500' : ''}`}
                                                         />
                                                     </div>
                                                     {/* Input de temperatura */}
@@ -494,7 +536,9 @@ export default function MedicionPorEquipo() {
                                                             min={0}
                                                             value={values.temperature ?? ""}
                                                             onChange={(e) => updateInspection(tire, 'temperature', parseFloat(e.target.value))}
-                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 
+                                                                ${isModified('temperature', tire.tire.id) ? 'border-yellow-500' : ''}
+                                                                `}
                                                         />
                                                     </div>
                                                     {/* Input de remanente, en el mismo contenedor deben estar el interno y el externo */}
@@ -510,7 +554,8 @@ export default function MedicionPorEquipo() {
                                                                 max={tire.tire.lastInspection.internalTread + 5}
                                                                 value={values.internalTread}
                                                                 onChange={(e) => updateInspection(tire, 'internalTread', parseFloat(e.target.value))}
-                                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 
+                                                                    ${isModified('internalTread', tire.tire.id) ? 'border-yellow-500' : ''}`}
                                                                 placeholder="Interno"
                                                             />
                                                         </div>
@@ -525,7 +570,8 @@ export default function MedicionPorEquipo() {
                                                                 max={tire.tire.lastInspection.externalTread + 5}
                                                                 value={values.externalTread}
                                                                 onChange={(e) => updateInspection(tire, 'externalTread', parseFloat(e.target.value))}
-                                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 
+                                                                    ${isModified('externalTread', tire.tire.id) ? 'border-yellow-500' : ''}`}
                                                                 placeholder="Externo"
                                                             />
                                                         </div>
