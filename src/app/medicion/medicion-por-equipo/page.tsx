@@ -8,13 +8,19 @@ import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import MineTruck from '@/components/common/icons/MineTruck';
 import { useAuth } from '@/contexts/AuthContext';
 import { CreateInspectionDTO } from '@/types/CreateInspection';
-import { InputNumeroSeguro } from '@/components/common/input/InputNumber';
 import CustomModal from '@/components/common/alerts/alert';
+
+
+type InspectionWithPhotos = CreateInspectionDTO & {
+    tempPhotoIds?: string[];
+    previews?: string[];
+    files?: File[];
+};
 
 export default function MedicionPorEquipo() {
     const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
-    const [inspections, setInspections] = useState<CreateInspectionDTO[]>([]);
+    const [inspections, setInspections] = useState<InspectionWithPhotos[]>([]);
 
     const [initialKilometrage, setInitialKilometrage] = useState<number>(0);
     const [initialHours, setInitialHours] = useState<number>(0);
@@ -28,6 +34,9 @@ export default function MedicionPorEquipo() {
     const [disableKms, setDisableKms] = useState(false);
     const [skippedTires, setSkippedTires] = useState<number[]>([]);
     const [originalInspections, setOriginalInspections] = useState<Record<number, CreateInspectionDTO>>({});
+
+
+    const [previewsByTire, setPreviewsByTire] = useState<Record<number, string[]>>({});
 
     const toggleSkipTire = (tireId: number) => {
         setSkippedTires((prev) =>
@@ -164,7 +173,8 @@ export default function MedicionPorEquipo() {
 
         setInspections(prev => {
             const existing = prev.find(i => i.tireId === tire.tire.id);
-            const newInspection: CreateInspectionDTO = {
+            const newInspection: InspectionWithPhotos = {
+                ...existing,
                 position: tire.position,
                 externalTread: field === 'externalTread' ? Number(value) : existing?.externalTread ?? last.externalTread,
                 internalTread: field === 'internalTread' ? Number(value) : existing?.internalTread ?? last.internalTread,
@@ -172,14 +182,13 @@ export default function MedicionPorEquipo() {
                 temperature: field === 'temperature' ? Number(value) : existing?.temperature ?? last.temperature,
                 observation: field === 'observation' ? String(value) : existing?.observation ?? last.observation,
                 inspectionDate: new Date().toISOString(),
-
-                // Acá está lo que pediste:
                 kilometrage: (last.kilometrage ?? 0) + kmDiff,
                 hours: (last.hours ?? 0) + hoursDiff,
-
                 tireId: tire.tire.id,
                 inspectorId: user?.user_id || 0,
                 inspectorName: `${user?.name} ${user?.last_name}`,
+                tempPhotoIds: existing?.tempPhotoIds ?? [],
+                previews: existing?.previews ?? [],
             };
 
             const filtered = prev.filter(i => i.tireId !== tire.tire.id);
@@ -205,43 +214,90 @@ export default function MedicionPorEquipo() {
 
     // Error al enviar inspecciones
     const [errorInspection, setErrorInspection] = useState<string | null>(null);
-
     const handleConfirm = async () => {
         setErrorInspection(null);
         setError(null);
+
         try {
             if (inspections.length === 0) {
                 setError("Debes registrar al menos una inspección.");
                 return;
             }
 
-            // Enviar todas las inspecciones en paralelo
-            await Promise.all(
-                inspections
-                    .filter(insp =>
-                        !skippedTires.includes(insp.tireId) &&
-                        // asegurarte de que al menos un campo fue modificado
-                        (insp.pressure !== undefined || insp.temperature !== undefined || insp.internalTread !== undefined || insp.externalTread !== undefined)
-                    )
-                    .map((insp) =>
-                        axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, insp)
-                    )
+            const validInspections = inspections.filter(
+                insp =>
+                    !skippedTires.includes(insp.tireId) &&
+                    (insp.pressure !== undefined ||
+                        insp.temperature !== undefined ||
+                        insp.internalTread !== undefined ||
+                        insp.externalTread !== undefined)
             );
 
-            // Limpieza posterior
+            // Crear inspecciones en paralelo
+            await Promise.all(
+                validInspections.map(async (insp) => {
+                    const tempIds: string[] = [];
+
+                    // 1. Subir fotos temporales
+                    if (insp.files && insp.files.length > 0) {
+                        for (let i = 0; i < insp.files.length; i++) {
+                            const tempId = insp.tempPhotoIds?.[i] || crypto.randomUUID();
+                            tempIds.push(tempId);
+
+                            const formData = new FormData();
+                            formData.append("file", insp.files[i]);
+                            formData.append("tempId", tempId);
+                            formData.append("uploadedById", String(user?.user_id || 1));
+
+                            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
+                        }
+                    }
+                    const {
+                        tempPhotoIds,
+                        previews,
+                        files,
+                        ...inspectionData
+                    } = insp;
+                    // 2. Crear la inspección
+                    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspectionData);
+                    const createdInspection = response.data;
+
+                    // 3. Asociar las fotos
+                    for (const tempId of tempIds) {
+                        await axios.patch(
+                            `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${createdInspection.id}`,
+                            { tempId }
+                        );
+                    }
+
+                    console.log(`✅ Inspección ${createdInspection.id} creada y fotos asociadas`);
+                })
+            );
+
+            // Limpieza
             setIsOpen(false);
             setInspections([]);
             setVehicle(null);
             setVehicleCode(null);
-
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                setIsOpen(false);
                 const message = error.response?.data?.message || "Error desconocido";
                 setErrorInspection(message);
                 setError(message);
             }
         }
+    };
+
+    // Funcion para resetear todos los campos de inspección
+    const resetInspections = () => {
+        setInspections([]);
+        setKilometrage(vehicle?.kilometrage || null);
+        setHours(vehicle?.hours || null);
+        setSkippedTires([]);
+        setSuccess(false);
+        setError(null);
+        setDisableKms(false);
+        setOriginalInspections({});
     };
 
     const isModified = (field: keyof CreateInspectionDTO, id: number) => {
@@ -312,7 +368,7 @@ export default function MedicionPorEquipo() {
                 {/* Informacion del Equipo */}
                 <div className="relative">
                     {!vehicle || (success || disableKms) && (
-                        <div className="absolute inset-0 z-10 flex items-center justify-center bg-transparent   border-dashed border-2 border-amber-500 rounded-md">
+                        <div className={`absolute inset-0 z-10 flex items-center justify-center bg-transparent   border-dashed border-2 ${(success || disableKms) ? "border-green-500" : "border-amber-500"} rounded-md`}>
                             <div className="text-center p-4">
                                 {
                                     (success || disableKms) ?
@@ -481,37 +537,43 @@ export default function MedicionPorEquipo() {
                                 <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'>
                                     {
                                         vehicle?.installedTires.map((tire) => {
-                                            const existing = inspections.find(i => i.tireId === tire.tire.id);
+                                            const inspection = inspections.find(i => i.tireId === tire.tire.id);
 
-                                            const values = existing ?? {
+                                            const values = inspection ?? {
                                                 pressure: tire.tire.lastInspection.pressure ?? 0,
                                                 temperature: tire.tire.lastInspection.temperature ?? 0,
                                                 externalTread: tire.tire.lastInspection.externalTread ?? 0,
                                                 internalTread: tire.tire.lastInspection.internalTread ?? 0,
                                                 observation: tire.tire.lastInspection.observation ?? "",
+                                                previews: [],
+                                                tempPhotoIds: [],
+                                                files: [],
                                             };
+
                                             return (
                                                 <div
                                                     key={tire.id}
                                                     className={`p-4 rounded-lg border cursor-pointer transition-colors
     ${isCardModified(tire.tire.id)
                                                             ? 'border-green-400 bg-yellow-50 dark:border-green-500 dark:bg-neutral-900'
-                                                            : 'bg-white dark:bg-neutral-800 opacity-80'}
+                                                            : 'bg-white dark:bg-neutral-800'}
   `}
                                                 >
                                                     <input
                                                         type="checkbox"
                                                         checked={skippedTires.includes(tire.tire.id)}
                                                         onChange={() => toggleSkipTire(tire.tire.id)}
-                                                        className='w-4 h-4 text-amber-300 accent-amber-400 rounded-lg bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600 mr-2'
+                                                        className="w-4 h-4 text-amber-300 accent-amber-400 rounded-lg bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600 mr-2"
                                                     />
-
                                                     <label className="text-md text-gray-700 dark:text-white">
                                                         No inspeccionar este neumático
                                                     </label>
-                                                    <h3 className='text-lg font-semibold'>Neumático {tire.position}</h3>
-                                                    <p className='text-sm text-gray-600 dark:text-gray-300'>Código: {tire.tire.code}</p>
-                                                    {/* Input de presion */}
+
+                                                    <h3 className="text-lg font-semibold">Neumático {tire.position}</h3>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-300">Código: {tire.tire.code}</p>
+
+                                                    {/* Inputs de inspección */}
+                                                    {/* Presión */}
                                                     <div className='flex flex-col gap-y-2 mt-2'>
                                                         <label className='text-md font-semibold text-gray-700 dark:text-white'>
                                                             <Gauge size={24} className="inline mr-2 text-blue-400" />
@@ -577,21 +639,68 @@ export default function MedicionPorEquipo() {
                                                         </div>
 
                                                     </div>
-                                                    {/* Input para agregar comentario a cada neumatico */}
-                                                    <div className='flex flex-col gap-y-2 mt-2'>
-                                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>Comentario adicional:</label>
+
+                                                    {/* Comentario */}
+                                                    <div className="flex flex-col gap-y-2 mt-2">
+                                                        <label className="text-md font-semibold text-gray-700 dark:text-white">
+                                                            Comentario adicional:
+                                                        </label>
                                                         <input
                                                             disabled={skippedTires.includes(tire.tire.id)}
                                                             type="text"
-                                                            value={values.observation ?? ""}
-                                                            onChange={(e) => updateInspection(tire, 'observation', e.target.value)}
-                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                                            value={values.observation}
+                                                            onChange={(e) => updateInspection(tire, "observation", e.target.value)}
+                                                            className="w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2"
                                                             placeholder="Ingrese observaciones"
                                                         />
+                                                    </div>
 
+                                                    {/* Subida de fotos */}
+                                                    <div className="flex flex-col gap-y-2 mt-4">
+                                                        <label className="text-md font-semibold text-gray-700 dark:text-white">Fotos:</label>
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            multiple
+                                                            disabled={skippedTires.includes(tire.tire.id)}
+
+                                                            onChange={(e) => {
+                                                                const selected = Array.from(e.target.files || []);
+                                                                const previews = selected.map(file => URL.createObjectURL(file));
+                                                                const tempIds = selected.map(() => crypto.randomUUID());
+
+                                                                setInspections(prev =>
+                                                                    prev.map(i =>
+                                                                        i.tireId === tire.tire.id
+                                                                            ? {
+                                                                                ...i,
+                                                                                previews: [...(i.previews || []), ...previews],
+                                                                                tempPhotoIds: [...(i.tempPhotoIds || []), ...tempIds],
+                                                                                files: [...(i.files || []), ...selected],
+                                                                            }
+                                                                            : i
+                                                                    )
+                                                                );
+                                                            }}
+                                                            className="block w-full text-sm text-gray-900 dark:text-white"
+                                                        />
+                                                        {/* Mostrar previews */}
+                                                        {values.previews && values.previews.length > 0 && (
+                                                            <div className="flex gap-2 mt-2 overflow-x-auto">
+                                                                {values.previews.map((src, i) => (
+                                                                    <div key={i} className="relative w-[100px] h-[80px] flex-shrink-0">
+                                                                        <img
+                                                                            src={src}
+                                                                            alt={`Preview ${i}`}
+                                                                            className="object-cover w-full h-full rounded"
+                                                                        />
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            )
+                                            );
                                         })
                                     }
                                     {autoSkippedCount > 0 && (
@@ -613,7 +722,13 @@ export default function MedicionPorEquipo() {
                         onClick={() => setIsOpen(true)} className={`bg-amber-300 text-black w-full lg:w-48 px-4 font-bold py-2 rounded-lg mt-4
                         ${autoSkippedCount == 6 || vehicle == null ? 'opacity-50 ' : ''}
                         `}>Confirmar Datos</button>
-                    <button className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
+                    {/* Boton de reset */}
+                    <button
+                        onClick={() => {
+                            resetInspections();
+                            window.location.reload();
+                        }}
+                        className="bg-amber-50 border border-black font-bold text-black w-full lg:w-48 px-4 py-2 rounded-lg mt-4">Cancelar</button>
                 </div>
                 <small className="text-gray-700 dark:text-white text-xs">*Datos erróneos no serán aceptados por el sistema, <span className='font-bold'>Recuerde verificar sus datos</span></small>
 
