@@ -371,149 +371,177 @@ export default function MedicionPorEquipo() {
                         </section>
                     </main>
                 </div>
+                {/* Checkbox para no querer hacer cambios de kilometraje */}
                 <div className="flex items-center mt-4 gap-x-2">
                     <input
                         type="checkbox"
                         id="disableKms"
                         checked={disableKms}
                         onChange={(e) => setDisableKms(e.target.checked)}
-                        className="accent-amber-500 w-4 h-4"
+                        className="w-5 h-5 text-amber-300 accent-amber-400 rounded-lg bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
                     />
-                    <label htmlFor="disableKms" className="text-sm text-gray-700 dark:text-white">
+                    <label htmlFor="disableKms" className="text-md text-gray-700 dark:text-white">
                         No quiero modificar las horas y los kilómetros
                     </label>
                 </div>
                 {/* Seccion de mediciones de los neumaticos */}
-                {
-                    vehicle && (
-                        <section className={`flex flex-col gap-y-2 my-5 w-full border bg-white p-3 rounded-md shadow-sm shadow-gray-200 dark:bg-neutral-800 dark:text-white dark:shadow-neutral-800
-                    ${!vehicle ? 'opacity-50 ' : ''}
-                    `}>
-                            {/* Titulo */}
-                            <div className='flex items-center gap-x-2'>
-                                <Waves className='w-6 h-6 text-amber-400' />
-                                <h2 className='text-2xl font-bold'>Mediciones de Neumáticos</h2>
-                            </div>
-                            <p className='text-gray-700 dark:text-white'>Registre las mediciones para cada uno de los neumáticos</p>
-                            {/* Seccion para las cards de los neumaticos */}
-                            <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'>
-                                {
-                                    vehicle?.installedTires.map((tire) => {
-                                        const existing = inspections.find(i => i.tireId === tire.tire.id);
-
-                                        const values = existing ?? {
-                                            pressure: tire.tire.lastInspection.pressure ?? 0,
-                                            temperature: tire.tire.lastInspection.temperature ?? 0,
-                                            externalTread: tire.tire.lastInspection.externalTread ?? 0,
-                                            internalTread: tire.tire.lastInspection.internalTread ?? 0,
-                                            observation: tire.tire.lastInspection.observation ?? "",
-                                        };
-                                        return (
-
-                                            <div
-                                                key={tire.id}
-                                                className={`p-4 rounded-lg border cursor-pointer transition-colors bg-white dark:bg-neutral-800 `}
-
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={skippedTires.includes(tire.tire.id)}
-                                                    onChange={() => toggleSkipTire(tire.tire.id)}
-                                                />
-
-                                                <label className="text-sm text-gray-700 dark:text-white">
-                                                    No inspeccionar este neumático
-                                                </label>
-                                                <h3 className='text-lg font-semibold'>Neumático {tire.position}</h3>
-                                                <p className='text-sm text-gray-600 dark:text-gray-300'>Código: {tire.tire.code}</p>
-                                                {/* Input de presion */}
-                                                <div className='flex flex-col gap-y-2 mt-2'>
-                                                    <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                                        <Gauge size={24} className="inline mr-2 text-blue-400" />
-                                                        Presión:</label>
-                                                    <input
-                                                        type="number"
-                                                        min={0}
-                                                        disabled={skippedTires.includes(tire.tire.id)}
-                                                        value={values.pressure ?? ""}
-                                                        onChange={(e) => updateInspection(tire, 'pressure', parseFloat(e.target.value))}
-                                                        className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
-                                                    />
-                                                </div>
-                                                {/* Input de temperatura */}
-                                                <div className='flex flex-col gap-y-2 mt-2'>
-                                                    <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                                        <Thermometer size={24} className="inline mr-2 text-red-500" />
-                                                        Temperatura:</label>
-                                                    <input
-                                                        disabled={skippedTires.includes(tire.tire.id)}
-                                                        type="number"
-                                                        min={0}
-                                                        value={values.temperature ?? ""}
-                                                        onChange={(e) => updateInspection(tire, 'temperature', parseFloat(e.target.value))}
-                                                        className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
-                                                    />
-                                                </div>
-                                                {/* Input de remanente, en el mismo contenedor deben estar el interno y el externo */}
-                                                <div className='flex items-center gap-x-2 mt-2'>
-                                                    <div className='flex flex-col gap-y-2 w-full'>
-                                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                                            <Waves size={24} className="inline mr-2 text-green-500" />
-                                                            Rem. Int.:</label>
-                                                        <input
-                                                            disabled={skippedTires.includes(tire.tire.id)}
-                                                            type="number"
-                                                            min={0}
-                                                            max={tire.tire.lastInspection.internalTread + 5}
-                                                            value={values.internalTread}
-                                                            onChange={(e) => updateInspection(tire, 'internalTread', parseFloat(e.target.value))}
-                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
-                                                            placeholder="Interno"
-                                                        />
-                                                    </div>
-                                                    <div className='flex flex-col gap-y-2 w-full'>
-                                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>
-                                                            <Waves size={24} className="inline mr-2 text-green-500" />
-                                                            Rem. Ext.:</label>
-                                                        <input
-                                                            disabled={skippedTires.includes(tire.tire.id)}
-                                                            type="number"
-                                                            min={0}
-                                                            max={tire.tire.lastInspection.externalTread + 5}
-                                                            value={values.externalTread}
-                                                            onChange={(e) => updateInspection(tire, 'externalTread', parseFloat(e.target.value))}
-                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
-                                                            placeholder="Externo"
-                                                        />
-                                                    </div>
-
-                                                </div>
-                                                {/* Input para agregar comentario a cada neumatico */}
-                                                <div className='flex flex-col gap-y-2 mt-2'>
-                                                    <label className='text-md font-semibold text-gray-700 dark:text-white'>Comentario adicional:</label>
-                                                    <input
-                                                        disabled={skippedTires.includes(tire.tire.id)}
-                                                        type="text"
-                                                        value={values.observation ?? ""}
-                                                        onChange={(e) => updateInspection(tire, 'observation', e.target.value)}
-                                                        className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
-                                                        placeholder="Ingrese observaciones"
-                                                    />
-
-                                                </div>
-                                            </div>
-                                        )
-                                    })
-                                }
-                                {autoSkippedCount > 0 && (
-                                    <p className="text-yellow-600 text-md font-semibold">
-                                        {autoSkippedCount} neumático(s) serán omitidos automáticamente por falta de datos.
+                <div className="relative">
+                    {/* quiero un div negro con opacity 70 que se vea disablekms */}
+                    {
+                        disableKms == false
+                        && (
+                            <div className="absolute inset-0 z-20 flex items-start pt-20 justify-center bg-transparent   border-dashed border-2 border-amber-500 rounded-md">
+                                <div className="text-center p-4 px-10">
+                                    <Info className="w-12 h-12 text-amber-500 mx-auto" />
+                                    <h3 className="text-xl font-bold text-amber-500">Complete Paso 2</h3>
+                                    <p className="text-amber-500 mt-2 font-semibold">
+                                        Ingrese los kilometros y horas actuales del equipo o seleccione la opción de omitir ese paso para acceder al paso 3
                                     </p>
-                                )}
+                                </div>
+                            </div>
+                        )
+                    }
+
+
+                    {
+                        disableKms == false
+                        && (
+                            <div className="absolute inset-0 z-10 flex items-start pt-10 justify-center bg-black opacity-60  border-dashed border-2 border-amber-500 rounded-md">
+
+                            </div>
+                        )}
+
+                    {
+                        vehicle && (
+                            <section className={`flex flex-col gap-y-2 my-5 w-full border bg-white p-3 rounded-md shadow-sm shadow-gray-200 dark:bg-neutral-800 dark:text-white dark:shadow-neutral-800
+                    ${vehicle ? 'opacity-70 ' : ''}
+                    `}>
+                                {/* Titulo */}
+                                <div className='flex items-center gap-x-2'>
+                                    <Waves className='w-6 h-6 text-amber-400' />
+                                    <h2 className='text-2xl font-bold'>Mediciones de Neumáticos</h2>
+                                </div>
+                                <p className='text-gray-700 dark:text-white'>Registre las mediciones para cada uno de los neumáticos</p>
+                                {/* Seccion para las cards de los neumaticos */}
+                                <section className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-4'>
+                                    {
+                                        vehicle?.installedTires.map((tire) => {
+                                            const existing = inspections.find(i => i.tireId === tire.tire.id);
+
+                                            const values = existing ?? {
+                                                pressure: tire.tire.lastInspection.pressure ?? 0,
+                                                temperature: tire.tire.lastInspection.temperature ?? 0,
+                                                externalTread: tire.tire.lastInspection.externalTread ?? 0,
+                                                internalTread: tire.tire.lastInspection.internalTread ?? 0,
+                                                observation: tire.tire.lastInspection.observation ?? "",
+                                            };
+                                            return (
+
+                                                <div
+                                                    key={tire.id}
+                                                    className={`p-4 rounded-lg border cursor-pointer transition-colors bg-white dark:bg-neutral-800 `}
+
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={skippedTires.includes(tire.tire.id)}
+                                                        onChange={() => toggleSkipTire(tire.tire.id)}
+                                                    />
+
+                                                    <label className="text-sm text-gray-700 dark:text-white">
+                                                        No inspeccionar este neumático
+                                                    </label>
+                                                    <h3 className='text-lg font-semibold'>Neumático {tire.position}</h3>
+                                                    <p className='text-sm text-gray-600 dark:text-gray-300'>Código: {tire.tire.code}</p>
+                                                    {/* Input de presion */}
+                                                    <div className='flex flex-col gap-y-2 mt-2'>
+                                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                                            <Gauge size={24} className="inline mr-2 text-blue-400" />
+                                                            Presión:</label>
+                                                        <input
+                                                            type="number"
+                                                            min={0}
+                                                            disabled={skippedTires.includes(tire.tire.id)}
+                                                            value={values.pressure ?? ""}
+                                                            onChange={(e) => updateInspection(tire, 'pressure', parseFloat(e.target.value))}
+                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                                        />
+                                                    </div>
+                                                    {/* Input de temperatura */}
+                                                    <div className='flex flex-col gap-y-2 mt-2'>
+                                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                                            <Thermometer size={24} className="inline mr-2 text-red-500" />
+                                                            Temperatura:</label>
+                                                        <input
+                                                            disabled={skippedTires.includes(tire.tire.id)}
+                                                            type="number"
+                                                            min={0}
+                                                            value={values.temperature ?? ""}
+                                                            onChange={(e) => updateInspection(tire, 'temperature', parseFloat(e.target.value))}
+                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                                        />
+                                                    </div>
+                                                    {/* Input de remanente, en el mismo contenedor deben estar el interno y el externo */}
+                                                    <div className='flex items-center gap-x-2 mt-2'>
+                                                        <div className='flex flex-col gap-y-2 w-full'>
+                                                            <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                                                <Waves size={24} className="inline mr-2 text-green-500" />
+                                                                Rem. Int.:</label>
+                                                            <input
+                                                                disabled={skippedTires.includes(tire.tire.id)}
+                                                                type="number"
+                                                                min={0}
+                                                                max={tire.tire.lastInspection.internalTread + 5}
+                                                                value={values.internalTread}
+                                                                onChange={(e) => updateInspection(tire, 'internalTread', parseFloat(e.target.value))}
+                                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                                                placeholder="Interno"
+                                                            />
+                                                        </div>
+                                                        <div className='flex flex-col gap-y-2 w-full'>
+                                                            <label className='text-md font-semibold text-gray-700 dark:text-white'>
+                                                                <Waves size={24} className="inline mr-2 text-green-500" />
+                                                                Rem. Ext.:</label>
+                                                            <input
+                                                                disabled={skippedTires.includes(tire.tire.id)}
+                                                                type="number"
+                                                                min={0}
+                                                                max={tire.tire.lastInspection.externalTread + 5}
+                                                                value={values.externalTread}
+                                                                onChange={(e) => updateInspection(tire, 'externalTread', parseFloat(e.target.value))}
+                                                                className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 $`}
+                                                                placeholder="Externo"
+                                                            />
+                                                        </div>
+
+                                                    </div>
+                                                    {/* Input para agregar comentario a cada neumatico */}
+                                                    <div className='flex flex-col gap-y-2 mt-2'>
+                                                        <label className='text-md font-semibold text-gray-700 dark:text-white'>Comentario adicional:</label>
+                                                        <input
+                                                            disabled={skippedTires.includes(tire.tire.id)}
+                                                            type="text"
+                                                            value={values.observation ?? ""}
+                                                            onChange={(e) => updateInspection(tire, 'observation', e.target.value)}
+                                                            className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
+                                                            placeholder="Ingrese observaciones"
+                                                        />
+
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    {autoSkippedCount > 0 && (
+                                        <p className="text-yellow-600 text-md font-semibold">
+                                            {autoSkippedCount} neumático(s) serán omitidos automáticamente por falta de datos.
+                                        </p>
+                                    )}
+                                </section>
                             </section>
-                        </section>
-                    )
-                }
+                        )
+                    }
+                </div>
                 {/* Botones de confirmación */}
                 <div className='lg:flex gap-x-4 lg:justify-around'>
                     <button
