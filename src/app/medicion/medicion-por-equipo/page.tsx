@@ -1,13 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
-import { Gauge, Info, Search, Thermometer, Waves } from "lucide-react";
+import { CheckCircle, CheckCircle2, Gauge, Info, Search, Thermometer, Waves } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import MineTruck from '@/components/common/icons/MineTruck';
 import { useAuth } from '@/contexts/AuthContext';
 import { CreateInspectionDTO } from '@/types/CreateInspection';
+import { InputNumeroSeguro } from '@/components/common/input/InputNumber';
+import CustomModal from '@/components/common/alerts/alert';
 
 export default function MedicionPorEquipo() {
     const { user } = useAuth();
@@ -43,6 +45,8 @@ export default function MedicionPorEquipo() {
     const hasChanges =
         vehicle &&
         (kilometrage !== vehicle.kilometrage || hours !== vehicle.hours);
+
+
 
     // Enviar al backend
     const handleSave = async () => {
@@ -179,8 +183,12 @@ export default function MedicionPorEquipo() {
         }
     }, [vehicle]);
 
+    // Error al enviar inspecciones
+    const [errorInspection, setErrorInspection] = useState<string | null>(null);
 
     const handleConfirm = async () => {
+        setErrorInspection(null);
+        setError(null);
         try {
             if (inspections.length === 0) {
                 setError("Debes registrar al menos una inspección.");
@@ -208,10 +216,10 @@ export default function MedicionPorEquipo() {
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
+                setIsOpen(false);
                 const message = error.response?.data?.message || "Error desconocido";
+                setErrorInspection(message);
                 setError(message);
-            } else {
-                console.error("Error inesperado:", error);
             }
         }
     };
@@ -263,17 +271,23 @@ export default function MedicionPorEquipo() {
 
                 {/* Informacion del Equipo */}
                 <div className="relative">
-                    {!vehicle && (
+                    {!vehicle || (success || disableKms) && (
                         <div className="absolute inset-0 z-10 flex items-center justify-center bg-transparent   border-dashed border-2 border-amber-500 rounded-md">
                             <div className="text-center p-4">
-                                <Info className="w-12 h-12 text-amber-500 mx-auto" />
-                                <h3 className="text-xl font-bold text-amber-500">Complete Paso 1</h3>
-                                <p className="text-amber-500 mt-2 font-semibold">Debe ingresar un código de equipo válido antes de continuar.</p>
+                                {
+                                    (success || disableKms) ?
+                                        <CheckCircle className='w-12 h-12 text-green-500 mx-auto' />
+                                        : <Info className="w-12 h-12 text-amber-500 mx-auto" />
+                                }
+                                <h3 className={`text-xl font-bold ${(success || disableKms) ? "text-green-500" : "text-amber-500"}`}>{(success || disableKms) ? "Continue con Paso 3" : "Complete Paso 1"}</h3>
+                                <p className={`${(success || disableKms) ? "text-green-500" : "text-amber-500"} mt-2 font-semibold`}>
+                                    {(success || disableKms) ? "Kilometros y horas ya ingresados, continue con paso 3" : "Debe ingresar un código de equipo válido antes de continuar."}
+                                </p>
                             </div>
                         </div>
                     )}
                     <main className={`flex flex-col gap-x-4 my-5 w-full border bg-white p-3 rounded-md shadow-sm shadow-gray-200 dark:bg-neutral-800 dark:text-white dark:shadow-neutral-800
-                ${!vehicle ? 'opacity-40 ' : ''}
+                ${!vehicle || (success || disableKms) ? 'opacity-40 ' : ''}
                 `}>
                         <div className='flex items-center gap-x-2'>
                             <MineTruck className='w-10 h-10 text-amber-400' />
@@ -340,9 +354,9 @@ export default function MedicionPorEquipo() {
                             <div className="flex gap-2 mt-2">
                                 <button
                                     onClick={handleSave}
-                                    disabled={loading || !vehicle || !hasChanges || disableKms}
+                                    disabled={loading || !vehicle || !hasChanges || disableKms || success}
                                     className={`bg-amber-300  text-black font-semibold px-4 py-2 rounded
-                                    ${loading || !vehicle || !hasChanges || disableKms ? 'opacity-50 ' : 'hover:bg-amber-400'}
+                                    ${loading || !vehicle || !hasChanges || disableKms || success ? 'opacity-50 ' : 'hover:bg-amber-400'}
                                     `}
                                 >
                                     {loading ? "Guardando..." : "Guardar Cambios"}
@@ -358,7 +372,7 @@ export default function MedicionPorEquipo() {
                                         }
                                     }}
                                     className={`bg-gray-300  dark:bg-neutral-700  font-semibold dark:text-white text-black px-4 py-2 rounded
-                                    ${loading || !vehicle || !hasChanges || disableKms ? 'opacity-50 ' : 'hover:cursor-pointer hover:bg-gray-400 dark:hover:bg-neutral-600'}
+                                    ${loading || !vehicle || !hasChanges || disableKms || success ? 'opacity-50 ' : 'hover:cursor-pointer hover:bg-gray-400 dark:hover:bg-neutral-600'}
                                     `}
                                 >
                                     Cancelar
@@ -375,6 +389,7 @@ export default function MedicionPorEquipo() {
                 <div className="flex items-center mt-4 gap-x-2">
                     <input
                         type="checkbox"
+                        disabled={vehicle === null || success}
                         id="disableKms"
                         checked={disableKms}
                         onChange={(e) => setDisableKms(e.target.checked)}
@@ -388,7 +403,7 @@ export default function MedicionPorEquipo() {
                 <div className="relative">
                     {/* quiero un div negro con opacity 70 que se vea disablekms */}
                     {
-                        disableKms == false
+                        vehicle && (disableKms || success) == false
                         && (
                             <div className="absolute inset-0 z-20 flex items-start pt-20 justify-center bg-transparent   border-dashed border-2 border-amber-500 rounded-md">
                                 <div className="text-center p-4 px-10">
@@ -404,7 +419,7 @@ export default function MedicionPorEquipo() {
 
 
                     {
-                        disableKms == false
+                        vehicle && (disableKms || success) == false
                         && (
                             <div className="absolute inset-0 z-10 flex items-start pt-10 justify-center bg-black opacity-60  border-dashed border-2 border-amber-500 rounded-md">
 
@@ -446,9 +461,10 @@ export default function MedicionPorEquipo() {
                                                         type="checkbox"
                                                         checked={skippedTires.includes(tire.tire.id)}
                                                         onChange={() => toggleSkipTire(tire.tire.id)}
+                                                        className='w-4 h-4 text-amber-300 accent-amber-400 rounded-lg bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600 mr-2'
                                                     />
 
-                                                    <label className="text-sm text-gray-700 dark:text-white">
+                                                    <label className="text-md text-gray-700 dark:text-white">
                                                         No inspeccionar este neumático
                                                     </label>
                                                     <h3 className='text-lg font-semibold'>Neumático {tire.position}</h3>
@@ -459,9 +475,9 @@ export default function MedicionPorEquipo() {
                                                             <Gauge size={24} className="inline mr-2 text-blue-400" />
                                                             Presión:</label>
                                                         <input
+                                                            disabled={skippedTires.includes(tire.tire.id)}
                                                             type="number"
                                                             min={0}
-                                                            disabled={skippedTires.includes(tire.tire.id)}
                                                             value={values.pressure ?? ""}
                                                             onChange={(e) => updateInspection(tire, 'pressure', parseFloat(e.target.value))}
                                                             className={`w-full bg-gray-50 dark:bg-[#414141] rounded-sm border border-gray-300 p-2 `}
@@ -565,6 +581,11 @@ export default function MedicionPorEquipo() {
                         </p>
                     }
                 </Modal>
+
+                {
+                    errorInspection &&
+                    <CustomModal isOpen={!!errorInspection} onClose={() => setErrorInspection(null)} title="Error" message={errorInspection} />
+                }
 
             </section >
             <LoadingSpinner isOpen={loading} />
