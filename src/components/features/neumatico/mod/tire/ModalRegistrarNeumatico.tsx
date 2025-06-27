@@ -150,6 +150,7 @@ export default function ModalRegistrarNeumatico({
             });
             onGuardar();
             onClose();
+            console.log("Neumatico registrado exitosamente:", response.data);
             return response.data;
         } catch (error) {
             setError(error instanceof Error ? error.message : "Error al actualizar el modelo");

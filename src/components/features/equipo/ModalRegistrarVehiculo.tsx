@@ -82,6 +82,14 @@ export default function ModalRegistrarVehiculo({
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (user?.faena_id) {
+            setVehicleEdited((prev) => ({
+                ...prev,
+                siteId: user.faena_id === 99 ? null : (user.faena_id ?? null),
+            }));
+        }
+    }, [user]);
 
     if (!visible) return null;
 
@@ -112,7 +120,6 @@ export default function ModalRegistrarVehiculo({
             );
 
             onGuardar();
-            onClose();
             setVehicleEdited({
                 code: "",
                 modelId: null,
@@ -121,6 +128,7 @@ export default function ModalRegistrarVehiculo({
                 kilometrage: 0,
                 hours: 0,
             });
+            onClose();
             setError("");
             return response.data;
         } catch (error) {
@@ -133,6 +141,19 @@ export default function ModalRegistrarVehiculo({
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleClose = () => {
+        setVehicleEdited({
+            code: "",
+            modelId: null,
+            typeId: null,
+            siteId: user?.faena_id == 99 ? null : user?.faena_id as number | null,
+            kilometrage: 0,
+            hours: 0,
+        });
+        setError("");
+        onClose();
     };
 
     return (
@@ -260,7 +281,7 @@ export default function ModalRegistrarVehiculo({
                     </ButtonWithAuthControl>
 
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
                     >
                         Cancelar

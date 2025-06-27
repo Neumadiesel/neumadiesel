@@ -310,12 +310,12 @@ export default function Page() {
                             {/* HORAS */}
                             <div className="flex flex-col">
                                 <p className="text-gray-500 dark:text-gray-300">Horas:</p>
-                                <span className="font-bold text-xl">{inspectionData?.hours || "No Disponible"}</span>
+                                <span className="font-bold text-xl">{inspectionData?.hours || "0"}</span>
                             </div>
                             {/* Kilometraje */}
                             <div className="flex flex-col">
                                 <p className="text-gray-500 dark:text-gray-300">Kilometraje:</p>
-                                <span className="font-bold text-xl">{inspectionData?.kilometrage || "No Disponible"}</span>
+                                <span className="font-bold text-xl">{inspectionData?.kilometrage || "0"}</span>
                             </div>
                         </div>
                     </section>
