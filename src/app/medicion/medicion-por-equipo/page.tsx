@@ -64,7 +64,7 @@ export default function MedicionPorEquipo() {
             return;
         }
 
-        const isInvalid = (val: any) =>
+        const isInvalid = (val: number | null) =>
             val === null ||
             isNaN(val) ||
             typeof val !== "number" ||
@@ -238,7 +238,7 @@ export default function MedicionPorEquipo() {
                     const {
                         files,
                         tempPhotoIds,
-                        previews, // si no lo usas, puedes omitirlo o renombrarlo con _
+                        previews: _,
                         ...inspectionData
                     } = insp;
 
