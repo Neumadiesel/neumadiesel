@@ -238,10 +238,10 @@ export default function MedicionPorEquipo() {
                     const {
                         files,
                         tempPhotoIds,
-                        previews: _,
+                        previews,
                         ...inspectionData
                     } = insp;
-
+                    console.log(previews)
 
                     // 1. Subir fotos temporales
                     if (files && files.length > 0) {
