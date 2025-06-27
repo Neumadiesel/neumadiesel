@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Modal from "@/components/common/modal/CustomModal";
-import { CheckCircle, CheckCircle2, Gauge, Info, Search, Thermometer, Waves } from "lucide-react";
+import { CheckCircle, Gauge, Info, Search, Thermometer, Waves } from "lucide-react";
 import { VehicleDTO } from "@/types/Vehicle";
 import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
@@ -34,9 +34,6 @@ export default function MedicionPorEquipo() {
     const [disableKms, setDisableKms] = useState(false);
     const [skippedTires, setSkippedTires] = useState<number[]>([]);
     const [originalInspections, setOriginalInspections] = useState<Record<number, CreateInspectionDTO>>({});
-
-
-    const [previewsByTire, setPreviewsByTire] = useState<Record<number, string[]>>({});
 
     const toggleSkipTire = (tireId: number) => {
         setSkippedTires((prev) =>
@@ -115,6 +112,7 @@ export default function MedicionPorEquipo() {
             );
             setSuccess(true);
         } catch (err) {
+            console.error("Error al actualizar vehículo:", err);
             setError("Error al actualizar. Intenta nuevamente.");
         } finally {
             setLoading(false);
@@ -131,7 +129,7 @@ export default function MedicionPorEquipo() {
             setInitialHours(response.data.hours);
             setVehicle(response.data);
             const originals: Record<number, CreateInspectionDTO> = {};
-            response.data.installedTires.forEach((tire: any) => {
+            response.data.installedTires.forEach((tire: VehicleDTO["installedTires"][0]) => {
                 const last = tire.tire.lastInspection;
                 originals[tire.tire.id] = {
                     tireId: tire.tire.id,
@@ -237,27 +235,29 @@ export default function MedicionPorEquipo() {
             await Promise.all(
                 validInspections.map(async (insp) => {
                     const tempIds: string[] = [];
+                    const {
+                        files,
+                        tempPhotoIds,
+                        previews, // si no lo usas, puedes omitirlo o renombrarlo con _
+                        ...inspectionData
+                    } = insp;
+
 
                     // 1. Subir fotos temporales
-                    if (insp.files && insp.files.length > 0) {
-                        for (let i = 0; i < insp.files.length; i++) {
-                            const tempId = insp.tempPhotoIds?.[i] || crypto.randomUUID();
+                    if (files && files.length > 0) {
+                        for (let i = 0; i < files.length; i++) {
+                            const tempId = tempPhotoIds?.[i] || crypto.randomUUID();
                             tempIds.push(tempId);
 
                             const formData = new FormData();
-                            formData.append("file", insp.files[i]);
+                            formData.append("file", files[i]);
                             formData.append("tempId", tempId);
                             formData.append("uploadedById", String(user?.user_id || 1));
 
                             await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
                         }
                     }
-                    const {
-                        tempPhotoIds,
-                        previews,
-                        files,
-                        ...inspectionData
-                    } = insp;
+
                     // 2. Crear la inspección
                     const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspectionData);
                     const createdInspection = response.data;

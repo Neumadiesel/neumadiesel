@@ -1,15 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Label from "@/components/common/forms/Label";
-import { TireDTO } from "@/types/Tire";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
-import MultiSelect from "@/components/common/select/MultiSelect";
-import { FaPlusCircle } from "react-icons/fa";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import Cross from "@/components/common/icons/Cross";
 
@@ -176,7 +172,7 @@ export default function ModalCrearOrden({
                         <input
                             type="datetime-local"
                             value={actionDate.format('YYYY-MM-DDTHH')}
-                            onChange={(e) => setActionDate(dayjs(e.target.value).tz('America/Santiago'))}
+                            onChange={(e) => setStartDate(dayjs(e.target.value).tz('America/Santiago').toDate())}
                             className="border border-gray-300 p-2 rounded"
                         />
                         {/* Tiempo estimado de ejecucion */}
