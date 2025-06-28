@@ -3,7 +3,7 @@ import OperationalTyresHistograms from "@/components/features/res/OperationalTyr
 import OperationalTyres from "@/components/features/res/OperationalTyres";
 import ScrapTyres from "@/components/features/res/ScrapTyres";
 import ScrappedTyresChart from "@/components/features/res/ScrappedTyresChart";
-import ScrappedReasonsChart from "@/components/features/res/ScrappedReasonsChart";
+import ScrappedReaasonsChart from "@/components/features/res/ScrappedReasonsChart";
 
 export default function Page() {
     return (
@@ -21,7 +21,7 @@ export default function Page() {
             <OperationalTyres />
             <OperationalTyresHistograms />
             <ScrappedTyresChart />
-            <ScrappedReasonsChart />
+            <ScrappedReaasonsChart />
         </div>
     );
 }
