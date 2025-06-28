@@ -6,7 +6,7 @@ import ScrappedTyresChart from "@/components/features/res/ScrappedTyresChart";
 import ScrappedReaasonsChart from "@/components/features/res/ScrappedReasonsChart";
 import TyresKPI from "@/components/features/res/KPI_Operational_Scrapped";
 import TireAnalyticsDashboard from '@/components/features/res/TireAnalyticsDashboard';
-
+import OperationalTiresDiagnostics from "@/components/features/res/OperationalTiresDiagnostics";
 export default function Page() {
     return (
         <div className="flex flex-col overflow-x-hidden bg-white dark:bg-[#212121] pt-4 p-2 dark:text-white  w-full o lg:p-3">
@@ -26,7 +26,7 @@ export default function Page() {
             <ScrappedReaasonsChart />
             <TyresKPI />
             <TireAnalyticsDashboard />
-
+            <OperationalTiresDiagnostics />
         </div>
     );
 }
