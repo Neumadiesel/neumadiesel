@@ -4,6 +4,8 @@ import OperationalTyres from "@/components/features/res/OperationalTyres";
 import ScrapTyres from "@/components/features/res/ScrapTyres";
 import ScrappedTyresChart from "@/components/features/res/ScrappedTyresChart";
 import ScrappedReaasonsChart from "@/components/features/res/ScrappedReasonsChart";
+import TyresKPI from "@/components/features/res/KPI_Operational_Scrapped";
+import TireAnalyticsDashboard from '@/components/features/res/TireAnalyticsDashboard';
 
 export default function Page() {
     return (
@@ -22,6 +24,9 @@ export default function Page() {
             <OperationalTyresHistograms />
             <ScrappedTyresChart />
             <ScrappedReaasonsChart />
+            <TyresKPI />
+            <TireAnalyticsDashboard />
+
         </div>
     );
 }

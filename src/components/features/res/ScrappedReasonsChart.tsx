@@ -30,6 +30,11 @@ interface Procedure {
     startDate: string;
     tireHours: number;
     retirementReason: { description: string };
+    vehicle?: {
+        model?: {
+            model?: string;
+        };
+    };
 }
 
 interface Tire {
@@ -43,6 +48,7 @@ export default function ScrappedReasonsChart() {
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [semester, setSemester] = useState<'1' | '2'>('1');
     const [dimension, setDimension] = useState<string | null>(null);
+    const [equipmentModel, setEquipmentModel] = useState<string | null>(null);
     const [availableReasons, setAvailableReasons] = useState<string[]>([]);
     const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
 
@@ -51,6 +57,13 @@ export default function ScrappedReasonsChart() {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
             const json = await res.json();
             setData(json);
+
+            // Debug
+            if (json.length > 0) {
+                console.log('Estructura de datos:', json[0]);
+                console.log('Primer objeto completo:', JSON.stringify(json[0], null, 2));
+            }
+
             setLoading(false);
         };
         fetchData();
@@ -62,6 +75,11 @@ export default function ScrappedReasonsChart() {
 
         data.forEach((tire) => {
             if (dimension && tire.model?.dimensions !== dimension) return;
+
+            if (equipmentModel) {
+                const lastProcedureVehicleModel = tire.procedures?.at(-1)?.vehicle?.model?.model;
+                if (lastProcedureVehicleModel !== equipmentModel) return;
+            }
 
             tire.procedures.forEach((p) => {
                 if (!p.startDate || !p.retirementReason?.description) return;
@@ -76,7 +94,6 @@ export default function ScrappedReasonsChart() {
                 const desc = p.retirementReason.description.toLowerCase().trim();
 
                 let group = 'Otros';
-                // Primero verificar coincidencias exactas
                 if (desc === 'desgaste') {
                     group = 'Desgaste';
                 } else if (desc === 'desgaste anormal') {
@@ -120,7 +137,7 @@ export default function ScrappedReasonsChart() {
                 return entry;
             })
             .sort((a, b) => a.monthIndex - b.monthIndex);
-    }, [data, year, semester, dimension]);
+    }, [data, year, semester, dimension, equipmentModel]);
 
     if (loading) {
         return <p className="text-center my-8">Cargando datos...</p>;
@@ -132,178 +149,135 @@ export default function ScrappedReasonsChart() {
 
     const availableDimensions = Array.from(new Set(data.map(t => t.model?.dimensions).filter(Boolean)));
 
+    const availableEquipmentModels = Array.from(new Set(
+        data
+            .map(t => t.procedures?.at(-1)?.vehicle?.model?.model)
+            .filter(Boolean)
+    )).sort();
+
     return (
-        <section className="my-6">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-6 shadow-lg">
-                <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <section className="my-4">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 shadow-lg">
+                <h2 className="text-xl font-bold mb-4 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     📊 Rendimiento Mensual por Motivo de Baja
                 </h2>
 
-                <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                        {/* Año */}
+                        <div className="space-y-1">
+                            <label className="block text-xs font-semibold">
                                 📅 Año:
                             </label>
                             <select
                                 value={year}
                                 onChange={(e) => setYear(Number(e.target.value))}
-                                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
                             >
                                 {availableYears.map(y => (
                                     <option key={y} value={y}>{y}</option>
                                 ))}
                             </select>
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {/* Semestre */}
+                        <div className="space-y-1">
+                            <label className="block text-xs font-semibold">
                                 📆 Semestre:
                             </label>
                             <select
                                 value={semester}
                                 onChange={(e) => setSemester(e.target.value as '1' | '2')}
-                                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
                             >
-                                <option value="1">1er Semestre (Ene-Jun)</option>
-                                <option value="2">2do Semestre (Jul-Dic)</option>
+                                <option value="1">1er Semestre</option>
+                                <option value="2">2do Semestre</option>
                             </select>
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        {/* Dimensión */}
+                        <div className="space-y-1">
+                            <label className="block text-xs font-semibold">
                                 📏 Dimensión:
                             </label>
                             <select
                                 value={dimension ?? ''}
                                 onChange={(e) => setDimension(e.target.value || null)}
-                                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
                             >
-                                <option value="">Todas las dimensiones</option>
+                                <option value="">Todas</option>
                                 {availableDimensions.map(d => (
                                     <option key={d} value={d}>{d}</option>
                                 ))}
                             </select>
                         </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                🔍 Motivos de Baja:
+                        {/* Modelo Equipo */}
+                        <div className="space-y-1">
+                            <label className="block text-xs font-semibold">
+                                🚛 Modelo Equipo:
                             </label>
-                            <Select
-                                isMulti
-                                options={availableReasons.map(r => ({
-                                    value: r,
-                                    label: r,
-                                    color: COLORS[r]
-                                }))}
-                                value={selectedReasons.map(r => ({
-                                    value: r,
-                                    label: r,
-                                    color: COLORS[r]
-                                }))}
-                                onChange={(vals) => setSelectedReasons(vals.map(v => v.value))}
-                                placeholder="Selecciona motivos..."
-                                className="text-black"
-                                styles={{
-                                    control: (base) => ({
-                                        ...base,
-                                        borderWidth: '2px',
-                                        borderColor: '#e5e7eb',
-                                        borderRadius: '8px',
-                                        padding: '4px',
-                                        '&:hover': {
-                                            borderColor: '#3b82f6'
-                                        }
-                                    }),
-                                    multiValue: (base, { data }) => ({
-                                        ...base,
-                                        backgroundColor: data.color + '20',
-                                        borderRadius: '6px'
-                                    }),
-                                    multiValueLabel: (base, { data }) => ({
-                                        ...base,
-                                        color: data.color,
-                                        fontWeight: '600'
-                                    })
-                                }}
-                            />
+                            <select
+                                value={equipmentModel ?? ''}
+                                onChange={(e) => setEquipmentModel(e.target.value || null)}
+                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
+                            >
+                                <option value="">Todos</option>
+                                {availableEquipmentModels.map(model => (
+                                    <option key={model} value={model}>{model}</option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md">
-                    <ResponsiveContainer width="100%" height={420}>
-                        <BarChart data={processed} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                            <XAxis
-                                dataKey="month"
-                                tick={{ fontSize: 12, fill: '#666' }}
-                                tickLine={{ stroke: '#ddd' }}
-                            />
-                            <YAxis
-                                label={{
-                                    value: "⏱️ Horas promedio",
-                                    angle: -90,
-                                    position: "insideLeft",
-                                    style: { textAnchor: 'middle', fill: '#666', fontSize: '14px' }
-                                }}
-                                tick={{ fontSize: 12, fill: '#666' }}
-                                tickLine={{ stroke: '#ddd' }}
-                            />
-                            <Tooltip
-                                formatter={(value, name, props) => {
-                                    const count = props.payload[`${name}_count`];
-                                    return [
-                                        `${value} hrs promedio (${count} neumáticos)`,
-                                        `🔧 ${name}`
-                                    ];
-                                }}
-                                labelFormatter={(label) => `📅 ${label}`}
-                                contentStyle={{
-                                    backgroundColor: '#fff',
-                                    border: '2px solid #e5e7eb',
-                                    borderRadius: '12px',
-                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                                    fontSize: '13px'
-                                }}
-                                labelStyle={{
-                                    color: '#374151',
-                                    fontWeight: 'bold',
-                                    marginBottom: '4px'
-                                }}
-                            />
-                            <Legend
-                                wrapperStyle={{
-                                    fontSize: '12px',
-                                    paddingTop: '15px',
-                                    fontWeight: '500'
-                                }}
-                                iconType="circle"
-                            />
-                            {selectedReasons.map(motivo => (
-                                <Bar
-                                    key={motivo}
-                                    dataKey={motivo}
-                                    stackId="a"
-                                    fill={COLORS[motivo] || '#94A3B8'}
-                                    radius={[6, 6, 0, 0]}
-                                    stroke="#fff"
-                                    strokeWidth={1}
-                                >
-                                    <LabelList
-                                        dataKey={`${motivo}_count`}
-                                        position="top"
-                                        formatter={(val: number) => (val > 0 ? `${val}` : '')}
-                                        fill="#374151"
-                                        fontSize={11}
-                                        fontWeight="600"
-                                    />
-                                </Bar>
-                            ))}
-                        </BarChart>
-                    </ResponsiveContainer>
+                {/* Motivos */}
+                <div className="mt-3">
+                    <div className="space-y-1">
+                        <label className="block text-xs font-semibold">
+                            🔍 Motivos de Baja:
+                        </label>
+                        <Select
+                            isMulti
+                            options={availableReasons.map(r => ({
+                                value: r,
+                                label: r,
+                                color: COLORS[r]
+                            }))}
+                            value={selectedReasons.map(r => ({
+                                value: r,
+                                label: r,
+                                color: COLORS[r]
+                            }))}
+                            onChange={(vals) => setSelectedReasons(vals.map(v => v.value))}
+                            placeholder="Selecciona motivos..."
+                            className="text-black"
+                        />
+                    </div>
                 </div>
+            </div>
+
+            <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md">
+                <ResponsiveContainer width="100%" height={350}>
+                    <BarChart data={processed}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        {selectedReasons.map(motivo => (
+                            <Bar
+                                key={motivo}
+                                dataKey={motivo}
+                                stackId="a"
+                                fill={COLORS[motivo] || '#999'}
+                            >
+                                <LabelList
+                                    dataKey={`${motivo}_count`}
+                                    position="top"
+                                    formatter={(val: number) => (val > 0 ? `${val}` : '')}
+                                />
+                            </Bar>
+                        ))}
+                    </BarChart>
+                </ResponsiveContainer>
             </div>
         </section>
     );
