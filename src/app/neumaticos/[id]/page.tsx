@@ -56,14 +56,16 @@ export default function TirePage() {
     const fetchUnifiedRecords = async () => {
         setLoading(true);
         try {
-            const [inspectionsRes, proceduresRes] = await Promise.all([
+            const [inspectionsRes, proceduresRes, maintenancesRes] = await Promise.all([
                 fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/tire/${id}/all`),
-                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/tire/${id}`)
+                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/tire/${id}`),
+                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/tire/${id}`),
             ]);
 
             const inspections = await inspectionsRes.json();
             const procedures = await proceduresRes.json();
-            console.log("Procedures:", procedures);
+            const maintenances = await maintenancesRes.json();
+            console.log("Mantenciones:", maintenances);
 
             const normalizedInspections: UnifiedRecord[] = inspections
                 .filter((item: normalizedInspectionDTO) => item.approved === true)
@@ -78,6 +80,17 @@ export default function TirePage() {
                     observation: item.observation,
                 }));
 
+            const normalizedMaintenances: UnifiedRecord[] = maintenances.map((item: any) => ({
+                id: item.id,
+                type: "maintenance",
+                date: item.executionDate,
+                position: item.position,
+                description: item.description || "",
+                internalTread: item.internalTread,
+                externalTread: item.externalTread,
+                observation: null,
+            }));
+
             const normalizedProcedures: UnifiedRecord[] = procedures.map((item: normalizedInspectionDTO) => ({
                 id: item.id,
                 type: "procedure",
@@ -89,7 +102,11 @@ export default function TirePage() {
                 procedureName: item.procedureName,
             }));
 
-            const merged = [...normalizedInspections, ...normalizedProcedures];
+            const merged = [
+                ...normalizedInspections,
+                ...normalizedProcedures,
+                ...normalizedMaintenances
+            ];
             const sorted = merged.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
             setUnifiedRecords(sorted);
 
@@ -250,7 +267,7 @@ export default function TirePage() {
                                         <td className="p-4 dark:bg-neutral-800">
                                             {/* Remanente */}
                                             {record.type === "procedure" && record.procedureName === "Ingreso al sistema"
-                                                ? `${tire?.model.originalTread ?? "-"} / ${tire?.model.originalTread ?? "-"}`
+                                                ? `${tire?.initialTread ?? "-"} / ${tire?.initialTread ?? "-"}`
                                                 : `${record.internalTread ?? "-"} / ${record.externalTread ?? "-"}`
                                             }
                                         </td>
