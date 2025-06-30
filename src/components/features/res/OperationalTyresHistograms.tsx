@@ -7,9 +7,10 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
+    TooltipProps,
 } from "recharts";
 import { useEffect, useState, useMemo } from "react";
-import Select from "react-select";
+import Select, { CSSObjectWithLabel } from "react-select";
 
 // Tipos de datos diferenciados
 type OperationalTire = {
@@ -34,6 +35,21 @@ type OperationalTire = {
         };
     }[];
 };
+
+type Discrepancy =
+    | {
+        type: 'operativo';
+        code: string;
+        lastInspectionPosition: number;
+        installedTiresPosition: number | undefined;
+        inspectionDate: string;
+    }
+    | {
+        type: 'baja';
+        code: string;
+        position: number;
+        startDate: string;
+    };
 
 type ScrappedTire = {
     id: number;
@@ -138,9 +154,9 @@ type HistogramBin = {
     range: string;
 };
 
-const CustomHistogramTooltip = ({ active, payload }: { active?: boolean; payload?: any[] }) => {
+const CustomHistogramTooltip = ({ active, payload }: TooltipProps<number, string>) => {
     if (active && payload && payload.length > 0) {
-        const data = payload[0].payload;
+        const data = payload[0].payload as HistogramBin;
         return (
             <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white">
                 <p><strong>Rango:</strong> {data.range}</p>
@@ -273,17 +289,17 @@ export default function OperationalTyresHistograms() {
 
     // 🎯 ESTILOS PARA REACT-SELECT (SSR SAFE)
     const selectStyles = useMemo(() => ({
-        control: (base: any) => ({
+        control: (base: CSSObjectWithLabel) => ({
             ...base,
             minHeight: '40px',
             borderColor: '#D1D5DB',
             zIndex: 10,
         }),
-        menuPortal: (base: any) => ({
+        menuPortal: (base: CSSObjectWithLabel) => ({
             ...base,
             zIndex: 9999,
         }),
-        menu: (base: any) => ({
+        menu: (base: CSSObjectWithLabel) => ({
             ...base,
             zIndex: 9999,
         }),
@@ -451,7 +467,7 @@ export default function OperationalTyresHistograms() {
         let validTires = 0;
         let invalidTires = 0;
 
-        const discrepanciesList: any[] = [];
+        const discrepanciesList: Discrepancy[] = [];
 
         selectedTires.forEach((t, index) => {
             let hasValidStructure = false;

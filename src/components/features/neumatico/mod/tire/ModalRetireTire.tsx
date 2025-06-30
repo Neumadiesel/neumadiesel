@@ -7,10 +7,7 @@ import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import { useAuth } from "@/contexts/AuthContext";
 import { Camera, CircleX } from "lucide-react";
-interface LocationDTO {
-    id: number;
-    name: string;
-}
+
 
 interface ModalRetireTireProps {
     visible: boolean;
@@ -24,10 +21,7 @@ interface MaintenanceReasonDTO {
     description: string;
 }
 
-interface LocationMaintenanceDTO {
-    id: number;
-    description: string;
-}
+
 
 export default function ModalRetireTire({
     visible,

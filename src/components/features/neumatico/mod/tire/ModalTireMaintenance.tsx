@@ -5,10 +5,7 @@ import axios from "axios";
 import { TireDTO } from "@/types/Tire";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
-interface LocationDTO {
-    id: number;
-    name: string;
-}
+
 
 interface ModalTireMaintenanceProps {
     visible: boolean;

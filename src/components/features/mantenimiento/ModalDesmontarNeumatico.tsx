@@ -13,10 +13,7 @@ import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl"
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface LocationMaintenanceDTO {
-    id: number;
-    description: string;
-}
+
 
 interface RazonDto {
     id: number;
@@ -43,7 +40,6 @@ export default function ModalDesmontarNeumatico({
         externalTread: 0,
         internalTread: 0,
     });
-    const [locations, setLocations] = useState<LocationMaintenanceDTO[]>([] as LocationMaintenanceDTO[]);
     const [razones, setRazones] = useState<RazonDto[]>([] as RazonDto[]);
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
@@ -85,20 +81,6 @@ export default function ModalDesmontarNeumatico({
 
 
 
-
-    const fetchLocations = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance`);
-            const data = await response.json();
-            console.log("locations", data);
-            setLoading(false);
-            setLocations(data);
-        } catch (error) {
-            console.error("Error fetching tyre models:", error);
-        }
-    };
-
     const fetchRazones = async () => {
         setLoading(true);
         try {
@@ -114,7 +96,6 @@ export default function ModalDesmontarNeumatico({
 
 
     useEffect(() => {
-        fetchLocations();
         fetchRazones();
     }, []);
 
