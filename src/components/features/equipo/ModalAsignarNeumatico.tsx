@@ -93,6 +93,9 @@ export default function ModalAsignarNeumatico({
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
+    const [finalDate, setFinalDate] = useState(() =>
+        dayjs().tz('America/Santiago')
+    );
     const [executeTime, setExecuteTime] = useState<number | null>(null);
     const fetchData = async () => {
         setLoading(true);
@@ -155,7 +158,7 @@ export default function ModalAsignarNeumatico({
         setLoading(true);
 
 
-        if (!vehicle.code || !posicion || !tireId || !otCode || !actionDate || !executeTime || !reasonId || !locationId
+        if (!vehicle.code || !posicion || !tireId || !otCode || !actionDate
 
         ) {
             setError("Por favor, completa todos los campos");
@@ -170,20 +173,20 @@ export default function ModalAsignarNeumatico({
 
         const date = new Date(actionDate.format('YYYY-MM-DDTHH:mm:ss'));
         const utcDate = date.toISOString();
+
+        const endDate = new Date(finalDate.format('YYYY-MM-DDTHH:mm:ss'));
+        const utcEndDate = endDate.toISOString();
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/mount`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/install-tire`,
                 {
-
-                    "tireId": id,
-                    "vehicleId": vehicleId,
-                    "position": position,
-                    "maintenanceReasonId": reasonId,
-                    "executionDate": utcDate,
-                    "executionTime": executeTime,
-                    "internalTread": internalTread || tireSelected?.initialTread,
-                    "externalTread": externalTread || tireSelected?.initialTread,
-                    "locationId": locationId,
+                    tireId: id,
+                    vehicleId: vehicleId,
+                    position: position,
+                    executionDate: utcDate,
+                    executionFinal: utcEndDate,
+                    internalTread: internalTread || tireSelected?.initialTread,
+                    externalTread: externalTread || tireSelected?.initialTread,
                 }
             );
             setPosition(null);
@@ -212,6 +215,7 @@ export default function ModalAsignarNeumatico({
         setOtCode(null);
         setTireId(null);
         setActionDate(dayjs().tz('America/Santiago'));
+        setFinalDate(dayjs().tz('America/Santiago'));
         setExecuteTime(null);
         setReasonId(null);
         setLocationId(null);
@@ -296,17 +300,17 @@ export default function ModalAsignarNeumatico({
                             placeholder="Fecha de Montaje"
                             className="border border-gray-300 p-2 rounded"
                         />
-                        {/* Tiempo de montaje */}
-                        <Label title="Tiempo de Montaje" isNotEmpty={true} />
+                        <Label title="Fecha de Despacho" isNotEmpty={true} />
                         <input
-                            type="number"
-                            name="Tiempo de Montaje"
-                            min={0}
-                            value={executeTime || ""}
-                            onChange={
-                                (e) => setExecuteTime(parseFloat(e.target.value))
-                            }
-                            placeholder="Tiempo de Montaje"
+                            type="datetime-local"
+                            name="Fecha de Despacho"
+                            value={finalDate ? finalDate.format('YYYY-MM-DDTHH:mm') : ''}
+                            onChange={(e) => {
+                                // Asumimos que lo que el usuario selecciona es en hora chilena
+                                const newDate = dayjs.tz(e.target.value, 'America/Santiago');
+                                setFinalDate(newDate);
+                            }}
+                            placeholder="Fecha de Montaje"
                             className="border border-gray-300 p-2 rounded"
                         />
                         {/* Kilometraje del vehiculo */}
@@ -328,22 +332,6 @@ export default function ModalAsignarNeumatico({
                             placeholder="código de la OT"
                             className="border border-gray-300 p-2 rounded"
                         />
-                        {/* Razon */}
-                        <Label title="razón" isNotEmpty={true} />
-                        <select
-                            value={reasonId ?? ""}
-                            onChange={(e) => setReasonId(Number(e.target.value))}
-                            className="border border-gray-300 p-2 rounded"
-                        >
-                            <option value="" disabled>
-                                Seleccione una razón
-                            </option>
-                            {reasons.map((reason) => (
-                                <option key={reason.id} value={reason.id}>
-                                    {reason.description}
-                                </option>
-                            ))}
-                        </select>
                         {/* Ubicacion */}
                         <Label title="Lugar de Trabajo" isNotEmpty={true} />
                         <select
