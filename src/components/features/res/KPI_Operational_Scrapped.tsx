@@ -36,6 +36,7 @@ interface Tire {
     model: { dimensions: string };
     lastInspection: LastInspection;
     usedHours: number;
+    code: string;
     procedures?: Procedure[];
     createdAt?: string;
 }
@@ -173,7 +174,7 @@ export default function TyresKPI() {
     if (!kpis) return null;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-2">
             {/* KPIs Principales */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 p-4 rounded-lg shadow-md border border-green-200 dark:border-green-700">
@@ -211,25 +212,15 @@ export default function TyresKPI() {
                         <FaTachometerAlt className="text-purple-500 text-3xl" />
                         <div>
                             <p className="text-2xl font-bold text-purple-700 dark:text-purple-300">{Math.round(kpis.avgHoursOperational)} hrs</p>
-                            <p className="text-sm text-purple-600 dark:text-purple-400">Promedio horas operativas</p>
+                            <p className="text-sm text-purple-600 dark:text-purple-400">Promedio horas neumáticos operativos</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* KPIs de Análisis Avanzado */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Neumáticos en Riesgo */}
-                <div className="bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900 dark:to-amber-900 p-4 rounded-lg shadow-md border border-orange-200 dark:border-orange-700">
-                    <div className="flex items-center gap-3">
-                        <FaExclamationTriangle className="text-orange-500 text-3xl" />
-                        <div>
-                            <p className="text-xl font-bold text-orange-700 dark:text-orange-300">{kpis.tiresAtRisk}</p>
-                            <p className="text-sm text-orange-600 dark:text-orange-400">Neumáticos en riesgo</p>
-                            <p className="text-xs text-orange-500 dark:text-orange-400">≥ {Math.round(kpis.riskThreshold)} hrs</p>
-                        </div>
-                    </div>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+
 
                 {/* Promedio de Horas de Baja */}
                 <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-slate-900 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
@@ -243,50 +234,9 @@ export default function TyresKPI() {
                     </div>
                 </div>
 
-                {/* Proyección de Reemplazo */}
-                <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900 dark:to-blue-900 p-4 rounded-lg shadow-md border border-indigo-200 dark:border-indigo-700">
-                    <div className="flex items-center gap-3">
-                        <FaCalendarAlt className="text-indigo-500 text-3xl" />
-                        <div>
-                            <p className="text-xl font-bold text-indigo-700 dark:text-indigo-300">
-                                {kpis.monthsToReplace > 12 ? `${Math.round(kpis.monthsToReplace / 12)} años` : `${Math.round(kpis.monthsToReplace)} meses`}
-                            </p>
-                            <p className="text-sm text-indigo-600 dark:text-indigo-400">Proyección reemplazo</p>
-                            <p className="text-xs text-indigo-500 dark:text-indigo-400">Al ritmo actual</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            {/* KPIs de Rendimiento */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Mejor Dimensión */}
-                {kpis.bestDimension && (
-                    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900 dark:to-teal-900 p-4 rounded-lg shadow-md border border-emerald-200 dark:border-emerald-700">
-                        <div className="flex items-start gap-3">
-                            <FaRuler className="text-emerald-500 text-3xl mt-1" />
-                            <div className="flex-1">
-                                <p className="text-lg font-semibold text-emerald-700 dark:text-emerald-300">🏆 Mejor Dimensión</p>
-                                <p className="text-xl font-bold text-emerald-800 dark:text-emerald-200">{kpis.bestDimension.dimension}</p>
-                                <div className="mt-2 space-y-1">
-                                    <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                                        Promedio: {Math.round(kpis.bestDimension.avgHours)} hrs
-                                    </p>
-                                    <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                                        Operatividad: {kpis.bestDimension.operationalRate.toFixed(1)}%
-                                    </p>
-                                    <p className="text-xs text-emerald-500 dark:text-emerald-400">
-                                        Total: {kpis.bestDimension.total} neumáticos
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Principal Motivo de Baja */}
                 {kpis.mainRetirementReason && (
-                    <div className="bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900 dark:to-pink-900 p-4 rounded-lg shadow-md border border-rose-200 dark:border-rose-700">
+                    <div className="bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900 dark:to-pink-900 w-full p-4 rounded-lg shadow-md border border-rose-200 dark:border-rose-700">
                         <div className="flex items-start gap-3">
                             <FaChartLine className="text-rose-500 text-3xl mt-1" />
                             <div className="flex-1">
@@ -304,6 +254,7 @@ export default function TyresKPI() {
                         </div>
                     </div>
                 )}
+
             </div>
 
             {/* Neumático Destacado */}
@@ -313,10 +264,14 @@ export default function TyresKPI() {
                         <FaAward className="text-yellow-500 text-4xl" />
                         <div className="flex-1">
                             <p className="text-xl font-semibold text-yellow-700 dark:text-yellow-300">🥇 Neumático con Mayor Rendimiento</p>
-                            <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <div>
                                     <p className="text-sm text-yellow-600 dark:text-yellow-400">Dimensión</p>
                                     <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.model?.dimensions}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-yellow-600 dark:text-yellow-400">Código</p>
+                                    <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.code}</p>
                                 </div>
                                 <div>
                                     <p className="text-sm text-yellow-600 dark:text-yellow-400">Horas Acumuladas</p>
@@ -345,7 +300,7 @@ export default function TyresKPI() {
                         const avgHours = stats.totalHours / total;
 
                         return (
-                            <div key={dimension} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border">
+                            <div key={dimension} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border dark:border-gray-600">
                                 <p className="font-semibold text-gray-800 dark:text-gray-200 text-sm">{dimension}</p>
                                 <div className="mt-2 space-y-1">
                                     <div className="flex justify-between text-xs">

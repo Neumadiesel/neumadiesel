@@ -64,7 +64,7 @@ export default function OldTyres() {
 
 
     return (
-        <section className="w-full h-[65dvh] bg-white shadow-sm dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg mb-4">
+        <section className="w-full h-[65dvh] bg-white shadow-sm dark:bg-gray-800 border dark:border-neutral-600 p-4 rounded-lg mb-4">
             <div className="flex justify-between items-center mb-2">
                 <h2 className="text-3xl font-semibold flex items-center">
                     <FileCheck size={32} className="inline mr-2 text-red-500" />
@@ -92,8 +92,8 @@ export default function OldTyres() {
                 {
                     showChart ? (
 
-                        <table className="min-w-full bg-white  dark:bg-neutral-800">
-                            <thead className="bg-white dark:bg-neutral-800 border-b sticky top-0 z-10">
+                        <table className="min-w-full bg-white  dark:bg-gray-800">
+                            <thead className="bg-white dark:bg-gray-800 border-b sticky top-0 z-10">
                                 <tr className="border-b dark:border-neutral-600">
                                     <th className="px-4 py-2 text-left">Neumático</th>
                                     <th className="px-4 py-2 text-left">Equipo</th>

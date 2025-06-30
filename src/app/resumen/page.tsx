@@ -18,15 +18,17 @@ export default function Page() {
                     Aquí puedes ver un resumen de los neumáticos críticos y su estado.
                 </p>
             </main>
-            <OldTyres />
-            <ScrapTyres />
-            <OperationalTyres />
-            <OperationalTyresHistograms />
-            <ScrappedTyresChart />
-            <ScrappedReaasonsChart />
             <TyresKPI />
-            <TireAnalyticsDashboard />
+
             <TireHealthDashboard />
+            <OldTyres />
+            {/* <ScrapTyres />
+            <OperationalTyres /> */}
+            {/* <OperationalTyresHistograms /> */}
+            {/* <ScrappedTyresChart /> */}
+            {/* <ScrappedReaasonsChart /> */}
+
+            {/* <TireAnalyticsDashboard /> */}
         </div>
     );
 }
