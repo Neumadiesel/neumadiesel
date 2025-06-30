@@ -11,6 +11,8 @@ import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import CustomModal from "@/components/common/alerts/alert";
 import axios from "axios";
 import { Info, Pencil } from "lucide-react";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface FaenaDTO {
     id: number;
@@ -26,6 +28,8 @@ interface FaenaDTO {
 }
 
 export default function Page() {
+    const client = useAxiosWithAuth();
+    const authFetch = useAuthFetch();
     const [listaFaenas, setRazones] = useState<FaenaDTO[]>([]);
     const [faenaSelected, setFaenaSelected] = useState<FaenaDTO | null>(null);
     const [loading, setLoading] = useState(true);
@@ -35,7 +39,7 @@ export default function Page() {
     const fetchFaenas = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             setLoading(false);
             setRazones(data);
@@ -48,7 +52,8 @@ export default function Page() {
         if (!faenaId) return;
         try {
             setIsLoading(true);
-            const response = await axios.patch(
+
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${faenaId}/deactivate`,
             );
             console.log("Desactivar usuario response", response);
@@ -67,7 +72,8 @@ export default function Page() {
         if (!faenaId) return;
         try {
             setIsLoading(true);
-            const response = await axios.patch(
+
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${faenaId}/activate`,
             );
             console.log("Usuario reactivado:", response.data);

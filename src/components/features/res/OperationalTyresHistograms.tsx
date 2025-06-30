@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { useEffect, useState, useMemo } from "react";
 import Select, { CSSObjectWithLabel } from "react-select";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 // Tipos de datos diferenciados
 type OperationalTire = {
@@ -270,6 +271,7 @@ const renderHistogram = (
 };
 
 export default function OperationalTyresHistograms() {
+    const authFetch = useAuthFetch();
     const [tiresOperational, setTiresOperational] = useState<OperationalTire[]>([]);
     const [tiresScrapped, setTiresScrapped] = useState<ScrappedTire[]>([]);
     const [loading, setLoading] = useState(false);
@@ -325,8 +327,8 @@ export default function OperationalTyresHistograms() {
 
                 // 🎯 FETCH CON MANEJO INDEPENDIENTE DE ERRORES
                 const [resOp, resScrap] = await Promise.allSettled([
-                    fetch(urlOperational),
-                    fetch(urlScrapped) // 🎯 CAMBIO: Prueba sin el filtro initialTread
+                    authFetch(urlOperational),
+                    authFetch(urlScrapped) // 🎯 CAMBIO: Prueba sin el filtro initialTread
                 ]);
 
                 let operationalData: OperationalTire[] = [];

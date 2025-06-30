@@ -4,14 +4,17 @@ import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 import { TireDTO } from '@/types/Tire';
 import { FileDown } from 'lucide-react';
+import { useAuthFetch } from '@/utils/AuthFetch';
 
 interface Props {
     tireCritical: TireDTO[];
 }
 
 export default function ExportOldTyresReport({ tireCritical }: Props) {
+    const authFetch = useAuthFetch();
+
     const fetchImageAsBase64 = async (url: string): Promise<string> => {
-        const response = await fetch(url);
+        const response = await authFetch(url);
         const blob = await response.blob();
         return new Promise((resolve, reject) => {
             const reader = new FileReader();

@@ -14,6 +14,7 @@ import {
 import Select from 'react-select';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import { useAuthFetch } from '@/utils/AuthFetch';
 dayjs.locale('es');
 
 type MotivoEntry = {
@@ -49,6 +50,7 @@ interface Tire {
 }
 
 export default function ScrappedReasonsChart() {
+    const authFetch = useAuthFetch();
     const [data, setData] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
     const [year, setYear] = useState<number>(new Date().getFullYear());
@@ -60,7 +62,7 @@ export default function ScrappedReasonsChart() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
             const json = await res.json();
             setData(json);
 

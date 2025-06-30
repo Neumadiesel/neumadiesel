@@ -8,6 +8,8 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 // Extender con los plugins
 dayjs.extend(utc);
@@ -54,6 +56,7 @@ export default function ModalDesmontarNeumatico({
 
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const authFetch = useAuthFetch();
 
 
     useEffect(() => {
@@ -84,7 +87,7 @@ export default function ModalDesmontarNeumatico({
     const fetchRazones = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason`);
             const data = await response.json();
             console.log("razones", data);
             setLoading(false);
@@ -105,7 +108,7 @@ export default function ModalDesmontarNeumatico({
     const handleSubmit = async () => {
         setError("");
         setLoading(true);
-
+        const client = useAxiosWithAuth();
         const { tireId, internalTread, externalTread } = tireDesmonted;
         if (!tireId || !internalTread || !externalTread || !actionDate || !otCode || !reasonId) {
             setError("Por favor, completa todos los campos");
@@ -125,7 +128,7 @@ export default function ModalDesmontarNeumatico({
             otCode,
         });
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/uninstall-tire`, {
+            const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/uninstall-tire`, {
                 tireId,
                 retirementReasonId: reasonId,  // ✅ CORREGIDO
                 executionDate: actionDate.toISOString(),

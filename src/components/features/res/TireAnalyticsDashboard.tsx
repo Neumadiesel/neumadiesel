@@ -16,6 +16,7 @@ import {
     Legend
 } from 'recharts';
 import { FaChartLine, FaChartPie, FaArrowUp } from 'react-icons/fa';
+import { useAuthFetch } from '@/utils/AuthFetch';
 
 interface Tire {
     id?: string;
@@ -33,6 +34,7 @@ interface Tire {
 const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
 
 export default function TireAnalyticsDashboard() {
+    const authFetch = useAuthFetch();
     const [operationalTires, setOperationalTires] = useState<Tire[]>([]);
     const [scrappedTires, setScrappedTires] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
@@ -41,8 +43,8 @@ export default function TireAnalyticsDashboard() {
         const fetchData = async () => {
             try {
                 const [opRes, scrRes] = await Promise.all([
-                    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`),
-                    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`)
+                    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`),
+                    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`)
                 ]);
 
                 const [opData, scrData] = await Promise.all([

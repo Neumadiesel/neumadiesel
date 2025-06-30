@@ -7,8 +7,10 @@ import Link from "next/link";
 import ModaleditarTyreModel from "@/components/features/neumatico/mod/model/ModalEditarTyreModel";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import Button from "@/components/common/button/Button";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 export default function ModelosNeumaticos() {
+    const authFetch = useAuthFetch();
     const [tyreModels, setTyreModels] = useState<TyreModelDto[]>([]);
     const [tyreModelSelected, setTyreModelSelected] = useState<TyreModelDto | null>(null);
     const [loading, setLoading] = useState(true);
@@ -16,7 +18,7 @@ export default function ModelosNeumaticos() {
     const fetchModelTyres = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels`);
             const data = await response.json();
             setLoading(false);
             setTyreModels(data);

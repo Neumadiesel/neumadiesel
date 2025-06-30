@@ -10,6 +10,7 @@ import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import CustomModal from "@/components/common/alerts/alert";
 import Button from "@/components/common/button/Button";
 import { ArrowLeft, ArrowRight, Pencil } from "lucide-react";
+import { useAuthFetch } from "@/utils/AuthFetch";
 interface Role {
     role_id: number;
     name: string;
@@ -42,6 +43,8 @@ interface FaenaDTO {
 }
 
 export default function Page() {
+    const authFetch = useAuthFetch();
+
     const [filtroRol, setFiltroRol] = useState("todos");
     const [busqueda, setBusqueda] = useState("");
     const [paginaActual, setPaginaActual] = useState(1);
@@ -66,7 +69,7 @@ export default function Page() {
     const fetchFaenas = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             console.log("Faenas Fetched:", data);
             setLoading(false);

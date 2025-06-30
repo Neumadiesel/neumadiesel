@@ -5,6 +5,8 @@ import axios from "axios";
 import { TireDTO } from "@/types/Tire";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 
 interface ModalTireMaintenanceProps {
@@ -30,6 +32,7 @@ export default function ModalTireMaintenance({
     tire,
     onGuardar,
 }: ModalTireMaintenanceProps) {
+    const authFetch = useAuthFetch();
     const [tireEdited, setTireEdited] = useState({
         code: "",
         locationId: null as number | null,
@@ -43,7 +46,7 @@ export default function ModalTireMaintenance({
         externalTread: tire?.lastInspection.externalTread || null,
     });
 
-
+    const client = useAxiosWithAuth();
     const [maintenanceReasons, setMaintenanceReasons] = useState<MaintenanceReasonDTO[]>([]);
     const [locationMaintenance, setLocationMaintenance] = useState<LocationMaintenanceDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -53,7 +56,7 @@ export default function ModalTireMaintenance({
     const fetchLocationsMaintenance = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance/`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance/`);
             const data = await response.json();
             setLoading(false);
             setLocationMaintenance(data);
@@ -67,7 +70,7 @@ export default function ModalTireMaintenance({
     const fetchReasons = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-reason`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-reason`);
             const data = await response.json();
             setLoading(false);
             setMaintenanceReasons(
@@ -128,7 +131,7 @@ export default function ModalTireMaintenance({
             return;
         }
         try {
-            const response = await axios.post(
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/`,
                 {
                     tireId: tire.id,

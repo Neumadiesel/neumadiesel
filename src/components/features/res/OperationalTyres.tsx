@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { useEffect, useState } from "react";
 import Select from "react-select";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 type OperationalTire = {
     id: number;
@@ -64,6 +65,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 };
 
 export default function OperationalTyres() {
+    const authFetch = useAuthFetch();
     const [tires, setTires] = useState<OperationalTire[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedDimensions, setSelectedDimensions] = useState<string[]>([]);
@@ -73,7 +75,7 @@ export default function OperationalTyres() {
         const fetchTires = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+                const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
                 const data = await res.json();
                 setTires(data);
             } catch (error) {

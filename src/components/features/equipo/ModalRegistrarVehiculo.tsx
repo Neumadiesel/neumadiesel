@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 
 interface VehicleModelDto {
@@ -46,6 +48,7 @@ export default function ModalRegistrarVehiculo({
     onGuardar,
 }: ModalRegistrarVehiculoProps) {
     const { user } = useAuth();
+    const client = useAxiosWithAuth();
     const [vehicleEdited, setVehicleEdited] = useState({
         code: "",
         modelId: null as number | null,
@@ -61,11 +64,13 @@ export default function ModalRegistrarVehiculo({
     const [sites, setSites] = useState<FaenaDTO[]>([]);
     const [vehicleTypes, setVehicleTypes] = useState<VehicleTypeDTO[]>([]);
 
+    const authFetch = useAuthFetch();
+
 
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dataForm/registerVehicle`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dataForm/registerVehicle`);
             const data = await response.json();
             setLoading(false);
             setSites(data.sites);
@@ -107,7 +112,7 @@ export default function ModalRegistrarVehiculo({
 
 
         try {
-            const response = await axios.post(
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/`,
                 {
                     code,

@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { useState, useEffect } from "react";
 import Select from "react-select";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 type TireScrapResponse = {
     id: number;
@@ -59,6 +60,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 };
 
 export default function ScrapTyres() {
+    const authFetch = useAuthFetch();
     const [scatterData, setScatterData] = useState<ScatterPoint[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedMotivos, setSelectedMotivos] = useState<string[]>([]);
@@ -67,7 +69,7 @@ export default function ScrapTyres() {
         const fetchScrappedTires = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:3002/tires/scrapped/site/1/initialTread/97`);
+                const response = await authFetch(`http://localhost:3002/tires/scrapped/site/1/initialTread/97`);
                 const tires: TireScrapResponse = await response.json();
 
                 const data: ScatterPoint[] = tires.flatMap((tire) => {

@@ -7,6 +7,8 @@ import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import { useAuth } from "@/contexts/AuthContext";
 import { Camera, CircleX } from "lucide-react";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 
 interface ModalRetireTireProps {
@@ -31,7 +33,7 @@ export default function ModalRetireTire({
 }: ModalRetireTireProps) {
     const { user } = useAuth();
 
-
+    const client = useAxiosWithAuth();
     const [tireEdited, setTireEdited] = useState({
         code: "",
         locationId: null as number | null,
@@ -57,6 +59,7 @@ export default function ModalRetireTire({
     const [files, setFiles] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
     const [uploading, setUploading] = useState(false);
+    const authFetch = useAuthFetch();
 
     const [maintenanceReasons, setMaintenanceReasons] = useState<MaintenanceReasonDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -66,7 +69,7 @@ export default function ModalRetireTire({
     const fetchReasons = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-reason`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-reason`);
             const data = await response.json();
             setLoading(false);
             setMaintenanceReasons(
@@ -151,11 +154,13 @@ export default function ModalRetireTire({
                     formData.append("tempId", fileTempId);
                     formData.append("uploadedById", String(user?.user_id || 1));
 
-                    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tire-retire-photos/upload`, formData);
+
+                    await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tire-retire-photos/upload`, formData);
                 }
             }
 
-            const response = await axios.post(
+
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tire-retirement`,
                 {
                     tireId: tire.id,
@@ -176,7 +181,8 @@ export default function ModalRetireTire({
 
             // Asociar todas las fotos al ID de del neumático retirado
             for (const tempId of tempIds) {
-                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tire-retire-photos/assign/${retireTire.id}`, {
+
+                await client.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tire-retire-photos/assign/${retireTire.id}`, {
                     tempId
                 });
             }

@@ -7,6 +7,7 @@ import { InspectionDTO } from "@/types/Inspection";
 import { useAuth } from "@/contexts/AuthContext";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import Modal from "@/components/common/modal/CustomModal";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 
 interface KpiDTO {
@@ -16,7 +17,8 @@ interface KpiDTO {
     tyresInspectedThisWeek: number;
 }
 export default function MedicionPage() {
-    const { user } = useAuth();
+    const { user, token } = useAuth();
+    const client = useAxiosWithAuth();
     const [pendingInspections, setPendingInspections] = useState<InspectionDTO[]>([]);
     const [lastApprovedInspection, setLastApprovedInspection] = useState<InspectionDTO[]>([]);
     const [kpi, setKpi] = useState<KpiDTO>(); // Puedes definir un tipo más específico si lo deseas
@@ -26,7 +28,16 @@ export default function MedicionPage() {
     // Funcion de axios que pide las inspecciones pendientes
     const fetchPendingInspections = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/1/disapproved`);
+
+            const response = await client.get(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/1/disapproved`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
             setPendingInspections(response.data);
         } catch (error) {
             console.error("Error fetching pending inspections:", error);
@@ -37,7 +48,9 @@ export default function MedicionPage() {
     // Get kpi
     const fetchKpi = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/1`);
+
+
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/1`);
             setKpi(response.data);
         } catch (error) {
             console.error("Error fetching KPI:", error);
@@ -48,7 +61,9 @@ export default function MedicionPage() {
     // fetch las 50 inspecciones aprobadas http://localhost:3002/inspections/site/1/last-50
     const fetchLastInspections = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/1/last-25`);
+
+
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/1/last-25`);
             setLastApprovedInspection(response.data);
         } catch (error) {
             console.error("Error fetching last inspections:", error);
@@ -61,7 +76,8 @@ export default function MedicionPage() {
         const approvedById = user?.user_id; // ID del usuario que aprueba la inspección, puedes obtenerlo del contexto o estado global
         const approvedByName = user?.name + " " + user?.last_name; // Nombre del usuario que aprueba la inspección
         try {
-            const response = await axios.post(
+
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${inspectionId}/approve`,
                 {
                     approvedUserId: approvedById, // ID del usuario que aprueba la inspección
@@ -91,7 +107,8 @@ export default function MedicionPage() {
         }
 
         try {
-            const response = await axios.post(
+
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${inspectionIdToDeny}/deny`
             );
             console.log("Inspección denegada:", response.data);

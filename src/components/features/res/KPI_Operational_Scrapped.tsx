@@ -1,14 +1,12 @@
 'use client';
+import { useAuthFetch } from '@/utils/AuthFetch';
 import React, { useEffect, useState, useMemo } from 'react';
 import {
     FaTachometerAlt,
     FaCheckCircle,
     FaTimesCircle,
     FaAward,
-    FaExclamationTriangle,
     FaChartLine,
-    FaCalendarAlt,
-    FaRuler,
     FaIndustry,
     FaPercentage,
     FaClock
@@ -42,6 +40,7 @@ interface Tire {
 }
 
 export default function TyresKPI() {
+    const authFetch = useAuthFetch();
     const [operationalTires, setOperationalTires] = useState<Tire[]>([]);
     const [scrappedTires, setScrappedTires] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
@@ -49,10 +48,10 @@ export default function TyresKPI() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const opRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+                const opRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
                 const opData = await opRes.json();
 
-                const scrRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+                const scrRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
                 const scrData = await scrRes.json();
 
                 setOperationalTires(opData);

@@ -12,6 +12,8 @@ import ModalProgramaMantenimiento from "@/components/features/mantenimiento/Moda
 import axios from "axios";
 import { CheckCircle, CircleX } from "lucide-react";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface ProgramasDTO {
     id: number;
@@ -30,6 +32,8 @@ interface ProgramasDTO {
 }
 
 export default function Programas() {
+    const authFetch = useAuthFetch();
+    const client = useAxiosWithAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -37,6 +41,7 @@ export default function Programas() {
     const [startDate, setStartDate] = useState(new Date()); // NUEVO: fecha base
 
     const exportToExcel = async () => {
+
         const table = document.querySelector("table") as HTMLTableElement;
         if (!table) return;
 
@@ -153,7 +158,7 @@ export default function Programas() {
     const handleDeleteProgram = async (id: number) => {
         try {
             setLoading(true);
-            const response = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/${id}`);
+            const response = await client.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/${id}`);
             fetchData();
             setLoading(false);
             return response.data;
@@ -177,7 +182,7 @@ export default function Programas() {
         try {
             console.log("Fechas:", isoInicio, isoFin);
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
             const data = await response.json();
             console.log("Programas", data);
             setProgramMaintenance(data);

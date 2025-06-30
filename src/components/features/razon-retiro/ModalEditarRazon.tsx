@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 
 interface RazonDto {
@@ -29,7 +30,7 @@ export default function ModalEditarRazon({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-
+    const client = useAxiosWithAuth();
     useEffect(() => {
         if (razon) {
             setRazonEditada({
@@ -50,7 +51,7 @@ export default function ModalEditarRazon({
         const { name, description } = razonEditada;
 
         try {
-            const response = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason/${razon.id}`, {
+            const response = await client.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason/${razon.id}`, {
                 name,
                 description,
             });

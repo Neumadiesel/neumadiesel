@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 
 interface FaenaDTO {
@@ -38,7 +39,7 @@ export default function ModalEditarFaena({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-
+    const client = useAxiosWithAuth();
     useEffect(() => {
         if (faena) {
             console.log("faena", faena);
@@ -73,7 +74,7 @@ export default function ModalEditarFaena({
         }
 
         try {
-            const response = await axios.patch(
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${faena.id}`,
                 {
                     name,

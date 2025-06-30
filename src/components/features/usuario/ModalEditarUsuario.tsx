@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface Role {
     role_id: number;
@@ -54,6 +55,8 @@ export default function ModalEditarUsuario({
         rol: "operador",
         faena_id: 0,
     });
+    const authFetch = useAuthFetch();
+
     const [roles, setRoles] = useState<Role[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -96,7 +99,7 @@ export default function ModalEditarUsuario({
     const fetchFaenas = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             console.log("Faenas Fetched:", data);
             setLoading(false);

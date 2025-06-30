@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 
 interface VehicleModelDto {
@@ -31,7 +32,7 @@ export default function ModalEditarVehicleModel({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-
+    const client = useAxiosWithAuth();
     useEffect(() => {
         if (vehicleModel) {
             console.log("faena", vehicleModel);
@@ -60,7 +61,7 @@ export default function ModalEditarVehicleModel({
 
 
         try {
-            const response = await axios.patch(
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/${vehicleModel.id}`,
                 {
                     brand,

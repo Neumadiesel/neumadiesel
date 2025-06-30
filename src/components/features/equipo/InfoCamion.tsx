@@ -13,6 +13,7 @@ import CardTire from "@/components/common/cards/CardTyre";
 import { VehicleDTO } from "@/types/Vehicle";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
@@ -26,7 +27,7 @@ export default function ListaMaquinaria() {
     const [vehicle, setVehicle] = useState<VehicleDTO>({} as VehicleDTO);
     const [installedTires, setInstalledTires] = useState<installedTiresDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
-
+    const client = useAxiosWithAuth();
     const fetchVehicleModels = async () => {
         setError(null);
         setLoading(true);
@@ -40,7 +41,9 @@ export default function ListaMaquinaria() {
             return;
         }
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/withTires/${id}/site/${siteId}`,);
+
+
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/withTires/${id}/site/${siteId}`,);
             const data = await response.data;
             console.log("Installed tires", data);
             setLoading(false);

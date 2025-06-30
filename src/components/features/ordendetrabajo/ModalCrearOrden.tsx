@@ -8,6 +8,7 @@ import timezone from 'dayjs/plugin/timezone';
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import Cross from "@/components/common/icons/Cross";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 // Extender con los plugins
 dayjs.extend(utc);
@@ -62,6 +63,7 @@ export default function ModalCrearOrden({
 
 
     const fetchData = async () => {
+        const authFetch = useAuthFetch();
         const fechaInicio = new Date(startDate);
         const fechaFin = new Date(startDate);
         fechaFin.setDate(fechaInicio.getDate() + 6);
@@ -72,20 +74,20 @@ export default function ModalCrearOrden({
         try {
             console.log("Fechas:", isoInicio, isoFin);
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
             const data = await response.json();
             console.log("Programas", data);
             setProgramMaintenance(data);
             setLoading(false);
         } catch (error) {
             console.error("Error fetching:", error);
+            setProgramMaintenance([]);
         }
 
     }
 
     useEffect(() => {
         fetchData();
-        console.log("Program", programMaintenance);
     }, []);
 
 
@@ -240,28 +242,31 @@ export default function ModalCrearOrden({
                     </p>
                     {/* Mostrar listado de programa semanal que su vehicle code sea igual al vehcile code ingresado en el input anterior */}
                     <div className="h-[75%] overflow-y-auto">
-                        {loading ? (
-                            <p>Cargando programas...</p>
-                        ) : (
-                            programMaintenance.filter((program) => program.vehicle.code === vehicleCode).length === 0 ? (
-                                <p>No hay programas disponibles para el vehículo ingresado.</p>
+
+                        {
+
+                            loading ? (
+                                <p>Cargando programas...</p>
                             ) : (
-                                // Filtrar los programas por el vehicle code ingresado
-                                vehicleCode === "" ? (
-                                    <p>Ingrese un código de vehículo para ver los programas.</p>
-                                ) :
-                                    // Mapear los programas filtrados
-                                    (programMaintenance
-                                        .filter((program) => program.vehicle.code === vehicleCode) // Filtrar por vehicle code ingresado
-                                        .map((program) => (
-                                            <div key={program.id} className=" bg-gray-50 border p-2 mb-2 rounded">
-                                                <h3 className="font-semibold">{program.description}</h3>
-                                                <p>Fecha Programada: {dayjs(program.scheduledDate).format('DD/MM/YYYY')}</p>
-                                            </div>
-                                        ))
-                                    )
-                            )
-                        )}
+                                programMaintenance.filter((program) => program.vehicle.code === vehicleCode).length === 0 ? (
+                                    <p>No hay programas disponibles para el vehículo ingresado.</p>
+                                ) : (
+                                    // Filtrar los programas por el vehicle code ingresado
+                                    vehicleCode === "" ? (
+                                        <p>Ingrese un código de vehículo para ver los programas.</p>
+                                    ) :
+                                        // Mapear los programas filtrados
+                                        (programMaintenance
+                                            .filter((program) => program.vehicle.code === vehicleCode) // Filtrar por vehicle code ingresado
+                                            .map((program) => (
+                                                <div key={program.id} className=" bg-gray-50 border p-2 mb-2 rounded">
+                                                    <h3 className="font-semibold">{program.description}</h3>
+                                                    <p>Fecha Programada: {dayjs(program.scheduledDate).format('DD/MM/YYYY')}</p>
+                                                </div>
+                                            ))
+                                        )
+                                )
+                            )}
                     </div>
 
 

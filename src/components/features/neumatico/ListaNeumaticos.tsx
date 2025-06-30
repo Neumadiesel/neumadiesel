@@ -16,9 +16,12 @@ import ModalRetireTire from "./mod/tire/ModalRetireTire";
 import { useAuth } from "@/contexts/AuthContext";
 import { VehicleDTO } from "@/types/Vehicle";
 import MultiSelect from "@/components/common/select/MultiSelect";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 export default function ListaNeumaticos() {
     const { user } = useAuth();
+    const authFetch = useAuthFetch();
+
     const faenaId = user?.faena_id;
     const [codigo, setCodigo] = useState('');
     const [estado, setEstado] = useState('');
@@ -46,7 +49,7 @@ export default function ListaNeumaticos() {
     const fetchVehicles = async () => {
         console.log("Fetching vehicles for faenaId:", faenaId);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1`);
             const data = await response.json();
             setVehicles(data);
         } catch (error) {
@@ -68,7 +71,7 @@ export default function ListaNeumaticos() {
             return;
         }
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/yearStart/${yearStart}/yearEnd/${yearEnd}/site/${faenaId}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/yearStart/${yearStart}/yearEnd/${yearEnd}/site/${faenaId}`);
             const data = await response.json();
             setLoading(false);
             console.log("INFORMACION NEUMATICOS ✅", data);
@@ -81,7 +84,7 @@ export default function ListaNeumaticos() {
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
             const data = await response.json();
             setLoading(false);
             setLocations(data);

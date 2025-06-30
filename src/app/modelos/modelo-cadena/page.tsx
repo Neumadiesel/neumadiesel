@@ -3,9 +3,9 @@
 
 import { useEffect, useState } from "react";
 import { Pencil, Plus, Link as LinkIcon } from "lucide-react";
-import axios from "axios";
 import ModalRegistrarModeloCadena from "@/components/features/cadenas/ModalRegistrarModeloCadena";
 import ModalEditarModeloCadena from "@/components/features/cadenas/ModalEditarModeloCadena";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 
 // Interfaz para tipar los datos de cada modelo de cadena
@@ -22,6 +22,7 @@ interface ModeloCadena {
 
 export default function Page() {
     // Estados para manejar datos y visibilidad de los modales
+    const client = useAxiosWithAuth();
     const [modelos, setModelos] = useState<ModeloCadena[]>([]);
     const [modalCrearVisible, setModalCrearVisible] = useState(false);
     const [modalEditarVisible, setModalEditarVisible] = useState(false);
@@ -29,7 +30,8 @@ export default function Page() {
 
     // Función para obtener datos desde la API
     const fetchModelos = async () => {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chain-model`);
+
+        const res = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chain-model`);
         setModelos(res.data);
     };
 

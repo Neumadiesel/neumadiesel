@@ -4,6 +4,7 @@ import ModalRegistrarRazon from "@/components/features/razon-retiro/ModalRegistr
 import ModalEditarRazon from "@/components/features/razon-retiro/ModalEditarRazon";
 import Button from "@/components/common/button/Button";
 import { Pencil } from "lucide-react";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 
 interface RazonDto {
@@ -14,6 +15,8 @@ interface RazonDto {
 
 
 export default function Page() {
+    const authFetch = useAuthFetch();
+
     const [isOpen, setIsOpen] = useState(false);
     const [razonSeleccionada, setRazonSeleccionada] = useState<RazonDto | null>(null);
     const [razones, setRazones] = useState<RazonDto[]>([]);
@@ -30,7 +33,7 @@ export default function Page() {
     const fetchRazones = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason`);
             const data = await response.json();
             setLoading(false);
             setRazones(data);

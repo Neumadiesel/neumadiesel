@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface ModAddBudgetProps {
     visible: boolean;
@@ -35,7 +36,7 @@ export default function ModAddBudget({
 }: ModAddBudgetProps) {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-
+    const client = useAxiosWithAuth();
     const [budgetData, setBudgetData] = useState<Budget>({
         year: new Date().getFullYear(),
         meses: MESES.map((nombre, i) => ({
@@ -65,7 +66,7 @@ export default function ModAddBudget({
         }
         try {
             for (const mes of budgetData.meses) {
-                await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/`, {
+                await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/`, {
                     siteId: siteId,
                     year: budgetData.year,
                     month: mes.numero,

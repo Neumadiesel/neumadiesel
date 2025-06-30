@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthFetch } from "@/utils/AuthFetch";
 import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import {
@@ -12,7 +13,6 @@ import {
   YAxis,
   Legend,
   ReferenceLine,
-  Cell
 } from "recharts";
 
 type ProcessedTire = {
@@ -53,15 +53,15 @@ interface Tire {
 }
 
 export default function TireHealthDashboard() {
+  const authFetch = useAuthFetch();
   const [tires, setTires] = useState<Tire[]>([]);
   const [selectedDimension, setSelectedDimension] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
   useEffect(() => {
     // Cargar neumáticos desde el endpoint operacional
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
+    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
       .then(res => res.json())
       .then(setTires)
       .catch(err => console.error("Error cargando neumáticos:", err));
@@ -103,13 +103,7 @@ export default function TireHealthDashboard() {
         // Filtro por dimensión
         if (selectedDimension && t.model.dimensions !== selectedDimension) return false;
 
-        // Filtro por modelo de vehículo (corregido)
-        if (selectedModel) {
-          const hasModelMatch = t.installedTires.some(install =>
-            install.vehicle.model === selectedModel
-          );
-          if (!hasModelMatch) return false;
-        }
+
 
         // Filtro por posición
         if (selectedPosition && !t.installedTires.some(i => i.position === selectedPosition)) return false;
@@ -203,7 +197,7 @@ export default function TireHealthDashboard() {
           positionName: getPositionName(position)
         };
       });
-  }, [tires, selectedDimension, selectedModel, selectedPosition]);
+  }, [tires, selectedDimension, selectedPosition]);
 
   const criticos = processedData.filter(t => t.status === "Crítico").length;
   const desgasteIrregular = processedData.filter(t => t.treadDiff > 6).length;
@@ -304,9 +298,7 @@ export default function TireHealthDashboard() {
   }, [processedData]);
 
   const uniqueDimensions = Array.from(new Set(tires.map(t => t.model.dimensions)));
-  const uniqueModels = Array.from(new Set(
-    tires.flatMap(t => t.installedTires.map(install => install.vehicle.model))
-  )).filter(Boolean).sort(); // Filtrar valores nulos/undefined y ordenar
+
   const uniquePositions = Array.from(new Set(tires.flatMap(t => t.installedTires.map(i => i.position)))).sort((a, b) => a - b);
 
   return (

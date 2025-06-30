@@ -4,6 +4,7 @@ import ExportTireReport from "@/components/features/neumatico/data/ExportDataToE
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import { TireDTO } from "@/types/Tire";
+import { useAuthFetch } from "@/utils/AuthFetch";
 import { Info } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -56,6 +57,7 @@ interface normalizedInspectionDTO {
 
 export default function TirePage() {
     const { id } = useParams();
+    const authFetch = useAuthFetch();
 
     const [tire, setTires] = useState<TireDTO>();
     const [loading, setLoading] = useState(true);
@@ -67,9 +69,9 @@ export default function TirePage() {
         setLoading(true);
         try {
             const [inspectionsRes, proceduresRes, maintenancesRes] = await Promise.all([
-                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/tire/${id}/all`),
-                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/tire/${id}`),
-                fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/tire/${id}`),
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/tire/${id}/all`),
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/tire/${id}`),
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/tire/${id}`),
             ]);
 
             const inspections = await inspectionsRes.json();
@@ -141,7 +143,7 @@ export default function TirePage() {
     const fetchTires = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/${id}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/${id}`);
             const data = await response.json();
             setTires(data);
             setLoading(false);

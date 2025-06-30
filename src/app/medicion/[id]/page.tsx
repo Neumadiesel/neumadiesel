@@ -8,10 +8,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import Link from "next/link";
 import Modal from "@/components/common/modal/CustomModal";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 
 export default function Page() {
-
+    const authFetch = useAuthFetch();
+    const client = useAxiosWithAuth();
     const { user } = useAuth();
     const params = useParams<{ id: string }>();
     const id = params.id
@@ -23,7 +26,7 @@ export default function Page() {
     const [inspectionData, setInspectionData] = useState<InspectionDTO | null>(null);
     const fetchInspectionData = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${id}`, {
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +56,8 @@ export default function Page() {
         const approvedByName = user?.name + " " + user?.last_name; // Nombre del usuario que aprueba la inspección
         const inspectionId = id; // ID de la inspección que se está aprobando
         try {
-            const response = await axios.post(
+
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${inspectionId}/approve`,
                 {
                     approvedUserId: approvedById, // ID del usuario que aprueba la inspección
@@ -76,7 +80,8 @@ export default function Page() {
     const denyInspection = async () => {
 
         try {
-            const response = await axios.post(
+
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${id}/deny`
             );
             console.log("Inspección denegada:", response.data);
@@ -104,7 +109,9 @@ export default function Page() {
         }
 
         try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-comments`, {
+
+
+            const res = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-comments`, {
                 inspectionId: Number(id),
                 userId: user?.user_id,
                 userName,

@@ -3,6 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface ProgramDTO {
     code: string;
@@ -42,7 +43,7 @@ export default function ModalProgramaMantenimiento({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-
+    const client = useAxiosWithAuth();
 
 
     const handleSubmit = async () => {
@@ -61,7 +62,7 @@ export default function ModalProgramaMantenimiento({
         }
 
         try {
-            const response = await axios.post(
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/`,
                 {
                     // vehicleCode, siteId, description, scheduledDate

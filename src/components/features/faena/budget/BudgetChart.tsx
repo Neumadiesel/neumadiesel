@@ -16,6 +16,7 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart"
 import { useAuth } from "@/contexts/AuthContext"
+import { useAuthFetch } from "@/utils/AuthFetch"
 
 const chartConfig = {
     budget: {
@@ -53,6 +54,8 @@ interface BudgetChartProps {
 
 export function BudgetChart({ siteId, year }: BudgetChartProps) {
     const { user } = useAuth();
+    const authFetch = useAuthFetch();
+
     const isAdmin = user?.role.name.toLowerCase() === "administrador";
     const [budgetByYear, setBudgetByYear] = useState<BudgetDataDTO[]>([]);
     const [yearSelected, setYearSelected] = useState<number>(year);
@@ -63,7 +66,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
     const fetchBudgetByYear = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteSelected}/year/${yearSelected}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteSelected}/year/${yearSelected}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
             setBudgetByYear(data);
@@ -76,7 +79,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
 
     const fetchSites = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/`);
             const data = await response.json();
             setSites(data);
         } catch (error) {

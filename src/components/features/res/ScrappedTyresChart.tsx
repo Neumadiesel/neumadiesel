@@ -17,6 +17,7 @@ import Select, { CSSObjectWithLabel } from "react-select";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { useAuthFetch } from "@/utils/AuthFetch";
 dayjs.locale("es");
 
 interface Procedure {
@@ -87,6 +88,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
 };
 
 export default function ScrappedTyresChart() {
+  const authFetch = useAuthFetch();
   const [tires, setTires] = useState<ScrappedTire[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false); // 🎯 ESTADO PARA HIDRATACIÓN
@@ -128,7 +130,7 @@ export default function ScrappedTyresChart() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+        const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

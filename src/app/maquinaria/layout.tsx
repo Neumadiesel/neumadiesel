@@ -7,6 +7,7 @@ import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import MineTruck from "@/components/common/icons/MineTruck";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface VehicleDTO {
     id: number;
@@ -34,6 +35,7 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const authFetch = useAuthFetch();
 
     const [loading, setLoading] = useState(true);
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
@@ -49,7 +51,7 @@ export default function RootLayout({
                 console.log("Fetching vehicles for user with faena_id:", user.faena_id);
                 if (user.faena_id === 99) {
                     // Admin: obtener todos los vehículos
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles`);
+                    const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles`);
                     const data = await response.json();
                     if (Array.isArray(data)) {
                         setVehicles(data);
@@ -59,7 +61,7 @@ export default function RootLayout({
                     }
                 } else {
                     // Usuario común: obtener solo vehículos de su faena
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${user.faena_id}`);
+                    const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${user.faena_id}`);
                     const data = await response.json();
                     if (Array.isArray(data)) {
                         setVehicles(data);

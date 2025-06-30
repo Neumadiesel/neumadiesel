@@ -5,6 +5,8 @@ import axios from "axios";
 import { TireDTO } from "@/types/Tire";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 interface LocationDTO {
     id: number;
     name: string;
@@ -32,8 +34,9 @@ export default function ModalStockDisponible({
         internalTread: tire?.lastInspection.internalTread || null,
         externalTread: tire?.lastInspection.externalTread || null,
     });
+    const client = useAxiosWithAuth();
 
-
+    const authFetch = useAuthFetch();
     const [locations, setLocations] = useState<LocationDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -41,7 +44,7 @@ export default function ModalStockDisponible({
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -87,7 +90,7 @@ export default function ModalStockDisponible({
         }
         console.log("Nueva Ubicacion:", locationId);
         try {
-            const response = await axios.post(
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/available/`,
                 {
                     tireId: tire.id,

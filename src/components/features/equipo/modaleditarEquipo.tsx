@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 
 interface VehicleDTO {
@@ -67,6 +69,7 @@ export default function ModaleditarEquipo({
     vehicle,
     onGuardar,
 }: ModaleditarEquipoProps) {
+    const client = useAxiosWithAuth();
     const [vehicleEdited, setVehicleEdited] = useState({
         code: "",
         modelId: null as number | null,
@@ -96,10 +99,13 @@ export default function ModaleditarEquipo({
         }
     }, [vehicle]);
 
+    const authFetch = useAuthFetch();
+
+
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dataForm/registerVehicle`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dataForm/registerVehicle`);
             const data = await response.json();
             setLoading(false);
             setSites(data.sites);
@@ -130,7 +136,7 @@ export default function ModaleditarEquipo({
             return;
         }
         try {
-            const response = await axios.patch(
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/${vehicle.id}`,
                 {
                     code,

@@ -5,6 +5,7 @@ import ModalRegistarModeloVehiculo from "@/components/features/equipo/mod/model/
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import { useAuthFetch } from "@/utils/AuthFetch";
 interface TyreModelDto {
     id: number;
     code: string;
@@ -29,6 +30,7 @@ interface TireDto {
 }
 
 export default function EquiposPorModelo() {
+    const authFetch = useAuthFetch();
     const { id } = useParams();
     const [tires, setTires] = useState<TireDto[]>([]);
     const [model, setModel] = useState<TyreModelDto>({} as TyreModelDto);
@@ -36,7 +38,7 @@ export default function EquiposPorModelo() {
     const fetchVehicleModels = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/${id}/with-tires`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/${id}/with-tires`);
             const data = await response.json();
             console.log(data);
             console.log("Vehiculos", data.vehicles)

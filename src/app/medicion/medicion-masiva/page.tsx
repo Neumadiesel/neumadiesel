@@ -8,6 +8,7 @@ import axios from 'axios';
 import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import ModalResultInspeccion from '@/components/features/inspeccion/ModalResultInspeccion';
 import { useAuth } from '@/contexts/AuthContext';
+import useAxiosWithAuth from '@/hooks/useAxiosWithAuth';
 
 interface RegistrosDTO {
     id: number;
@@ -49,6 +50,7 @@ type ExcelRow = {
 type InspectionField = "externalTread" | "internalTread" | "temperature" | "pressure";
 
 export default function Page() {
+    const client = useAxiosWithAuth();
     const { isDemo } = useAuth();
     const [data, setData] = useState<Inspection[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -180,7 +182,7 @@ export default function Page() {
         try {
             setLoading(true);
             console.log("Datos a enviar:", data);
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/bulk`, data);
+            const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/bulk`, data);
             console.log('Inspecciones enviadas exitosamente:', response.data);
             // tengo que destructurar el response.data para recibir solo data.equipmentCode, data.position, success, error
             console.log('Response:', response.data);

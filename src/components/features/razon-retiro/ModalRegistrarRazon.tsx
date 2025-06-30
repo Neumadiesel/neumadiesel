@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface ModalRegistrarRazonProps {
     visible: boolean;
@@ -17,7 +18,7 @@ export default function ModalRegistrarRazon({
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-
+    const client = useAxiosWithAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -32,7 +33,7 @@ export default function ModalRegistrarRazon({
             return;
         }
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason`, {
+            const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason`, {
                 name,
                 description,
             });

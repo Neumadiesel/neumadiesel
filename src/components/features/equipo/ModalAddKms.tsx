@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 
 interface VehicleDTO {
@@ -45,7 +46,7 @@ export default function ModalAddKms({
 
     const [kilometrage, setKilometrage] = useState<number | null>(null);
     const [hours, setHours] = useState<number | null>(null);
-
+    const client = useAxiosWithAuth();
     if (!visible || !vehicle) return null;
 
 
@@ -80,7 +81,7 @@ export default function ModalAddKms({
         console.log("vehicleEdited", kilometrage);
 
         try {
-            const response = await axios.patch(
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/updateKms/${vehicle.id}`,
                 {
                     hours,

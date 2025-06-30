@@ -9,8 +9,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { CreateInspectionDTO } from '@/types/CreateInspection';
 import { TireDTO } from '@/types/Tire';
 import CustomModal from '@/components/common/alerts/alert';
+import useAxiosWithAuth from '@/hooks/useAxiosWithAuth';
 
 export default function MedicionPorEquipo() {
+    const client = useAxiosWithAuth();
     const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +37,9 @@ export default function MedicionPorEquipo() {
         }
         setLoading(true);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/code/${tireCode}/site/1`);
+
+
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/code/${tireCode}/site/1`);
             setTire(response.data);
             setError(null);
         } catch (error) {
@@ -69,17 +73,20 @@ export default function MedicionPorEquipo() {
                     formData.append("tempId", fileTempId);
                     formData.append("uploadedById", String(user?.user_id || 1));
 
-                    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
+
+                    await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
                 }
             }
 
+
             // Crear inspección
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspection);
+            const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspection);
             const createdInspection = response.data;
 
             // Asociar todas las fotos al ID de inspección
             for (const tempId of tempIds) {
-                await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${createdInspection.id}`, {
+
+                await client.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${createdInspection.id}`, {
                     tempId
                 });
             }

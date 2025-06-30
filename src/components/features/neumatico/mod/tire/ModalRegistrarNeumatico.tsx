@@ -5,6 +5,8 @@ import Label from "@/components/common/forms/Label";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import { useAuth } from "@/contexts/AuthContext";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 
 interface ModalRegistrarNeumaticoProps {
@@ -44,16 +46,18 @@ export default function ModalRegistrarNeumatico({
         initialHours: null as number | null,
         siteId: isAdmin ? null as number | null : user?.faena_id || null,
     });
+    const client = useAxiosWithAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [tireModels, setTireModels] = useState<TyreModelDto[]>([]);
     const [selectedModel, setSelectedModel] = useState<TyreModelDto | null>(null);
     const [sites, setSites] = useState<FaenaDTO[]>([]);
+    const authFetch = useAuthFetch();
 
     const fetchModelTire = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
             const data = await response.json();
             setLoading(false);
             setTireModels(data);
@@ -65,7 +69,7 @@ export default function ModalRegistrarNeumatico({
     const fetchSites = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             setLoading(false);
             setSites(data);
@@ -123,7 +127,7 @@ export default function ModalRegistrarNeumatico({
             siteId
         });
         try {
-            const response = await axios.post(
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/`,
                 {
                     code,

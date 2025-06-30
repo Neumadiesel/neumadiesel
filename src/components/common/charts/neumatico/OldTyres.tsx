@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { TireDTO } from "@/types/Tire";
-import axios from "axios";
 import { FileCheck, Info } from "lucide-react";
 import Link from "next/link";
 import {
@@ -15,7 +14,7 @@ import {
 export default function OldTyres() {
     const [tireCritical, setTireCritical] = useState<TireDTO[]>([]);
     const [showChart, setShowChart] = useState(true);
-
+    const client = useAxiosWithAuth();
     function calculateWearPercentage(
         internalTread?: number,
         externalTread?: number,
@@ -37,7 +36,8 @@ export default function OldTyres() {
 
     const fetchCriticalTires = async () => {
         try {
-            const response = await axios.get(
+
+            const response = await client.get(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/more-than-4500-hours/site/1`
             );
             const sortedTires = response.data.sort(
@@ -183,6 +183,7 @@ import {
 } from "@/components/ui/chart"
 import ExportOldTyresReport from "@/components/features/neumatico/data/ExportOldTyreesToExcel";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 export const description = "A bar chart with a custom label"
 

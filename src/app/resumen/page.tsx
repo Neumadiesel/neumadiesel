@@ -1,11 +1,5 @@
 import OldTyres from "@/components/common/charts/neumatico/OldTyres";
-import OperationalTyresHistograms from "@/components/features/res/OperationalTyresHistograms";
-import OperationalTyres from "@/components/features/res/OperationalTyres";
-import ScrapTyres from "@/components/features/res/ScrapTyres";
-import ScrappedTyresChart from "@/components/features/res/ScrappedTyresChart";
-import ScrappedReaasonsChart from "@/components/features/res/ScrappedReasonsChart";
 import TyresKPI from "@/components/features/res/KPI_Operational_Scrapped";
-import TireAnalyticsDashboard from '@/components/features/res/TireAnalyticsDashboard';
 import TireHealthDashboard from "@/components/features/res/TireHealthDashboard";
 export default function Page() {
     return (

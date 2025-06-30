@@ -5,6 +5,8 @@ import axios from "axios";
 import { TireDTO } from "@/types/Tire";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 interface LocationDTO {
     id: number;
     name: string;
@@ -29,14 +31,16 @@ export default function ModalEditarNeumatico({
         usedHours: "",
         usedKilometrage: "",
     });
+    const client = useAxiosWithAuth();
     const [locations, setLocations] = useState<LocationDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const authFetch = useAuthFetch();
 
     const fetchLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
             const data = await response.json();
             setLoading(false);
             setLocations(data);
@@ -79,7 +83,7 @@ export default function ModalEditarNeumatico({
         }
 
         try {
-            const response = await axios.patch(
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/${tire.id}`,
                 {
                     code,

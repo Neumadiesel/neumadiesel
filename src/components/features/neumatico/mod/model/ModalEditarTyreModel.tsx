@@ -5,6 +5,7 @@ import axios from "axios";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface ModaleditarTyreModelProps {
     visible: boolean;
@@ -19,6 +20,7 @@ export default function ModaleditarTyreModel({
     tyreModel,
     onGuardar,
 }: ModaleditarTyreModelProps) {
+    const client = useAxiosWithAuth();
     const [tyreModelEdited, setTyreModelEdited] = useState({
         code: "",
         brand: "",
@@ -68,7 +70,7 @@ export default function ModaleditarTyreModel({
 
 
         try {
-            const response = await axios.patch(
+            const response = await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/${tyreModel.id}`,
                 {
                     code,

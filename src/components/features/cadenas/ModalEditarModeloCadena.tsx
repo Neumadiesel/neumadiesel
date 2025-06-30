@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
 import { useAuth } from "@/contexts/AuthContext";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface ModeloCadena {
     id: number;
@@ -24,6 +25,7 @@ interface ModalProps {
 }
 
 export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, modeloCadena }: ModalProps) {
+    const client = useAxiosWithAuth();
     const { isDemo } = useAuth();
     const [codigo, setCodigo] = useState("");
     const [modelo, setModelo] = useState("");
@@ -50,7 +52,7 @@ export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, m
             meshDesign: diseno,
             tireSize: tamano,
         };
-        await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chain-model/${modeloCadena.id}`, payload);
+        await client.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chain-model/${modeloCadena.id}`, payload);
         onGuardar();
     };
 

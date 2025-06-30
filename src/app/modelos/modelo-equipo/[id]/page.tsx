@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface VehicleModelDto {
     id: number;
@@ -27,6 +28,7 @@ interface VehicleDTO {
 }
 
 export default function EquiposPorModelo() {
+    const authFetch = useAuthFetch();
     const { id } = useParams();
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
     const [model, setModel] = useState<VehicleModelDto>({} as VehicleModelDto);
@@ -39,7 +41,7 @@ export default function EquiposPorModelo() {
         try {
             const baseURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/withVehicles/${id}/site/${user?.faena_id}`
 
-            const response = await fetch(baseURL);
+            const response = await authFetch(baseURL);
             const data = await response.json();
             console.log("Fetched vehicle model data:", data);
             setModel(data);

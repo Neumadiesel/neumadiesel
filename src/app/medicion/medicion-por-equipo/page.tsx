@@ -9,6 +9,7 @@ import MineTruck from '@/components/common/icons/MineTruck';
 import { useAuth } from '@/contexts/AuthContext';
 import { CreateInspectionDTO } from '@/types/CreateInspection';
 import CustomModal from '@/components/common/alerts/alert';
+import useAxiosWithAuth from '@/hooks/useAxiosWithAuth';
 
 
 type InspectionWithPhotos = CreateInspectionDTO & {
@@ -19,6 +20,7 @@ type InspectionWithPhotos = CreateInspectionDTO & {
 
 export default function MedicionPorEquipo() {
     const { user } = useAuth();
+    const client = useAxiosWithAuth();
     const [error, setError] = useState<string | null>(null);
     const [inspections, setInspections] = useState<InspectionWithPhotos[]>([]);
 
@@ -101,7 +103,8 @@ export default function MedicionPorEquipo() {
         setSuccess(false);
 
         try {
-            await axios.patch(
+
+            await client.patch(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/updateKms/${vehicle.id}`,
                 {
                     hours,
@@ -123,7 +126,9 @@ export default function MedicionPorEquipo() {
         setError(null);
         setLoading(true);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
+
+
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
             console.log("Vehículo", response.data);
             setInitialKilometrage(response.data.kilometrage);
             setInitialHours(response.data.hours);
@@ -254,17 +259,20 @@ export default function MedicionPorEquipo() {
                             formData.append("tempId", tempId);
                             formData.append("uploadedById", String(user?.user_id || 1));
 
-                            await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
+
+                            await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
                         }
                     }
 
                     // 2. Crear la inspección
-                    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspectionData);
+
+                    const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections`, inspectionData);
                     const createdInspection = response.data;
 
                     // 3. Asociar las fotos
                     for (const tempId of tempIds) {
-                        await axios.patch(
+
+                        await client.patch(
                             `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${createdInspection.id}`,
                             { tempId }
                         );

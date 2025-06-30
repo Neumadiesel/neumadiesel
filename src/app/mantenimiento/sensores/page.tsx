@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
+import useAxiosWithAuth from '@/hooks/useAxiosWithAuth';
 
 export default function UploadInspectionPhoto() {
     const { user } = useAuth();
+    const client = useAxiosWithAuth();
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
@@ -33,7 +35,8 @@ export default function UploadInspectionPhoto() {
 
         try {
             setUploading(true);
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
+
+            const res = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/upload`, formData);
             console.log('Uploaded:', res.data);
             alert('Foto subida temporalmente');
         } catch (err) {
@@ -48,7 +51,8 @@ export default function UploadInspectionPhoto() {
         if (!inspectionId || !tempId) return;
 
         try {
-            const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${inspectionId}`, {
+
+            const res = await client.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-photos/assign/${inspectionId}`, {
                 tempId,
             });
             console.log('Asignado:', res.data);
@@ -65,7 +69,8 @@ export default function UploadInspectionPhoto() {
         const userName = user?.name + ' ' + user?.last_name || 'Usuario Anónimo';
 
         try {
-            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-comments`, {
+
+            const res = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspection-comments`, {
                 inspectionId,
                 userId: uploadedById,
                 userName: userName,

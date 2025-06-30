@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface CircuitoDTO {
     id: number;
@@ -35,7 +36,7 @@ export default function ModalEditarFaena({
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const { token } = useAuth();
-
+    const client = useAxiosWithAuth();
     useEffect(() => {
         if (circuito) {
             setCircuitoeditado({
@@ -61,7 +62,7 @@ export default function ModalEditarFaena({
         setLoading(true);
 
         try {
-            const response = await axios.put(
+            const response = await client.put(
                 `${process.env.NEXT_PUBLIC_API_URL}/faena/${circuito.id}`,
                 {
                     nombreCircuito: circuitoEditado.nombreCircuito,

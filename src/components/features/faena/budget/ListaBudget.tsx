@@ -7,6 +7,7 @@ import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import { Check, Pencil } from "lucide-react";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface BudgetData {
     id: number;
@@ -41,12 +42,15 @@ export default function Budget({ siteId }: BudgetProps) {
     const [isEdit, setIsEdit] = useState(false);
     const [editedBudgets, setEditedBudgets] = useState<{ [id: number]: string }>({});
     const [selectedYear, setSelectedYear] = useState<number>(2025);
+    const authFetch = useAuthFetch();
 
 
     const fetchBudget = async () => {
+        const authFetch = useAuthFetch();
+
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto");
             const data = await response.json();
             setBudget(data);
@@ -61,7 +65,7 @@ export default function Budget({ siteId }: BudgetProps) {
         setSelectedYear(year);
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}/year/${year}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}/year/${year}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
             setBudgetByYear(data);

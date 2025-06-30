@@ -12,6 +12,8 @@ import MultiSelect from "@/components/common/select/MultiSelect";
 import { FaPlusCircle } from "react-icons/fa";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import Cross from "@/components/common/icons/Cross";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuthFetch } from "@/utils/AuthFetch";
 interface VehicleDTO {
     id: number;
     code: string;
@@ -72,6 +74,8 @@ export default function ModalAsignarNeumatico({
     vehicle,
     onGuardar,
 }: ModalAsignarNeumaticoProps) {
+    const authFetch = useAuthFetch();
+    const client = useAxiosWithAuth();
     const [posicion, setPosition] = useState<number | null>(null);
     const [tireIdSelected, setTireIdSelected] = useState<number | null>(null);
     const [tireId, setTireId] = useState<number | null>(null);
@@ -93,7 +97,7 @@ export default function ModalAsignarNeumatico({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/available/site/${vehicle?.siteId}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/available/site/${vehicle?.siteId}`);
             const data = await response.json();
             setTires(Array.isArray(data) ? data : []); // <-- Asegura que siempre sea un array
             console.log("Neumáticos", data);
@@ -106,7 +110,9 @@ export default function ModalAsignarNeumatico({
 
     const fetchLocations = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance/`);
+
+
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance/`);
             setLocations(response.data);
         } catch (error) {
             console.error("Error fetching locations:", error);
@@ -115,7 +121,9 @@ export default function ModalAsignarNeumatico({
 
     const fetchModels = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
+
+
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
             setModels(response.data);
         } catch (error) {
             console.error("Error fetching models:", error);
@@ -159,7 +167,8 @@ export default function ModalAsignarNeumatico({
         const endDate = new Date(finalDate.format('YYYY-MM-DDTHH:mm:ss'));
         const utcEndDate = endDate.toISOString();
         try {
-            const response = await axios.post(
+
+            const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/install-tire`,
                 {
                     tireId: id,

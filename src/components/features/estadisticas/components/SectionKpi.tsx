@@ -3,6 +3,7 @@ import { FaCircleDot } from "react-icons/fa6";
 import { GiMineTruck } from "react-icons/gi";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface KpiDto {
     operationalTires: number,
@@ -17,9 +18,12 @@ export default function SectionKpi() {
         operationalVehicles: 0
         , treadAlerts: 0
     });
+
+    const authFetch = useAuthFetch();
+
     const fetchKpis = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/1`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/1`);
             const data = await response.json();
             setKpis(data);
         } catch (error) {

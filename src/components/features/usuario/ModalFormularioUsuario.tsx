@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Usuario } from "@/types/Usuario";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface Role {
     role_id: number;
@@ -35,6 +36,7 @@ export default function ModalFormularioUsuario({
     onGuardar,
     onSuccess,
 }: ModalFormularioUsuarioProps) {
+    const authFetch = useAuthFetch();
     const [nombre, setNombre] = useState<string>("");
     const [apellido, setApellido] = useState<string>("");
     const [correo, setCorreo] = useState<string>("");
@@ -75,7 +77,7 @@ export default function ModalFormularioUsuario({
     }, [visible, token]);
     const fetchFaenas = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
             const data = await response.json();
             console.log("Faenas Fetched:", data);
             setFaenas(data);

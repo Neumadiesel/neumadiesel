@@ -8,6 +8,7 @@ import ModalRegistarModeloVehiculo from "@/components/features/equipo/mod/model/
 import Link from "next/link";
 import Button from "@/components/common/button/Button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface VehicleModelDto {
     id: number;
@@ -18,6 +19,8 @@ interface VehicleModelDto {
 }
 
 export default function ModelosEquipo() {
+    const authFetch = useAuthFetch();
+
     const [vehicleModels, setVehicleModels] = useState<VehicleModelDto[]>([]);
     const [vehicleModelSelected, setVehicleModelSelected] = useState<VehicleModelDto | null>(null);
     const [loading, setLoading] = useState(true);
@@ -35,7 +38,7 @@ export default function ModelosEquipo() {
 
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/site/${user.faena_id}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/site/${user.faena_id}`);
             const data = await response.json();
             setVehicleModels(data);
         } catch (error) {

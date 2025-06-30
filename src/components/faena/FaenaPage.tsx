@@ -1,6 +1,7 @@
 "use client";
 import Budget from "@/components/features/faena/budget/ListaBudget";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import { useAuthFetch } from "@/utils/AuthFetch";
 import { useEffect, useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 
@@ -19,12 +20,13 @@ interface FaenaDTO {
 
 
 export default function Faena({ id }: { id?: string }) {
+    const authFetch = useAuthFetch();
 
     const [faena, setFaena] = useState<FaenaDTO | null>(null);
 
     const fetchFaenas = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${id}/with-contract`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${id}/with-contract`);
             const data = await response.json();
             setFaena(data);
         } catch (error) {

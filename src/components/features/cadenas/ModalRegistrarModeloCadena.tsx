@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import axios from "axios";
 import Label from "@/components/common/forms/Label";
 import { useAuth } from "@/contexts/AuthContext";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface ModalProps {
     visible: boolean;
@@ -14,6 +15,7 @@ interface ModalProps {
 // Componente para registrar un nuevo modelo de cadena
 export default function ModalRegistrarModeloCadena({ visible, onClose, onGuardar }: ModalProps) {
     const { isDemo } = useAuth();
+    const client = useAxiosWithAuth();
     // Estados para los campos del formulario
     const [codigo, setCodigo] = useState("");
     const [modelo, setModelo] = useState("");
@@ -26,7 +28,7 @@ export default function ModalRegistrarModeloCadena({ visible, onClose, onGuardar
 
     // Acción para guardar nuevo modelo
     const handleGuardar = async () => {
-        await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chain-model`, {
+        await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chain-model`, {
             code: codigo,
             model: modelo,
             meshPattern: patron,
