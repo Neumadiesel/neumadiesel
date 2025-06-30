@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
-import { useAuth } from "@/contexts/AuthContext";
 
 
 interface VehicleModelDto {
