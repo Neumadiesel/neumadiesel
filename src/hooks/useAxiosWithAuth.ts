@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 
-
+import axios from "axios";
 const useAxiosWithAuth = () => {
     const { token } = useAuth();
 
