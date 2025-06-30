@@ -44,7 +44,6 @@ export default function ModalProgramaMantenimiento({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const { user } = useAuth();
     const client = useAxiosWithAuth();
 
 

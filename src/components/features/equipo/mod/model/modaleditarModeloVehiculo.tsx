@@ -31,7 +31,6 @@ export default function ModalEditarVehicleModel({
         brand: "",
         model: "",
     });
-    const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const client = useAxiosWithAuth();

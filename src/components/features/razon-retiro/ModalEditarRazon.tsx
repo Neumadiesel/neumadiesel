@@ -29,7 +29,6 @@ export default function ModalEditarRazon({
         name: "",
         description: "",
     });
-    const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const client = useAxiosWithAuth();

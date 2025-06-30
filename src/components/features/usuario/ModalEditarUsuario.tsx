@@ -56,7 +56,6 @@ export default function ModalEditarUsuario({
         faena_id: 0,
     });
     const authFetch = useAuthFetch();
-    const { user } = useAuth();
     const [roles, setRoles] = useState<Role[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
