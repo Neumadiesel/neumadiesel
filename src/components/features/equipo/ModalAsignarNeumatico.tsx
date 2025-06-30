@@ -86,8 +86,6 @@ export default function ModalAsignarNeumatico({
     const [tireSelected, setTireSelected] = useState<TireDTO | null>(null);
     const [locations, setLocations] = useState<LocationDTO[]>([]);
     const [locationId, setLocationId] = useState<number | null>(null);
-    const [reasons, setReasons] = useState<ReasonDTO[]>([]);
-    const [reasonId, setReasonId] = useState<number | null>(null);
     const [models, setModels] = useState<TireModelDTO[]>([]);
     const [selectModelsId, setSelectModelsId] = useState<string[]>([]);
     const [actionDate, setActionDate] = useState(() =>
@@ -96,7 +94,6 @@ export default function ModalAsignarNeumatico({
     const [finalDate, setFinalDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
-    const [executeTime, setExecuteTime] = useState<number | null>(null);
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -108,16 +105,6 @@ export default function ModalAsignarNeumatico({
         } catch (error) {
             console.error("Error fetching data:", error);
             setTires([]); // <-- En caso de error, también deja un array vacío
-        }
-    };
-
-    const fetchReasons = async () => {
-        try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-reason`);
-            const data = response.data;
-            setReasons(data);
-        } catch (error) {
-            console.error("Error fetching reasons:", error);
         }
     };
 
@@ -141,7 +128,6 @@ export default function ModalAsignarNeumatico({
 
     useEffect(() => {
         fetchLocations();
-        fetchReasons();
         fetchModels();
         fetchData();
     }, []);
@@ -216,8 +202,6 @@ export default function ModalAsignarNeumatico({
         setTireId(null);
         setActionDate(dayjs().tz('America/Santiago'));
         setFinalDate(dayjs().tz('America/Santiago'));
-        setExecuteTime(null);
-        setReasonId(null);
         setLocationId(null);
     }
     const handleClose = () => {
