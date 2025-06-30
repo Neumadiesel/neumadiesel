@@ -52,10 +52,10 @@ export default function ModalRetireTire({
     });
 
     const [executionDate, setExecutionDate] = useState<Date>(new Date());
-    const [finalKilometrage, setFinalKilometrage] = useState<number>(0);
-    const [finalHours, setFinalHours] = useState<number>(0);
-    const [finalInternalTread, setFinalInternalTread] = useState<number>(0);
-    const [finalExternalTread, setFinalExternalTread] = useState<number>(0);
+    const [finalKilometrage, setFinalKilometrage] = useState<number>(tire?.lastInspection.kilometrage || 0);
+    const [finalHours, setFinalHours] = useState<number>(tire?.lastInspection.hours || 0);
+    const [finalInternalTread, setFinalInternalTread] = useState<number>(tire?.lastInspection.internalTread || 0);
+    const [finalExternalTread, setFinalExternalTread] = useState<number>(tire?.lastInspection.externalTread || 0);
     const [retirementReason, setRetirementReason] = useState<string>("");
     const [finalComment, setFinalComment] = useState<string>("");
 
@@ -102,6 +102,10 @@ export default function ModalRetireTire({
                 internalTread: tire.lastInspection.internalTread,
                 externalTread: tire.lastInspection.externalTread,
             });
+            setFinalHours(tire.lastInspection.hours || 0);
+            setFinalKilometrage(tire.lastInspection.kilometrage || 0);
+            setFinalInternalTread(tire.lastInspection.internalTread || 0);
+            setFinalExternalTread(tire.lastInspection.externalTread || 0);
         }
     }, [tire]);
 
@@ -270,10 +274,10 @@ export default function ModalRetireTire({
                             ))}
                         </select>
                         {/* Input de fecha de Baja */}
-                        <Label title="Fecha de Baja" isNotEmpty={true} />
+                        <Label title="Fecha y Hora de Baja" isNotEmpty={true} />
                         <input
-                            type="date"
-                            value={executionDate.toISOString().split("T")[0]}
+                            type="datetime-local"
+                            value={executionDate.toISOString().slice(0, 16)}
                             onChange={(e) => {
                                 const date = new Date(e.target.value);
                                 if (!isNaN(date.getTime())) {
