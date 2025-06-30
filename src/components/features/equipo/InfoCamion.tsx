@@ -14,6 +14,7 @@ import { VehicleDTO } from "@/types/Vehicle";
 import { useAuth } from "@/contexts/AuthContext";
 
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import axios from "axios";
 
 export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();

@@ -41,6 +41,8 @@ export default function ModalCrearOrden({
     onClose,
     onGuardar,
 }: ModalCrearOrdenProps) {
+
+    const authFetch = useAuthFetch();
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
@@ -63,7 +65,6 @@ export default function ModalCrearOrden({
 
 
     const fetchData = async () => {
-        const authFetch = useAuthFetch();
         const fechaInicio = new Date(startDate);
         const fechaFin = new Date(startDate);
         fechaFin.setDate(fechaInicio.getDate() + 6);

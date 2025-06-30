@@ -7,6 +7,7 @@ import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import axios from "axios";
 
 
 interface ModalTireMaintenanceProps {

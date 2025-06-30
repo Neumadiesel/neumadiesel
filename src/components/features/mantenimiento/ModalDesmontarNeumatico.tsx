@@ -10,6 +10,7 @@ import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import axios from "axios";
 
 // Extender con los plugins
 dayjs.extend(utc);

@@ -10,6 +10,7 @@ import Link from "next/link";
 import Modal from "@/components/common/modal/CustomModal";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import axios from "axios";
 
 
 export default function Page() {

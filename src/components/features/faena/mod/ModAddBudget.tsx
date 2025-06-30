@@ -4,6 +4,7 @@ import { useState } from "react";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import axios from "axios";
 
 interface ModAddBudgetProps {
     visible: boolean;

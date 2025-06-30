@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Camera, CircleX } from "lucide-react";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import axios from "axios";
 
 
 interface ModalRetireTireProps {

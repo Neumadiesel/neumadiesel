@@ -32,11 +32,11 @@ export default function ModalRegistrarFaena({
 
     if (!visible) return null;
 
+    const client = useAxiosWithAuth();
 
     const registerSite = async () => {
         setError("");
         setLoading(true);
-        const client = useAxiosWithAuth();
         const { name, region } = faenaEditada;
         if (name === "" || region === "") {
             setError("Por favor complete todos los campos");

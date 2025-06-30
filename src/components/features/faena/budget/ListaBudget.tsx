@@ -8,6 +8,7 @@ import { Check, Pencil } from "lucide-react";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface BudgetData {
     id: number;
@@ -45,8 +46,8 @@ export default function Budget({ siteId }: BudgetProps) {
     const authFetch = useAuthFetch();
 
 
+    const client = useAxiosWithAuth();
     const fetchBudget = async () => {
-        const authFetch = useAuthFetch();
 
         setLoading(true);
         try {
@@ -83,7 +84,7 @@ export default function Budget({ siteId }: BudgetProps) {
         try {
             const updatePromises = Object.entries(editedBudgets).map(([budgetId, tireCountStr]) => {
                 const tireCount = parseInt(tireCountStr);
-                return axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/${budgetId}`, {
+                return client.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/${budgetId}`, {
                     siteId,
                     tireCount: isNaN(tireCount) ? 0 : tireCount,
                 });
