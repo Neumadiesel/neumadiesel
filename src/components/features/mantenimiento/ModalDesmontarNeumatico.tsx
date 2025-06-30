@@ -48,6 +48,9 @@ export default function ModalDesmontarNeumatico({
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
+    const [endDate, setEndDate] = useState(() =>
+        dayjs().tz('America/Santiago')
+    );
     const [locationId, setLocationId] = useState<number | null>(null);
     const [executeTime, setExecuteTime] = useState<number | null>(null);
     const [reasonId, setReasonId] = useState<number | null>(null);
@@ -123,7 +126,7 @@ export default function ModalDesmontarNeumatico({
         setLoading(true);
 
         const { tireId, internalTread, externalTread } = tireDesmonted;
-        if (!tireId || !internalTread || !externalTread || !actionDate || !executeTime || !otCode || !reasonId) {
+        if (!tireId || !internalTread || !externalTread || !actionDate || !otCode || !reasonId) {
             setError("Por favor, completa todos los campos");
             setLoading(false);
             return;
@@ -141,23 +144,27 @@ export default function ModalDesmontarNeumatico({
             otCode,
         });
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/dismount`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/uninstall-tire`, {
                 tireId,
                 retirementReasonId: reasonId,  // ✅ CORREGIDO
-                locationId,
                 executionDate: actionDate.toISOString(),
-                executionTime: executeTime,    // ✅ CORREGIDO
+                executionFinal: endDate.toISOString(),
                 internalTread,
                 externalTread,
             }
 
             );
-
+            console.log("Response from server:", response.data);
             onGuardar();
             onClose();
-            return response.data;
         } catch (error) {
-            setError(error instanceof Error ? error.message : "Error al actualizar el modelo");
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                console.error("Error al obtener los datos de la inspección:", message);
+                setError(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
         } finally {
             handleCancel();
             setLoading(false);
@@ -203,50 +210,33 @@ export default function ModalDesmontarNeumatico({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Fecha de accion con hora */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Fecha de Desmontaje</label>
+                    <label className="text-sm mt-2 font-semibold mb-2">Fecha de Detención</label>
                     <input
                         type="datetime-local"
-                        name="Fecha de Desmontaje"
+                        name="Fecha de Detención"
                         value={actionDate ? actionDate.format('YYYY-MM-DDTHH:mm') : ''}
                         onChange={(e) => {
                             // Asumimos que lo que el usuario selecciona es en hora chilena
                             const newDate = dayjs.tz(e.target.value, 'America/Santiago');
                             setActionDate(newDate);
                         }}
-                        placeholder="Fecha de Desmontaje"
+                        placeholder="Fecha de Detención"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Tiempo de desmontaje */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Tiempo de Desmontaje</label>
+                    {/* Fecha de termino con hora */}
+                    <label className="text-sm mt-2 font-semibold mb-2">Fecha de Despacho</label>
                     <input
-                        type="number"
-                        name="Tiempo de Desmontaje"
-                        min={0}
-                        value={executeTime || ""}
-                        onChange={
-                            (e) => setExecuteTime(parseFloat(e.target.value))
-                        }
-                        placeholder="Tiempo de Desmontaje"
+                        type="datetime-local"
+                        name="Fecha de Despacho"
+                        value={endDate ? endDate.format('YYYY-MM-DDTHH:mm') : ''}
+                        onChange={(e) => {
+                            // Asumimos que lo que el usuario selecciona es en hora chilena
+                            const newDate = dayjs.tz(e.target.value, 'America/Santiago');
+                            setEndDate(newDate);
+                        }}
+                        placeholder="Fecha de Despacho"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Locacion */}
-                    <label className="text-sm mt-2 font-semibold mb-2">Lugar de Trabajo</label>
-                    <select
-                        name="Lugar de Trabajo"
-                        value={locationId || ""}
-                        onChange={(e) => setLocationId(parseInt(e.target.value))}
-                        className="border border-gray-300 p-2 rounded"
-                    >
-                        <option value="">Selecciona una locación</option>
-                        {locations.map((location) => (
-
-
-                            <option key={location.id} value={location.id}>
-                                {location.description}
-                            </option>
-
-                        ))}
-                    </select>
                     {/* Razon */}
                     <label className="text-sm mt-2 font-semibold mb-2">Razón de Desmontaje</label>
                     <select
@@ -258,7 +248,7 @@ export default function ModalDesmontarNeumatico({
                         <option value="">Selecciona una razón</option>
                         {razones.map((razon) => (
                             <option key={razon.id} value={razon.id}>
-                                {razon.name}
+                                {razon.description}
                             </option>
 
                         ))}

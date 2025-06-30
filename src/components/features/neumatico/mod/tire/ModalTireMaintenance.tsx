@@ -85,7 +85,12 @@ export default function ModalTireMaintenance({
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-reason`);
             const data = await response.json();
             setLoading(false);
-            setMaintenanceReasons(data);
+            setMaintenanceReasons(
+                data.filter(
+                    (reason: MaintenanceReasonDTO) =>
+                        !/Desinstalaci[oó]n|Instalaci[oó]n|Baja/i.test(reason.description)
+                )
+            );
         } catch (error) {
             console.error("Error fetching maintenance reasons:", error);
             setLoading(false);
@@ -196,22 +201,6 @@ export default function ModalTireMaintenance({
                         placeholder="Código Neumático"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* Ubicacion */}
-                    <Label title="Ubicación" isNotEmpty={true} />
-                    <select
-                        disabled={true}
-                        value={tireEdited.locationId ?? ""}
-                        onChange={(e) => setTireEdited({ ...tireEdited, locationId: Number(e.target.value) })}
-                        className="border border-gray-300 p-2 rounded"
-                    >
-                        {locations
-                            .filter((location) => location.name === "Mantención")
-                            .map((location) => (
-                                <option key={location.id} value={location.id}>
-                                    {location.name}
-                                </option>
-                            ))}
-                    </select>
                     {/* Razon de mantencion */}
                     <Label title="Razón de Mantenimiento" isNotEmpty={true} />
                     <select
@@ -241,9 +230,9 @@ export default function ModalTireMaintenance({
                         ))}
                     </select>
                     {/* Input de fecha de modificacion */}
-                    <Label title="Fecha de Mantenimiento" isNotEmpty={true} />
+                    <Label title="Fecha y Hora de Mantenimiento" isNotEmpty={true} />
                     <input
-                        type="date"
+                        type="datetime-local"
                         value={tireEdited.date}
                         onChange={(e) => setTireEdited({ ...tireEdited, date: e.target.value })}
                         className="border border-gray-300 p-2 rounded"
@@ -286,7 +275,7 @@ export default function ModalTireMaintenance({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Kilometraje Usado */}
-                    <Label title="Kilometraje Usado" isNotEmpty={true} />
+                    <Label title="Kilometraje Acumulado" isNotEmpty={true} />
                     <input
                         name="Kilometraje del Neumático"
                         type="number"
@@ -303,24 +292,8 @@ export default function ModalTireMaintenance({
                                 setTireEdited({ ...tireEdited, usedKilometrage: "0" });
                             }
                         }}
-                        placeholder="Kilometraje Usado"
+                        placeholder="Kilometraje Acumulado"
                         className="border border-gray-300 p-2 rounded"
-                    />
-                    {/* Remantente externo */}
-                    <Label title="Remanente Externo" isNotEmpty={true} />
-                    <input
-                        name="Remanente Externo"
-                        type="number"
-                        min="0"
-                        placeholder="Remanente Externo"
-                        className="border border-gray-300 p-2 rounded"
-                        value={tireEdited.externalTread === null ? "" : tireEdited.externalTread}
-                        onChange={(e) => {
-                            setTireEdited({
-                                ...tireEdited,
-                                externalTread: e.target.value.trim() === "" ? null : Number(e.target.value),
-                            });
-                        }}
                     />
 
                     {/* Remanente interno */}
@@ -340,6 +313,23 @@ export default function ModalTireMaintenance({
                         }
                         }
                     />
+                    {/* Remantente externo */}
+                    <Label title="Remanente Externo" isNotEmpty={true} />
+                    <input
+                        name="Remanente Externo"
+                        type="number"
+                        min="0"
+                        placeholder="Remanente Externo"
+                        className="border border-gray-300 p-2 rounded"
+                        value={tireEdited.externalTread === null ? "" : tireEdited.externalTread}
+                        onChange={(e) => {
+                            setTireEdited({
+                                ...tireEdited,
+                                externalTread: e.target.value.trim() === "" ? null : Number(e.target.value),
+                            });
+                        }}
+                    />
+
 
                 </div>
 

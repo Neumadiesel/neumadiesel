@@ -1,8 +1,160 @@
+"use client"
+import ModalCrearOrden from "@/components/features/ordendetrabajo/ModalCrearOrden";
+import { Ban, CirclePlus, FileCog, Funnel, Info } from "lucide-react";
+import { useState } from "react";
+
 export default function OrdenDeTrabajoPage() {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4">Orden de Trabajo</h1>
-            <p>Esta página está en construcción.</p>
+        <div className="p-4 bg-gray-50 dark:bg-[#212121] dark:text-white w-full">
+            <div className="flex w-full items-center justify-between mb-4">
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-4xl font-bold">Órdenes de Trabajo</h1>
+                    <p>Gestiona y visualiza las órdenes de trabajo aquí.</p>
+                </div>
+                <aside className="mt-4">
+                    {/* Boton para crear nueva orden */}
+                    <button onClick={() => { setIsModalOpen(true) }} className="px-4 py-3 hover:cursor-pointer  bg-amber-300 text-black font-semibold rounded hover:bg-amber-400 transition-colors">
+                        <CirclePlus className="inline mr-2" />
+                        Nueva Orden
+                    </button>
+                </aside>
+            </div>
+            {/* Seccion de kpis */}
+            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
+                    <h2 className="text-xl font-semibold mb-2">Mantenimientos Programados</h2>
+                    <p className="text-3xl font-bold">22</p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        Mantenimientos programados para esta semana.
+                    </p>
+                </div>
+                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
+                    <h2 className="text-xl font-semibold mb-2">Órdenes Completadas</h2>
+                    <p className="text-3xl font-bold">15
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">Órdenes que han sido finalizadas.</p>
+                </div>
+                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
+                    <h2 className="text-xl font-semibold mb-2">Órdenes en Pendientes</h2>
+                    <p className="text-3xl font-bold">4</p>
+                    <p className="text-gray-600 dark:text-gray-400">Órdenes que están pendientes de ejecución.</p>
+                </div>
+                {/* KPI Completadas */}
+                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
+                    <h2 className="text-xl font-semibold mb-2">Porcentaje de Cumplimiento</h2>
+                    <p className="text-3xl font-bold">83%</p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        Porcentaje de órdenes completadas a tiempo.
+                    </p>
+                </div>
+            </section>
+
+            {/* Seccion de filtros */}
+            <section className="mt-6 dark:bg-neutral-800 p-4 rounded-md shadow border dark:border-neutral-700">
+                <h2 className="text-3xl font-semibold mb-4">
+                    <Funnel size={35} className=" text-blue-500 inline mr-2" />
+                    Filtros</h2>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <div className="bg-white dark:bg-neutral-800  p-2">
+                        <label className="block mb-2 font-bold">Buscar</label>
+                        <input
+                            type="text"
+                            placeholder="Buscar por código o equipo."
+                            className="w-full h-10 p-2 border dark:border-neutral-600 rounded dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors"
+                        />
+                    </div>
+                    {/* Filtro por estado */}
+                    <div className="bg-white dark:bg-neutral-800  p-2">
+                        <label className="block mb-2">Estado</label>
+                        <select
+                            className="w-full p-2 border dark:border-neutral-600 rounded dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors h-10"
+                        >
+                            <option value="">Todos</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="completada">Completada</option>
+                            <option value="cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    {/* Filtro por Tipo */}
+                    <div className="bg-white dark:bg-neutral-800  p-2">
+                        <label className="block mb-2">Tipo de Orden</label>
+                        <select
+                            className="w-full p-2 border dark:border-neutral-600 rounded dark:bg-neutral-700 dark:text-white  h-10 focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors"
+                        >
+                            <option value="">Todos</option>
+                            <option value="mantenimiento">Programada</option>
+                            <option value="reparacion">Imprevista</option>
+                            <option value="inspeccion">Preventiva</option>
+                        </select>
+                    </div>
+                    {/* Boton de limpiar filtro */}
+                    <div className="bg-white dark:bg-neutral-800  p-2">
+                        <label className="block mb-2">Limpiar Filtros</label>
+                        <button className=" w-full py-2 bg-gray-200 dark:bg-neutral-700 text-black dark:text-white h-10 font-semibold rounded hover:bg-gray-300 transition-colors">
+                            Limpiar Filtros
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+
+            {/* ===================================== */}
+            {/* Seccion de tabla de ordenes */}
+            {/* ===================================== */}
+            <main className="mt-6 bg-white dark:bg-neutral-800 p-4 rounded-md shadow border dark:border-neutral-700">
+                <h2 className="text-3xl font-semibold mb-4">
+                    <FileCog size={35} className="inline mr-2 text-amber-300" />
+                    Lista de Órdenes de Trabajo</h2>
+                <table className="w-full table-auto">
+                    <thead className="">
+                        <tr className="py-6 border-b dark:border-neutral-400 h-14 items-center">
+                            <th className="px-4 py-2 text-left">Código</th>
+                            <th className="px-4 py-2 text-left">Equipo</th>
+                            <th className="px-4 py-2 text-left">Estado</th>
+                            <th className="px-4 py-2 text-left">Tipo</th>
+                            <th className="px-4 py-2 text-left">Fecha Programada</th>
+                            <th className="px-4 py-2 text-left">Fecha Ejecución</th>
+                            <th className="px-4 py-2 text-left">Responsable</th>
+                            <th className="px-4 py-2 text-left">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {/* Simulación de datos */}
+                        {Array.from({ length: 10 }).map((_, index) => (
+                            <tr key={index} className="border-b dark:border-neutral-600 h-14">
+                                <td className="px-4 py-2">OT-{index + 1}</td>
+                                <td className="px-4 py-2">Equipo {index + 1}</td>
+                                <td className="px-4 py-2">Pendiente</td>
+                                <td className="px-4 py-2">Programada</td>
+                                <td className="px-4 py-2">2025-06-{index + 1}</td>
+
+                                <td className="px-4 py-2">2025-06-{index + 1}</td>
+                                {/* Responsable */}
+                                <td className="px-4 py-2">Carlos Villegas</td>
+                                {/* Acciones */}
+                                <td className="px-4 py-2">
+                                    <button className="text-blue-600 hover:underline mr-2">
+                                        <Info className="inline mr-1" />
+                                    </button>
+                                    <button className="text-red-600 hover:underline">
+                                        <Ban className="inline mr-1" />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </main>
+
+            <ModalCrearOrden
+                visible={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onGuardar={() => {
+                    setIsModalOpen(false);
+                    console.log("Orden guardada");
+                }} />
         </div>
     );
 }

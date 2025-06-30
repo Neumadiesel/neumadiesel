@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/common/lodaing/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
 import { CreateInspectionDTO } from '@/types/CreateInspection';
 import { TireDTO } from '@/types/Tire';
+import CustomModal from '@/components/common/alerts/alert';
 
 export default function MedicionPorEquipo() {
     const { user } = useAuth();
@@ -92,6 +93,7 @@ export default function MedicionPorEquipo() {
             setTire(null);
             setTireCode(null);
         } catch (error) {
+            setIsOpen(false);
             if (axios.isAxiosError(error)) {
                 const message = error.response?.data?.message || "Error desconocido";
                 setError(message);
@@ -168,7 +170,7 @@ export default function MedicionPorEquipo() {
             </p>
             <section className=' max-auto'>
                 {/* Seccion buscador */}
-                <section className='flex flex-col gap-2 bg-neutral-800 p-3 rounded-md border dark:border-neutral-700'>
+                <section className='flex flex-col gap-2 bg-gray-50 dark:bg-neutral-800  p-3 rounded-md border dark:border-neutral-700'>
                     {/* Subtitulo de busqueda */}
                     <h3 className="text-2xl mb-1 text-black font-semibold dark:text-white ">
                         <Search className="w-6 h-6 inline mr-1" />
@@ -179,6 +181,13 @@ export default function MedicionPorEquipo() {
                         <input
                             onChange={(e) => setTireCode(e.target.value.toUpperCase())}
                             value={tireCode || ""}
+
+                            onKeyDown={(e) => {
+                                console.log("Key pressed:", e.key);
+                                if (e.key === "Enter") {
+                                    fetchTire();
+                                }
+                            }}
                             placeholder="Código Neumático"
                             name='tireCode'
                             type="text" className="w-2/3 bg-gray-50 dark:bg-[#414141] rounded-lg border dark:border-neutral-700 p-2" />
@@ -197,7 +206,7 @@ export default function MedicionPorEquipo() {
                 </section>
 
                 {/* Seccion detalles de la inspeccion, nombre del inspector, fecha de hoy */}
-                <section className='flex flex-col gap-4 bg-neutral-800 p-3 rounded-md border dark:border-neutral-700 mt-4'>
+                <section className='flex flex-col gap-4 bg-gray-50 dark:bg-neutral-800 p-3 rounded-md border dark:border-neutral-700 mt-4'>
                     <h3 className="text-2xl mb-1 text-black items-center font-semibold dark:text-white ">
                         <File className="w-6 h-6 inline mr-1" />
                         Detalles de Inspección
@@ -392,7 +401,10 @@ export default function MedicionPorEquipo() {
 
             </section>
             <LoadingSpinner isOpen={loading} />
-
+            {
+                error &&
+                <CustomModal isOpen={!!error} onClose={() => setError(null)} title="Error" message={error} />
+            }
         </div>
     );
 }

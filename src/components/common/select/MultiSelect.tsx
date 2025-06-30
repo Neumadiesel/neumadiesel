@@ -1,5 +1,4 @@
-// components/MultiSelectWithCheckbox.tsx
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import clsx from "clsx";
 
@@ -24,6 +23,7 @@ export default function MultiSelect({
     placeholder = "Seleccionar estado...",
 }: MultiSelectProps) {
     const [open, setOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const toggleValue = (value: string) => {
         if (selected.includes(value)) {
@@ -33,8 +33,21 @@ export default function MultiSelect({
         }
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div className="relative w-full ">
+        <div ref={containerRef} className="relative w-full">
             <button
                 onClick={() => setOpen(!open)}
                 className="w-full border dark:border-neutral-700 rounded-md px-4 py-2 bg-white dark:bg-[#212121] flex justify-between items-center shadow-sm"
@@ -48,7 +61,7 @@ export default function MultiSelect({
             </button>
 
             {open && (
-                <div className="absolute z-30 mt-2 w-full  bg-white dark:bg-[#212121] border dark:border-neutral-700 rounded-md shadow-md max-h-64 overflow-y-auto">
+                <div className="absolute z-30 mt-2 w-full bg-white dark:bg-[#212121] border dark:border-neutral-700 rounded-md shadow-md max-h-64 overflow-y-auto">
                     {options.map(opt => (
                         <label
                             key={opt.value}

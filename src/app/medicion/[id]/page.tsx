@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import Link from "next/link";
+import Modal from "@/components/common/modal/CustomModal";
 
 
 export default function Page() {
@@ -45,9 +46,52 @@ export default function Page() {
         }
     };
 
+    // Funcion para aprobar inspección
+    const aproveInspection = async () => {
+
+        const approvedById = user?.user_id; // ID del usuario que aprueba la inspección, puedes obtenerlo del contexto o estado global
+        const approvedByName = user?.name + " " + user?.last_name; // Nombre del usuario que aprueba la inspección
+        const inspectionId = id; // ID de la inspección que se está aprobando
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${inspectionId}/approve`,
+                {
+                    approvedUserId: approvedById, // ID del usuario que aprueba la inspección
+                    approvedUserName: approvedByName, // Nombre del usuario que aprueba la inspección
+                }
+            );
+            console.log("Inspección aprobada:", response.data);
+            // Actualizar la lista de inspecciones pendientes
+            fetchInspectionData(); // Refrescar los datos de la inspección después de aprobar
+        } catch (error) {
+            console.error("Error approving inspection:", error);
+            setDenyModalOpen(false); // Cerrar el modal de confirmación si ocurre un error
+            return [];
+        }
+    };
+
+    const [denyModalOpen, setDenyModalOpen] = useState(false);
+
+    // Denegar inspección
+    const denyInspection = async () => {
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/${id}/deny`
+            );
+            console.log("Inspección denegada:", response.data);
+            // Actualizar la lista de inspecciones pendientes
+            setDenyModalOpen(false); // Cerrar el modal de confirmación
+            // quiero redirigirme a la pagina de inspecciones
+            window.location.href = '/medicion';
+        } catch (error) {
+            console.error("Error denying inspection:", error);
+            return [];
+        }
+    }
+
+
     // Funcion para subir comentario
-
-
     const [comment, setComment] = useState('');
     const submitComment = async () => {
         if (!comment.trim()) return;
@@ -124,9 +168,19 @@ export default function Page() {
     function getGeneralStatusAlert(position: number, external: number, internal: number) {
         const alerts = [];
 
-
         const averageTread = (external + internal) / 2;
-        if (position === 1 || position === 2 && Math.min(external, internal) <= 70) {
+
+        // 🔁 Nueva alerta: diferencia > 10 → invertir neumático
+        if (Math.abs(external - internal) > 10) {
+            alerts.push({
+                icon: <AlertTriangle size={24} className="inline" />,
+                color: 'bg-orange-500',
+                message: 'Inversión Requerida.',
+            });
+        }
+
+        // ⚠️ Rotación en posición 1 o 2 con desgaste bajo
+        if ((position === 1 || position === 2) && Math.min(external, internal) <= 70) {
             alerts.push({
                 icon: <AlertTriangle size={24} className="inline" />,
                 color: 'bg-yellow-400 text-black',
@@ -134,6 +188,7 @@ export default function Page() {
             });
         }
 
+        // 🔴 Fin de vida útil
         if (external <= 20 || internal <= 20) {
             alerts.push({
                 icon: <TriangleAlert size={24} className="inline" />,
@@ -142,6 +197,7 @@ export default function Page() {
             });
         }
 
+        // 🟡 Desgaste avanzado
         if (averageTread <= 50) {
             alerts.push({
                 icon: <Donut size={24} className="inline" />,
@@ -150,7 +206,7 @@ export default function Page() {
             });
         }
 
-        // Si no hay alertas, devolver un estado neutro
+        // ✅ Estado neutro si no hay alertas
         if (alerts.length === 0) {
             return {
                 icon: <Check size={24} className="inline" />,
@@ -159,8 +215,8 @@ export default function Page() {
             };
         }
 
-        // Prioriza mostrar la alerta más grave (última evaluada)
-        return alerts[alerts.length - 1];
+
+        return alerts[0];
     }
 
     const position = inspectionData?.position ?? 0;
@@ -254,12 +310,12 @@ export default function Page() {
                             {/* HORAS */}
                             <div className="flex flex-col">
                                 <p className="text-gray-500 dark:text-gray-300">Horas:</p>
-                                <span className="font-bold text-xl">{inspectionData?.hours || "No Disponible"}</span>
+                                <span className="font-bold text-xl">{inspectionData?.hours || "0"}</span>
                             </div>
                             {/* Kilometraje */}
                             <div className="flex flex-col">
                                 <p className="text-gray-500 dark:text-gray-300">Kilometraje:</p>
-                                <span className="font-bold text-xl">{inspectionData?.kilometrage || "No Disponible"}</span>
+                                <span className="font-bold text-xl">{inspectionData?.kilometrage || "0"}</span>
                             </div>
                         </div>
                     </section>
@@ -421,7 +477,7 @@ export default function Page() {
                         <h3 className="text-xl font-semibold mb-2">Estado General</h3>
                         <p className="text-gray-700 font-semibold dark:text-gray-300 mb-2">Condición</p>
                         <div className="flex items-center gap-2 mb-4">
-                            <span className={`text-white px-2 py-1 rounded-full ${alert.color}`}>
+                            <span className={`text-black    font-semibold px-2 py-1 rounded-full ${alert.color}`}>
                                 {alert.icon} {alert.message}
                             </span>
                         </div>
@@ -451,14 +507,9 @@ export default function Page() {
                     {/* Panel de acciones programar mantenimiento, ver neumatico, generar informe */}
                     <div className="  bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg font-semibold ">
                         <div className="flex items-center mb-4">
-                            <FileText size={32} className="inline mr-2 text-black" />
+                            <FileText size={32} className="inline mr-2 text-black dark:text-white " />
                             <h3 className="text-xl font-semibold ">Acciones</h3>
                         </div>
-
-                        <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors mb-2 w-full">
-                            <Donut size={24} className="inline mr-2" />
-                            Programar Mantenimiento
-                        </button>
 
                         <Link
                             href={inspectionData?.tireId ? `/neumaticos/${inspectionData.tireId}` : "#"}
@@ -470,22 +521,44 @@ export default function Page() {
                             }}
                         >
                             <div
-                                className={`bg-white text-black border border-gray-200 px-4 py-2 rounded-md mb-2 w-full flex items-center justify-center ${!inspectionData?.tireId ? "opacity-50 cursor-not-allowed pointer-events-none" : "hover:bg-white transition-colors"
+                                className={`bg-blue-600 text-white border border-blue-700 px-4 py-2 rounded-md mb-2 w-full flex items-center justify-center ${!inspectionData?.tireId ? "opacity-50 cursor-not-allowed pointer-events-none" : "hover:bg-blue-700 transition-colors"
                                     }`}
                             >
                                 <CircleDot size={24} className="inline mr-2" />
                                 Ver Neumático
                             </div>
                         </Link>
-                        <button className="bg-white text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors mb-2 w-full">
-                            <FileText size={24} className="inline mr-2" />
-                            Generar Informe
-                        </button>
+                        {
+                            !inspectionData?.approved && (
+
+                                <button onClick={aproveInspection} className="bg-amber-400 cursor-pointer text-black px-4 py-2 rounded-md hover:bg-amber-500 transition-colors mb-2 w-full">
+                                    <Donut size={24} className="inline mr-2" />
+                                    Aprobar Inspección
+                                </button>
+                            )
+                        }
+                        {
+                            !inspectionData?.approved && (
+
+                                <button onClick={() => setDenyModalOpen(true)} className="bg-gray-50 cursor-pointer dark:bg-neutral-800 text-black dark:text-white border border-red-400 px-4 py-2 rounded-md hover:bg-white hover:dark:bg-neutral-900 transition-colors mb-2 w-full">
+                                    <FileText size={24} className="inline mr-2 text-red-500" />
+                                    Rechazar Inspección
+                                </button>
+                            )
+                        }
                     </div>
                 </aside>
                 {/* ------------------------------------ */}
                 {/* ------------------------------------ */}
-
+                {
+                    denyModalOpen && (
+                        <Modal isOpen={denyModalOpen} onClose={() => setDenyModalOpen(false)} onConfirm={denyInspection} title="¿Estás seguro?">
+                            <p>
+                                Esta Inspección será denegada y no podrá ser aprobada nuevamente. ¿Deseas continuar?
+                            </p>
+                        </Modal>
+                    )
+                }
             </section>
 
         </div>

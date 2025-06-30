@@ -12,46 +12,21 @@ import {
 import { useState, useEffect } from "react";
 import Select from "react-select";
 
-export interface RetirementTyreDTO {
+type TireScrapResponse = {
     id: number;
-    retirementReasonId: number;
-    tireId: number;
-    finalExternalTread: number;
-    finalInternalTread: number;
-    finalKilometrage: number;
-    finalHours: number;
-    lastVehicleId: number;
-    lastPosition: number;
-    retirementDate: string;
-    tire: {
-        id: number;
-        code: string;
-        modelId: number;
-        initialTread: number;
-        initialKilometrage: number;
-        initialHours: number;
-        lastInspectionId: number;
-        locationId: number;
-        usedHours: number;
-        usedKilometrage: number;
-        siteId: number;
-        creationDate: string;
-    };
+    code: string;
+    initialTread: number;
     retirementReason: {
-        id: number;
         name: string;
         description: string;
     };
-    lastVehicle: {
-        id: number;
-        code: string;
-        modelId: number;
-        siteId: number;
-        kilometrage: number;
-        hours: number;
-        typeId: number;
-    };
-}
+    procedures: {
+        externalTread: number;
+        internalTread: number;
+        tireHours: number;
+        startDate: string;
+    }[];
+}[];
 
 type ScatterPoint = {
     horas: number;
@@ -61,7 +36,6 @@ type ScatterPoint = {
     descripcionMotivo: string;
     fecha: string;
 };
-
 
 interface CustomTooltipProps {
     active?: boolean;
@@ -85,45 +59,57 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 };
 
 export default function ScrapTyres() {
-    const [retirementRecords, setRetirementRecords] = useState<RetirementTyreDTO[]>([]);
+    const [scatterData, setScatterData] = useState<ScatterPoint[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedMotivos, setSelectedMotivos] = useState<string[]>([]);
 
     useEffect(() => {
-        const fetchRetirements = async () => {
+        const fetchScrappedTires = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tire-retirement/site/1/initial-tread/97`);
-                const data = await response.json();
-                setRetirementRecords(data);
+                const response = await fetch(`http://localhost:3002/tires/scrapped/site/1/initialTread/97`);
+                const tires: TireScrapResponse = await response.json();
+
+                const data: ScatterPoint[] = tires.flatMap((tire) => {
+                    const procedure = tire.procedures?.[0];
+                    if (
+                        !procedure ||
+                        tire.initialTread == null ||
+                        procedure.externalTread == null ||
+                        procedure.internalTread == null ||
+                        procedure.tireHours == null ||
+                        !tire.retirementReason
+                    ) {
+                        return [];
+                    }
+
+                    const finalTread = (procedure.externalTread + procedure.internalTread) / 2;
+                    const desgaste = Number(
+                        (((tire.initialTread - finalTread) / tire.initialTread) * 100).toFixed(2)
+                    );
+
+                    return {
+                        horas: procedure.tireHours,
+                        desgaste,
+                        codigo: tire.code,
+                        motivo: tire.retirementReason.name,
+                        descripcionMotivo: tire.retirementReason.description,
+                        fecha: new Date(procedure.startDate).toISOString().split("T")[0],
+                    };
+                });
+
+                setScatterData(data);
             } catch (error) {
-                console.error("Error fetching tyre retirement data:", error);
+                console.error("Error fetching scrap tires:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchRetirements();
+        fetchScrappedTires();
     }, []);
 
-    const scatterData = retirementRecords.map((record) => {
-        const initialTread = record.tire.initialTread;
-        const finalTread = (record.finalInternalTread + record.finalExternalTread) / 2;
-        const desgaste = initialTread
-            ? Number((((initialTread - finalTread) / initialTread) * 100).toFixed(2))
-            : 0;
-
-        return {
-            horas: record.finalHours,
-            desgaste,
-            codigo: record.tire.code,
-            motivo: record.retirementReason?.name ?? "Desconocido",
-            descripcionMotivo: record.retirementReason?.description ?? "Desconocido",
-            fecha: new Date(record.retirementDate).toISOString().split("T")[0],
-        };
-    });
-
-    const groupedData: Record<string, typeof scatterData> = {};
+    const groupedData: Record<string, ScatterPoint[]> = {};
     scatterData.forEach((item) => {
         const key = item.descripcionMotivo;
         if (!groupedData[key]) groupedData[key] = [];
@@ -157,11 +143,10 @@ export default function ScrapTyres() {
                 <Select
                     options={motivoOptions}
                     isMulti
-
                     value={motivoOptions.filter((opt) => selectedMotivos.includes(opt.value))}
                     onChange={(selected) => setSelectedMotivos(selected.map((opt) => opt.value))}
                     placeholder="Selecciona tipos de baja..."
-                    className="text-black "
+                    className="text-black"
                 />
             </div>
 

@@ -361,7 +361,12 @@ export default function ModalAsignarNeumatico({
                             ))}
                         </select>
                     </div>
-
+                    {/* Mostrar error si existe */}
+                    {error && <div className="text-red-500 flex justify-between text-sm mt-2 overflow-y-scroll items-center bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                        <button onClick={() => setError("")} className=" text-red-500 pr-2">
+                            X
+                        </button>
+                    </div>}
                 </main>
 
                 {/* Lista de neumaticos */}
@@ -453,12 +458,7 @@ export default function ModalAsignarNeumatico({
                             Cancelar
                         </button>
                     </div>
-                    {/* Mostrar error si existe */}
-                    {error && <div className="text-red-500 flex justify-between text-sm h-[10dvh] mt-2 overflow-y-scroll bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                        <button onClick={() => setError("")} className=" text-red-500 pr-2">
-                            X
-                        </button>
-                    </div>}
+
                 </aside>
                 <LoadingSpinner isOpen={loading} />
 
