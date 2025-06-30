@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Label from "@/components/common/forms/Label";
 import { TireDTO } from "@/types/Tire";
 import dayjs from 'dayjs';

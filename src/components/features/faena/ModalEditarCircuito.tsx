@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
+
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface CircuitoDTO {

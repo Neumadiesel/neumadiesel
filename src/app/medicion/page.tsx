@@ -1,7 +1,7 @@
 "use client"
 import { FileCheck, Info } from "lucide-react";
 import Link from "next/link";
-import axios from "axios";
+
 import { useState, useEffect } from "react";
 import { InspectionDTO } from "@/types/Inspection";
 import { useAuth } from "@/contexts/AuthContext";

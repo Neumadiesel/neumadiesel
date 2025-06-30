@@ -5,7 +5,7 @@ import Button from "@/components/common/button/Button";
 import ModAddBudget from "../mod/ModAddBudget";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import { Check, Pencil } from "lucide-react";
-import axios from "axios";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
 

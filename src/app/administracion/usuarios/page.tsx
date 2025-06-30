@@ -5,12 +5,12 @@ import Modal from "@/components/common/modal/CustomModal";
 import ModalFormularioUsuario from "@/components/features/usuario/ModalFormularioUsuario";
 import ModalEditarUsuario from "@/components/features/usuario/ModalEditarUsuario";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import CustomModal from "@/components/common/alerts/alert";
 import Button from "@/components/common/button/Button";
 import { ArrowLeft, ArrowRight, Pencil } from "lucide-react";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import axios from "axios";
 interface Role {
     role_id: number;
     name: string;

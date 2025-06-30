@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import { installedTiresDTO } from "@/types/Tire";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';

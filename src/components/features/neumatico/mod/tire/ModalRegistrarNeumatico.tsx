@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import Label from "@/components/common/forms/Label";
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";

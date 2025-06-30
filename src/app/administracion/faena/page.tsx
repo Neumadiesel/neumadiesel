@@ -9,7 +9,6 @@ import Breadcrumb from "@/components/layout/BreadCrumb";
 import Button from "@/components/common/button/Button";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import CustomModal from "@/components/common/alerts/alert";
-import axios from "axios";
 import { Info, Pencil } from "lucide-react";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";

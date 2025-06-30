@@ -5,7 +5,7 @@ import { InspectionDTO } from "@/types/Inspection";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
+
 import Link from "next/link";
 import Modal from "@/components/common/modal/CustomModal";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";

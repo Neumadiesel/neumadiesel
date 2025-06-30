@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import { Usuario } from "@/types/Usuario";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
+
 import { useAuthFetch } from "@/utils/AuthFetch";
+import axios from "axios";
 
 interface Role {
     role_id: number;

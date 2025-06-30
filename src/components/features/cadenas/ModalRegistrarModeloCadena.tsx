@@ -2,7 +2,7 @@
 "use client";
 import { useState } from "react";
 import { X } from "lucide-react";
-import axios from "axios";
+
 import Label from "@/components/common/forms/Label";
 import { useAuth } from "@/contexts/AuthContext";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";

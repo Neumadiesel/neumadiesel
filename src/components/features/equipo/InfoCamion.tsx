@@ -12,7 +12,7 @@ import ModalAddKms from "./ModalAddKms";
 import CardTire from "@/components/common/cards/CardTyre";
 import { VehicleDTO } from "@/types/Vehicle";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
+
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 export default function ListaMaquinaria() {
