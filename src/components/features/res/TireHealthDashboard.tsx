@@ -191,7 +191,7 @@ export default function TireHealthDashboard() {
             <XAxis type="number" dataKey="pressure" name="Presión" unit="psi" />
             <YAxis type="number" dataKey="temperature" name="Temperatura" unit="°C" />
             <Tooltip
-              formatter={(value, name) => (value ?? "Sin dato")}
+              formatter={(value) => (value ?? "Sin dato")}
               labelFormatter={(label, payload) =>
                 payload[0] ? `Código: ${payload[0].payload.code}` : ""
               }
@@ -211,7 +211,7 @@ export default function TireHealthDashboard() {
             <XAxis type="number" dataKey="internalTread" name="Goma Interna" unit="mm" />
             <YAxis type="number" dataKey="externalTread" name="Goma Externa" unit="mm" />
             <Tooltip
-              formatter={(value, name) => (value ?? "Sin dato")}
+              formatter={(value) => (value ?? "Sin dato")}
               labelFormatter={(label, payload) =>
                 payload[0] ? `Código: ${payload[0].payload.code}` : ""
               }

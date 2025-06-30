@@ -11,8 +11,9 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   LabelList,
+  TooltipProps,
 } from "recharts";
-import Select from "react-select";
+import Select, { CSSObjectWithLabel } from "react-select";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
@@ -57,7 +58,7 @@ interface Filters {
 }
 
 // 🎯 TOOLTIP MEJORADO
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
   if (!active || !payload?.length) return null;
 
   const data = payload[0].payload as ChartPoint;
@@ -106,17 +107,17 @@ export default function ScrappedTyresChart() {
 
   // 🎯 ESTILOS PARA REACT-SELECT (SSR SAFE)
   const selectStyles = useMemo(() => ({
-    control: (base: any) => ({
+    control: (base: CSSObjectWithLabel) => ({
       ...base,
       minHeight: '48px',
       borderColor: '#D1D5DB',
       zIndex: 10,
     }),
-    menuPortal: (base: any) => ({
+    menuPortal: (base: CSSObjectWithLabel) => ({
       ...base,
       zIndex: 9999,
     }),
-    menu: (base: any) => ({
+    menu: (base: CSSObjectWithLabel) => ({
       ...base,
       zIndex: 9999,
     }),

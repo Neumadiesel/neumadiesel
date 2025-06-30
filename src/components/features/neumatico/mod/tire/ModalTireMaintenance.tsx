@@ -47,23 +47,11 @@ export default function ModalTireMaintenance({
     });
 
 
-    const [locations, setLocations] = useState<LocationDTO[]>([]);
     const [maintenanceReasons, setMaintenanceReasons] = useState<MaintenanceReasonDTO[]>([]);
     const [locationMaintenance, setLocationMaintenance] = useState<LocationMaintenanceDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const fetchLocations = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
-            const data = await response.json();
-            setLoading(false);
-            setLocations(data);
-        } catch (error) {
-            console.error("Error fetching tyre models:", error);
-        }
-    };
 
     const fetchLocationsMaintenance = async () => {
         setLoading(true);
@@ -116,7 +104,6 @@ export default function ModalTireMaintenance({
     }, [tire]);
 
     useEffect(() => {
-        fetchLocations();
         fetchReasons();
         fetchLocationsMaintenance();
     }, []);

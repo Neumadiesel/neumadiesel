@@ -16,6 +16,12 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 dayjs.locale('es');
 
+type MotivoEntry = {
+    month: string;
+    monthIndex: number;
+    [motivo: string]: number | string; // para los motivos dinámicos y sus counts
+};
+
 const COLORS: Record<string, string> = {
     Corte: '#FF6B6B',
     Desgarro: '#4ECDC4',
@@ -126,7 +132,7 @@ export default function ScrappedReasonsChart() {
         return Object.entries(counts)
             .map(([key, motivos]) => {
                 const [monthIndexStr, label] = key.split('-');
-                const entry: any = {
+                const entry: MotivoEntry = {
                     month: label.charAt(0).toUpperCase() + label.slice(1),
                     monthIndex: parseInt(monthIndexStr),
                 };
@@ -134,6 +140,7 @@ export default function ScrappedReasonsChart() {
                     entry[motivo] = Math.round(v.hrs / v.count || 0);
                     entry[`${motivo}_count`] = v.count;
                 });
+
                 return entry;
             })
             .sort((a, b) => a.monthIndex - b.monthIndex);

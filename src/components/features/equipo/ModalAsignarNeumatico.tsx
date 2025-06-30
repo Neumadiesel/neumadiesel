@@ -44,10 +44,6 @@ interface LocationDTO {
     description: string;
 }
 
-interface ReasonDTO {
-    id: number;
-    description: string;
-}
 
 interface ModalAsignarNeumaticoProps {
     visible: boolean;

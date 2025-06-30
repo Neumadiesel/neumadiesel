@@ -30,6 +30,16 @@ interface UnifiedRecord {
     observation?: string;
 }
 
+interface MaintenanceDTO {
+    id: number;
+    executionDate: string;
+    position: number | string;
+    description?: string;
+    internalTread?: number;
+    externalTread?: number;
+    // agrega otros campos si tu backend los retorna
+}
+
 interface normalizedInspectionDTO {
     id: number;
     type: string
@@ -80,7 +90,7 @@ export default function TirePage() {
                     observation: item.observation,
                 }));
 
-            const normalizedMaintenances: UnifiedRecord[] = maintenances.map((item: any) => ({
+            const normalizedMaintenances: UnifiedRecord[] = maintenances.map((item: MaintenanceDTO) => ({
                 id: item.id,
                 type: "maintenance",
                 date: item.executionDate,

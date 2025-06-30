@@ -131,7 +131,13 @@ export default function TireAnalyticsDashboard() {
                 }
                 acc[dim].count++;
                 return acc;
-            }, {} as Record<string, any>)
+            }, {} as Record<string, {
+                dimension: string;
+                totalHours: number;
+                count: number;
+                operational: number;
+                scrapped: number;
+            }>)
         )
             .map(([, data]) => ({
                 ...data,
