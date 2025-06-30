@@ -17,6 +17,8 @@ export default function ModalRegistrarFaena({
     onClose,
     onGuardar,
 }: ModalRegistrarFaenaProps) {
+
+    const client = useAxiosWithAuth();
     const [faenaEditada, setFaenaeditada] = useState({
         name: "",
         region: "",
@@ -32,7 +34,6 @@ export default function ModalRegistrarFaena({
 
     if (!visible) return null;
 
-    const client = useAxiosWithAuth();
 
     const registerSite = async () => {
         setError("");

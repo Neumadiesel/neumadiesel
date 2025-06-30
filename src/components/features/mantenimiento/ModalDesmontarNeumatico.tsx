@@ -37,6 +37,8 @@ export default function ModalDesmontarNeumatico({
     tire,
     onGuardar,
 }: ModalDesmontarNeumaticoProps) {
+
+    const client = useAxiosWithAuth();
     const [tireDesmonted, setTireDesmonted] = useState({
         code: "",
         tireId: null as number | null,
@@ -109,7 +111,6 @@ export default function ModalDesmontarNeumatico({
     const handleSubmit = async () => {
         setError("");
         setLoading(true);
-        const client = useAxiosWithAuth();
         const { tireId, internalTread, externalTread } = tireDesmonted;
         if (!tireId || !internalTread || !externalTread || !actionDate || !otCode || !reasonId) {
             setError("Por favor, completa todos los campos");
