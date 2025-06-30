@@ -9,6 +9,7 @@ import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import Cross from "@/components/common/icons/Cross";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Extender con los plugins
 dayjs.extend(utc);
@@ -43,6 +44,8 @@ export default function ModalCrearOrden({
 }: ModalCrearOrdenProps) {
 
     const authFetch = useAuthFetch();
+
+    const { user } = useAuth();
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
@@ -91,7 +94,9 @@ export default function ModalCrearOrden({
         fetchData();
     }, []);
 
-
+    useEffect(() => {
+        fetchData();
+    }, [user]);
 
     if (!visible) return null;
 

@@ -12,6 +12,7 @@ import {
 import { useEffect, useState, useMemo } from "react";
 import Select, { CSSObjectWithLabel } from "react-select";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Tipos de datos diferenciados
 type OperationalTire = {
@@ -272,6 +273,7 @@ const renderHistogram = (
 
 export default function OperationalTyresHistograms() {
     const authFetch = useAuthFetch();
+    const { user } = useAuth();
     const [tiresOperational, setTiresOperational] = useState<OperationalTire[]>([]);
     const [tiresScrapped, setTiresScrapped] = useState<ScrappedTire[]>([]);
     const [loading, setLoading] = useState(false);
@@ -308,133 +310,133 @@ export default function OperationalTyresHistograms() {
     }), []);
 
     // 🎯 FETCH MEJORADO CON MANEJO INDEPENDIENTE DE ERRORES
-    useEffect(() => {
-        const fetchTires = async () => {
-            setLoading(true);
-            setError(null);
-            setFetchErrors({});
 
-            try {
-                console.log('🔍 Iniciando fetch de neumáticos...');
-                console.log('🌐 Backend URL:', process.env.NEXT_PUBLIC_BACKEND_URL);
+    const fetchTires = async () => {
+        setLoading(true);
+        setError(null);
+        setFetchErrors({});
 
-                // 🎯 URLs que estás intentando usar
-                const urlOperational = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`;
-                const urlScrapped = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`;
+        try {
+            console.log('🔍 Iniciando fetch de neumáticos...');
+            console.log('🌐 Backend URL:', process.env.NEXT_PUBLIC_BACKEND_URL);
 
-                console.log('📡 URL Operacional:', urlOperational);
-                console.log('📡 URL Desechados:', urlScrapped);
+            // 🎯 URLs que estás intentando usar
+            const urlOperational = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`;
+            const urlScrapped = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`;
 
-                // 🎯 FETCH CON MANEJO INDEPENDIENTE DE ERRORES
-                const [resOp, resScrap] = await Promise.allSettled([
-                    authFetch(urlOperational),
-                    authFetch(urlScrapped) // 🎯 CAMBIO: Prueba sin el filtro initialTread
-                ]);
+            console.log('📡 URL Operacional:', urlOperational);
+            console.log('📡 URL Desechados:', urlScrapped);
 
-                let operationalData: OperationalTire[] = [];
-                let scrappedData: ScrappedTire[] = [];
-                const errors: { operational?: string; scrapped?: string } = {};
+            // 🎯 FETCH CON MANEJO INDEPENDIENTE DE ERRORES
+            const [resOp, resScrap] = await Promise.allSettled([
+                authFetch(urlOperational),
+                authFetch(urlScrapped) // 🎯 CAMBIO: Prueba sin el filtro initialTread
+            ]);
 
-                // 🎯 PROCESAR RESULTADO OPERACIONAL
-                if (resOp.status === 'fulfilled' && resOp.value.ok) {
-                    try {
-                        const dataOp = await resOp.value.json();
-                        if (Array.isArray(dataOp)) {
-                            operationalData = dataOp;
-                            console.log('✅ Datos operacionales:', dataOp.length, 'items');
+            let operationalData: OperationalTire[] = [];
+            let scrappedData: ScrappedTire[] = [];
+            const errors: { operational?: string; scrapped?: string } = {};
 
-                            // 🎯 DEBUG: Mostrar ejemplo de fechas
-                            if (dataOp.length > 0 && dataOp[0]?.lastInspection?.inspectionDate) {
-                                console.log('🔍 Ejemplo de fecha operacional:', dataOp[0].lastInspection.inspectionDate);
-                                const sampleDate = new Date(dataOp[0].lastInspection.inspectionDate);
-                                console.log('🔍 Fecha parseada:', sampleDate);
-                                console.log('🔍 Año UTC:', sampleDate.getUTCFullYear());
-                                console.log('🔍 Mes UTC:', sampleDate.getUTCMonth() + 1);
-                            }
-                        } else {
-                            console.warn('⚠️ Datos operacionales no son un array:', typeof dataOp);
+            // 🎯 PROCESAR RESULTADO OPERACIONAL
+            if (resOp.status === 'fulfilled' && resOp.value.ok) {
+                try {
+                    const dataOp = await resOp.value.json();
+                    if (Array.isArray(dataOp)) {
+                        operationalData = dataOp;
+                        console.log('✅ Datos operacionales:', dataOp.length, 'items');
+
+                        // 🎯 DEBUG: Mostrar ejemplo de fechas
+                        if (dataOp.length > 0 && dataOp[0]?.lastInspection?.inspectionDate) {
+                            console.log('🔍 Ejemplo de fecha operacional:', dataOp[0].lastInspection.inspectionDate);
+                            const sampleDate = new Date(dataOp[0].lastInspection.inspectionDate);
+                            console.log('🔍 Fecha parseada:', sampleDate);
+                            console.log('🔍 Año UTC:', sampleDate.getUTCFullYear());
+                            console.log('🔍 Mes UTC:', sampleDate.getUTCMonth() + 1);
                         }
-                    } catch (parseError) {
-                        console.error('❌ Error parseando datos operacionales:', parseError);
-                        errors.operational = 'Error al procesar datos operacionales';
+                    } else {
+                        console.warn('⚠️ Datos operacionales no son un array:', typeof dataOp);
                     }
-                } else {
-                    const status = resOp.status === 'fulfilled' ? resOp.value.status : 'rejected';
-                    const statusText = resOp.status === 'fulfilled' ? resOp.value.statusText : 'Connection failed';
-                    console.error('❌ Error fetch operacional:', status, statusText);
-                    errors.operational = `Error ${status}: ${statusText}`;
+                } catch (parseError) {
+                    console.error('❌ Error parseando datos operacionales:', parseError);
+                    errors.operational = 'Error al procesar datos operacionales';
                 }
-
-                // 🎯 PROCESAR RESULTADO DESECHADOS (NO BLOQUEAR SI FALLA)
-                if (resScrap.status === 'fulfilled' && resScrap.value.ok) {
-                    try {
-                        const dataScrap = await resScrap.value.json();
-                        if (Array.isArray(dataScrap)) {
-                            scrappedData = dataScrap;
-                            console.log('✅ Datos desechados:', dataScrap.length, 'items');
-
-                            // 🎯 DEBUG: Mostrar ejemplo real de dados de baja
-                            if (dataScrap.length > 0 && dataScrap[0]?.procedures?.[0]?.startDate) {
-                                console.log('🔍 === ESTRUCTURA REAL DE DADOS DE BAJA ===');
-                                console.log('🔍 Ejemplo de fecha baja:', dataScrap[0].procedures[0].startDate);
-                                const sampleDate = new Date(dataScrap[0].procedures[0].startDate);
-                                console.log('🔍 Fecha parseada (baja):', sampleDate);
-                                console.log('🔍 Año UTC (baja):', sampleDate.getUTCFullYear());
-                                console.log('🔍 Mes UTC (baja):', sampleDate.getUTCMonth() + 1);
-                                console.log('🔍 Estructura procedures[0]:', {
-                                    tireHours: dataScrap[0].procedures[0].tireHours,
-                                    tireKilometres: dataScrap[0].procedures[0].tireKilometres,
-                                    position: dataScrap[0].procedures[0].position,
-                                    internalTread: dataScrap[0].procedures[0].internalTread,
-                                    externalTread: dataScrap[0].procedures[0].externalTread,
-                                    startDate: dataScrap[0].procedures[0].startDate
-                                });
-                                console.log('🔍 installedTires está vacío:', dataScrap[0].installedTires.length === 0);
-                                console.log('🔍 Tiene retirementReason:', !!dataScrap[0].retirementReason);
-                            }
-                        } else {
-                            console.warn('⚠️ Datos desechados no son un array:', typeof dataScrap);
-                        }
-                    } catch (parseError) {
-                        console.error('❌ Error parseando datos desechados:', parseError);
-                        errors.scrapped = 'Error al procesar datos desechados';
-                    }
-                } else {
-                    const status = resScrap.status === 'fulfilled' ? resScrap.value.status : 'rejected';
-                    const statusText = resScrap.status === 'fulfilled' ? resScrap.value.statusText : 'Connection failed';
-                    console.warn('⚠️ Error fetch desechados (no crítico):', status, statusText);
-                    errors.scrapped = `Error ${status}: ${statusText}`;
-                }
-
-                // 🎯 ACTUALIZAR ESTADO SIEMPRE (INCLUSO CON ERRORES PARCIALES)
-                setTiresOperational(operationalData);
-                setTiresScrapped(scrappedData);
-                setFetchErrors(errors);
-
-                // 🎯 SOLO MOSTRAR ERROR CRÍTICO SI AMBOS FALLAN
-                if (operationalData.length === 0 && scrappedData.length === 0) {
-                    setError('No se pudieron cargar datos de neumáticos');
-                } else {
-                    console.log('✅ Estado actualizado correctamente');
-                }
-
-            } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-                console.error("❌ Error general cargando neumáticos:", errorMessage);
-                setError(errorMessage);
-
-                // 🎯 FALLBACK: Arrays vacíos en caso de error
-                setTiresOperational([]);
-                setTiresScrapped([]);
-            } finally {
-                setLoading(false);
+            } else {
+                const status = resOp.status === 'fulfilled' ? resOp.value.status : 'rejected';
+                const statusText = resOp.status === 'fulfilled' ? resOp.value.statusText : 'Connection failed';
+                console.error('❌ Error fetch operacional:', status, statusText);
+                errors.operational = `Error ${status}: ${statusText}`;
             }
-        };
 
+            // 🎯 PROCESAR RESULTADO DESECHADOS (NO BLOQUEAR SI FALLA)
+            if (resScrap.status === 'fulfilled' && resScrap.value.ok) {
+                try {
+                    const dataScrap = await resScrap.value.json();
+                    if (Array.isArray(dataScrap)) {
+                        scrappedData = dataScrap;
+                        console.log('✅ Datos desechados:', dataScrap.length, 'items');
+
+                        // 🎯 DEBUG: Mostrar ejemplo real de dados de baja
+                        if (dataScrap.length > 0 && dataScrap[0]?.procedures?.[0]?.startDate) {
+                            console.log('🔍 === ESTRUCTURA REAL DE DADOS DE BAJA ===');
+                            console.log('🔍 Ejemplo de fecha baja:', dataScrap[0].procedures[0].startDate);
+                            const sampleDate = new Date(dataScrap[0].procedures[0].startDate);
+                            console.log('🔍 Fecha parseada (baja):', sampleDate);
+                            console.log('🔍 Año UTC (baja):', sampleDate.getUTCFullYear());
+                            console.log('🔍 Mes UTC (baja):', sampleDate.getUTCMonth() + 1);
+                            console.log('🔍 Estructura procedures[0]:', {
+                                tireHours: dataScrap[0].procedures[0].tireHours,
+                                tireKilometres: dataScrap[0].procedures[0].tireKilometres,
+                                position: dataScrap[0].procedures[0].position,
+                                internalTread: dataScrap[0].procedures[0].internalTread,
+                                externalTread: dataScrap[0].procedures[0].externalTread,
+                                startDate: dataScrap[0].procedures[0].startDate
+                            });
+                            console.log('🔍 installedTires está vacío:', dataScrap[0].installedTires.length === 0);
+                            console.log('🔍 Tiene retirementReason:', !!dataScrap[0].retirementReason);
+                        }
+                    } else {
+                        console.warn('⚠️ Datos desechados no son un array:', typeof dataScrap);
+                    }
+                } catch (parseError) {
+                    console.error('❌ Error parseando datos desechados:', parseError);
+                    errors.scrapped = 'Error al procesar datos desechados';
+                }
+            } else {
+                const status = resScrap.status === 'fulfilled' ? resScrap.value.status : 'rejected';
+                const statusText = resScrap.status === 'fulfilled' ? resScrap.value.statusText : 'Connection failed';
+                console.warn('⚠️ Error fetch desechados (no crítico):', status, statusText);
+                errors.scrapped = `Error ${status}: ${statusText}`;
+            }
+
+            // 🎯 ACTUALIZAR ESTADO SIEMPRE (INCLUSO CON ERRORES PARCIALES)
+            setTiresOperational(operationalData);
+            setTiresScrapped(scrappedData);
+            setFetchErrors(errors);
+
+            // 🎯 SOLO MOSTRAR ERROR CRÍTICO SI AMBOS FALLAN
+            if (operationalData.length === 0 && scrappedData.length === 0) {
+                setError('No se pudieron cargar datos de neumáticos');
+            } else {
+                console.log('✅ Estado actualizado correctamente');
+            }
+
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+            console.error("❌ Error general cargando neumáticos:", errorMessage);
+            setError(errorMessage);
+
+            // 🎯 FALLBACK: Arrays vacíos en caso de error
+            setTiresOperational([]);
+            setTiresScrapped([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
         if (isMounted) {
             fetchTires();
         }
-    }, [isMounted]);
+    }, [isMounted, user]);
 
     // 🎯 VALIDAR SI HAY DATOS DISPONIBLES PARA EL TIPO SELECCIONADO
     const hasDataForCurrentType = useMemo(() => {

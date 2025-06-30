@@ -18,6 +18,7 @@ import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 dayjs.locale("es");
 
 interface Procedure {
@@ -89,6 +90,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
 
 export default function ScrappedTyresChart() {
   const authFetch = useAuthFetch();
+  const { user } = useAuth();
   const [tires, setTires] = useState<ScrappedTire[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false); // 🎯 ESTADO PARA HIDRATACIÓN
@@ -126,33 +128,37 @@ export default function ScrappedTyresChart() {
   }), []);
 
   // 🎯 FETCH CON MANEJO DE ERRORES MEJORADO
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (!Array.isArray(data)) {
-          throw new Error('Los datos recibidos no son un array válido');
-        }
-
-        setTires(data);
-      } catch (error) {
-        console.error("Error al cargar datos:", error);
-        setTires([]); // Fallback seguro
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
 
+      const data = await response.json();
+
+      if (!Array.isArray(data)) {
+        throw new Error('Los datos recibidos no son un array válido');
+      }
+
+      setTires(data);
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+      setTires([]); // Fallback seguro
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [user]);
 
   // 🎯 DATOS FILTRADOS PRIMERO (para opciones inteligentes)
   const filteredTires = useMemo(() => {

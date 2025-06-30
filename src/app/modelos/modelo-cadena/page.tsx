@@ -6,6 +6,7 @@ import { Pencil, Plus, Link as LinkIcon } from "lucide-react";
 import ModalRegistrarModeloCadena from "@/components/features/cadenas/ModalRegistrarModeloCadena";
 import ModalEditarModeloCadena from "@/components/features/cadenas/ModalEditarModeloCadena";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 // Interfaz para tipar los datos de cada modelo de cadena
@@ -23,6 +24,7 @@ interface ModeloCadena {
 export default function Page() {
     // Estados para manejar datos y visibilidad de los modales
     const client = useAxiosWithAuth();
+    const { user } = useAuth();
     const [modelos, setModelos] = useState<ModeloCadena[]>([]);
     const [modalCrearVisible, setModalCrearVisible] = useState(false);
     const [modalEditarVisible, setModalEditarVisible] = useState(false);
@@ -39,6 +41,10 @@ export default function Page() {
     useEffect(() => {
         fetchModelos();
     }, []);
+
+    useEffect(() => {
+        fetchModelos();
+    }, [user]);
 
     // Función para abrir modal de edición con un modelo específico
     const abrirModalEditar = (modelo: ModeloCadena) => {

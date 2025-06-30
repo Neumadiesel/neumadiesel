@@ -129,6 +129,13 @@ export default function MedicionPage() {
         fetchKpi();
     }, []);
 
+    useEffect(() => {
+        console.log("token", token);
+        fetchPendingInspections();
+        fetchLastInspections();
+        fetchKpi();
+    }, [user, token]);
+
     return (
         <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col  p-4">
             <div className="w-full flex justify-between mb-2">

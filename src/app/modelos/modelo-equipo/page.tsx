@@ -51,7 +51,7 @@ export default function ModelosEquipo() {
     useEffect(() => {
         console.log("User in fetchVehicleModels:", user?.faena_id);
         fetchVehicleModels();
-    }, [fetchVehicleModels]);
+    }, [fetchVehicleModels, user]);
 
     useEffect(() => {
         if (!mostrarEditar && !modalRegistarFaena) return;
@@ -62,6 +62,8 @@ export default function ModelosEquipo() {
         setVehicleModelSelected(model);
         setMostrarEditar(true);
     };
+
+
 
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">

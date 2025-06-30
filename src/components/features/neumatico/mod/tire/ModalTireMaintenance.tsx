@@ -8,6 +8,7 @@ import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl"
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface ModalTireMaintenanceProps {
@@ -34,6 +35,7 @@ export default function ModalTireMaintenance({
     onGuardar,
 }: ModalTireMaintenanceProps) {
     const authFetch = useAuthFetch();
+    const { user } = useAuth();
     const [tireEdited, setTireEdited] = useState({
         code: "",
         locationId: null as number | null,
@@ -108,6 +110,11 @@ export default function ModalTireMaintenance({
         fetchReasons();
         fetchLocationsMaintenance();
     }, []);
+
+    useEffect(() => {
+        fetchReasons();
+        fetchLocationsMaintenance();
+    }, [user]);
 
     if (!visible || !tire) return null;
 

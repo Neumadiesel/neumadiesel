@@ -7,6 +7,7 @@ import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 interface LocationDTO {
     id: number;
     name: string;
@@ -25,6 +26,7 @@ export default function ModalEditarNeumatico({
     tire,
     onGuardar,
 }: ModalEditarNeumaticoProps) {
+    const { user } = useAuth();
     const [tireEdited, setTireEdited] = useState({
         code: "",
         locationId: null as number | null,
@@ -63,7 +65,9 @@ export default function ModalEditarNeumatico({
     useEffect(() => {
         fetchLocations();
     }, []);
-
+    useEffect(() => {
+        fetchLocations();
+    }, [user]);
     if (!visible || !tire) return null;
 
 

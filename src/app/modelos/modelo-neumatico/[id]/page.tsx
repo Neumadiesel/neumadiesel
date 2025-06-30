@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 interface TyreModelDto {
     id: number;
     code: string;
@@ -35,6 +36,7 @@ export default function EquiposPorModelo() {
     const [tires, setTires] = useState<TireDto[]>([]);
     const [model, setModel] = useState<TyreModelDto>({} as TyreModelDto);
     const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
     const fetchVehicleModels = async () => {
         setLoading(true);
         try {
@@ -58,7 +60,7 @@ export default function EquiposPorModelo() {
 
     useEffect(() => {
         fetchVehicleModels();
-    }, [modalRegistarFaena]);
+    }, [modalRegistarFaena, user]);
 
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">

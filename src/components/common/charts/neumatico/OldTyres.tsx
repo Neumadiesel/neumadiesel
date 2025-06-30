@@ -14,6 +14,7 @@ import {
 export default function OldTyres() {
     const [tireCritical, setTireCritical] = useState<TireDTO[]>([]);
     const [showChart, setShowChart] = useState(true);
+    const { user } = useAuth(); // Assuming useAuth is defined in your context
     const client = useAxiosWithAuth();
     function calculateWearPercentage(
         internalTread?: number,
@@ -62,6 +63,9 @@ export default function OldTyres() {
         fetchCriticalTires();
     }, []);
 
+    useEffect(() => {
+        fetchCriticalTires();
+    }, [user]);
 
     return (
         <section className="w-full h-[65dvh] bg-white shadow-sm dark:bg-gray-800 border dark:border-neutral-600 p-4 rounded-lg mb-4">
@@ -184,6 +188,7 @@ import {
 import ExportOldTyresReport from "@/components/features/neumatico/data/ExportOldTyreesToExcel";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const description = "A bar chart with a custom label"
 

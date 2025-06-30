@@ -240,6 +240,10 @@ export default function Page() {
     useEffect(() => {
         fetchInspectionData();
     }, []);
+
+    useEffect(() => {
+        fetchInspectionData();
+    }, [user]);
     return (
         <div className="p-3 bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col gap-4">
             {/* Seccion de titulo y boton de exportación */}

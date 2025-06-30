@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
@@ -54,6 +55,7 @@ interface Tire {
 
 export default function TireHealthDashboard() {
   const authFetch = useAuthFetch();
+  const { user } = useAuth();
   const [tires, setTires] = useState<Tire[]>([]);
   const [selectedDimension, setSelectedDimension] = useState<string | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
@@ -66,6 +68,14 @@ export default function TireHealthDashboard() {
       .then(setTires)
       .catch(err => console.error("Error cargando neumáticos:", err));
   }, []);
+
+  useEffect(() => {
+    // Cargar neumáticos desde el endpoint operacional
+    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
+      .then(res => res.json())
+      .then(setTires)
+      .catch(err => console.error("Error cargando neumáticos:", err));
+  }, [user]);
 
   // Función para obtener color por posición
   const getPositionColor = (position: number) => {

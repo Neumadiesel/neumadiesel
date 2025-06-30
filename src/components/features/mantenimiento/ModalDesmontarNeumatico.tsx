@@ -11,6 +11,7 @@ import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl"
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Extender con los plugins
 dayjs.extend(utc);
@@ -37,7 +38,7 @@ export default function ModalDesmontarNeumatico({
     tire,
     onGuardar,
 }: ModalDesmontarNeumaticoProps) {
-
+    const { user } = useAuth();
     const client = useAxiosWithAuth();
     const [tireDesmonted, setTireDesmonted] = useState({
         code: "",
@@ -105,6 +106,9 @@ export default function ModalDesmontarNeumatico({
         fetchRazones();
     }, []);
 
+    useEffect(() => {
+        fetchRazones();
+    }, [user]);
 
     if (!visible || !tire) return null;
 

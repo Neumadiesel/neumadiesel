@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface RazonDto {
@@ -28,6 +29,7 @@ export default function ModalEditarRazon({
         name: "",
         description: "",
     });
+    const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const client = useAxiosWithAuth();

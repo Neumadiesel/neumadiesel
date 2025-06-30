@@ -8,6 +8,7 @@ import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl"
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 interface LocationDTO {
     id: number;
     name: string;
@@ -36,7 +37,7 @@ export default function ModalStockDisponible({
         externalTread: tire?.lastInspection.externalTread || null,
     });
     const client = useAxiosWithAuth();
-
+    const { user } = useAuth();
     const authFetch = useAuthFetch();
     const [locations, setLocations] = useState<LocationDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -71,6 +72,10 @@ export default function ModalStockDisponible({
     useEffect(() => {
         fetchLocations();
     }, []);
+
+    useEffect(() => {
+        fetchLocations();
+    }, [user]);
 
     if (!visible || !tire) return null;
 

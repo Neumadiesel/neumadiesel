@@ -4,6 +4,7 @@ import { useState } from "react";
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProgramDTO {
     code: string;
@@ -43,6 +44,7 @@ export default function ModalProgramaMantenimiento({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const { user } = useAuth();
     const client = useAxiosWithAuth();
 
 

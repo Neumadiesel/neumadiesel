@@ -15,6 +15,7 @@ import Select from 'react-select';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { useAuthFetch } from '@/utils/AuthFetch';
+import { useAuth } from '@/contexts/AuthContext';
 dayjs.locale('es');
 
 type MotivoEntry = {
@@ -51,6 +52,7 @@ interface Tire {
 
 export default function ScrappedReasonsChart() {
     const authFetch = useAuthFetch();
+    const { user } = useAuth();
     const [data, setData] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
     const [year, setYear] = useState<number>(new Date().getFullYear());
@@ -60,22 +62,27 @@ export default function ScrappedReasonsChart() {
     const [availableReasons, setAvailableReasons] = useState<string[]>([]);
     const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
 
+    const fetchData = async () => {
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+        const json = await res.json();
+        setData(json);
+
+        // Debug
+        if (json.length > 0) {
+            console.log('Estructura de datos:', json[0]);
+            console.log('Primer objeto completo:', JSON.stringify(json[0], null, 2));
+        }
+
+        setLoading(false);
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
-            const json = await res.json();
-            setData(json);
-
-            // Debug
-            if (json.length > 0) {
-                console.log('Estructura de datos:', json[0]);
-                console.log('Primer objeto completo:', JSON.stringify(json[0], null, 2));
-            }
-
-            setLoading(false);
-        };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [user]);
 
     const processed = useMemo(() => {
         const counts: Record<string, Record<string, { hrs: number; count: number }>> = {};

@@ -36,7 +36,6 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const authFetch = useAuthFetch();
-
     const [loading, setLoading] = useState(true);
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
     const [modalRegistrarVehiculo, setModalRegistrarVehiculo] = useState(false);

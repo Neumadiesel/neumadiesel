@@ -15,6 +15,7 @@ import Cross from "@/components/common/icons/Cross";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 interface VehicleDTO {
     id: number;
     code: string;
@@ -76,6 +77,7 @@ export default function ModalAsignarNeumatico({
     onGuardar,
 }: ModalAsignarNeumaticoProps) {
     const authFetch = useAuthFetch();
+    const { user } = useAuth();
     const client = useAxiosWithAuth();
     const [posicion, setPosition] = useState<number | null>(null);
     const [tireIdSelected, setTireIdSelected] = useState<number | null>(null);
@@ -136,6 +138,12 @@ export default function ModalAsignarNeumatico({
         fetchModels();
         fetchData();
     }, []);
+
+    useEffect(() => {
+        fetchLocations();
+        fetchModels();
+        fetchData();
+    }, [user]);
 
     useEffect(() => {
         fetchData();

@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 type OperationalTire = {
     id: number;
@@ -66,26 +67,32 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 
 export default function OperationalTyres() {
     const authFetch = useAuthFetch();
+    const { user } = useAuth()
     const [tires, setTires] = useState<OperationalTire[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedDimensions, setSelectedDimensions] = useState<string[]>([]);
     const [trendInfo, setTrendInfo] = useState<{ equation: string, r2: number, correlation: string } | null>(null);
 
+    const fetchTires = async () => {
+        setLoading(true);
+        try {
+            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            const data = await res.json();
+            setTires(data);
+        } catch (error) {
+            console.error("Error cargando neumáticos operacionales:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchTires = async () => {
-            setLoading(true);
-            try {
-                const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
-                const data = await res.json();
-                setTires(data);
-            } catch (error) {
-                console.error("Error cargando neumáticos operacionales:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchTires();
     }, []);
+
+    useEffect(() => {
+        fetchTires();
+    }, [user]);
 
     const scatterData: ScatterPoint[] = tires.map((tire) => {
         const finalTread = (tire.lastInspection.externalTread + tire.lastInspection.internalTread) / 2;

@@ -17,6 +17,7 @@ import {
 } from 'recharts';
 import { FaChartLine, FaChartPie, FaArrowUp } from 'react-icons/fa';
 import { useAuthFetch } from '@/utils/AuthFetch';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Tire {
     id?: string;
@@ -38,31 +39,35 @@ export default function TireAnalyticsDashboard() {
     const [operationalTires, setOperationalTires] = useState<Tire[]>([]);
     const [scrappedTires, setScrappedTires] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
 
+    const fetchData = async () => {
+        try {
+            const [opRes, scrRes] = await Promise.all([
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`),
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`)
+            ]);
+
+            const [opData, scrData] = await Promise.all([
+                opRes.json(),
+                scrRes.json()
+            ]);
+
+            setOperationalTires(opData);
+            setScrappedTires(scrData);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [opRes, scrRes] = await Promise.all([
-                    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`),
-                    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`)
-                ]);
-
-                const [opData, scrData] = await Promise.all([
-                    opRes.json(),
-                    scrRes.json()
-                ]);
-
-                setOperationalTires(opData);
-                setScrappedTires(scrData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
     }, []);
+
+    useEffect(() => {
+        fetchData();
+    }, [user]);
 
     const analytics = useMemo(() => {
         if (loading) return null;

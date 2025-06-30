@@ -37,6 +37,7 @@ export default function ModalEditarFaena({
     const [loading, setLoading] = useState(false);
     const { token } = useAuth();
     const client = useAxiosWithAuth();
+
     useEffect(() => {
         if (circuito) {
             setCircuitoeditado({

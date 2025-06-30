@@ -82,6 +82,11 @@ export default function Page() {
     useEffect(() => {
         fetchFaenas();
     }, []);
+
+    useEffect(() => {
+        fetchFaenas();
+    }, [token]);
+
     useEffect(() => {
         const fetchData = async () => {
             try {

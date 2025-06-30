@@ -26,7 +26,7 @@ interface ModalProps {
 
 export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, modeloCadena }: ModalProps) {
     const client = useAxiosWithAuth();
-    const { isDemo } = useAuth();
+    const { isDemo, user } = useAuth();
     const [codigo, setCodigo] = useState("");
     const [modelo, setModelo] = useState("");
     const [patron, setPatron] = useState("");
@@ -42,7 +42,7 @@ export default function ModalEditarModeloCadena({ visible, onClose, onGuardar, m
             setDiseno(modeloCadena.meshDesign);
             setTamano(modeloCadena.tireSize);
         }
-    }, [modeloCadena]);
+    }, [modeloCadena, user]);
 
     const handleGuardar = async () => {
         const payload = {

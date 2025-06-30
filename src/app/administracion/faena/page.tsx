@@ -12,6 +12,7 @@ import CustomModal from "@/components/common/alerts/alert";
 import { Info, Pencil } from "lucide-react";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface FaenaDTO {
     id: number;
@@ -28,6 +29,7 @@ interface FaenaDTO {
 
 export default function Page() {
     const client = useAxiosWithAuth();
+    const { token } = useAuth();
     const authFetch = useAuthFetch();
     const [listaFaenas, setRazones] = useState<FaenaDTO[]>([]);
     const [faenaSelected, setFaenaSelected] = useState<FaenaDTO | null>(null);
@@ -35,6 +37,7 @@ export default function Page() {
     const [faenaId, setFaenaId] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
     const fetchFaenas = async () => {
         setLoading(true);
         try {
@@ -98,7 +101,7 @@ export default function Page() {
 
     useEffect(() => {
         fetchFaenas();
-    }, [isOpen, mostrarEditar, modalRegistarFaena, isOpenReactivar]);
+    }, [isOpen, mostrarEditar, modalRegistarFaena, isOpenReactivar, token]);
 
 
 

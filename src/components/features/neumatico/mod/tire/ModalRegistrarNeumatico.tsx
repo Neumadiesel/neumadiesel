@@ -84,6 +84,12 @@ export default function ModalRegistrarNeumatico({
         fetchSites();
     }, []);
 
+
+    useEffect(() => {
+        fetchModelTire();
+        fetchSites();
+    }, [user]);
+
     const handleSubmit = async () => {
         setError("");
         setLoading(true);

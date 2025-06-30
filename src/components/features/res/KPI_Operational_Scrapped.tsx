@@ -1,4 +1,5 @@
 'use client';
+import { useAuth } from '@/contexts/AuthContext';
 import { useAuthFetch } from '@/utils/AuthFetch';
 import React, { useEffect, useState, useMemo } from 'react';
 import {
@@ -44,27 +45,33 @@ export default function TyresKPI() {
     const [operationalTires, setOperationalTires] = useState<Tire[]>([]);
     const [scrappedTires, setScrappedTires] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
+    const { user } = useAuth();
+
+    const fetchData = async () => {
+        try {
+            const opRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            const opData = await opRes.json();
+
+            const scrRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+            const scrData = await scrRes.json();
+
+            setOperationalTires(opData);
+            setScrappedTires(scrData);
+        } catch (error) {
+            console.error('Error fetching tire data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const opRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
-                const opData = await opRes.json();
-
-                const scrRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
-                const scrData = await scrRes.json();
-
-                setOperationalTires(opData);
-                setScrappedTires(scrData);
-            } catch (error) {
-                console.error('Error fetching tire data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
     }, []);
+
+
+    useEffect(() => {
+        fetchData();
+    }, [user]);
 
     // Cálculos avanzados de KPIs
     const kpis = useMemo(() => {

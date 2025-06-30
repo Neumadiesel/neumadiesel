@@ -8,13 +8,14 @@ import ModaleditarTyreModel from "@/components/features/neumatico/mod/model/Moda
 import { TyreModelDto } from "@/types/TyreModelDTO";
 import Button from "@/components/common/button/Button";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ModelosNeumaticos() {
     const authFetch = useAuthFetch();
     const [tyreModels, setTyreModels] = useState<TyreModelDto[]>([]);
     const [tyreModelSelected, setTyreModelSelected] = useState<TyreModelDto | null>(null);
     const [loading, setLoading] = useState(true);
-
+    const { user } = useAuth();
     const fetchModelTyres = async () => {
         setLoading(true);
         try {
@@ -37,7 +38,7 @@ export default function ModelosNeumaticos() {
 
     useEffect(() => {
         fetchModelTyres();
-    }, [mostrarEditar, modalRegistrarModelo]);
+    }, [mostrarEditar, modalRegistrarModelo, user]);
 
 
 

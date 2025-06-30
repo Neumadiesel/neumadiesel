@@ -130,6 +130,13 @@ export default function ListaNeumaticos() {
     useEffect(() => {
         fetchTires();
     }, [openRegisterModal, editarNeumatico, yearStart, yearEnd, faenaId]);
+
+    useEffect(() => {
+        fetchTires();
+        fetchLocations();
+        fetchVehicles();
+    }, [user]);
+
     return (
         <div className="w-full">
             <Breadcrumb />

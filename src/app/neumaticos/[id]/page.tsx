@@ -3,6 +3,7 @@ import LabelLoading from "@/components/common/forms/LabelLoading";
 import ExportTireReport from "@/components/features/neumatico/data/ExportDataToExcel";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
+import { useAuth } from "@/contexts/AuthContext";
 import { TireDTO } from "@/types/Tire";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { Info } from "lucide-react";
@@ -62,7 +63,7 @@ export default function TirePage() {
     const [tire, setTires] = useState<TireDTO>();
     const [loading, setLoading] = useState(true);
     const [unifiedRecords, setUnifiedRecords] = useState<UnifiedRecord[]>([]);
-
+    const { user } = useAuth();
     const [chartData, setChartData] = useState<{ date: string; avgRemanente: number }[]>([]);
 
     const fetchUnifiedRecords = async () => {
@@ -156,6 +157,11 @@ export default function TirePage() {
         fetchUnifiedRecords();
         fetchTires();
     }, []);
+
+    useEffect(() => {
+        fetchUnifiedRecords();
+        fetchTires();
+    }, [user]);
 
     const calculateWearPercentage = (initialTread: number | null, currentTread: number | null) => {
         if (initialTread === null || currentTread === null) return 0;

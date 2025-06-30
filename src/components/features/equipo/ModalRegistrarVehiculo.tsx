@@ -89,6 +89,10 @@ export default function ModalRegistrarVehiculo({
     }, []);
 
     useEffect(() => {
+        fetchData();
+    }, [user]);
+
+    useEffect(() => {
         if (user?.faena_id) {
             setVehicleEdited((prev) => ({
                 ...prev,

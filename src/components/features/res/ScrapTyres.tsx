@@ -12,6 +12,7 @@ import {
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 type TireScrapResponse = {
     id: number;
@@ -64,52 +65,56 @@ export default function ScrapTyres() {
     const [scatterData, setScatterData] = useState<ScatterPoint[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedMotivos, setSelectedMotivos] = useState<string[]>([]);
+    const { user } = useAuth();
 
+    const fetchScrappedTires = async () => {
+        try {
+            setLoading(true);
+            const response = await authFetch(`http://localhost:3002/tires/scrapped/site/1/initialTread/97`);
+            const tires: TireScrapResponse = await response.json();
+
+            const data: ScatterPoint[] = tires.flatMap((tire) => {
+                const procedure = tire.procedures?.[0];
+                if (
+                    !procedure ||
+                    tire.initialTread == null ||
+                    procedure.externalTread == null ||
+                    procedure.internalTread == null ||
+                    procedure.tireHours == null ||
+                    !tire.retirementReason
+                ) {
+                    return [];
+                }
+
+                const finalTread = (procedure.externalTread + procedure.internalTread) / 2;
+                const desgaste = Number(
+                    (((tire.initialTread - finalTread) / tire.initialTread) * 100).toFixed(2)
+                );
+
+                return {
+                    horas: procedure.tireHours,
+                    desgaste,
+                    codigo: tire.code,
+                    motivo: tire.retirementReason.name,
+                    descripcionMotivo: tire.retirementReason.description,
+                    fecha: new Date(procedure.startDate).toISOString().split("T")[0],
+                };
+            });
+
+            setScatterData(data);
+        } catch (error) {
+            console.error("Error fetching scrap tires:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchScrappedTires = async () => {
-            try {
-                setLoading(true);
-                const response = await authFetch(`http://localhost:3002/tires/scrapped/site/1/initialTread/97`);
-                const tires: TireScrapResponse = await response.json();
-
-                const data: ScatterPoint[] = tires.flatMap((tire) => {
-                    const procedure = tire.procedures?.[0];
-                    if (
-                        !procedure ||
-                        tire.initialTread == null ||
-                        procedure.externalTread == null ||
-                        procedure.internalTread == null ||
-                        procedure.tireHours == null ||
-                        !tire.retirementReason
-                    ) {
-                        return [];
-                    }
-
-                    const finalTread = (procedure.externalTread + procedure.internalTread) / 2;
-                    const desgaste = Number(
-                        (((tire.initialTread - finalTread) / tire.initialTread) * 100).toFixed(2)
-                    );
-
-                    return {
-                        horas: procedure.tireHours,
-                        desgaste,
-                        codigo: tire.code,
-                        motivo: tire.retirementReason.name,
-                        descripcionMotivo: tire.retirementReason.description,
-                        fecha: new Date(procedure.startDate).toISOString().split("T")[0],
-                    };
-                });
-
-                setScatterData(data);
-            } catch (error) {
-                console.error("Error fetching scrap tires:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchScrappedTires();
     }, []);
+
+    useEffect(() => {
+        fetchScrappedTires();
+    }, [user]);
 
     const groupedData: Record<string, ScatterPoint[]> = {};
     scatterData.forEach((item) => {

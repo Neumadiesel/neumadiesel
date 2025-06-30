@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface VehicleModelDto {
@@ -30,6 +31,7 @@ export default function ModalEditarVehicleModel({
         brand: "",
         model: "",
     });
+    const { user } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const client = useAxiosWithAuth();

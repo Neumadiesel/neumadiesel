@@ -111,6 +111,9 @@ export default function ModalRetireTire({
         fetchReasons();
     }, []);
 
+    useEffect(() => {
+        fetchReasons();
+    }, [user]);
     if (!visible || !tire) return null;
 
 

@@ -1,6 +1,7 @@
 "use client";
 import Budget from "@/components/features/faena/budget/ListaBudget";
 import Breadcrumb from "@/components/layout/BreadCrumb";
+import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useEffect, useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
@@ -21,6 +22,7 @@ interface FaenaDTO {
 
 export default function Faena({ id }: { id?: string }) {
     const authFetch = useAuthFetch();
+    const { user } = useAuth();
 
     const [faena, setFaena] = useState<FaenaDTO | null>(null);
 
@@ -37,6 +39,10 @@ export default function Faena({ id }: { id?: string }) {
     useEffect(() => {
         fetchFaenas();
     }, []);
+
+    useEffect(() => {
+        fetchFaenas();
+    }, [user]);
 
     return (
         <div className="bg-white dark:bg-neutral-800 dark:text-white rounded-lg h-full ">

@@ -38,6 +38,7 @@ export default function ModalFormularioUsuario({
     onSuccess,
 }: ModalFormularioUsuarioProps) {
     const authFetch = useAuthFetch();
+    const { user } = useAuth();
     const [nombre, setNombre] = useState<string>("");
     const [apellido, setApellido] = useState<string>("");
     const [correo, setCorreo] = useState<string>("");
@@ -92,6 +93,10 @@ export default function ModalFormularioUsuario({
     useEffect(() => {
         fetchFaenas();
     }, []);
+
+    useEffect(() => {
+        fetchFaenas();
+    }, [user]);
 
     if (!visible) return null;
 

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 
 interface VehicleDTO {
@@ -70,6 +71,7 @@ export default function ModaleditarEquipo({
     onGuardar,
 }: ModaleditarEquipoProps) {
     const client = useAxiosWithAuth();
+    const { user } = useAuth();
     const [vehicleEdited, setVehicleEdited] = useState({
         code: "",
         modelId: null as number | null,
@@ -121,6 +123,9 @@ export default function ModaleditarEquipo({
         fetchData();
     }, []);
 
+    useEffect(() => {
+        fetchData();
+    }, [user]);
 
     if (!visible || !vehicle) return null;
 

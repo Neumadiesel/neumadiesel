@@ -4,6 +4,7 @@ import { GiMineTruck } from "react-icons/gi";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface KpiDto {
     operationalTires: number,
@@ -13,6 +14,7 @@ interface KpiDto {
 
 export default function SectionKpi() {
     // const [siteId, setSiteId] = useState<number>(1)
+    const { user } = useAuth();
     const [kpis, setKpis] = useState<KpiDto>({
         operationalTires: 0,
         operationalVehicles: 0
@@ -34,6 +36,10 @@ export default function SectionKpi() {
     useEffect(() => {
         fetchKpis();
     }, []);
+
+    useEffect(() => {
+        fetchKpis();
+    }, [user]);
 
 
     return (

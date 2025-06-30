@@ -56,7 +56,7 @@ export default function ModalEditarUsuario({
         faena_id: 0,
     });
     const authFetch = useAuthFetch();
-
+    const { user } = useAuth();
     const [roles, setRoles] = useState<Role[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -76,26 +76,28 @@ export default function ModalEditarUsuario({
         }
     }, [usuario]);
 
-    useEffect(() => {
-        const fetchRoles = async () => {
-            try {
-                const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-                const response = await axios.get(`${API_URL}/roles`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setRoles(response.data);
-            } catch (error) {
-                console.error("Error al obtener roles:", error);
-                setError("Error al cargar los roles");
-            }
-        };
+    const fetchRoles = async () => {
+        try {
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+            const response = await axios.get(`${API_URL}/roles`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setRoles(response.data);
+        } catch (error) {
+            console.error("Error al obtener roles:", error);
+            setError("Error al cargar los roles");
+        }
+    };
 
+    useEffect(() => {
         if (visible) {
             fetchRoles();
         }
     }, [visible, token]);
+
+
     const fetchFaenas = async () => {
         setLoading(true);
         try {
