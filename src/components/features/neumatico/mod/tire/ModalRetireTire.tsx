@@ -74,10 +74,12 @@ export default function ModalRetireTire({
             const data = await response.json();
             setLoading(false);
             setMaintenanceReasons(
-                data.filter(
-                    (reason: MaintenanceReasonDTO) =>
-                        !/Desinstalaci[oó]n|Instalaci[oó]n|Baja/i.test(reason.description)
-                )
+                Array.isArray(data)
+                    ? data.filter(
+                        (reason: MaintenanceReasonDTO) =>
+                            !/Desinstalaci[oó]n|Instalaci[oó]n|Baja/i.test(reason.description)
+                    )
+                    : []
             );
         } catch (error) {
             console.error("Error fetching maintenance reasons:", error);

@@ -186,12 +186,12 @@ export default function Programas() {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
             const data = await response.json();
             console.log("Programas", data);
-            setProgramMaintenance(data);
+            setProgramMaintenance(Array.isArray(data) ? data : []); // 👈 Asegura que siempre sea un array
             setLoading(false);
         } catch (error) {
             console.error("Error fetching:", error);
+            setProgramMaintenance([]); // 👈 En caso de error, también deja un array vacío
         }
-
     }
 
     useEffect(() => {

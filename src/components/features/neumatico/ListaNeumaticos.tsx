@@ -47,13 +47,13 @@ export default function ListaNeumaticos() {
     const [selectedVehicles, setSelectedVehicles] = useState<number[]>([]);
 
     const fetchVehicles = async () => {
-        console.log("Fetching vehicles for faenaId:", faenaId);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1`);
             const data = await response.json();
-            setVehicles(data);
+            setVehicles(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error("Error fetching vehicles:", error);
+            setVehicles([]); // Asegura que siempre sea un array
         }
     };
 
@@ -78,6 +78,7 @@ export default function ListaNeumaticos() {
             setTires(data);
         } catch (error) {
             console.error("Error fetching tyre models:", error);
+            setLocations([]);
         }
     };
 
@@ -87,9 +88,10 @@ export default function ListaNeumaticos() {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
             const data = await response.json();
             setLoading(false);
-            setLocations(data);
+            setLocations(Array.isArray(data) ? data : []);
         } catch (error) {
-            console.error("Error fetching tyre models:", error);
+            console.error("Error fetching locations:", error);
+            setLocations([]); // Asegura que siempre sea un array
         }
     };
     const [openRegisterModal, setOpenRegisterModal] = useState(false);

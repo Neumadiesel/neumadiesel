@@ -35,7 +35,7 @@ export default function ModalTireMaintenance({
     onGuardar,
 }: ModalTireMaintenanceProps) {
     const authFetch = useAuthFetch();
-    const { user } = useAuth();
+    const { user, token } = useAuth();
     const [tireEdited, setTireEdited] = useState({
         code: "",
         locationId: null as number | null,
@@ -77,10 +77,12 @@ export default function ModalTireMaintenance({
             const data = await response.json();
             setLoading(false);
             setMaintenanceReasons(
-                data.filter(
-                    (reason: MaintenanceReasonDTO) =>
-                        !/Desinstalaci[oó]n|Instalaci[oó]n|Baja/i.test(reason.description)
-                )
+                Array.isArray(data)
+                    ? data.filter(
+                        (reason: MaintenanceReasonDTO) =>
+                            !/Desinstalaci[oó]n|Instalaci[oó]n|Baja/i.test(reason.description)
+                    )
+                    : []
             );
         } catch (error) {
             console.error("Error fetching maintenance reasons:", error);
@@ -104,7 +106,7 @@ export default function ModalTireMaintenance({
                 externalTread: tire.lastInspection.externalTread,
             });
         }
-    }, [tire]);
+    }, [tire, user]);
 
     useEffect(() => {
         fetchReasons();
@@ -112,6 +114,7 @@ export default function ModalTireMaintenance({
     }, []);
 
     useEffect(() => {
+        console.log("token", token);
         fetchReasons();
         fetchLocationsMaintenance();
     }, [user]);

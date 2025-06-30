@@ -169,15 +169,16 @@ export default function TirePage() {
         return (((initialTread - currentTread) / initialTread) * 100).toFixed(2);
     };
 
-    const criticalThreshold = tire?.model.originalTread
+    const criticalThreshold = tire?.model?.originalTread
         ? tire.initialTread * 0.2
-        : 5; // valor por defecto si no está definido
-
+        : 5;
     return (
         <div className="p-3 bg-white dark:bg-[#212121] relative shadow-sm">
             <Breadcrumb />
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold dark:text-white">Información del Neumático: {tire?.code} - {tire?.model.dimensions}</h1>
+                <h1 className="text-2xl font-bold dark:text-white">
+                    Información del Neumático: {tire?.code} - {tire?.model?.dimensions}
+                </h1>
                 <div className="flex flex-row justify-between items-center gap-2">
                     <Link href={`/medicion/${tire?.lastInspectionId}`}>
                         <div className="bg-neutral-100 text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors w-full flex items-center justify-center font-bold">
@@ -209,23 +210,81 @@ export default function TirePage() {
                 <div className="flex flex-col gap-2">
                     <div className="bg-gray-50 dark:bg-[#313131] dark:text-white p-4 rounded-md border grid grid-cols-1 lg:grid-cols-3">
                         <div className="grid grid-cols-2 gap-2 max-lg:pb-4">
-                            <LabelLoading loading={loading} title="Marca:" text={tire?.model.brand || ""} />
-                            <LabelLoading loading={loading} title="Patrón:" text={tire?.model.pattern || ""} />
-                            <LabelLoading loading={loading} title="Código:" text={tire?.model.code || ""} />
-                            <LabelLoading loading={loading} title="Medidas:" text={tire?.model.dimensions || ""} />
-                            <LabelLoading loading={loading} title="OTD:" text={tire?.model.originalTread?.toString() || ""} />
+                            <LabelLoading loading={loading} title="Marca:" text={tire?.model?.brand || ""} />
+                            <LabelLoading loading={loading} title="Patrón:" text={tire?.model?.pattern || ""} />
+                            <LabelLoading loading={loading} title="Código:" text={tire?.model?.code || ""} />
+                            <LabelLoading loading={loading} title="Medidas:" text={tire?.model?.dimensions || ""} />
+                            <LabelLoading loading={loading} title="OTD:" text={tire?.model?.originalTread?.toString() || ""} />
                         </div>
                         <div className="lg:px-4 max-lg:py-4 grid grid-cols-2 gap-2 max-lg:border-y lg:border-x border-gray-200">
-                            <LabelLoading loading={loading} title="Desgaste Interior:" text={tire?.lastInspection?.internalTread.toString() || ""} />
-                            <LabelLoading loading={loading} title="Desgaste Exterior:" text={tire?.lastInspection?.externalTread.toString() || ""} />
-                            <LabelLoading loading={loading} title="Kilometraje:" text={tire?.lastInspection?.kilometrage?.toString() || ""} />
-                            <LabelLoading loading={loading} title="Horas:" text={tire?.lastInspection.hours?.toString() || ""} />
-                            {tire && <LabelLoading loading={loading} title="% de Desgaste:" text={`${calculateWearPercentage(tire?.initialTread, tire?.lastInspection?.externalTread)}%`} />}
+                            <LabelLoading
+                                loading={loading}
+                                title="Desgaste Interior:"
+                                text={
+                                    tire?.lastInspection?.internalTread !== undefined && tire?.lastInspection?.internalTread !== null
+                                        ? tire.lastInspection.internalTread.toString()
+                                        : ""
+                                }
+                            />
+                            <LabelLoading
+                                loading={loading}
+                                title="Desgaste Exterior:"
+                                text={
+                                    tire?.lastInspection?.externalTread !== undefined && tire?.lastInspection?.externalTread !== null
+                                        ? tire.lastInspection.externalTread.toString()
+                                        : ""
+                                }
+                            />
+                            <LabelLoading
+                                loading={loading}
+                                title="Kilometraje:"
+                                text={
+                                    tire?.lastInspection?.kilometrage !== undefined && tire?.lastInspection?.kilometrage !== null
+                                        ? tire.lastInspection.kilometrage.toString()
+                                        : ""
+                                }
+                            />
+                            <LabelLoading
+                                loading={loading}
+                                title="Horas:"
+                                text={
+                                    tire?.lastInspection?.hours !== undefined && tire?.lastInspection?.hours !== null
+                                        ? tire.lastInspection.hours.toString()
+                                        : ""
+                                }
+                            />
+                            {tire && (
+                                <LabelLoading
+                                    loading={loading}
+                                    title="% de Desgaste:"
+                                    text={
+                                        tire.initialTread !== undefined && tire.lastInspection?.externalTread !== undefined
+                                            ? `${calculateWearPercentage(tire.initialTread, tire.lastInspection.externalTread)}%`
+                                            : ""
+                                    }
+                                />
+                            )}
                         </div>
                         <div className="max-lg:pt-2 lg:px-4 flex flex-col gap-2">
-                            <LabelLoading loading={loading} title="Ubicación:" text={tire?.location.name || ""} />
-                            <LabelLoading loading={loading} title="Equipo:" text={tire?.installedTires[0]?.vehicle?.code || ""} />
-                            <LabelLoading loading={loading} title="Posición:" text={tire?.installedTires[0]?.position?.toString() || ""} />
+                            <LabelLoading
+                                loading={loading}
+                                title="Ubicación:"
+                                text={tire?.location?.name || ""}
+                            />
+                            <LabelLoading
+                                loading={loading}
+                                title="Equipo:"
+                                text={tire?.installedTires?.[0]?.vehicle?.code || ""}
+                            />
+                            <LabelLoading
+                                loading={loading}
+                                title="Posición:"
+                                text={
+                                    tire?.installedTires?.[0]?.position !== undefined && tire?.installedTires?.[0]?.position !== null
+                                        ? tire.installedTires[0].position.toString()
+                                        : ""
+                                }
+                            />
                         </div>
                     </div>
                 </div>
