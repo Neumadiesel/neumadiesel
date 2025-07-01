@@ -26,6 +26,7 @@ export type Instalacion = {
 
 export interface OrdenTrabajoForm {
     code: string;
+    vehicleCode: string;
     description: string;
     locationMaintenanceId: number | null;
     type: string;
@@ -57,6 +58,7 @@ export default function ModalCrearOrden({ onClose }: Props) {
     const [step, setStep] = useState<number>(1);
     const [datos, setDatos] = useState<OrdenTrabajoForm>({
         code: "",
+        vehicleCode: "",
         description: "",
         locationMaintenanceId: null,
         type: "",
@@ -148,6 +150,7 @@ export default function ModalCrearOrden({ onClose }: Props) {
     const handleCancelar = () => {
         setDatos({
             code: "",
+            vehicleCode: "",
             description: "",
             locationMaintenanceId: null,
             type: "",

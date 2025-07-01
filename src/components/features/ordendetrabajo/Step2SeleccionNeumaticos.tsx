@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import dayjs from "dayjs";
@@ -20,10 +20,13 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
     const [vehicleCode, setVehicleCode] = useState<string>("");
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [programas, setProgramas] = useState<ProgramasDTO[]>([]);
+    const [error, setError] = useState<string | null>(null);
     const buscarEquipoYProgramas = async () => {
         try {
             // Buscar vehículo por código
-            const veh = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
+
+
+            const veh = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${datos.vehicleCode}`);
             const vehiculo = veh.data;
 
             setVehicle(vehiculo);
@@ -85,16 +88,70 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
         });
     };
 
+    useEffect(() => {
+        if (datos.vehicleCode) {
+            buscarEquipoYProgramas();
+        }
+    }, [datos.vehicleCode]);
+    const handleNext = () => {
+        const errores: string[] = [];
+
+        if (!datos.vehicleId) {
+            errores.push("Debes buscar y seleccionar un equipo antes de continuar.");
+        }
+
+        if (!datos.kilometrage || datos.kilometrage <= 0) {
+            errores.push("Debes ingresar un kilometraje válido.");
+        }
+
+        if (!datos.hours || datos.hours <= 0) {
+            errores.push("Debes ingresar una cantidad de horas válida.");
+        }
+
+        if (!datos.posicionesSeleccionadas || datos.posicionesSeleccionadas.length === 0) {
+            errores.push("Debes seleccionar al menos una posición de neumático.");
+        }
+
+        // Si programas son obligatorios:
+        // if (!datos.programasSeleccionados || datos.programasSeleccionados.length === 0) {
+        //     errores.push("Debes seleccionar al menos un programa de mantenimiento.");
+        // }
+
+        if (errores.length > 0) {
+            setError(errores.join("\n"));
+            return;
+        }
+
+        onNext();
+    };
+
     return (
         <div className="space-y-6">
             <section className="border rounded-xl p-6 bg-white dark:bg-neutral-800 dark:border-neutral-700 shadow-sm">
-                <h3 className="text-xl font-bold mb-4">🔧 Selección de Programas y Equipo</h3>
+                <div className="flex items-center justify-between mb-4">
+
+                    <h3 className="text-xl font-bold ">🔧 Selección de Programas y Equipo</h3>
+                    <div className="max-w-1/2">
+                        {
+                            error && (
+                                <div className="text-red-500 text-sm mb-2 bg-red-50 border border-red-500 p-2 rounded-md">
+                                    {error}
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
 
                 <div className="flex gap-2 mb-4">
                     <input
                         placeholder="Código del equipo"
-                        value={vehicleCode}
-                        onChange={(e) => setVehicleCode(e.target.value.toUpperCase())}
+                        value={datos.vehicleCode || ""}
+                        onChange={(e) =>
+                            setDatos((prev) => ({
+                                ...prev,
+                                vehicleCode: e.target.value.toUpperCase(),
+                            }))
+                        }
                         className="flex-1 border rounded-lg px-3 py-2 dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors"
                     />
                     <Button onClick={buscarEquipoYProgramas}>Buscar</Button>
@@ -131,7 +188,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                                     onChange={(e) =>
                                         setDatos((prev) => ({
                                             ...prev,
-                                            horas: e.target.value === "" ? 0 : Number(e.target.value),
+                                            hours: e.target.value === "" ? 0 : Number(e.target.value),
                                         }))
                                     }
                                     className="w-full border rounded-lg px-3 py-2"
@@ -192,7 +249,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                 <Button variant="secondary" onClick={onBack}>
                     Atrás
                 </Button>
-                <Button onClick={onNext}>Siguiente</Button>
+                <Button onClick={handleNext}>Siguiente</Button>
             </div>
         </div>
     );
