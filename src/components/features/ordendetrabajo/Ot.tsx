@@ -1,7 +1,10 @@
 "use client"
 import { useAuth } from "@/contexts/AuthContext";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { VehicleDTO } from "@/types/Vehicle";
 import { useEffect, useState } from "react";
+
+import dayjs from 'dayjs';
 
 interface Procedure {
     id: number;
@@ -22,19 +25,32 @@ interface Procedure {
 }
 interface WorkOrderDTO {
     id: number;
-    date: string; // formato ISO
+    code: string;
+    description: string;
+    type: string;
+
+
+    // "entryDate": "2025-07-01T16:00:00.000Z",
+    // "dispatchDate": "2025-07-01T17:00:00.000Z",
     dispatchDate: string; // formato ISO
+    entryDate: string; // formato ISO
     siteId: number;
     checkInHour: string; // formato HH:mm
     checkOutHour: string; // formato HH:mm
     observations: string;
-    technician: string;
+    responsibleName: string;
     interventionType: string;
     peopleCount: number;
     locationId: number;
     vehicleId: number;
+    vehicle: VehicleDTO;
     createdAt: string; // formato ISO
     updatedAt: string; // formato ISO
+    locationMaintenance: {
+        id: number;
+        description: string;
+    };
+
     procedures: Procedure[]; // Puedes definir un tipo más específico si es necesario
 }
 export default function OT({ id }: { id: number }) {
@@ -142,7 +158,7 @@ export default function OT({ id }: { id: number }) {
 
     const fetchWorkOrder = async () => {
         try {
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order/`);
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order/${id}`);
             setWorkOrder(response.data);
             console.log("Órdenes de trabajo:", response.data);
         } catch (error) {
@@ -157,7 +173,7 @@ export default function OT({ id }: { id: number }) {
     }, [user]);
     return (
         <div className="flex flex-col p-3 items-center min-h-full bg-amber-200 dark:bg-neutral-800 dark:text-white gap-y-4">
-            <h1 className="text-2xl font-bold">Orden de Trabajo de Neumaticos {id}</h1>
+            <h1 className="text-2xl font-bold">Orden de Trabajo de Neumaticos {workOrder?.code}</h1>
             {/* Seccion de informacion de trabajo */}
             <section className="flex flex-col w-full h-[15%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <div className="flex flex-col w-full h-full gap-y-2">
@@ -167,8 +183,9 @@ export default function OT({ id }: { id: number }) {
                             Descripcion del trabajo
                         </label>
                         <input
+                            disabled
                             type="text"
-                            value={workOrder?.observations || ""}
+                            value={workOrder?.description || ""}
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
@@ -179,23 +196,24 @@ export default function OT({ id }: { id: number }) {
                             <label className="text-md font-bold bg-amber-300 text-black p-2 w-[54%] border-r border-gray-500">
                                 Zona de trabajo
                             </label>
-                            <select className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300 ">
-                                <option value="Losa">Losa</option>
-                                <option value="Terreno">Terreno</option>
-                                <option value="Truck Shop">Truck Shop</option>
-                            </select>
+                            <input
+                                disabled
+                                type="text"
+                                value={workOrder?.locationMaintenance.description || ""}
+                                className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
+                            />
                         </div>
                         {/* Tipo de intervencion */}
                         <div className="flex flex-row w-[50%] h-10 border border-gray-500 ">
                             <label className="text-md font-bold bg-amber-300 text-black p-2 w-[60%] border-r border-gray-500">
                                 Tipo de intervencion
                             </label>
-                            <select className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300">
-                                <option value="Apoyo mecanico">Apoyo mecanico</option>
-                                <option value="Correctiva">Correctiva</option>
-                                <option value="Programada">Programada</option>
-                                <option value="Imprevisto">Imprevisto</option>
-                            </select>
+                            <input
+                                disabled
+                                type="text"
+                                value={workOrder?.type || ""}
+                                className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
+                            />
                         </div>
                     </section>
                 </div>
@@ -208,7 +226,9 @@ export default function OT({ id }: { id: number }) {
                     </label>
                     <input
                         type="text"
-                        placeholder="KOMATSU 830-E"
+                        disabled
+                        value={`${workOrder?.vehicle.model.brand} ${workOrder?.vehicle.model.model}` || ""}
+
                         className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                     />
                 </div>
@@ -219,6 +239,8 @@ export default function OT({ id }: { id: number }) {
                     </label>
                     <input
                         type="text"
+                        disabled
+                        value={workOrder?.vehicle.code || ""}
                         placeholder="H-41"
                         className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                     />
@@ -233,6 +255,8 @@ export default function OT({ id }: { id: number }) {
                             Fecha
                         </label>
                         <input
+                            disabled
+                            value={workOrder?.entryDate ? new Date(workOrder.entryDate).toISOString().split("T")[0] : ""}
                             type="date"
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
@@ -244,17 +268,20 @@ export default function OT({ id }: { id: number }) {
                         </label>
                         <input
                             type="time"
+                            disabled
+                            value={workOrder?.entryDate ? new Date(workOrder.entryDate).toISOString().split("T")[1].slice(0, 5) : ""}
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
                     {/* Personal ejecutor */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
                         <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Personal Ejecutor
+                            Responsable
                         </label>
                         <input
                             type="text"
-                            placeholder="NEUMADIESEL"
+                            disabled
+                            value={workOrder?.responsibleName || ""}
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
@@ -264,6 +291,9 @@ export default function OT({ id }: { id: number }) {
                             Hora Entrega Despacho
                         </label>
                         <input
+                            disabled
+                            value={workOrder?.dispatchDate ? new Date(workOrder.dispatchDate).toISOString().split("T")[1].slice(0, 5) : ""}
+
                             type="time"
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
@@ -275,6 +305,8 @@ export default function OT({ id }: { id: number }) {
                         </label>
                         <input
                             type="number"
+                            disabled
+                            value={workOrder?.peopleCount || ""}
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
@@ -285,15 +317,20 @@ export default function OT({ id }: { id: number }) {
                         </label>
                         <input
                             type="number"
+                            disabled
+                            value={
+                                workOrder?.peopleCount && workOrder?.entryDate && workOrder?.dispatchDate
+                                    ? (workOrder.peopleCount * dayjs(workOrder.dispatchDate).diff(dayjs(workOrder.entryDate), 'hour', true)).toFixed(2)
+                                    : ""
+                            }
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
                 </div>
             </section>
             {/* Seccion de registro torque utilizado */}
-            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
+            {/* <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <div className="grid grid-cols-2  gap-x-2 w-full h-full">
-                    {/* Torque aplicado */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
                         <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Torque aplicado
@@ -303,7 +340,6 @@ export default function OT({ id }: { id: number }) {
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
-                    {/* Torquit utilizado */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
                         <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Torquit utilizado
@@ -313,7 +349,6 @@ export default function OT({ id }: { id: number }) {
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
-                    {/* 1 verificacion torque (fecha/hora) */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
                         <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             1ra verif. torque
@@ -323,7 +358,6 @@ export default function OT({ id }: { id: number }) {
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
-                    {/* Serie torquit */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
                         <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Serie torquit
@@ -333,7 +367,6 @@ export default function OT({ id }: { id: number }) {
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
-                    {/* 2 verificacion torque (fecha/hora) */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
                         <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             2da verif. torque
@@ -344,7 +377,7 @@ export default function OT({ id }: { id: number }) {
                         />
                     </div>
                 </div>
-            </section>
+            </section> */}
             {/* Seccion neumatico desintalado,*/}
             <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <h2 className="text-xl font-bold mb-4">Neumáticos Desinstalados</h2>
@@ -368,21 +401,32 @@ export default function OT({ id }: { id: number }) {
                 </div>
             </section>
             {/* Seccion neumatico instalado,*/}
-            <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
+            <section className="flex flex-col w-full border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <h2 className="text-xl font-bold mb-4">Neumáticos Instalados</h2>
                 <div className="overflow-x-auto rounded-xl shadow">
-                    <table className="border min-w-full text-sm text-left">
+                    <table className="min-w-full text-sm text-left border">
+                        <thead className="bg-gray-100 dark:bg-black text-gray-700 dark:text-white">
+                            <tr>
+                                <th className="px-4 py-2 border">Pos</th>
+                                <th className="px-4 py-2 border">Código</th>
+                                <th className="px-4 py-2 border">Medidas</th>
+                                <th className="px-4 py-2 border">Fabricante</th>
+                                <th className="px-4 py-2 border">Remanente</th>
+                                <th className="px-4 py-2 border">Presión</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            {campos.map((campo, index) => (
-                                <tr key={index} className="border-b">
-                                    <th className="bg-gray-100 dark:bg-black dark:text-white text-gray-700 px-4 py-2 font-semibold w-48">
-                                        {campo.label}
-                                    </th>
-                                    {neumaticos.map((neumatico, idx) => (
-                                        <td key={idx} className="px-4 py-2">
-                                            {neumatico[campo.key as keyof typeof neumatico]}
-                                        </td>
-                                    ))}
+                            {workOrder?.vehicle.installedTires.map((neumatico) => (
+                                <tr key={neumatico.id} className="border-t">
+                                    <td className="px-4 py-2 border">{neumatico.position}</td>
+                                    <td className="px-4 py-2 border">{neumatico.tire.code}</td>
+                                    <td className="px-4 py-2 border">{neumatico.tire?.model?.dimensions || ''}</td>
+                                    <td className="px-4 py-2 border">{neumatico.tire?.model?.brand || ''}</td>
+
+                                    <td className="px-4 py-2 border">{neumatico.tire.lastInspection && `${neumatico.tire.lastInspection.internalTread} / ${neumatico.tire.lastInspection.externalTread}`}</td>
+                                    <td className="px-4 py-2 border">
+                                        {neumatico.tire.lastInspection.pressure ? `${neumatico.tire.lastInspection.pressure} PSI` : '-'}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -397,6 +441,8 @@ export default function OT({ id }: { id: number }) {
                     </label>
                     <input
                         type="text"
+                        disabled
+                        value={workOrder?.observations || ""}
                         className="w-full p-2 px-4 font-bold   min-h-20 outline-amber-300 focus:outline-amber-300"
                     />
                 </div>

@@ -28,6 +28,7 @@ export interface VehicleDTO {
         tire: {
             id: number;
             code: string;
+            creationDate: string;
             modelId: number;
             initialTread: number;
             initialKilometrage: number;
@@ -36,6 +37,14 @@ export interface VehicleDTO {
             usedHours: number;
             lastInspectionId: number | null;
             locationId: number;
+            model: {
+                id: number;
+                code: string;
+                brand: string;
+                dimensions: string;
+                constructionType: string | null;
+                originalTread: number;
+            };
             lastInspection: {
                 id: number;
                 position: number;

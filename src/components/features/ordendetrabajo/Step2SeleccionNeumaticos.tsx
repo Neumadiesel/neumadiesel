@@ -17,10 +17,13 @@ interface Props {
 
 export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBack }: Props) {
     const axios = useAxiosWithAuth();
-    const [vehicleCode, setVehicleCode] = useState<string>("");
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [programas, setProgramas] = useState<ProgramasDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [errorKms, setErrorKms] = useState<string | null>(null);
+
+    const [loading, setLoading] = useState<boolean>(false);
+    const [success, setSuccess] = useState<boolean>(false);
     const buscarEquipoYProgramas = async () => {
         try {
             // Buscar vehículo por código
@@ -52,7 +55,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
             // Filtrar por código de vehículo y estado distinto de "completado"
             const filtrados = data.filter(
                 (p) =>
-                    p.vehicle.code === vehicleCode &&
+                    p.vehicle.code === datos.vehicleCode &&
                     p.status.toLowerCase() !== "completada"
             );
 
@@ -86,6 +89,63 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                 : [...(prev.posicionesSeleccionadas ?? []), pos];
             return { ...prev, posicionesSeleccionadas: posiciones };
         });
+    };
+
+    const handleSaveKms = async () => {
+        setErrorKms(null);
+        setSuccess(false);
+
+        if (!vehicle || datos.hours == null || datos.kilometrage == null) {
+            setErrorKms("Por favor, completa todos los campos.");
+            return;
+        }
+
+        const isInvalid = (val: number | null) =>
+            val === null ||
+            isNaN(val) ||
+            typeof val !== "number" ||
+            val < 0 ||
+            val.toString().includes("-") ||
+            val.toString().startsWith("000") ||
+            val.toString().endsWith(".");
+
+        if (isInvalid(datos.kilometrage) || isInvalid(datos.hours)) {
+            setErrorKms("Formato inválido. Se restauraron los valores originales.");
+            setDatos(prev => ({
+                ...prev,
+                kilometrage: vehicle.kilometrage,
+                hours: vehicle.hours,
+            }));
+            return;
+        }
+
+        if (datos.kilometrage < vehicle.kilometrage) {
+            setErrorKms("El kilometraje no puede ser menor al actual.");
+            setDatos(prev => ({ ...prev, kilometrage: vehicle.kilometrage }));
+            return;
+        }
+
+        if (datos.hours < vehicle.hours) {
+            setErrorKms("Las horas no pueden ser menores a las actuales.");
+            setDatos(prev => ({ ...prev, hours: vehicle.hours }));
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await axios.patch(`/vehicles/updateKms/${vehicle.id}`, {
+                hours: datos.hours,
+                kilometrage: datos.kilometrage,
+                hoursAdded: datos.hours - vehicle.hours,
+                kilometrageAdded: datos.kilometrage - vehicle.kilometrage,
+            });
+            setSuccess(true);
+        } catch (err) {
+            console.error("Error al actualizar vehículo:", err);
+            setErrorKms("Error al actualizar. Intenta nuevamente.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -176,7 +236,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                                         }))
                                     }
                                     className="w-full border rounded-lg px-3 py-2"
-                                    placeholder="Ej: 546000"
+                                    placeholder={`Original: ${vehicle.kilometrage || 0}`}
                                 />
                             </div>
 
@@ -192,8 +252,36 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                                         }))
                                     }
                                     className="w-full border rounded-lg px-3 py-2"
-                                    placeholder="Ej: 70000"
+                                    placeholder={`Ej: ${vehicle.hours || 0}`}
                                 />
+                            </div>
+                        </div>
+                        <div className="w-full flex justify-between mb-4">
+
+                            <Button
+                                onClick={handleSaveKms}
+                                disabled={loading || !vehicle || datos.kilometrage == null || datos.hours == null}
+                                className={`bg-amber-300 text-black font-semibold px-4 py-2 rounded ${loading || !vehicle || datos.kilometrage == null || datos.hours == null ? 'opacity-50' : 'hover:bg-amber-400'
+                                    }`}
+                            >
+                                {loading ? "Guardando..." : "Guardar cambios de KMs/Horas"}
+                            </Button>
+                            {/* Div de error  */}
+                            <div>
+
+                                {success && (
+                                    <div className="text-black font-bold text-sm mb-2 bg-emerald-50 border border-emerald-500 p-2 rounded-md">
+                                        Kilometraje y horas actualizados correctamente.
+                                    </div>
+
+                                )}
+                                {
+                                    errorKms && (
+                                        <div className="text-red-500 text-sm mb-2 bg-red-50 border border-red-500 p-2 rounded-md">
+                                            {errorKms}
+                                        </div>
+                                    )
+                                }
                             </div>
                         </div>
                     </>
