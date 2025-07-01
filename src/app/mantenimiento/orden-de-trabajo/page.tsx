@@ -1,11 +1,56 @@
 "use client"
 import ModalCrearOrden from "@/components/features/ordendetrabajo/ModalCrearOrden";
-import { Ban, CirclePlus, FileCog, Funnel, Info } from "lucide-react";
-import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { Ban, CirclePlus, Eye, FileCog, Funnel, Info } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
+
+interface WorkOrderDTO {
+    id: number;
+    date: string; // formato ISO
+    dispatchDate: string; // formato ISO
+    siteId: number;
+    checkInHour: string; // formato HH:mm
+    checkOutHour: string; // formato HH:mm
+    observations: string;
+    technician: string;
+    interventionType: string;
+    peopleCount: number;
+    locationId: number;
+    vehicleId: number;
+    createdAt: string; // formato ISO
+    updatedAt: string; // formato ISO
+    procedures: any[]; // Puedes definir un tipo más específico si es necesario
+}
 export default function OrdenDeTrabajoPage() {
 
     const [modalAbierto, setModalAbierto] = useState(false);
+    const { user } = useAuth();
+    // axios get work orders
+    const client = useAxiosWithAuth();
+    const [workOrders, setWorkOrders] = useState<WorkOrderDTO[]>([]);
+
+    const fetchWorkOrders = async () => {
+        try {
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order/`);
+            setWorkOrders(response.data);
+            console.log("Órdenes de trabajo:", response.data);
+        } catch (error) {
+            console.error("Error al obtener órdenes de trabajo:", error);
+            setWorkOrders([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchWorkOrders();
+    }, []);
+
+    useEffect(() => {
+        fetchWorkOrders();
+    }, [user]);
+
     return (
         <div className="p-4 bg-gray-50 dark:bg-[#212121] dark:text-white w-full">
             <div className="flex w-full items-center justify-between mb-4">
@@ -122,28 +167,39 @@ export default function OrdenDeTrabajoPage() {
                     </thead>
                     <tbody>
                         {/* Simulación de datos */}
-                        {Array.from({ length: 10 }).map((_, index) => (
-                            <tr key={index} className="border-b dark:border-neutral-600 h-14">
-                                <td className="px-4 py-2">OT-{index + 1}</td>
-                                <td className="px-4 py-2">Equipo {index + 1}</td>
-                                <td className="px-4 py-2">Pendiente</td>
-                                <td className="px-4 py-2">Programada</td>
-                                <td className="px-4 py-2">2025-06-{index + 1}</td>
-
-                                <td className="px-4 py-2">2025-06-{index + 1}</td>
-                                {/* Responsable */}
-                                <td className="px-4 py-2">Carlos Villegas</td>
-                                {/* Acciones */}
-                                <td className="px-4 py-2">
-                                    <button className="text-blue-600 hover:underline mr-2">
-                                        <Info className="inline mr-1" />
-                                    </button>
-                                    <button className="text-red-600 hover:underline">
-                                        <Ban className="inline mr-1" />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {
+                            workOrders.length === 0 && (
+                                <tr className="text-center">
+                                    <td colSpan={8} className="py-4 text-gray-500">
+                                        No hay órdenes de trabajo registradas.
+                                    </td>
+                                </tr>
+                            )
+                        }
+                        {
+                            workOrders.map((orden) => (
+                                <tr key={orden.id} className="border-b dark:border-neutral-400 h-14">
+                                    <td className="px-4 py-2">{orden.id}</td>
+                                    <td className="px-4 py-2">{orden.vehicleId}</td>
+                                    <td className="px-4 py-2">
+                                        {orden.interventionType === "completada" ? (
+                                            <span className="text-green-500">Completada</span>
+                                        ) : (
+                                            <span className="text-yellow-500">Pendiente</span>
+                                        )}
+                                    </td>
+                                    <td className="px-4 py-2">{orden.interventionType}</td>
+                                    <td className="px-4 py-2">{new Date(orden.date).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2">{new Date(orden.dispatchDate).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2">{orden.technician}</td>
+                                    <td className="px-4 py-2">
+                                        <Link href={`/mantenimiento/orden-de-trabajo/${orden.id}`} className="text-blue-500 hover:underline">
+                                            <Eye className="inline cursor-pointer text-blue-500 mr-2" />
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))
+                        }
                     </tbody>
                 </table>
             </main>

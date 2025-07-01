@@ -1,4 +1,4 @@
-export default function OT() {
+export default function OT({ id }: { id: number }) {
     const neumaticos = [
         {
             posicion: "1",
@@ -94,14 +94,14 @@ export default function OT() {
         { label: "Destino", key: "destino" },
     ];
     return (
-        <div className="flex flex-col p-3 items-center min-h-full bg-amber-200 gap-y-4">
+        <div className="flex flex-col p-3 items-center min-h-full bg-amber-200 dark:bg-neutral-800 dark:text-white gap-y-4">
             <h1 className="text-2xl font-bold">Orden de Trabajo de Neumaticos</h1>
             {/* Seccion de informacion de trabajo */}
-            <section className="flex flex-col w-full h-[15%] border border-gray-500 rounded-sm p-3 bg-white">
+            <section className="flex flex-col w-full h-[15%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <div className="flex flex-col w-full h-full gap-y-2">
                     <div className="flex flex-row w-full h-10 border border-gray-500">
                         {/* Descripcion del trabajo */}
-                        <label className="text-md font-bold bg-amber-300 p-2 w-64 border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-64 border-r border-gray-500">
                             Descripcion del trabajo
                         </label>
                         <input
@@ -113,7 +113,7 @@ export default function OT() {
                     <section className="flex flex-row w-full h-full gap-x-2">
                         {/* Zona de trabajo */}
                         <div className="flex flex-row w-[50%] h-10 border border-gray-500">
-                            <label className="text-md font-bold bg-amber-300 p-2 w-[54%] border-r border-gray-500">
+                            <label className="text-md font-bold bg-amber-300 text-black p-2 w-[54%] border-r border-gray-500">
                                 Zona de trabajo
                             </label>
                             <select className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300 ">
@@ -124,7 +124,7 @@ export default function OT() {
                         </div>
                         {/* Tipo de intervencion */}
                         <div className="flex flex-row w-[50%] h-10 border border-gray-500 ">
-                            <label className="text-md font-bold bg-amber-300 p-2 w-[60%] border-r border-gray-500">
+                            <label className="text-md font-bold bg-amber-300 text-black p-2 w-[60%] border-r border-gray-500">
                                 Tipo de intervencion
                             </label>
                             <select className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300">
@@ -138,9 +138,9 @@ export default function OT() {
                 </div>
             </section>
             {/* Modelo del equipo */}
-            <section className="flex items-center  w-full h-[10%] border border-gray-500 rounded-sm p-3 gap-x-2 bg-white">
+            <section className="flex items-center  w-full h-[10%] border border-gray-500 rounded-sm p-3 gap-x-2 bg-white dark:bg-neutral-900">
                 <div className="flex flex-row w-full h-10 border border-gray-500 ">
-                    <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                    <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                         Modelo del equipo
                     </label>
                     <input
@@ -151,7 +151,7 @@ export default function OT() {
                 </div>
                 {/* Codigo del equipo */}
                 <div className="flex flex-row w-full h-10 border border-gray-500 ">
-                    <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                    <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                         Codigo del equipo
                     </label>
                     <input
@@ -162,11 +162,11 @@ export default function OT() {
                 </div>
             </section>
             {/* Infomracion registro de detencion */}
-            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white">
+            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <div className="grid grid-cols-2  gap-x-2 w-full h-full">
                     {/* Fecha */}
                     <div className="flex flex-row w-full h-10 border border-gray-500 ">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Fecha
                         </label>
                         <input
@@ -176,7 +176,7 @@ export default function OT() {
                     </div>
                     {/* Hora de detencion */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Hora de Detencion
                         </label>
                         <input
@@ -186,7 +186,7 @@ export default function OT() {
                     </div>
                     {/* Personal ejecutor */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Personal Ejecutor
                         </label>
                         <input
@@ -197,7 +197,7 @@ export default function OT() {
                     </div>
                     {/* Hora Entrega de Despacho */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Hora Entrega Despacho
                         </label>
                         <input
@@ -207,7 +207,7 @@ export default function OT() {
                     </div>
                     {/* Cantidad de personas */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Cantidad de personas
                         </label>
                         <input
@@ -217,7 +217,7 @@ export default function OT() {
                     </div>
                     {/* Horas Hombre */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Horas Hombre
                         </label>
                         <input
@@ -228,11 +228,11 @@ export default function OT() {
                 </div>
             </section>
             {/* Seccion de registro torque utilizado */}
-            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white">
+            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <div className="grid grid-cols-2  gap-x-2 w-full h-full">
                     {/* Torque aplicado */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Torque aplicado
                         </label>
                         <input
@@ -242,7 +242,7 @@ export default function OT() {
                     </div>
                     {/* Torquit utilizado */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Torquit utilizado
                         </label>
                         <input
@@ -252,7 +252,7 @@ export default function OT() {
                     </div>
                     {/* 1 verificacion torque (fecha/hora) */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             1ra verif. torque
                         </label>
                         <input
@@ -262,7 +262,7 @@ export default function OT() {
                     </div>
                     {/* Serie torquit */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             Serie torquit
                         </label>
                         <input
@@ -272,7 +272,7 @@ export default function OT() {
                     </div>
                     {/* 2 verificacion torque (fecha/hora) */}
                     <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 p-2 w-[50%] border-r border-gray-500">
+                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
                             2da verif. torque
                         </label>
                         <input
@@ -283,14 +283,14 @@ export default function OT() {
                 </div>
             </section>
             {/* Seccion neumatico desintalado,*/}
-            <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white">
+            <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <h2 className="text-xl font-bold mb-4">Neumáticos Desinstalados</h2>
                 <div className="overflow-x-auto rounded-sm shadow">
                     <table className="border min-w-full text-sm text-left">
                         <tbody>
                             {campos.map((campo, index) => (
                                 <tr key={index} className="border-b">
-                                    <th className="bg-gray-100 text-gray-700 px-4 py-2 font-semibold w-48">
+                                    <th className="bg-gray-100 dark:bg-[#000] dark:text-white text-gray-700 px-4 py-2 font-semibold w-48">
                                         {campo.label}
                                     </th>
                                     {neumaticos.map((neumatico, idx) => (
@@ -305,7 +305,7 @@ export default function OT() {
                 </div>
             </section>
             {/* Seccion neumatico instalado,*/}
-            <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white">
+            <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <h2 className="text-xl font-bold mb-4">Neumáticos Instalados</h2>
                 <div className="overflow-x-auto rounded-xl shadow">
                     <table className="border min-w-full text-sm text-left">
@@ -329,7 +329,7 @@ export default function OT() {
             {/* Seccion comentarios/observaciones */}
             <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white">
                 <div className="flex flex-col w-full  border border-gray-500">
-                    <label className="text-md font-bold border-b border-gray-500 bg-amber-300 p-2 text-center w-full ">
+                    <label className="text-md font-bold border-b border-gray-500 bg-amber-300 text-black p-2 text-center w-full ">
                         Comentarios/Observaciones del trabajo realizado
                     </label>
                     <input
