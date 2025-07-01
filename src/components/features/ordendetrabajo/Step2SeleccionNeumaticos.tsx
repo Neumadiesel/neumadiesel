@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import dayjs from "dayjs";
@@ -18,7 +18,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
     const [vehicleCode, setVehicleCode] = useState<string>("");
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [programas, setProgramas] = useState<ProgramasDTO[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+
 
     const buscarEquipoYProgramas = async () => {
         try {

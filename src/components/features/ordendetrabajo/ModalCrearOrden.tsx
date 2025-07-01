@@ -66,11 +66,11 @@ export default function ModalCrearOrden({ onClose }: Props) {
     });
 
     const router = useRouter();
-    const axios = useAxiosWithAuth();
+    const client = useAxiosWithAuth();
 
     const handleCrearOrden = async () => {
         try {
-            const response = await axios?.post("/ordenes", {
+            const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order`, {
                 equipoId: datos.equipoId,
                 tecnico: datos.tecnico,
                 fecha: datos.fecha,
