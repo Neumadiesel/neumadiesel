@@ -3,7 +3,7 @@ interface Props {
 }
 
 export default function PasoStepper({ pasoActual }: Props) {
-    const pasos = [1, 2, 3];
+    const pasos = [1, 2, 3, 4];
 
     return (
         <div className="flex items-center justify-center gap-4 mb-2">

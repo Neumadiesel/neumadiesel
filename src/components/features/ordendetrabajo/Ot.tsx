@@ -379,7 +379,7 @@ export default function OT({ id }: { id: number }) {
                 </div>
             </section> */}
             {/* Seccion neumatico desintalado,*/}
-            <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
+            {/* <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <h2 className="text-xl font-bold mb-4">Neumáticos Desinstalados</h2>
                 <div className="overflow-x-auto rounded-sm shadow">
                     <table className="border min-w-full text-sm text-left">
@@ -399,7 +399,7 @@ export default function OT({ id }: { id: number }) {
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </section> */}
             {/* Seccion neumatico instalado,*/}
             <section className="flex flex-col w-full border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <h2 className="text-xl font-bold mb-4">Neumáticos Instalados</h2>

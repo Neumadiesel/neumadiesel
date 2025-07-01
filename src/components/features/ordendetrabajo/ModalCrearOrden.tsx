@@ -10,6 +10,7 @@ import PasoStepper from "./components/PasoStepper";
 import { VehicleDTO } from "@/types/Vehicle";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import Step4Instalacion from "./Step4Instalation";
 
 // Tipos
 export type Instalacion = {
@@ -211,6 +212,14 @@ export default function ModalCrearOrden({ onClose }: Props) {
                             datos={datos}
                             setDatos={setDatos}
                             onBack={() => setStep(2)}
+                            onNext={() => setStep(4)}
+                        />
+                    )}
+                    {step === 4 && (
+                        <Step4Instalacion
+                            datos={datos}
+                            setDatos={setDatos}
+                            onBack={() => setStep(3)}
                             onConfirm={handleCrearOrden}
                         />
                     )}

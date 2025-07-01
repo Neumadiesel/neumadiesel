@@ -41,6 +41,13 @@ interface WorkOrderDTO {
     updatedAt: string; // formato ISO
     procedures: Procedure[]; // Puedes definir un tipo más específico si es necesario
 }
+
+interface kpis {
+    programadosSemana: number;
+    completadas: number;
+    pendientes: number;
+    porcentajeCumplimiento: number;
+}
 export default function OrdenDeTrabajoPage() {
 
     const [modalAbierto, setModalAbierto] = useState(false);
@@ -48,6 +55,12 @@ export default function OrdenDeTrabajoPage() {
     // axios get work orders
     const client = useAxiosWithAuth();
     const [workOrders, setWorkOrders] = useState<WorkOrderDTO[]>([]);
+    const [kpis, setKpis] = useState<kpis>({
+        programadosSemana: 0,
+        completadas: 0,
+        pendientes: 0,
+        porcentajeCumplimiento: 0,
+    });
 
     const fetchWorkOrders = async () => {
         try {
@@ -60,12 +73,25 @@ export default function OrdenDeTrabajoPage() {
         }
     };
 
+    // fetch kpis maintenance-program/kpis
+    const fetchKpis = async () => {
+        try {
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/kpis`);
+            setKpis(response.data);
+            console.log("KPIs:", response.data);
+        } catch (error) {
+            console.error("Error al obtener KPIs:", error);
+        }
+    };
+
     useEffect(() => {
         fetchWorkOrders();
+        fetchKpis();
     }, []);
 
     useEffect(() => {
         fetchWorkOrders();
+        fetchKpis();
     }, [user]);
 
     return (
@@ -87,28 +113,28 @@ export default function OrdenDeTrabajoPage() {
             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
                     <h2 className="text-xl font-semibold mb-2">Mantenimientos Programados</h2>
-                    <p className="text-3xl font-bold">22</p>
+                    <p className="text-3xl font-bold">{kpis.programadosSemana}</p>
                     <p className="text-gray-600 dark:text-gray-400">
                         Mantenimientos programados para esta semana.
                     </p>
                 </div>
                 <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Órdenes Completadas</h2>
-                    <p className="text-3xl font-bold">15
+                    <h2 className="text-xl font-semibold mb-2">Mantenimientos Completados</h2>
+                    <p className="text-3xl font-bold">{kpis.completadas}
                     </p>
-                    <p className="text-gray-600 dark:text-gray-400">Órdenes que han sido finalizadas.</p>
+                    <p className="text-gray-600 dark:text-gray-400">Mantenimientos completados .</p>
                 </div>
                 <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Órdenes en Pendientes</h2>
-                    <p className="text-3xl font-bold">4</p>
-                    <p className="text-gray-600 dark:text-gray-400">Órdenes que están pendientes de ejecución.</p>
+                    <h2 className="text-xl font-semibold mb-2">Mantenimientos en Pendientes</h2>
+                    <p className="text-3xl font-bold">{kpis.pendientes}</p>
+                    <p className="text-gray-600 dark:text-gray-400">Mantenimientos que están pendientes de ejecución.</p>
                 </div>
                 {/* KPI Completadas */}
                 <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
                     <h2 className="text-xl font-semibold mb-2">Porcentaje de Cumplimiento</h2>
-                    <p className="text-3xl font-bold">83%</p>
+                    <p className="text-3xl font-bold">{kpis.porcentajeCumplimiento}%</p>
                     <p className="text-gray-600 dark:text-gray-400">
-                        Porcentaje de órdenes completadas a tiempo.
+                        Porcentaje de cumplimineto programa semanal
                     </p>
                 </div>
             </section>

@@ -153,6 +153,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
             buscarEquipoYProgramas();
         }
     }, [datos.vehicleCode]);
+
     const handleNext = () => {
         const errores: string[] = [];
 
@@ -160,11 +161,11 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
             errores.push("Debes buscar y seleccionar un equipo antes de continuar.");
         }
 
-        if (!datos.kilometrage || datos.kilometrage <= 0) {
+        if (datos.kilometrage == null || isNaN(datos.kilometrage)) {
             errores.push("Debes ingresar un kilometraje válido.");
         }
 
-        if (!datos.hours || datos.hours <= 0) {
+        if (datos.hours == null || isNaN(datos.hours)) {
             errores.push("Debes ingresar una cantidad de horas válida.");
         }
 

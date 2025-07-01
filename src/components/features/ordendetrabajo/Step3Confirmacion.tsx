@@ -1,10 +1,10 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { OrdenTrabajoForm } from "./ModalCrearOrden";
 import {
-    TireDTO,
     RetirementReasonDTO,
     InstalledTireDTO,
     InstallationData,
@@ -15,32 +15,58 @@ interface Props {
     datos: OrdenTrabajoForm;
     setDatos: (fn: (prev: OrdenTrabajoForm) => OrdenTrabajoForm) => void;
     onBack: () => void;
-    onConfirm: () => Promise<void>;
+    onNext: () => void;
 }
 
-export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }: Props) {
+export default function Step3Desinstalacion({ datos, setDatos, onBack, onNext }: Props) {
     const axios = useAxiosWithAuth();
     const { user } = useAuth();
-    const [neumaticosDisponibles, setNeumaticosDisponibles] = useState<TireDTO[]>([]);
     const [razonesRetiro, setRazonesRetiro] = useState<RetirementReasonDTO[]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [tiresRes, razonesRes] = await Promise.all([
-                    axios.get(`/tires/available/site/${user?.faena_id}`),
-                    axios.get(`/retirement-reason`)
-                ]);
+    const handleDesmontaje = async () => {
+        const instalaciones = datos.instalaciones || [];
 
-                setNeumaticosDisponibles(tiresRes.data || []);
-                setRazonesRetiro(razonesRes.data || []);
+        for (const ins of instalaciones) {
+            const instalado = getTireInstalado(ins.posicion);
+            if (!instalado) continue;
+
+            const tireId = instalado.tire.id;
+            const { finalInternalTread, finalExternalTread, razonRetiroId } = ins;
+
+            if (
+                !tireId ||
+                finalInternalTread === undefined ||
+                finalExternalTread === undefined ||
+                !razonRetiroId
+            ) continue;
+
+            try {
+                await axios.post("/procedures/uninstall-tire", {
+                    tireId,
+                    retirementReasonId: razonRetiroId,
+                    executionDate: new Date().toISOString(),
+                    executionFinal: new Date().toISOString(),
+                    internalTread: finalInternalTread,
+                    externalTread: finalExternalTread,
+                });
             } catch (error) {
-                console.error("Error cargando datos:", error);
+                console.error("Error al desmontar neumático:", error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        const fetchRazones = async () => {
+            try {
+                const res = await axios.get(`/retirement-reason`);
+                setRazonesRetiro(res.data || []);
+            } catch (error) {
+                console.error("Error cargando razones de retiro:", error);
             }
         };
 
-        fetchData();
-    }, [axios, user]);
+        fetchRazones();
+    }, [axios]);
 
     const handleChange = (
         posicion: number,
@@ -65,83 +91,17 @@ export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }
 
     return (
         <div className="space-y-2 w-full">
-            <h3 className="text-lg font-semibold">Instalación de Neumáticos</h3>
+            <h3 className="text-lg font-semibold mb-4">Desinstalación de Neumáticos</h3>
             <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {(datos.posicionesSeleccionadas ?? []).map((pos: number) => {
+                {(datos.posicionesSeleccionadas ?? []).map((pos) => {
                     const instalado = getTireInstalado(pos);
                     const actual: InstallationData = datos.instalaciones.find((i) => i.posicion === pos) ?? { posicion: pos };
 
                     return (
                         <section key={pos} className="border p-4 rounded-xl shadow bg-white dark:bg-neutral-800">
-                            <h4 className="font-bold mb-2">Posición {pos}</h4>
+                            <h4 className="font-bold mb-3">Posición {pos}</h4>
 
-                            {/* Neumático a instalar */}
-                            <div className="mb-3">
-                                <label className="block font-medium mb-1">Neumático a instalar</label>
-                                <select
-                                    value={actual.nuevoTireId || ""}
-                                    onChange={(e) => handleChange(pos, "nuevoTireId", Number(e.target.value))}
-                                    className="w-full border rounded px-3 py-2"
-                                >
-                                    <option value="">Seleccionar neumático</option>
-                                    {neumaticosDisponibles.map((t) => (
-                                        <option key={t.id} value={t.id}>
-                                            {t.code} ({t.model?.dimensions})
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Campos de instalación */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                                <div>
-                                    <label className="block font-medium mb-1">Remanente interno</label>
-                                    <input
-                                        type="number"
-                                        value={actual.internalTread ?? ""}
-                                        onChange={(e) =>
-                                            handleChange(pos, "internalTread", Number(e.target.value))
-                                        }
-                                        className="w-full border rounded px-3 py-2"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">Remanente externo</label>
-                                    <input
-                                        type="number"
-                                        value={actual.externalTread ?? ""}
-                                        onChange={(e) =>
-                                            handleChange(pos, "externalTread", Number(e.target.value))
-                                        }
-                                        className="w-full border rounded px-3 py-2"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">Presión</label>
-                                    <input
-                                        type="number"
-                                        value={actual.presion ?? ""}
-                                        onChange={(e) =>
-                                            handleChange(pos, "presion", Number(e.target.value))
-                                        }
-                                        className="w-full border rounded px-3 py-2"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block font-medium mb-1">Temperatura</label>
-                                    <input
-                                        type="number"
-                                        value={actual.temperatura ?? ""}
-                                        onChange={(e) =>
-                                            handleChange(pos, "temperatura", Number(e.target.value))
-                                        }
-                                        className="w-full border rounded px-3 py-2"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Neumático a retirar */}
-                            {instalado && (
+                            {instalado ? (
                                 <div className="bg-gray-100 dark:bg-neutral-700 p-3 rounded">
                                     <p className="font-semibold text-sm mb-2">Neumático actual: {instalado.tire.code}</p>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -150,6 +110,7 @@ export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }
                                             <input
                                                 type="number"
                                                 value={actual.finalInternalTread || ""}
+                                                placeholder={instalado?.tire?.lastInspection.internalTread?.toString() || ""}
                                                 onChange={(e) => handleChange(pos, "finalInternalTread", Number(e.target.value))}
                                                 className="w-full border rounded px-3 py-2"
                                             />
@@ -159,6 +120,7 @@ export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }
                                             <input
                                                 type="number"
                                                 value={actual.finalExternalTread || ""}
+                                                placeholder={instalado?.tire.lastInspection?.externalTread?.toString() || ""}
                                                 onChange={(e) => handleChange(pos, "finalExternalTread", Number(e.target.value))}
                                                 className="w-full border rounded px-3 py-2"
                                             />
@@ -173,21 +135,27 @@ export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }
                                                 <option value="">Seleccionar razón</option>
                                                 {razonesRetiro.map((r) => (
                                                     <option key={r.id} value={r.id}>
-                                                        {r.name}
+                                                        {r.description}
                                                     </option>
                                                 ))}
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+                            ) : (
+                                <p className="text-sm italic text-gray-500 dark:text-gray-300">No hay neumático instalado en esta posición.</p>
                             )}
                         </section>
                     );
                 })}
             </main>
+
             <div className="flex justify-between mt-6">
                 <Button variant="secondary" onClick={onBack}>Atrás</Button>
-                <Button onClick={onConfirm}>Confirmar</Button>
+                <Button onClick={async () => {
+                    await handleDesmontaje();
+                    onNext();
+                }}>Siguiente</Button>
             </div>
         </div>
     );

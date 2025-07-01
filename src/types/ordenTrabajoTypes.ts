@@ -63,26 +63,90 @@ export interface TireModel {
 }
 
 export interface TireDTO {
+
     id: number;
     code: string;
-    model?: TireModel;
-}
+    creationDate: string;
+    modelId: number;
+    initialTread: number;
+    initialKilometrage: number;
+    initialHours: number;
+    usedKilometrage: number;
+    usedHours: number;
+    lastInspectionId: number | null;
+    locationId: number;
+    model: {
+        id: number;
+        code: string;
+        brand: string;
+        dimensions: string;
+        constructionType: string | null;
+        originalTread: number;
+    };
+    lastInspection: {
+        id: number;
+        position: number;
+        externalTread: number;
+        internalTread: number;
+        kilometrage: number;
+        hours: number;
+        inspectionDate: string;
+        pressure: number;
+        temperature: number;
+        observation: string;
+    }
+
+};
+
 
 export interface RetirementReasonDTO {
     id: number;
+    description: string;
     name: string;
 }
 
 export interface InstalledTireDTO {
     position: number;
     tire: {
+        id: number;
         code: string;
+        creationDate: string;
+        modelId: number;
+        initialTread: number;
+        initialKilometrage: number;
+        initialHours: number;
+        usedKilometrage: number;
+        usedHours: number;
+        lastInspectionId: number | null;
+        locationId: number;
+        model: {
+            id: number;
+            code: string;
+            brand: string;
+            dimensions: string;
+            constructionType: string | null;
+            originalTread: number;
+        };
+        lastInspection: {
+            id: number;
+            position: number;
+            externalTread: number;
+            internalTread: number;
+            kilometrage: number;
+            hours: number;
+            inspectionDate: string;
+            pressure: number;
+            temperature: number;
+            observation: string;
+        }
+
     };
 }
 
 export interface InstallationData {
     posicion: number;
     nuevoTireId?: number;
+    nuevoTire?: TireDTO;
     internalTread?: number;
     externalTread?: number;
     presion?: number;

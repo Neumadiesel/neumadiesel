@@ -105,8 +105,8 @@ export default function NavBar() {
             icon: <FaWrench className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
-                { title: "Cadenas", path: "/mantenimiento/cadenas" },
-                { title: "Sensores", path: "/mantenimiento/sensores" },
+                // { title: "Cadenas", path: "/mantenimiento/cadenas" },
+                // { title: "Sensores", path: "/mantenimiento/sensores" },
                 { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
                 { title: "Programa semanal", path: "/mantenimiento/programas" },
             ],
