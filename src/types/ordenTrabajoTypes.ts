@@ -76,10 +76,12 @@ export interface InstalledTireDTO {
 export interface InstallationData {
     posicion: number;
     nuevoTireId?: number;
-    remanente?: number;
+    internalTread?: number;
+    externalTread?: number;
     presion?: number;
     temperatura?: number;
-    remanenteFinal?: number;
+    finalInternalTread?: number;
+    finalExternalTread?: number;
     razonRetiroId?: number;
 }
 
@@ -117,5 +119,5 @@ export interface OrderFormData {
     horas: number;
 
     // Paso 3 - Instalación por posición
-    instalaciones: InstalacionNeumatico[];
+    instalaciones: InstallationData[];
 }

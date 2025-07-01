@@ -93,18 +93,47 @@ export default function ModalCrearOrden({ onClose }: Props) {
             console.error("Error creando orden:", error);
         }
     };
-
+    const handleCancelar = () => {
+        setDatos({
+            fecha: null,
+            fechaDespacho: "",
+            observaciones: "",
+            locationId: null,
+            tipoIntervencion: "",
+            cantidadPersonas: "",
+            horaIngreso: "",
+            horaDespacho: "",
+            equipoId: null,
+            vehicleCode: "",
+            vehicle: null,
+            programasSeleccionados: [],
+            posicionesSeleccionadas: [],
+            kilometrage: 0,
+            horas: 0,
+            instalaciones: [],
+            tecnico: "",
+        });
+        onClose();
+    };
     return (
         <div className="fixed inset-0 flex">
             <div className="absolute inset-0 bg-white dark:bg-neutral-900"></div>
-            <div className="relative bg-white dark:bg-[#212121] h-full dark:text-white p-3 rounded-md shadow-lg flex flex-col gap-y-2 items-center w-full">
+            <div className="relative bg-white dark:bg-[#212121] h-full dark:text-white p-3 rounded-md shadow-lg flex flex-col gap-y-2 items-center w-full overflow-y-auto pb-10">
                 <h2 className="text-3xl font-bold mb-4">Crear Orden de Trabajo</h2>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
                     Completa los pasos para crear una nueva orden de trabajo.
                 </p>
 
                 <PasoStepper pasoActual={step} />
-                <div className="w-full max-w-3xl h-full">
+                <div className="flex justify-center mt-4 w-full ">
+                    <button
+                        onClick={handleCancelar}
+                        className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition"
+                    >
+                        Cancelar
+                    </button>
+                </div>
+                <div className="w-full max-w-5xl h-full ">
                     {step === 1 && (
                         <Step1DatosGenerales
                             datos={datos}
