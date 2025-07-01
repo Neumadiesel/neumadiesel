@@ -117,17 +117,31 @@ export default function ModalCrearOrden({ onClose }: Props) {
             const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order`, payload);
 
             const nuevaOrdenId = response?.data?.workOrder?.id;
-            router.push(`/ordenes/${nuevaOrdenId}`);
+
+            // ✅ Actualizar programas seleccionados si existen
+            if (datos.programasSeleccionados && datos.programasSeleccionados.length > 0) {
+                await Promise.all(
+                    datos.programasSeleccionados.map((programaId) =>
+                        client.patch(`/maintenance-program/${programaId}`, {
+                            status: "Completada",
+                            otId: nuevaOrdenId,
+                            workDate: datos.entryDate, // o dayjs().toISOString() si prefieres ahora
+                        })
+                    )
+                );
+            }
+
+            router.push(`/mantenimiento/orden-de-trabajo/${nuevaOrdenId}`);
             onClose();
         } catch (err) {
             if (axios.isAxiosError(err)) {
+                alert(`err.message: ${err.message}`);
                 console.error(err.response?.data || err.message);
             } else if (err instanceof Error) {
                 console.error(err.message);
             } else {
                 console.error(err);
             }
-            alert('Error al enviar comentario');
         }
     };
 

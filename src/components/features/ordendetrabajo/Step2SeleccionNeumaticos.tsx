@@ -50,7 +50,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
             const filtrados = data.filter(
                 (p) =>
                     p.vehicle.code === vehicleCode &&
-                    p.status.toLowerCase() !== "completado"
+                    p.status.toLowerCase() !== "completada"
             );
 
             // Guardar los IDs seleccionados
