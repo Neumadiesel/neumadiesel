@@ -45,9 +45,16 @@ export interface InstalacionNeumatico {
 
 export interface ProgramasDTO {
     id: number;
+    vehicleId: number;
+    tyreId?: number;
+    status: "Programada" | "En ejecución" | "Completada" | "Cancelada";
+    otId?: string;
     description: string;
-    scheduledDate: string; // formato ISO
+    scheduledDate: string; // formato ISO (DateTime)
+    scheduledTime?: number;
+    workDate?: string; // formato ISO (DateTime)
     vehicle: {
+        id: number;
         code: string;
     };
 }

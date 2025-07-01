@@ -6,6 +6,7 @@ import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import dayjs from "dayjs";
 import { OrdenTrabajoForm } from "./ModalCrearOrden";
 import { ProgramasDTO, VehicleDTO } from "@/types/ordenTrabajoTypes";
+import QuickProgramForm from "./QuickProgramForm";
 
 interface Props {
     datos: OrdenTrabajoForm;
@@ -19,9 +20,9 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
     const [vehicleCode, setVehicleCode] = useState<string>("");
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [programas, setProgramas] = useState<ProgramasDTO[]>([]);
-
     const buscarEquipoYProgramas = async () => {
         try {
+            // Buscar vehículo por código
             const veh = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
             const vehiculo = veh.data;
 
@@ -31,26 +32,36 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                 vehicleId: vehiculo.id,
                 siteId: vehiculo.siteId,
                 vehicle: vehiculo,
-                code: `OT-${vehiculo.code}-${dayjs().format("YYYYMMDD-HHmm")}`, // Ejemplo de código
+                code: `OT-${vehiculo.code}-${dayjs().format("YYYYMMDD-HHmm")}`,
             }));
 
+            // Calcular fecha desde 10 días antes hasta 10 días después
             const hoy = dayjs().startOf("day");
-            const fin = hoy.add(6, "day");
+            const inicio = hoy.subtract(10, "day");
+            const fin = hoy.add(10, "day");
+
+            // Obtener programas dentro del rango
             const res = await axios.get(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${hoy.toISOString()}/${fin.toISOString()}`
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${inicio.toISOString()}/${fin.toISOString()}`
             );
             const data = res.data as ProgramasDTO[];
 
-            const seleccionados = data
-                .filter((p) => p.vehicle.code === vehicleCode)
-                .map((p) => p.id);
+            // Filtrar por código de vehículo y estado distinto de "completado"
+            const filtrados = data.filter(
+                (p) =>
+                    p.vehicle.code === vehicleCode &&
+                    p.status.toLowerCase() !== "completado"
+            );
+
+            // Guardar los IDs seleccionados
+            const seleccionados = filtrados.map((p) => p.id);
 
             setDatos((prev) => ({
                 ...prev,
                 programasSeleccionados: seleccionados,
             }));
 
-            setProgramas(data);
+            setProgramas(filtrados);
         } catch (err) {
             console.error("Error al buscar equipo o programas", err);
         }
@@ -129,6 +140,14 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                             </div>
                         </div>
                     </>
+                )}
+
+                {vehicle && (
+                    <QuickProgramForm
+                        vehicleCode={vehicle.code}
+                        siteId={vehicle.siteId}
+                        onCreated={buscarEquipoYProgramas} // recargar programas al crear uno nuevo
+                    />
                 )}
 
                 <div className="space-y-2">
