@@ -129,10 +129,10 @@ export default function MedicionPorEquipo() {
 
 
             const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
+            setVehicle(response.data);
             console.log("Vehículo", response.data);
             setInitialKilometrage(response.data.kilometrage);
             setInitialHours(response.data.hours);
-            setVehicle(response.data);
             const originals: Record<number, CreateInspectionDTO> = {};
             response.data.installedTires.forEach((tire: VehicleDTO["installedTires"][0]) => {
                 const last = tire.tire.lastInspection;

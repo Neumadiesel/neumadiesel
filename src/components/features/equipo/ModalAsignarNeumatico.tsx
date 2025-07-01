@@ -113,8 +113,6 @@ export default function ModalAsignarNeumatico({
 
     const fetchLocations = async () => {
         try {
-
-
             const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance/`);
             setLocations(response.data);
         } catch (error) {

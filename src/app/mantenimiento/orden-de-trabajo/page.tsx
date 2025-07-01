@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function OrdenDeTrabajoPage() {
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalAbierto, setModalAbierto] = useState(false);
     return (
         <div className="p-4 bg-gray-50 dark:bg-[#212121] dark:text-white w-full">
             <div className="flex w-full items-center justify-between mb-4">
@@ -15,7 +15,7 @@ export default function OrdenDeTrabajoPage() {
                 </div>
                 <aside className="mt-4">
                     {/* Boton para crear nueva orden */}
-                    <button onClick={() => { setIsModalOpen(true) }} className="px-4 py-3 hover:cursor-pointer  bg-amber-300 text-black font-semibold rounded hover:bg-amber-400 transition-colors">
+                    <button onClick={() => { setModalAbierto(true) }} className="px-4 py-3 hover:cursor-pointer  bg-amber-300 text-black font-semibold rounded hover:bg-amber-400 transition-colors">
                         <CirclePlus className="inline mr-2" />
                         Nueva Orden
                     </button>
@@ -148,13 +148,9 @@ export default function OrdenDeTrabajoPage() {
                 </table>
             </main>
 
-            <ModalCrearOrden
-                visible={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onGuardar={() => {
-                    setIsModalOpen(false);
-                    console.log("Orden guardada");
-                }} />
+            {modalAbierto && (
+                <ModalCrearOrden onClose={() => setModalAbierto(false)} />
+            )}
         </div>
     );
 }
