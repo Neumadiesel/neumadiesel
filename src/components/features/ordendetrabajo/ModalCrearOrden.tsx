@@ -53,7 +53,7 @@ interface Props {
 }
 
 export default function ModalCrearOrden({ onClose }: Props) {
-    const { token, user } = useAuth();
+    const { user } = useAuth();
     const [step, setStep] = useState<number>(1);
     const [datos, setDatos] = useState<OrdenTrabajoForm>({
         code: "",

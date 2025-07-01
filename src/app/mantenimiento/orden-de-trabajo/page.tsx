@@ -2,10 +2,27 @@
 import ModalCrearOrden from "@/components/features/ordendetrabajo/ModalCrearOrden";
 import { useAuth } from "@/contexts/AuthContext";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
-import { Ban, CirclePlus, Eye, FileCog, Funnel, Info } from "lucide-react";
+import { CirclePlus, Eye, FileCog, Funnel } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+interface Procedure {
+    id: number;
+    tireId: number;
+    position: number;
+    tireHours: number;
+    tireKilometres: number;
+    internalTread: number;
+    description?: string;
+    externalTread: number;
+    procedureName: string;
+    startDate: string; // ISO date string
+    endDate: string;   // ISO date string
+    vehicleId?: number;
+    siteId: number;
+    retirementReasonId?: number;
+    workOrderId?: number;
+}
 
 interface WorkOrderDTO {
     id: number;
@@ -22,7 +39,7 @@ interface WorkOrderDTO {
     vehicleId: number;
     createdAt: string; // formato ISO
     updatedAt: string; // formato ISO
-    procedures: any[]; // Puedes definir un tipo más específico si es necesario
+    procedures: Procedure[]; // Puedes definir un tipo más específico si es necesario
 }
 export default function OrdenDeTrabajoPage() {
 

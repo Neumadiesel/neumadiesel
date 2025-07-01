@@ -1,6 +1,7 @@
 "use client"
+import { useAuth } from "@/contexts/AuthContext";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 interface WorkOrderDTO {
@@ -120,7 +121,7 @@ export default function OT({ id }: { id: number }) {
 
     // funcion axios para pedir work order por id
     const client = useAxiosWithAuth()
-
+    const { user } = useAuth();
     const [workOrder, setWorkOrder] = useState<WorkOrderDTO | null>(null);
 
     const fetchWorkOrder = async () => {
@@ -132,6 +133,12 @@ export default function OT({ id }: { id: number }) {
             console.error("Error al obtener órdenes de trabajo:", error);
         }
     };
+
+    useEffect(() => {
+        if (user) {
+            fetchWorkOrder();
+        }
+    }, [user]);
     return (
         <div className="flex flex-col p-3 items-center min-h-full bg-amber-200 dark:bg-neutral-800 dark:text-white gap-y-4">
             <h1 className="text-2xl font-bold">Orden de Trabajo de Neumaticos {id}</h1>
@@ -145,6 +152,7 @@ export default function OT({ id }: { id: number }) {
                         </label>
                         <input
                             type="text"
+                            value={workOrder?.observations || ""}
                             className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
                         />
                     </div>
