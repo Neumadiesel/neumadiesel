@@ -4,11 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import dayjs from "dayjs";
-import { OrderFormData, ProgramasDTO, VehicleDTO } from "@/types/ordenTrabajoTypes";
+import { OrdenTrabajoForm } from "./ModalCrearOrden";
+import { ProgramasDTO, VehicleDTO } from "@/types/ordenTrabajoTypes";
 
 interface Props {
-    datos: OrderFormData;
-    setDatos: (fn: (prev: OrderFormData) => OrderFormData) => void;
+    datos: OrdenTrabajoForm;
+    setDatos: (fn: (prev: OrdenTrabajoForm) => OrdenTrabajoForm) => void;
     onNext: () => void;
     onBack: () => void;
 }
@@ -19,12 +20,19 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [programas, setProgramas] = useState<ProgramasDTO[]>([]);
 
-
     const buscarEquipoYProgramas = async () => {
         try {
             const veh = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
-            setVehicle(veh.data);
-            setDatos((prev) => ({ ...prev, equipoId: veh.data.id, vehicle: veh.data, vehicleCode }));
+            const vehiculo = veh.data;
+
+            setVehicle(vehiculo);
+            setDatos((prev) => ({
+                ...prev,
+                vehicleId: vehiculo.id,
+                siteId: vehiculo.siteId,
+                vehicle: vehiculo,
+                code: `OT-${vehiculo.code}-${dayjs().format("YYYYMMDD-HHmm")}`, // Ejemplo de código
+            }));
 
             const hoy = dayjs().startOf("day");
             const fin = hoy.add(6, "day");
@@ -36,7 +44,11 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
             const seleccionados = data
                 .filter((p) => p.vehicle.code === vehicleCode)
                 .map((p) => p.id);
-            setDatos((prev) => ({ ...prev, programasSeleccionados: seleccionados }));
+
+            setDatos((prev) => ({
+                ...prev,
+                programasSeleccionados: seleccionados,
+            }));
 
             setProgramas(data);
         } catch (err) {
@@ -46,18 +58,18 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
 
     const togglePrograma = (id: number) => {
         setDatos((prev) => {
-            const seleccionados = prev.programasSeleccionados.includes(id)
-                ? prev.programasSeleccionados.filter((pid) => pid !== id)
-                : [...prev.programasSeleccionados, id];
+            const seleccionados = (prev.programasSeleccionados ?? []).includes(id)
+                ? (prev.programasSeleccionados ?? []).filter((pid) => pid !== id)
+                : [...(prev.programasSeleccionados ?? []), id];
             return { ...prev, programasSeleccionados: seleccionados };
         });
     };
 
     const togglePosicion = (pos: number) => {
         setDatos((prev) => {
-            const posiciones = prev.posicionesSeleccionadas.includes(pos)
-                ? prev.posicionesSeleccionadas.filter((p) => p !== pos)
-                : [...prev.posicionesSeleccionadas, pos];
+            const posiciones = (prev.posicionesSeleccionadas ?? []).includes(pos)
+                ? (prev.posicionesSeleccionadas ?? []).filter((p) => p !== pos)
+                : [...(prev.posicionesSeleccionadas ?? []), pos];
             return { ...prev, posicionesSeleccionadas: posiciones };
         });
     };
@@ -104,11 +116,11 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                                 <label className="block text-sm font-medium mb-1">Horas actuales</label>
                                 <input
                                     type="number"
-                                    value={datos.horas || ""}
+                                    value={datos.hours || ""}
                                     onChange={(e) =>
                                         setDatos((prev) => ({
                                             ...prev,
-                                            horas: Number(e.target.value),
+                                            horas: e.target.value === "" ? 0 : Number(e.target.value),
                                         }))
                                     }
                                     className="w-full border rounded-lg px-3 py-2"
@@ -127,7 +139,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                                 type="checkbox"
                                 checked={datos.programasSeleccionados?.includes(program.id)}
                                 onChange={() => togglePrograma(program.id)}
-                                className=" accent-amber-300 h-4 w-4"
+                                className="accent-amber-300 h-4 w-4"
                             />
                             {program.description} - {dayjs(program.scheduledDate).format("DD/MM/YYYY")} ({program.vehicle.code})
                         </label>
@@ -148,7 +160,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                                     type="checkbox"
                                     checked={datos.posicionesSeleccionadas?.includes(pos)}
                                     onChange={() => togglePosicion(pos)}
-                                    className=" accent-amber-300 h-4 w-4"
+                                    className="accent-amber-300 h-4 w-4"
                                 />
                                 Posición {pos}
                             </label>

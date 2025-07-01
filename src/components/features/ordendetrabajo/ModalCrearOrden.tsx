@@ -7,36 +7,45 @@ import Step2SeleccionNeumaticos from "./Step2SeleccionNeumaticos";
 import Step3Confirmacion from "./Step3Confirmacion";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import PasoStepper from "./components/PasoStepper";
+import { VehicleDTO } from "@/types/Vehicle";
+import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
 
 // Tipos
 export type Instalacion = {
     posicion: number;
     nuevoTireId?: number;
-    remanente?: number;
+    internalTread?: number;
+    externalTread?: number;
     presion?: number;
     temperatura?: number;
-    remanenteFinal?: number;
+    finalInternalTread?: number;
+    finalExternalTread?: number;
     razonRetiroId?: number;
 };
 
 export interface OrdenTrabajoForm {
-    fecha: string | null;
-    fechaDespacho: string;
-    observaciones: string;
-    locationId: number | null;
-    tipoIntervencion: string;
-    cantidadPersonas: string;
-    horaIngreso: string;
-    horaDespacho: string;
-    equipoId: number | null;
-    vehicleCode: string;
-    vehicle: any; // Se puede mejorar con un tipo específico
-    programasSeleccionados: number[];
-    posicionesSeleccionadas: number[];
-    kilometrage: number;
-    horas: number;
+    code: string;
+    description: string;
+    locationMaintenanceId: number | null;
+    type: string;
+    status: string;
+    entryDate: string;
+    dispatchDate: string;
+    shift: string;
+    responsibleName: string;
+    peopleCount: number;
+    tool: string;
+    toolSerial: string;
+    observations?: string;
+    siteId: number | null;
+    vehicleId: number | null;
+    kilometrage?: number;
+    hours?: number;
     instalaciones: Instalacion[];
-    tecnico: string;
+    programasSeleccionados?: number[];
+    posicionesSeleccionadas?: number[];
+    vehicle?: VehicleDTO;
 }
 
 interface Props {
@@ -44,77 +53,108 @@ interface Props {
 }
 
 export default function ModalCrearOrden({ onClose }: Props) {
+    const { token, user } = useAuth();
     const [step, setStep] = useState<number>(1);
     const [datos, setDatos] = useState<OrdenTrabajoForm>({
-        fecha: null,
-        fechaDespacho: "",
-        observaciones: "",
-        locationId: null,
-        tipoIntervencion: "",
-        cantidadPersonas: "",
-        horaIngreso: "",
-        horaDespacho: "",
-        equipoId: null,
-        vehicleCode: "",
-        vehicle: null,
+        code: "",
+        description: "",
+        locationMaintenanceId: null,
+        type: "",
+        status: "Pendiente", // puedes setear un valor por defecto
+        entryDate: "",
+        dispatchDate: "",
+        shift: "",
+        responsibleName: "",
+        peopleCount: 1,
+        tool: "",
+        toolSerial: "",
+        observations: "",
+        siteId: null,
+        vehicleId: null,
+        instalaciones: [],
         programasSeleccionados: [],
         posicionesSeleccionadas: [],
-        kilometrage: 0,
-        horas: 0,
-        instalaciones: [],
-        tecnico: "",
     });
 
     const router = useRouter();
     const client = useAxiosWithAuth();
 
     const handleCrearOrden = async () => {
-        try {
-            const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order`, {
-                equipoId: datos.equipoId,
-                tecnico: datos.tecnico,
-                fecha: datos.fecha,
-                observaciones: datos.observaciones,
-                neumaticos: datos.instalaciones.map((inst) => ({
-                    posicion: inst.posicion,
-                    nuevoTireId: inst.nuevoTireId,
-                    remanente: inst.remanente,
-                    presion: inst.presion,
-                    temperatura: inst.temperatura,
-                    remanenteFinal: inst.remanenteFinal,
-                    razonRetiroId: inst.razonRetiroId,
-                })),
-            });
 
-            const nuevaOrdenId = response?.data?.id;
+        const payload = {
+            code: datos.code,
+            description: datos.description,
+            locationMaintenanceId: datos.locationMaintenanceId!,
+            type: datos.type,
+            status: datos.status,
+            entryDate: datos.entryDate,
+            dispatchDate: datos.dispatchDate,
+            shift: datos.shift,
+            responsibleName: datos.responsibleName,
+            peopleCount: datos.peopleCount,
+            tool: datos.tool || "Torquit 3000",
+            toolSerial: datos.toolSerial || "SN-123456",
+            siteId: datos.siteId! || user?.faena_id,
+            vehicleId: datos.vehicleId!,
+            observations: datos.observations || "Sin observaciones",
+        };
+
+        const camposObligatorios = [
+            'code', 'description', 'locationMaintenanceId', 'type',
+            'status', 'entryDate', 'dispatchDate', 'shift',
+            'responsibleName', 'peopleCount', 'tool', 'toolSerial',
+            'vehicleId'
+        ];
+
+        for (const campo of camposObligatorios) {
+            if (!payload[campo as keyof typeof payload]) {
+                console.error(`Falta el campo obligatorio: ${campo}`, payload);
+                return;
+            }
+        }
+        try {
+            console.log("Datos a enviar:", payload);
+            const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order`, payload);
+
+            const nuevaOrdenId = response?.data?.workOrder?.id;
             router.push(`/ordenes/${nuevaOrdenId}`);
             onClose();
-        } catch (error) {
-            console.error("Error creando orden:", error);
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                console.error(err.response?.data || err.message);
+            } else if (err instanceof Error) {
+                console.error(err.message);
+            } else {
+                console.error(err);
+            }
+            alert('Error al enviar comentario');
         }
     };
+
     const handleCancelar = () => {
         setDatos({
-            fecha: null,
-            fechaDespacho: "",
-            observaciones: "",
-            locationId: null,
-            tipoIntervencion: "",
-            cantidadPersonas: "",
-            horaIngreso: "",
-            horaDespacho: "",
-            equipoId: null,
-            vehicleCode: "",
-            vehicle: null,
+            code: "",
+            description: "",
+            locationMaintenanceId: null,
+            type: "",
+            status: "Pendiente",
+            entryDate: "",
+            dispatchDate: "",
+            shift: "",
+            responsibleName: "",
+            peopleCount: 1,
+            tool: "",
+            toolSerial: "",
+            observations: "",
+            siteId: null,
+            vehicleId: null,
+            instalaciones: [],
             programasSeleccionados: [],
             posicionesSeleccionadas: [],
-            kilometrage: 0,
-            horas: 0,
-            instalaciones: [],
-            tecnico: "",
         });
         onClose();
     };
+
     return (
         <div className="fixed inset-0 flex">
             <div className="absolute inset-0 bg-white dark:bg-neutral-900"></div>
@@ -133,7 +173,7 @@ export default function ModalCrearOrden({ onClose }: Props) {
                         Cancelar
                     </button>
                 </div>
-                <div className="w-full max-w-5xl h-full ">
+                <div className="w-full max-w-5xl h-full">
                     {step === 1 && (
                         <Step1DatosGenerales
                             datos={datos}

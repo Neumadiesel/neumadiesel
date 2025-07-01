@@ -2,34 +2,33 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { OrdenTrabajoForm } from "./ModalCrearOrden";
 import {
-    OrderFormData,
     TireDTO,
     RetirementReasonDTO,
     InstalledTireDTO,
     InstallationData,
 } from "@/types/ordenTrabajoTypes";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
-    datos: OrderFormData;
-    setDatos: (fn: (prev: OrderFormData) => OrderFormData) => void;
+    datos: OrdenTrabajoForm;
+    setDatos: (fn: (prev: OrdenTrabajoForm) => OrdenTrabajoForm) => void;
     onBack: () => void;
     onConfirm: () => Promise<void>;
 }
 
 export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }: Props) {
     const axios = useAxiosWithAuth();
+    const { user } = useAuth();
     const [neumaticosDisponibles, setNeumaticosDisponibles] = useState<TireDTO[]>([]);
     const [razonesRetiro, setRazonesRetiro] = useState<RetirementReasonDTO[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const siteId = datos?.vehicle?.siteId;
-                if (!siteId) return;
-
                 const [tiresRes, razonesRes] = await Promise.all([
-                    axios.get(`/tires/available/site/${siteId}`),
+                    axios.get(`/tires/available/site/${user?.faena_id}`),
                     axios.get(`/retirement-reason`)
                 ]);
 
@@ -41,7 +40,7 @@ export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }
         };
 
         fetchData();
-    }, [axios, datos?.vehicle]);
+    }, [axios, user]);
 
     const handleChange = (
         posicion: number,
@@ -68,7 +67,7 @@ export default function Step3Confirmacion({ datos, setDatos, onBack, onConfirm }
         <div className="space-y-2 w-full">
             <h3 className="text-lg font-semibold">Instalación de Neumáticos</h3>
             <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {datos.posicionesSeleccionadas.map((pos: number) => {
+                {(datos.posicionesSeleccionadas ?? []).map((pos: number) => {
                     const instalado = getTireInstalado(pos);
                     const actual: InstallationData = datos.instalaciones.find((i) => i.posicion === pos) ?? { posicion: pos };
 

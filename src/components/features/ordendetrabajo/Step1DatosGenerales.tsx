@@ -7,11 +7,12 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuth } from "@/contexts/AuthContext";
-import { OrderFormData, LocationDTO } from "@/types/ordenTrabajoTypes";
+import { OrdenTrabajoForm } from "./ModalCrearOrden";
+import { LocationDTO } from "@/types/ordenTrabajoTypes";
 
 interface Props {
-    datos: OrderFormData;
-    setDatos: (fn: (prev: OrderFormData) => OrderFormData) => void;
+    datos: OrdenTrabajoForm;
+    setDatos: (fn: (prev: OrdenTrabajoForm) => OrdenTrabajoForm) => void;
     onNext: () => void;
 }
 
@@ -34,10 +35,12 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
 
     useEffect(() => {
         fetchLocations();
-    }, []);
-
-    useEffect(() => {
-        fetchLocations();
+        if (user && (!datos.responsibleName || datos.responsibleName.trim() === "")) {
+            setDatos((prev) => ({
+                ...prev,
+                responsibleName: `${user.name ?? ""} ${user.last_name ?? ""}`.trim(),
+            }));
+        }
     }, [user]);
 
     return (
@@ -53,47 +56,43 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label className="block font-medium mb-1">Fecha y Hora de Ingreso</label>
-                        <div className="flex gap-2">
-                            <input
-                                type="datetime-local"
-                                value={
-                                    datos.fecha ? dayjs(datos.fecha).tz("America/Santiago").format("YYYY-MM-DDTHH:mm") : ""
-                                }
-                                onChange={(e) => {
-                                    const newDate = dayjs.tz(e.target.value, "America/Santiago");
-                                    setDatos((prev) => ({ ...prev, fecha: newDate.toISOString() }));
-                                }}
-                                className="w-full border rounded-lg px-3 py-2"
-                            />
-                        </div>
+                        <input
+                            type="datetime-local"
+                            value={
+                                datos.entryDate ? dayjs(datos.entryDate).tz("America/Santiago").format("YYYY-MM-DDTHH:mm") : ""
+                            }
+                            onChange={(e) => {
+                                const newDate = dayjs.tz(e.target.value, "America/Santiago");
+                                setDatos((prev) => ({ ...prev, entryDate: newDate.toISOString() }));
+                            }}
+                            className="w-full border rounded-lg px-3 py-2"
+                        />
                     </div>
 
                     <div>
                         <label className="block font-medium mb-1">Fecha y hora de Despacho</label>
-                        <div className="flex gap-2">
-                            <input
-                                type="datetime-local"
-                                value={
-                                    datos.fechaDespacho
-                                        ? dayjs(datos.fechaDespacho).tz("America/Santiago").format("YYYY-MM-DDTHH:mm")
-                                        : ""
-                                }
-                                onChange={(e) => {
-                                    const newDate = dayjs.tz(e.target.value, "America/Santiago");
-                                    setDatos((prev) => ({ ...prev, fechaDespacho: newDate.toISOString() }));
-                                }}
-                                className="w-full border rounded-lg px-3 py-2"
-                            />
-                        </div>
+                        <input
+                            type="datetime-local"
+                            value={
+                                datos.dispatchDate
+                                    ? dayjs(datos.dispatchDate).tz("America/Santiago").format("YYYY-MM-DDTHH:mm")
+                                    : ""
+                            }
+                            onChange={(e) => {
+                                const newDate = dayjs.tz(e.target.value, "America/Santiago");
+                                setDatos((prev) => ({ ...prev, dispatchDate: newDate.toISOString() }));
+                            }}
+                            className="w-full border rounded-lg px-3 py-2"
+                        />
                     </div>
 
                     <div>
                         <label className="block font-medium mb-1">Responsable</label>
                         <input
                             type="text"
-                            value={datos.tecnico || (user ? `${user.name ?? ""} ${user.last_name ?? ""}` : "")}
+                            value={datos.responsibleName}
                             onChange={(e) =>
-                                setDatos((prev) => ({ ...prev, tecnico: e.target.value }))
+                                setDatos((prev) => ({ ...prev, responsibleName: e.target.value }))
                             }
                             placeholder="Nombre del responsable"
                             className="w-full border rounded-lg px-3 py-2"
@@ -103,9 +102,9 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                     <div className="md:col-span-2">
                         <label className="block font-medium mb-1">Descripción</label>
                         <textarea
-                            value={datos.observaciones}
+                            value={datos.description}
                             onChange={(e) =>
-                                setDatos((prev) => ({ ...prev, observaciones: e.target.value }))
+                                setDatos((prev) => ({ ...prev, description: e.target.value }))
                             }
                             placeholder="Describe el trabajo a realizar…"
                             className="w-full border rounded-lg px-3 py-2"
@@ -115,9 +114,9 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                     <div>
                         <label className="block font-medium mb-1">Ubicación</label>
                         <select
-                            value={datos.locationId || ""}
+                            value={datos.locationMaintenanceId || ""}
                             onChange={(e) =>
-                                setDatos((prev) => ({ ...prev, locationId: Number(e.target.value) }))
+                                setDatos((prev) => ({ ...prev, locationMaintenanceId: Number(e.target.value) }))
                             }
                             className="w-full border rounded-lg px-3 py-2"
                         >
@@ -133,9 +132,9 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                     <div>
                         <label className="block font-medium mb-1">Tipo de Intervención</label>
                         <select
-                            value={datos.tipoIntervencion || ""}
+                            value={datos.type}
                             onChange={(e) =>
-                                setDatos((prev) => ({ ...prev, tipoIntervencion: e.target.value }))
+                                setDatos((prev) => ({ ...prev, type: e.target.value }))
                             }
                             className="w-full border rounded-lg px-3 py-2"
                         >
@@ -143,7 +142,7 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                             <option value="preventiva">Preventiva</option>
                             <option value="correctiva">Correctiva</option>
                             <option value="programada">Programada</option>
-                            <option value="apoyo">Apoyo Mecanico</option>
+                            <option value="apoyo">Apoyo Mecánico</option>
                         </select>
                     </div>
 
@@ -153,12 +152,9 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                             type="number"
                             min={1}
                             max={10}
-                            step={1}
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            value={datos.cantidadPersonas || ""}
+                            value={datos.peopleCount}
                             onChange={(e) =>
-                                setDatos((prev) => ({ ...prev, cantidadPersonas: e.target.value }))
+                                setDatos((prev) => ({ ...prev, peopleCount: Number(e.target.value) }))
                             }
                             className="w-full border rounded-lg px-3 py-2"
                         />
@@ -167,9 +163,9 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                     <div>
                         <label className="block font-medium mb-1">Turno</label>
                         <select
-                            value={datos.turno || ""}
+                            value={datos.shift}
                             onChange={(e) =>
-                                setDatos((prev) => ({ ...prev, turno: e.target.value }))
+                                setDatos((prev) => ({ ...prev, shift: e.target.value }))
                             }
                             className="w-full border rounded-lg px-3 py-2"
                         >

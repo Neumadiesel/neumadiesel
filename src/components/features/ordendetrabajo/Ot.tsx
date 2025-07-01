@@ -1,4 +1,28 @@
+"use client"
+import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useState } from "react";
+
+
+interface WorkOrderDTO {
+    id: number;
+    date: string; // formato ISO
+    dispatchDate: string; // formato ISO
+    siteId: number;
+    checkInHour: string; // formato HH:mm
+    checkOutHour: string; // formato HH:mm
+    observations: string;
+    technician: string;
+    interventionType: string;
+    peopleCount: number;
+    locationId: number;
+    vehicleId: number;
+    createdAt: string; // formato ISO
+    updatedAt: string; // formato ISO
+    procedures: any[]; // Puedes definir un tipo más específico si es necesario
+}
 export default function OT({ id }: { id: number }) {
+
+
     const neumaticos = [
         {
             posicion: "1",
@@ -93,9 +117,24 @@ export default function OT({ id }: { id: number }) {
         { label: "Razón Desmontaje", key: "razonDesmontaje" },
         { label: "Destino", key: "destino" },
     ];
+
+    // funcion axios para pedir work order por id
+    const client = useAxiosWithAuth()
+
+    const [workOrder, setWorkOrder] = useState<WorkOrderDTO | null>(null);
+
+    const fetchWorkOrder = async () => {
+        try {
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order/`);
+            setWorkOrder(response.data);
+            console.log("Órdenes de trabajo:", response.data);
+        } catch (error) {
+            console.error("Error al obtener órdenes de trabajo:", error);
+        }
+    };
     return (
         <div className="flex flex-col p-3 items-center min-h-full bg-amber-200 dark:bg-neutral-800 dark:text-white gap-y-4">
-            <h1 className="text-2xl font-bold">Orden de Trabajo de Neumaticos</h1>
+            <h1 className="text-2xl font-bold">Orden de Trabajo de Neumaticos {id}</h1>
             {/* Seccion de informacion de trabajo */}
             <section className="flex flex-col w-full h-[15%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <div className="flex flex-col w-full h-full gap-y-2">
@@ -312,7 +351,7 @@ export default function OT({ id }: { id: number }) {
                         <tbody>
                             {campos.map((campo, index) => (
                                 <tr key={index} className="border-b">
-                                    <th className="bg-gray-100 text-gray-700 px-4 py-2 font-semibold w-48">
+                                    <th className="bg-gray-100 dark:bg-black dark:text-white text-gray-700 px-4 py-2 font-semibold w-48">
                                         {campo.label}
                                     </th>
                                     {neumaticos.map((neumatico, idx) => (
@@ -327,7 +366,7 @@ export default function OT({ id }: { id: number }) {
                 </div>
             </section>
             {/* Seccion comentarios/observaciones */}
-            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white">
+            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-800">
                 <div className="flex flex-col w-full  border border-gray-500">
                     <label className="text-md font-bold border-b border-gray-500 bg-amber-300 text-black p-2 text-center w-full ">
                         Comentarios/Observaciones del trabajo realizado
