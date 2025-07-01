@@ -24,6 +24,8 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
     const { user } = useAuth();
     const [locations, setLocations] = useState<LocationDTO[]>([]);
 
+    const [error, setError] = useState<string | null>(null);
+
     const fetchLocations = async () => {
         try {
             const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/location-maintenance/`);
@@ -32,10 +34,11 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
             console.error("Error fetching locations:", error);
         }
     };
-
     useEffect(() => {
         fetchLocations();
-        if (user && (!datos.responsibleName || datos.responsibleName.trim() === "")) {
+
+        // Solo setear responsable una vez al cargar (no si lo borra manualmente)
+        if (user && datos.responsibleName === undefined) {
             setDatos((prev) => ({
                 ...prev,
                 responsibleName: `${user.name ?? ""} ${user.last_name ?? ""}`.trim(),
@@ -43,6 +46,29 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
         }
     }, [user]);
 
+    const handleNext = () => {
+        const errores: string[] = [];
+
+        if (!datos.entryDate || !datos.dispatchDate) {
+            errores.push("Debes ingresar ambas fechas.");
+        } else if (dayjs(datos.dispatchDate).isBefore(dayjs(datos.entryDate))) {
+            errores.push("La fecha de despacho no puede ser anterior a la de ingreso.");
+        }
+
+        if (!datos.responsibleName?.trim()) errores.push("Debes ingresar el nombre del responsable.");
+        if (!datos.description?.trim()) errores.push("Debes ingresar la descripción del trabajo.");
+        if (!datos.locationMaintenanceId) errores.push("Debes seleccionar una ubicación.");
+        if (!datos.type) errores.push("Debes seleccionar el tipo de intervención.");
+        if (!datos.shift) errores.push("Debes seleccionar un turno.");
+        if (!datos.peopleCount || datos.peopleCount < 1) errores.push("Cantidad de personas inválida.");
+
+        if (errores.length > 0) {
+            setError(errores.join("\n"));
+            return;
+        }
+
+        onNext();
+    };
     return (
         <div className="space-y-6">
             <section className="border rounded-xl p-6 bg-white dark:bg-neutral-800 dark:border-neutral-700 shadow-sm">
@@ -97,6 +123,15 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                             placeholder="Nombre del responsable"
                             className="w-full border rounded-lg px-3 py-2"
                         />
+                    </div>
+                    <div>
+                        {
+                            error && (
+                                <div className="text-red-500 text-sm mb-2 bg-red-50 border border-red-500 p-2 rounded-md">
+                                    {error}
+                                </div>
+                            )
+                        }
                     </div>
 
                     <div className="md:col-span-2">
@@ -178,7 +213,7 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
             </section>
 
             <div className="flex justify-end">
-                <Button onClick={onNext}>Siguiente</Button>
+                <Button onClick={handleNext}>Siguiente</Button>
             </div>
         </div>
     );
