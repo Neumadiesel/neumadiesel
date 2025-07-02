@@ -9,7 +9,6 @@ import {
     InstalledTireDTO,
     InstallationData,
 } from "@/types/ordenTrabajoTypes";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
     datos: OrdenTrabajoForm;
@@ -20,7 +19,6 @@ interface Props {
 
 export default function Step3Desinstalacion({ datos, setDatos, onBack, onNext }: Props) {
     const axios = useAxiosWithAuth();
-    const { user } = useAuth();
     const [razonesRetiro, setRazonesRetiro] = useState<RetirementReasonDTO[]>([]);
 
     const handleDesmontaje = async () => {

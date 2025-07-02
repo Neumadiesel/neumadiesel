@@ -86,7 +86,7 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
             }
 
             await onConfirm();
-        } catch (err: any) {
+        } catch (err) {
             console.error("Error al instalar neumáticos:", err);
             setError("Ocurrió un error al instalar los neumáticos.");
         } finally {
