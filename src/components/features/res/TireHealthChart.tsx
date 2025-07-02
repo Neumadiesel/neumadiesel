@@ -230,25 +230,22 @@ export default function TireHealthChart() {
         <div className="flex flex-col bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-neutral-700 border-gray-200 dark:text-white">
 
             <main className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="p-3 bg-blue-100 dark:bg-gray-700 rounded-lg">
-                        <span className="text-2xl">📊</span>
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                            Panel de Salud de Neumáticos OTR
-                        </h2>
-                        <p className="text-gray-600 dark:text-white">
-                            Monitoreo en tiempo real del estado de neumáticos con análisis detallado
-                        </p>
-                    </div>
+                <div className="flex flex-col items-center  mb-2">
+
+                    <h2 className="text-2xl font-bold mb-2 text-center bg-black  bg-clip-text text-transparent">
+                        Panel de Salud de Neumáticos OTR
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 text-center">
+                        Monitoreo en tiempo real del estado de neumáticos con análisis detallado
+                    </p>
+
                 </div>
 
                 {/* Filtros mejorados */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-2">
-                            📏 Dimensión del neumático:
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="flex flex-col items-start space-y-1 ">
+                        <label className="block text-xs font-semibold">
+                            Dimensión del neumático:
                         </label>
                         <Select
                             value={
@@ -269,14 +266,14 @@ export default function TireHealthChart() {
                             isClearable
                             placeholder="Todas las dimensiones"
                             onChange={e => setSelectedDimension(e?.value || null)}
-                            className="react-select-container text-black "
+                            className="w-full rounded-md react-select-container text-black "
                             classNamePrefix="react-select"
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-semibold text-gray-700 dark:text-white mb-2">
-                            📍 Posición en vehículo:
+                    <div className="flex flex-col items-start space-y-1 ">
+                        <label className="block text-xs font-semibold">
+                            Posición en vehículo:
                         </label>
                         <Select
                             options={uniquePositions.map(p => {
@@ -291,18 +288,17 @@ export default function TireHealthChart() {
                             isClearable
                             placeholder="Todas las posiciones"
                             onChange={e => setSelectedPosition(e?.value || null)}
-                            className="react-select-container text-black"
+                            className=" w-full rounded-md react-select-container text-black"
                             classNamePrefix="react-select"
                         />
                     </div>
                 </div>
             </main>
-            <main className={`grid grid-cols-1  gap-6 ${validPressureTemperatureCount >= 100 ? 'lg:grid-cols-2' : ''}`}>
+            <main className={`grid grid-cols-1 ${validPressureTemperatureCount >= 40 ? 'lg:grid-cols-2' : ''}`}>
 
-                {validPressureTemperatureCount >= 100 && (
-                    <div className="p-6">
+                {validPressureTemperatureCount >= 40 && (
+                    <div className="p-3">
                         <div className="flex items-center gap-2 mb-4">
-                            <span className="text-2xl">🌡️</span>
                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                                 Temperatura vs Presión por Posición
                             </h3>
@@ -382,9 +378,8 @@ export default function TireHealthChart() {
                 )
                 }
 
-                <section id="chart-area" className="p-6">
+                <section id="chart-area" className="p-3">
                     <div className="flex items-center gap-2 mb-4">
-                        <span className="text-2xl">⚖️</span>
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                             Desgaste Interno vs Externo por Posición
                         </h3>
