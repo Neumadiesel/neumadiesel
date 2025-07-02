@@ -54,7 +54,6 @@ export default function ScrappedReasonsChart() {
     const authFetch = useAuthFetch();
     const { user } = useAuth();
     const [data, setData] = useState<Tire[]>([]);
-    const [loading, setLoading] = useState(true);
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [semester, setSemester] = useState<'1' | '2'>('1');
     const [dimension, setDimension] = useState<string | null>(null);
@@ -73,7 +72,6 @@ export default function ScrappedReasonsChart() {
             console.log('Primer objeto completo:', JSON.stringify(json[0], null, 2));
         }
 
-        setLoading(false);
     };
 
 
@@ -160,9 +158,6 @@ export default function ScrappedReasonsChart() {
             .sort((a, b) => a.monthIndex - b.monthIndex);
     }, [data, year, semester, dimension, equipmentModel]);
 
-    if (loading) {
-        return <p className="text-center my-8">Cargando datos...</p>;
-    }
 
     const availableYears = Array.from(new Set(data.flatMap(t =>
         t.procedures.map(p => new Date(p.startDate).getFullYear())
