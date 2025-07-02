@@ -70,7 +70,7 @@ export default function OperationalTyres() {
     const { user } = useAuth()
     const [tires, setTires] = useState<OperationalTire[]>([]);
     const [loading, setLoading] = useState(false);
-    const [selectedDimensions, setSelectedDimensions] = useState<string[]>([]);
+    const [selectedDimensions, setSelectedDimensions] = useState<string[]>(["46/90R57"]);
     const [trendInfo, setTrendInfo] = useState<{ equation: string, r2: number, correlation: string } | null>(null);
 
     const fetchTires = async () => {
@@ -131,9 +131,9 @@ export default function OperationalTyres() {
     );
 
     return (
-        <section className="my-6">
+        <section className=" border rounded-xl p-4 bg-white dark:bg-gray-900 shadow-sm">
             <h2 className="text-xl font-bold mb-2 dark:text-white">
-                % Desgaste  vs. Horas de uso desde última inspección - Neumáticos Operacionales
+                % Desgaste vs. Horas de uso desde última inspección - Neumáticos Operacionales
             </h2>
 
             <div className="mb-4">
@@ -167,7 +167,8 @@ export default function OperationalTyres() {
                 </div>
             )}
 
-            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md shadow relative">
+            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md 
+             relative">
                 {loading ? (
                     <p className="text-gray-600 dark:text-gray-300">Cargando datos...</p>
                 ) : (

@@ -227,9 +227,9 @@ export default function TireHealthChart() {
     const uniquePositions = Array.from(new Set(tires.flatMap(t => t.installedTires.map(i => i.position)))).sort((a, b) => a - b);
 
     return (
-        <div className="flex flex-col bg-white dark:bg-gray-800 rounded-xl shadow-sm my-4 border dark:border-neutral-700 border-gray-200 dark:text-white">
+        <div className="flex flex-col bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-neutral-700 border-gray-200 dark:text-white">
 
-            <main className=" p-6  ">
+            <main className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                     <div className="p-3 bg-blue-100 dark:bg-gray-700 rounded-lg">
                         <span className="text-2xl">📊</span>

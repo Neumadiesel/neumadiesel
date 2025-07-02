@@ -66,7 +66,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
   const data = payload[0].payload as ChartPoint;
 
   return (
-    <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded shadow text-sm">
+    <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded  text-sm">
       <p className="font-semibold text-gray-900 dark:text-white mb-2 capitalize">
         {label}
       </p>
@@ -285,7 +285,7 @@ export default function ScrappedTyresChart() {
     barColor: string;
     meta: number | null;
   }) => (
-    <div className="bg-white dark:bg-[#313131] p-4 rounded-lg shadow">
+    <div className="bg-white dark:bg-[#313131]  p-4 rounded-lg border">
       <h3 className="text-lg font-semibold mb-3 text-center dark:text-white">
         {config.yLabel}
       </h3>
@@ -350,8 +350,8 @@ export default function ScrappedTyresChart() {
   // 🎯 LOADING STATE
   if (loading) {
     return (
-      <section className="my-6">
-        <div className="flex justify-center items-center h-64 bg-white dark:bg-[#313131] rounded-lg shadow">
+      <section className="">
+        <div className="flex justify-center items-center h-64 bg-white dark:bg-[#313131] rounded-lg ">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600 dark:text-gray-300">Cargando datos...</p>
@@ -364,7 +364,7 @@ export default function ScrappedTyresChart() {
   // 🎯 PREVENIR RENDERIZADO HASTA QUE ESTÉ MONTADO (EVITA ERRORES DE HIDRATACIÓN)
   if (!isMounted) {
     return (
-      <section className="my-6">
+      <section className="">
         <div className="flex justify-center items-center h-64 bg-white dark:bg-[#313131] rounded-lg shadow">
           <div className="animate-pulse text-gray-500">Inicializando componente...</div>
         </div>
@@ -375,13 +375,13 @@ export default function ScrappedTyresChart() {
   const totalTires = chartData.reduce((sum, item) => sum + item.count, 0);
 
   return (
-    <section className="my-6 space-y-6">
+    <section className=" space-y-6 bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md border dark:border-gray-700">
       <h2 className="text-2xl font-bold mb-6 dark:text-white text-center">
         Rendimiento de Neumáticos Dados de Baja
       </h2>
 
       {/* 🎯 FILTROS INTELIGENTES CON SSR SAFE */}
-      <div className="bg-white dark:bg-[#313131] p-6 rounded-lg shadow space-y-4">
+      <div className="bg-white dark:bg-[#313131] p-6 rounded-lg  space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <div>
             <label className="block mb-2 text-sm font-semibold dark:text-white">Año:</label>

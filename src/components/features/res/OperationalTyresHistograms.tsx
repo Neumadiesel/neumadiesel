@@ -160,7 +160,8 @@ const CustomHistogramTooltip = ({ active, payload }: TooltipProps<number, string
     if (active && payload && payload.length > 0) {
         const data = payload[0].payload as HistogramBin;
         return (
-            <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white">
+            <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded 
+             text-sm text-black dark:text-white">
                 <p><strong>Rango:</strong> {data.range}</p>
                 <p><strong>Frecuencia:</strong> {data.count} neumáticos</p>
             </div>
@@ -220,7 +221,7 @@ const renderHistogram = (
     // 🎯 DEBUG: Mostrar mensaje si no hay datos
     if (histogramData.length === 0) {
         return (
-            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md shadow">
+            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md">
                 <h3 className="text-md font-semibold dark:text-white mb-2 text-center">{label}</h3>
                 <div className="flex items-center justify-center h-full">
                     <p className="text-gray-500 dark:text-gray-400">
@@ -232,7 +233,7 @@ const renderHistogram = (
     }
 
     return (
-        <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md shadow">
+        <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md border">
             <h3 className="text-md font-semibold dark:text-white mb-2 text-center">{label}</h3>
             <ResponsiveContainer width="100%" height="90%">
                 <BarChart data={histogramData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
@@ -992,7 +993,7 @@ export default function OperationalTyresHistograms() {
     // 🎯 EVITAR RENDERIZADO HASTA QUE ESTÉ MONTADO
     if (!isMounted) {
         return (
-            <section className="my-6">
+            <section className="">
                 <div className="flex justify-center items-center h-64">
                     <div className="animate-pulse text-gray-500">Inicializando histogramas...</div>
                 </div>
@@ -1003,7 +1004,7 @@ export default function OperationalTyresHistograms() {
     // 🎯 MOSTRAR ERROR CRÍTICO SOLO SI NO HAY DATOS
     if (error && tiresOperational.length === 0 && tiresScrapped.length === 0) {
         return (
-            <section className="my-6">
+            <section className="">
                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-6">
                     <div className="flex items-center">
                         <svg className="h-5 w-5 text-red-400 mr-3" viewBox="0 0 20 20" fill="currentColor">
@@ -1025,7 +1026,7 @@ export default function OperationalTyresHistograms() {
     }
 
     return (
-        <section className="my-6">
+        <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border dark:border-gray-700">
             <h2 className="text-xl font-bold mb-4 dark:text-white">Histogramas de Frecuencia</h2>
 
             {/* 🎯 ALERTAS DE ERRORES PARCIALES */}

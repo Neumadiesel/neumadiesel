@@ -136,7 +136,7 @@ export default function TreadWearChart() {
     if (loading) return <p className="text-gray-600">Cargando inspecciones...</p>;
 
     return (
-        <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-md">
+        <div className="bg-white border dark:bg-gray-900 p-4 rounded-lg shadow-md">
             <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                     Tasa de desgaste promedio por tramo de goma (hrs/mm)

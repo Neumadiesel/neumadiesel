@@ -13,7 +13,9 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useAuth } from "@/contexts/AuthContext";
+import { TireDTO } from "@/types/Tire";
 
+type TireWithModel = { model?: { dimensions?: string } };
 type TireScrapResponse = {
     id: number;
     code: string;
@@ -109,7 +111,7 @@ export default function ScrapTyres() {
                     motivo: tire.retirementReason.name,
                     descripcionMotivo: tire.retirementReason.description,
                     fecha: new Date(procedure.startDate).toISOString().split("T")[0],
-                    dimension: (tire as any).model?.dimensions ?? "Desconocida",
+                    dimension: (tire as TireWithModel).model?.dimensions ?? "Desconocida",
                     year: new Date(procedure.startDate).getFullYear(),
                     vehiculo: procedure.vehicle?.code || "Desconocido",
                 };
@@ -163,7 +165,7 @@ export default function ScrapTyres() {
     );
 
     return (
-        <section className="my-6 p-2">
+        <section className="p-4 bg-white dark:bg-gray-900 rounded-md shadow-sm border dark:border-gray-700">
             <h2 className="text-xl font-bold mb-2 dark:text-white">
                 % Desgaste vs. Horas de Operación al Momento de la Baja
             </h2>
@@ -220,7 +222,7 @@ export default function ScrapTyres() {
             </div>
 
 
-            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md shadow">
+            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md ">
                 {loading ? (
                     <p className="text-gray-600 dark:text-gray-300">Cargando datos...</p>
                 ) : (

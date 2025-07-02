@@ -172,13 +172,13 @@ export default function ScrappedReasonsChart() {
     )).sort();
 
     return (
-        <section className="my-4">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 shadow-lg">
+        <section className=" bg-white dark:bg-gray-800 border  rounded-md p-4 shadow-sm">
+            <div className="">
                 <h2 className="text-2xl font-bold mb-4 text-center bg-black  bg-clip-text text-transparent">
                     Rendimiento Mensual por Motivo de Baja
                 </h2>
 
-                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md mb-4">
+                <div className="bg-white dark:bg-gray-800 p-3 mb-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
                         {/* Año */}
                         <div className="space-y-1">
@@ -270,7 +270,7 @@ export default function ScrappedReasonsChart() {
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 p-3 m-2 rounded-lg shadow-md">
+            <div className="bg-white dark:bg-gray-800 p-3 m-2">
                 <ResponsiveContainer width="100%" height={350} className={" p-2"}>
                     <BarChart data={processed} >
                         <CartesianGrid strokeDasharray="3 3" />
