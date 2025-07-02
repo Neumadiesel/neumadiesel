@@ -60,11 +60,9 @@ export default function OldTyres() {
     };
 
     useEffect(() => {
-        fetchCriticalTires();
-    }, []);
-
-    useEffect(() => {
-        fetchCriticalTires();
+        if (user) {
+            fetchCriticalTires();
+        }
     }, [user]);
 
     return (

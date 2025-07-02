@@ -152,9 +152,6 @@ export default function ScrappedTyresChart() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   useEffect(() => {
     fetchData();

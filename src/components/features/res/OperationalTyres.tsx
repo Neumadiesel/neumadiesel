@@ -86,11 +86,11 @@ export default function OperationalTyres() {
         }
     };
 
-    useEffect(() => {
-        fetchTires();
-    }, []);
 
     useEffect(() => {
+        if (!user) {
+            return;
+        }
         fetchTires();
     }, [user]);
 

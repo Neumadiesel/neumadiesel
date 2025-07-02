@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import Select from "react-select";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface TireModel {
     dimensions: string;
@@ -97,12 +98,15 @@ function calcularTasaDesgaste(
 
 export default function TreadWearChart() {
     const client = useAxiosWithAuth()
-
+    const { user } = useAuth();
     const [inspecciones, setInspecciones] = useState<Inspection[]>([]);
     const [loading, setLoading] = useState(true);
     const [dimensionSeleccionada, setDimensionSeleccionada] = useState<string | null>("46/90R57");
 
     useEffect(() => {
+        if (!user) {
+            return;
+        }
         const fetchInspecciones = async () => {
             try {
                 const res = await client.get("http://localhost:3002/inspections");
@@ -114,7 +118,7 @@ export default function TreadWearChart() {
             }
         };
         fetchInspecciones();
-    }, []);
+    }, [user]);
 
     const dimensiones = useMemo(() => {
         const unique = new Set(inspecciones.map((i) => i.tire.model.dimensions));

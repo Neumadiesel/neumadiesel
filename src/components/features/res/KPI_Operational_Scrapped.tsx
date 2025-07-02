@@ -72,11 +72,9 @@ export default function TyresKPI() {
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        fetchData();
+        if (user) {
+            fetchData();
+        }
     }, [user]);
 
     const allDimensions = useMemo(() => {

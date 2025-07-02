@@ -108,12 +108,11 @@ export default function ScrapTyres() {
             setLoading(false);
         }
     };
-    useEffect(() => {
-        fetchScrappedTires();
-    }, []);
 
     useEffect(() => {
-        fetchScrappedTires();
+        if (user) {
+            fetchScrappedTires();
+        }
     }, [user]);
 
     const groupedData: Record<string, ScatterPoint[]> = {};

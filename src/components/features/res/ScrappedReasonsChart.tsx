@@ -77,12 +77,11 @@ export default function ScrappedReasonsChart() {
         setLoading(false);
     };
 
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     useEffect(() => {
-        fetchData();
+        if (user) {
+            fetchData();
+        }
     }, [user]);
 
     const processed = useMemo(() => {

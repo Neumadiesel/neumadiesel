@@ -63,21 +63,17 @@ export default function TireHealthDashboard() {
   const [selectedDimension, setSelectedDimension] = useState<string | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  ;
 
   useEffect(() => {
-    // Cargar neumáticos desde el endpoint operacional
-    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
-      .then(res => res.json())
-      .then(setTires)
-      .catch(err => console.error("Error cargando neumáticos:", err));
-  }, []);
+    if (user) {
 
-  useEffect(() => {
-    // Cargar neumáticos desde el endpoint operacional
-    authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
-      .then(res => res.json())
-      .then(setTires)
-      .catch(err => console.error("Error cargando neumáticos:", err));
+      // Cargar neumáticos desde el endpoint operacional
+      authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
+        .then(res => res.json())
+        .then(setTires)
+        .catch(err => console.error("Error cargando neumáticos:", err));
+    }
   }, [user]);
 
   // Función para obtener color por posición
