@@ -53,6 +53,12 @@ export interface TireDTO {
             kilometrage: number;
             hours: number;
             typeId: number;
+            model: {
+                id: number;
+                brand: string;
+                model: string;
+                wheelCount: number;
+            };
         };
     }[];
 }

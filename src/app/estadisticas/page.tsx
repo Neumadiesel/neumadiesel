@@ -5,6 +5,7 @@ import OperationalTyresHistograms from "@/components/features/res/OperationalTyr
 import ScrappedTyresChart from "@/components/features/res/ScrappedTyresChart";
 import ScrappedReasonsChart from "@/components/features/res/ScrappedReasonsChart";
 import TreadWearChart from "@/components/features/res/TreadWearChart";
+import TireHealthChart from "@/components/features/res/TireHealthChart";
 export default function Page() {
     return (
         <div className="flex flex-col overflow-x-hidden bg-white dark:bg-[#212121] pt-4 p-2 dark:text-white text-center w-full mx-auto   lg:p-3">
@@ -19,6 +20,7 @@ export default function Page() {
             {/* <SectionCharts /> */}
             <TreadWearChart />
 
+            <TireHealthChart />
             <ScrapTyres />
             <OperationalTyres />
             <OperationalTyresHistograms />
