@@ -13,7 +13,6 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useAuth } from "@/contexts/AuthContext";
-import { TireDTO } from "@/types/Tire";
 
 type TireWithModel = { model?: { dimensions?: string } };
 type TireScrapResponse = {

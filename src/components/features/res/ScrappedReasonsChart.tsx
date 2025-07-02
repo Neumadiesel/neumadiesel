@@ -1,16 +1,15 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-    BarChart,
-    Bar,
     XAxis,
     YAxis,
     CartesianGrid,
     Tooltip,
     Legend,
     ResponsiveContainer,
-    LabelList,
     Label,
+    BarChart,
+    Bar
 } from 'recharts';
 import Select from 'react-select';
 import dayjs from 'dayjs';
@@ -145,9 +144,15 @@ export default function ScrappedReasonsChart() {
                     month: label.charAt(0).toUpperCase() + label.slice(1),
                     monthIndex: parseInt(monthIndexStr),
                 };
-                Object.entries(motivos).forEach(([motivo, v]) => {
-                    entry[motivo] = Math.round(v.hrs / v.count || 0);
-                    entry[`${motivo}_count`] = v.count;
+
+                reasonsArr.forEach(motivo => {
+                    if (motivos[motivo]) {
+                        entry[motivo] = Math.round(motivos[motivo].hrs / motivos[motivo].count || 0);
+                        entry[`${motivo}_count`] = motivos[motivo].count;
+                    } else {
+                        entry[motivo] = 0; // 👈 evita líneas cortadas
+                        entry[`${motivo}_count`] = 0;
+                    }
                 });
 
                 return entry;
@@ -174,21 +179,23 @@ export default function ScrappedReasonsChart() {
     return (
         <section className=" bg-white dark:bg-gray-800 border  rounded-md p-4 shadow-sm">
             <div className="">
-                <h2 className="text-2xl font-bold mb-4 text-center bg-black  bg-clip-text text-transparent">
+                <h2 className="text-2xl font-bold mb-2 text-center bg-black  bg-clip-text text-transparent">
                     Rendimiento Mensual por Motivo de Baja
                 </h2>
-
-                <div className="bg-white dark:bg-gray-800 p-3 mb-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 text-center">
+                    Aquí puedes ver el rendimiento mensual de los neumáticos dados de baja, desglosado por motivo de baja.
+                </p>
+                <div className="bg-white dark:bg-gray-800 ">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
                         {/* Año */}
-                        <div className="space-y-1">
+                        <div className="flex flex-col items-start space-y-1">
                             <label className="block text-xs font-semibold">
-                                📅 Año:
+                                Año:
                             </label>
                             <select
                                 value={year}
                                 onChange={(e) => setYear(Number(e.target.value))}
-                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
+                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
                             >
                                 {availableYears.map(y => (
                                     <option key={y} value={y}>{y}</option>
@@ -196,28 +203,28 @@ export default function ScrappedReasonsChart() {
                             </select>
                         </div>
                         {/* Semestre */}
-                        <div className="space-y-1">
+                        <div className="flex flex-col items-start space-y-1">
                             <label className="block text-xs font-semibold">
-                                📆 Semestre:
+                                Semestre:
                             </label>
                             <select
                                 value={semester}
                                 onChange={(e) => setSemester(e.target.value as '1' | '2')}
-                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
+                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
                             >
                                 <option value="1">1er Semestre</option>
                                 <option value="2">2do Semestre</option>
                             </select>
                         </div>
                         {/* Dimensión */}
-                        <div className="space-y-1">
+                        <div className="flex flex-col items-start space-y-1">
                             <label className="block text-xs font-semibold">
-                                📏 Dimensión:
+                                Dimensión:
                             </label>
                             <select
                                 value={dimension ?? ''}
                                 onChange={(e) => setDimension(e.target.value || null)}
-                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
+                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
                             >
                                 <option value="">Todas</option>
                                 {availableDimensions.map(d => (
@@ -226,14 +233,14 @@ export default function ScrappedReasonsChart() {
                             </select>
                         </div>
                         {/* Modelo Equipo */}
-                        <div className="space-y-1">
+                        <div className="flex flex-col items-start space-y-1">
                             <label className="block text-xs font-semibold">
-                                🚛 Modelo Equipo:
+                                Modelo Equipo:
                             </label>
                             <select
                                 value={equipmentModel ?? ''}
                                 onChange={(e) => setEquipmentModel(e.target.value || null)}
-                                className="w-full p-2 text-sm border-2 border-gray-200 rounded-lg"
+                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
                             >
                                 <option value="">Todos</option>
                                 {availableEquipmentModels.map(model => (
@@ -247,8 +254,8 @@ export default function ScrappedReasonsChart() {
                 {/* Motivos */}
                 <div className="mt-3">
                     <div className="space-y-1">
-                        <label className="block text-xs font-semibold">
-                            🔍 Motivos de Baja:
+                        <label className="block text-xs text-start font-semibold">
+                            Motivos de Baja:
                         </label>
                         <Select
                             isMulti
@@ -271,8 +278,8 @@ export default function ScrappedReasonsChart() {
             </div>
 
             <div className="bg-white dark:bg-gray-800 p-3 m-2">
-                <ResponsiveContainer width="100%" height={350} className={" p-2"}>
-                    <BarChart data={processed} >
+                <ResponsiveContainer width="100%" height={350} className="p-2">
+                    <BarChart data={processed}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="month" />
                         <YAxis>
@@ -280,7 +287,7 @@ export default function ScrappedReasonsChart() {
                                 value="Horas"
                                 angle={-90}
                                 position="insideLeft"
-                                dx={-10} // mueve hacia la derecha (dentro del gráfico)
+                                dx={-10}
                                 style={{ textAnchor: 'middle' }}
                             />
                         </YAxis>
@@ -290,18 +297,13 @@ export default function ScrappedReasonsChart() {
                             <Bar
                                 key={motivo}
                                 dataKey={motivo}
-                                stackId="a"
                                 fill={COLORS[motivo] || '#999'}
-                            >
-                                <LabelList
-                                    dataKey={`${motivo}_count`}
-                                    position="top"
-                                    formatter={(val: number) => (val > 0 ? `${val}` : '')}
-                                />
-                            </Bar>
+                            />
                         ))}
                     </BarChart>
                 </ResponsiveContainer>
+
+
             </div>
         </section>
     );
