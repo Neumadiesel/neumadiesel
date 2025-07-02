@@ -173,7 +173,7 @@ export default function ListaNeumaticos() {
                                 onChange={(e) => setYearStart(Number(e.target.value))}
                                 className="border p-2 w-[50%] rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
                             >
-                                {[2023, 2024, 2025, 2026, 2027].map((year) => (
+                                {[2022, 2023, 2024, 2025, 2026, 2027].map((year) => (
                                     <option key={year} value={year}>{year}</option>
                                 ))}
                             </select>
@@ -183,7 +183,7 @@ export default function ListaNeumaticos() {
                                 onChange={(e) => setYearEnd(Number(e.target.value))}
                                 className="border w-[50%] p-2 rounded-md bg-gray-100 dark:bg-[#212121] dark:text-white dark:border-neutral-700"
                             >
-                                {[2023, 2024, 2025, 2026, 2027].map((year) => (
+                                {[2022, 2023, 2024, 2025, 2026, 2027].map((year) => (
                                     <option key={year} value={year}>{year}</option>
                                 ))}
                             </select>

@@ -30,8 +30,6 @@ export default function TireHealthDashboard() {
   const authFetch = useAuthFetch();
   const { user } = useAuth();
   const [tires, setTires] = useState<Tire[]>([]);
-  const [selectedDimension, setSelectedDimension] = useState<string | null>(null);
-  const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   ;
 
@@ -78,17 +76,7 @@ export default function TireHealthDashboard() {
 
   const processedData = useMemo(() => {
     return tires
-      .filter(t => {
-        // Filtro por dimensión
-        if (selectedDimension && t.model.dimensions !== selectedDimension) return false;
 
-
-
-        // Filtro por posición
-        if (selectedPosition && !t.installedTires.some(i => i.position === selectedPosition)) return false;
-
-        return true;
-      })
       .map(t => {
         const { pressure, temperature, internalTread, externalTread } = t.lastInspection;
         const position = t.installedTires[0]?.position || 0;
@@ -177,7 +165,7 @@ export default function TireHealthDashboard() {
           positionName: getPositionName(position)
         };
       });
-  }, [tires, selectedDimension, selectedPosition]);
+  }, [tires]);
 
   const criticos = processedData.filter(t => t.status === "Crítico").length;
   const desgasteIrregular = processedData.filter(t => t.treadDiff > 6).length;

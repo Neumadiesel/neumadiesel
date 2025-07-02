@@ -27,6 +27,9 @@ type TireScrapResponse = {
         internalTread: number;
         tireHours: number;
         startDate: string;
+        vehicle: {
+            code: string;
+        } | null;
     }[];
 }[];
 
@@ -37,6 +40,9 @@ type ScatterPoint = {
     motivo: string;
     descripcionMotivo: string;
     fecha: string;
+    dimension: string;
+    year: number;
+    vehiculo: string
 };
 
 interface CustomTooltipProps {
@@ -54,6 +60,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
                 <p><strong>Fecha:</strong> {data.fecha}</p>
                 <p><strong>Horas:</strong> {data.horas}h</p>
                 <p><strong>% Desgaste:</strong> {data.desgaste}%</p>
+                <p><strong>Equipo:</strong> {data.vehiculo}</p>
             </div>
         );
     }
@@ -67,10 +74,13 @@ export default function ScrapTyres() {
     const [selectedMotivos, setSelectedMotivos] = useState<string[]>([]);
     const { user } = useAuth();
 
+    const [selectedDimension, setSelectedDimension] = useState<string | null>("46/90R57");
+    const [selectedYear, setSelectedYear] = useState<number | null>(2025);
+
     const fetchScrappedTires = async () => {
         try {
             setLoading(true);
-            const response = await authFetch(`http://localhost:3002/tires/scrapped/site/1/initialTread/97`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1/`);
             const tires: TireScrapResponse = await response.json();
 
             const data: ScatterPoint[] = tires.flatMap((tire) => {
@@ -95,15 +105,20 @@ export default function ScrapTyres() {
                     horas: procedure.tireHours,
                     desgaste,
                     codigo: tire.code,
+
                     motivo: tire.retirementReason.name,
                     descripcionMotivo: tire.retirementReason.description,
                     fecha: new Date(procedure.startDate).toISOString().split("T")[0],
+                    dimension: (tire as any).model?.dimensions ?? "Desconocida",
+                    year: new Date(procedure.startDate).getFullYear(),
+                    vehiculo: procedure.vehicle?.code || "Desconocido",
                 };
             });
 
             setScatterData(data);
         } catch (error) {
             console.error("Error fetching scrap tires:", error);
+            setScatterData([]);
         } finally {
             setLoading(false);
         }
@@ -116,11 +131,16 @@ export default function ScrapTyres() {
     }, [user]);
 
     const groupedData: Record<string, ScatterPoint[]> = {};
-    scatterData.forEach((item) => {
-        const key = item.descripcionMotivo;
-        if (!groupedData[key]) groupedData[key] = [];
-        groupedData[key].push(item);
-    });
+    scatterData
+        .filter(item =>
+            (!selectedDimension || item.dimension === selectedDimension) &&
+            (!selectedYear || item.year === selectedYear) // ✅ nuevo filtro
+        )
+        .forEach(item => {
+            const key = item.descripcionMotivo;
+            if (!groupedData[key]) groupedData[key] = [];
+            groupedData[key].push(item);
+        });
 
     const motivoKeys = Object.keys(groupedData);
     const colorMap: Record<string, string> = {};
@@ -137,24 +157,68 @@ export default function ScrapTyres() {
     const visibleGroups = Object.entries(groupedData).filter(([descMotivo]) =>
         selectedMotivos.length === 0 || selectedMotivos.includes(descMotivo)
     );
+    const visiblePointsCount = visibleGroups.reduce(
+        (total, [, points]) => total + points.length,
+        0
+    );
 
     return (
-        <section className="my-6">
+        <section className="my-6 p-2">
             <h2 className="text-xl font-bold mb-2 dark:text-white">
                 % Desgaste vs. Horas de Operación al Momento de la Baja
             </h2>
+            <p className="text-sm text-gray-700 dark:text-gray-200 mb-2">
+                Mostrando <strong>{visiblePointsCount}</strong> neumáticos de dimensión <strong>{selectedDimension}</strong> dados de baja del año <strong>{selectedYear}</strong>
+            </p>
 
-            <div className="mb-4">
-                <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por tipo de baja:</label>
-                <Select
-                    options={motivoOptions}
-                    isMulti
-                    value={motivoOptions.filter((opt) => selectedMotivos.includes(opt.value))}
-                    onChange={(selected) => setSelectedMotivos(selected.map((opt) => opt.value))}
-                    placeholder="Selecciona tipos de baja..."
-                    className="text-black"
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                <div className="mb-4">
+                    <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por tipo de baja:</label>
+                    <Select
+                        options={motivoOptions}
+                        isMulti
+                        value={motivoOptions.filter((opt) => selectedMotivos.includes(opt.value))}
+                        onChange={(selected) => setSelectedMotivos(selected.map((opt) => opt.value))}
+                        placeholder="Selecciona tipos de baja..."
+                        className="text-black"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por dimensión:</label>
+                    <Select
+                        options={Array.from(new Set(scatterData.map(d => d.dimension)))
+                            .sort()
+                            .map(d => ({
+                                value: d,
+                                label: d,
+                            }))
+                        }
+                        isClearable
+                        value={selectedDimension ? { value: selectedDimension, label: selectedDimension } : null}
+                        onChange={(e) => setSelectedDimension(e?.value || null)}
+                        placeholder="Selecciona dimensión..."
+                        className="text-black"
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por año de baja:</label>
+                    <Select
+                        options={Array.from(new Set(scatterData.map(d => d.year)))
+                            .sort((a, b) => b - a) // años descendentes
+                            .map(year => ({
+                                value: year,
+                                label: `${year}`,
+                            }))
+                        }
+                        isClearable
+                        placeholder="Todos los años"
+                        value={selectedYear ? { value: selectedYear, label: `${selectedYear}` } : null}
+                        onChange={e => setSelectedYear(e?.value || null)}
+                        className="text-black"
+                    />
+                </div>
             </div>
+
 
             <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md shadow">
                 {loading ? (
