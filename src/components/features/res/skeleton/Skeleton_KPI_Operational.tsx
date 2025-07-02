@@ -13,7 +13,6 @@ export default function Skeleton_KPI_Operational_Scrapped() {
                         options={[]} // Reemplazar con opciones de dimensión
                         isClearable
                         placeholder="Todas las dimensiones"
-                        onChange={(e) => { }} // Reemplazar con lógica de cambio
                         value={null} // Reemplazar con valor seleccionado
                         className="react-select-container text-black w-full sm:w-72"
                         classNamePrefix="react-select"
@@ -33,7 +32,6 @@ export default function Skeleton_KPI_Operational_Scrapped() {
                             { value: 48, label: 'Últimos 48 meses' }
                         ]}
                         defaultValue={{ value: 12, label: 'Últimos 12 meses' }}
-                        onChange={(e) => { }} // Reemplazar con lógica de cambio
                         className="react-select-container text-black w-full sm:w-48"
                         classNamePrefix="react-select"
                     />

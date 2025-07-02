@@ -2,6 +2,8 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { Info, Siren, Waves } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import {
@@ -36,6 +38,7 @@ type ProcessedTire = {
 };
 interface Tire {
   code: string;
+  id: number;
   model: {
     dimensions: string;
   };
@@ -188,6 +191,7 @@ export default function TireHealthDashboard() {
         }
 
         return {
+          id: t.id,
           code: t.code,
           dimension: t.model.dimensions,
           model: t.installedTires[0]?.vehicle.model || "Desconocido",
@@ -254,6 +258,7 @@ export default function TireHealthDashboard() {
     return {
       criticos: processedData.filter(t => t.status === "Crítico").map(t => ({
         code: t.code,
+        id: t.id,
         motivo: t.action,
         positionName: t.positionName,
         priority: 'Crítico'
@@ -318,12 +323,14 @@ export default function TireHealthDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {/* Neumáticos Críticos */}
         <div
-          className="bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+          className="bg-gradient-to-br from-red-50 to-red-100 text-red-500  border border-red-500 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
           onClick={() => setExpandedCard(expandedCard === 'criticos' ? null : 'criticos')}
         >
           <div className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <div className="text-2xl">🚨</div>
+              <div className="text-2xl">
+                <Siren size={35} />
+              </div>
               <div className="text-right">
                 <div className="text-2xl font-bold">{criticos}</div>
                 <div className="text-xs opacity-90">Críticos</div>
@@ -336,12 +343,14 @@ export default function TireHealthDashboard() {
 
         {/* Desgaste Irregular */}
         <div
-          className="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+          className="bg-gradient-to-br from-orange-50 to-orange-100 text-orange-600 border border-orange-600 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
           onClick={() => setExpandedCard(expandedCard === 'desgaste' ? null : 'desgaste')}
         >
           <div className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <div className="text-2xl">⚖️</div>
+              <div className="text-2xl">
+                <Waves size={35} />
+              </div>
               <div className="text-right">
                 <div className="text-2xl font-bold">{desgasteIrregular}</div>
                 <div className="text-xs opacity-90">Irregulares</div>
@@ -427,7 +436,7 @@ export default function TireHealthDashboard() {
 
       {/* Modal para mostrar detalles */}
       {expandedCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-gray-400 bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
@@ -448,6 +457,7 @@ export default function TireHealthDashboard() {
               </div>
             </div>
 
+            {/* Lista de Nuemáticos Criticos */}
             <div className="p-6 overflow-y-auto max-h-96">
               {expandedCard === 'criticos' && (
                 <div className="space-y-3">
@@ -457,6 +467,9 @@ export default function TireHealthDashboard() {
                         <div className="flex justify-between items-start">
                           <div>
                             <div className="font-mono font-bold text-lg text-red-700">{neumatico.code}</div>
+                            <Link href={`/neumaticos/${neumatico.id}`} className="text-sm text-blue-600 hover:underline">
+                              <Info size={16} className="inline mr-1" />
+                            </Link>
                             <div className="text-sm text-gray-600 dark:text-white">{neumatico.positionName}</div>
                           </div>
                           <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">
