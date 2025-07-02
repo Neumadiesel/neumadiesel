@@ -123,7 +123,7 @@ export default function OperationalTyres() {
     const colorMap: Record<string, string> = {};
     dimensionOptions.forEach((opt, i) => {
         const hue = (i * 137.508) % 360;
-        colorMap[opt.value] = `hsl(${hue}, 70%, 50%)`;
+        colorMap[opt.value] = `hsl(${hue}, 70%, 55%)`;
     });
 
     const visibleGroups = Object.entries(groupedData).filter(
@@ -134,38 +134,42 @@ export default function OperationalTyres() {
         <section className=" border rounded-xl p-4 bg-white dark:bg-gray-900 shadow-sm">
             <h2 className="text-xl font-bold mb-2 dark:text-white">
                 % Desgaste vs. Horas de uso desde última inspección - Neumáticos Operacionales
-            </h2>
-
-            <div className="mb-4">
-                <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por dimensión:</label>
-                <Select
-                    isMulti
-                    options={dimensionOptions}
-                    value={dimensionOptions.filter(opt => selectedDimensions.includes(opt.value))}
-                    onChange={(opts) => setSelectedDimensions(opts.map(opt => opt.value))}
-                    placeholder="Selecciona dimensiones..."
-                    className="text-black"
-                />
-            </div>
-
-            {/* Información de tendencia flotante */}
-            {trendInfo && (
-                <div className="mb-4 p-3 bg-gray-100/70 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-lg">
-                    <div className="flex items-center gap-2 text-sm">
-                        <span className="inline-block w-4 h-0.5 bg-gray-600" style={{ borderTop: "2px dashed" }}></span>
-                        <span className="font-semibold text-gray-700 dark:text-gray-200">Línea de Tendencia:</span>
-                        <span className="text-gray-700 dark:text-gray-300">
-                            {trendInfo.equation}
-                        </span>
-                        <span className="text-gray-600 dark:text-gray-400 font-medium">
-                            R² = {trendInfo.r2.toFixed(4)}
-                        </span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                            ({trendInfo.correlation})
-                        </span>
-                    </div>
+            </h2> <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 text-center">
+                Relación entre el uso operativo y el desgaste acumulado de los neumáticos
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
+                <div className="flex flex-col items-start space-y-1">
+                    <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por dimensión:</label>
+                    <Select
+                        isMulti
+                        options={dimensionOptions}
+                        value={dimensionOptions.filter(opt => selectedDimensions.includes(opt.value))}
+                        onChange={(opts) => setSelectedDimensions(opts.map(opt => opt.value))}
+                        placeholder="Selecciona dimensiones..."
+                        className="text-black w-full"
+                    />
                 </div>
-            )}
+
+                {/* Información de tendencia flotante */}
+                {trendInfo && (
+                    <div className="flex flex-col items-start space-y-1">
+                        <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por dimensión:</label>
+                        <div className="flex px-2 w-full bg-gray-100/70 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-lg py-2 items-center gap-2 text-sm">
+                            <span className="inline-block w-4 h-0.5 bg-gray-600" style={{ borderTop: "2px dashed" }}></span>
+                            <span className="font-semibold text-gray-700 dark:text-gray-200">Línea de Tendencia:</span>
+                            <span className="text-gray-700 dark:text-gray-300">
+                                {trendInfo.equation}
+                            </span>
+                            <span className="text-gray-600 dark:text-gray-400 font-medium">
+                                R² = {trendInfo.r2.toFixed(4)}
+                            </span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                                ({trendInfo.correlation})
+                            </span>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md 
              relative">

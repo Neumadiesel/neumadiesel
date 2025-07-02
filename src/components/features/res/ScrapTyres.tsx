@@ -146,8 +146,8 @@ export default function ScrapTyres() {
     const motivoKeys = Object.keys(groupedData);
     const colorMap: Record<string, string> = {};
     motivoKeys.forEach((key, index) => {
-        const hue = (index * 137.508) % 360;
-        colorMap[key] = `hsl(${hue}, 70%, 50%)`;
+        const hue = (index * 125.508) % 360;
+        colorMap[key] = `hsl(${hue}, 65%, 50%)`;
     });
 
     const motivoOptions = motivoKeys.map((desc) => ({
