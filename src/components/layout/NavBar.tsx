@@ -19,8 +19,9 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaCircleDot } from "react-icons/fa6";
 import Cookies from "js-cookie";
-import { FileText, Mountain } from "lucide-react";
+import { FileText, Mountain, QrCode } from "lucide-react";
 import MineTruck from "../common/icons/MineTruck";
+import QRModal from "./ModalQR/QRModal";
 
 interface MenuItem {
     title: string;
@@ -35,6 +36,8 @@ export default function NavBar() {
     const userData = Cookies.get("user-data");
     const userDataParsed = userData ? JSON.parse(userData) : null;
     const role = userDataParsed?.role;
+
+    const [showQRModal, setShowQRModal] = React.useState(false);
 
     const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
     const [menuOpen, setMenuOpen] = React.useState(false);
@@ -84,8 +87,8 @@ export default function NavBar() {
             children: [
                 { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
                 { title: "Crear Modelo Neumático", path: "/modelos/modelo-neumatico" },
-                { title: "Crear Modelo Cadena", path: "/modelos/modelo-cadena" },
-                { title: "Crear Modelo Sensor", path: "/modelos/modelo-sensor" },
+                // { title: "Crear Modelo Cadena", path: "/modelos/modelo-cadena" },
+                // { title: "Crear Modelo Sensor", path: "/modelos/modelo-sensor" },
             ],
         },
         {
@@ -209,6 +212,7 @@ export default function NavBar() {
                             )}
                         </Link>
                     </li>
+
                     {filteredMenuItems.map((item, index) => (
                         <li key={index} className="mb-1">
                             {item.children ? (
@@ -261,11 +265,31 @@ export default function NavBar() {
                             )}
                         </li>
                     ))}
+
                 </ul>
             </div>
-
+            <div
+                className={`hidden h-[10%]  p-2 lg:flex lg:flex-col w-[100%] ${isCollapsed ? "items-center" : ""
+                    }`}
+            >
+                <ul className="w-full">
+                    <li className="mb-1">
+                        <button
+                            onClick={() => setShowQRModal(true)}
+                            className="flex items-center gap-x-2 p-2 hover:bg-gray-700 rounded w-full text-lg"
+                            type="button"
+                        >
+                            <QrCode size={32} />
+                            {!isCollapsed && <span>
+                                Soporte
+                            </span>}
+                        </button>
+                    </li>
+                </ul>
+            </div>
             {/* Cerrar sesion - cambiar la version para el */}
             <div className="w-[100%] flex gap-2 items-center justify-between p-3 mr-8 lg:mr-0">
+
                 {user && (
                     <Link href={"/perfil"} onClick={() => {
 
@@ -349,9 +373,13 @@ export default function NavBar() {
                             </li>
 
                         ))}
+
                     </ul>
 
                 </div>
+            )}
+            {showQRModal && (
+                <QRModal onClose={() => setShowQRModal(false)} />
             )}
         </div>
     );

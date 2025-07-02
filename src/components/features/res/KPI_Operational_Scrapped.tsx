@@ -2,6 +2,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthFetch } from '@/utils/AuthFetch';
 import React, { useEffect, useState, useMemo } from 'react';
+import Select from "react-select";
 import {
     FaTachometerAlt,
     FaCheckCircle,
@@ -12,11 +13,15 @@ import {
     FaPercentage,
     FaClock
 } from 'react-icons/fa';
+import Skeleton_KPI_Operational_Scrapped from './skeleton/Skeleton_KPI_Operational';
+import { Donut } from 'lucide-react';
 
 interface LastInspection {
     hours: number;
     kilometrage: number;
     date?: string;
+    internalTread: number;
+    externalTread: number;
 }
 
 interface Procedure {
@@ -37,6 +42,7 @@ interface Tire {
     usedHours: number;
     code: string;
     procedures?: Procedure[];
+    initialTread: number;
     createdAt?: string;
 }
 
@@ -45,6 +51,9 @@ export default function TyresKPI() {
     const [operationalTires, setOperationalTires] = useState<Tire[]>([]);
     const [scrappedTires, setScrappedTires] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedDimension, setSelectedDimension] = useState<string | null>('46/90R57');
+    const [monthRange, setMonthRange] = useState(12);
+
     const { user } = useAuth();
 
     const fetchData = async () => {
@@ -68,48 +77,72 @@ export default function TyresKPI() {
         fetchData();
     }, []);
 
-
     useEffect(() => {
         fetchData();
     }, [user]);
 
-    // Cálculos avanzados de KPIs
+    const allDimensions = useMemo(() => {
+        const all = [...operationalTires, ...scrappedTires].map(t => t.model?.dimensions || 'Sin dimensión');
+        return Array.from(new Set(all));
+    }, [operationalTires, scrappedTires]);
+
     const kpis = useMemo(() => {
         if (loading) return null;
 
-        const totalOperational = operationalTires.length;
-        const totalScrapped = scrappedTires.length;
+        // Filtro por dimensión
+        const filteredOperational = selectedDimension
+            ? operationalTires.filter(t => t.model?.dimensions === selectedDimension)
+            : operationalTires;
+
+        const filteredScrapped = selectedDimension
+            ? scrappedTires.filter(t => t.model?.dimensions === selectedDimension)
+            : scrappedTires;
+
+        // Filtro por fecha de baja (procedures)
+        const now = new Date();
+        const startDate = new Date();
+        startDate.setMonth(now.getMonth() - monthRange);
+
+        const filteredScrappedByDate = filteredScrapped.filter(tire =>
+            tire.procedures?.some(proc => new Date(proc.startDate) >= startDate)
+        );
+
+        const totalOperational = filteredOperational.length;
+        const totalScrapped = filteredScrappedByDate.length;
         const totalTires = totalOperational + totalScrapped;
 
-        // KPIs básicos
         const avgHoursOperational = totalOperational > 0
-            ? operationalTires.reduce((sum, t) => sum + (t.lastInspection?.hours || 0), 0) / totalOperational
+            ? filteredOperational.reduce((sum, t) => sum + (t.lastInspection?.hours || 0), 0) / totalOperational
             : 0;
 
         const avgHoursScrapped = totalScrapped > 0
-            ? scrappedTires.reduce((sum, t) => sum + (t.procedures?.reduce((acc, p) => acc + p.tireHours, 0) || 0), 0) / totalScrapped
+            ? filteredScrappedByDate.reduce((sum, t) => sum + (t.procedures?.reduce((acc, p) => {
+                const date = new Date(p.startDate);
+                return date >= startDate ? acc + p.tireHours : acc;
+            }, 0) || 0), 0) / totalScrapped
             : 0;
 
-        // Análisis por dimensiones
-        const dimensionStats = [...operationalTires, ...scrappedTires].reduce((acc, tire) => {
+        const dimensionStats = [...filteredOperational, ...filteredScrappedByDate].reduce((acc, tire) => {
             const dim = tire.model?.dimensions || 'Sin dimensión';
             if (!acc[dim]) {
                 acc[dim] = { operational: 0, scrapped: 0, totalHours: 0 };
             }
 
-            const isOperational = operationalTires.includes(tire);
+            const isOperational = filteredOperational.includes(tire);
             if (isOperational) {
                 acc[dim].operational++;
                 acc[dim].totalHours += tire.lastInspection?.hours || 0;
             } else {
                 acc[dim].scrapped++;
-                acc[dim].totalHours += tire.procedures?.reduce((sum, p) => sum + p.tireHours, 0) || 0;
+                acc[dim].totalHours += tire.procedures?.reduce((sum, p) => {
+                    const date = new Date(p.startDate);
+                    return date >= startDate ? sum + p.tireHours : sum;
+                }, 0) || 0;
             }
 
             return acc;
         }, {} as Record<string, { operational: number; scrapped: number; totalHours: number }>);
 
-        // Mejor dimensión (mayor rendimiento promedio)
         const bestDimension = Object.entries(dimensionStats)
             .map(([dim, stats]) => ({
                 dimension: dim,
@@ -119,10 +152,10 @@ export default function TyresKPI() {
             }))
             .sort((a, b) => b.avgHours - a.avgHours)[0];
 
-        // Análisis de motivos de baja
-        const retirementReasons = scrappedTires.reduce((acc, tire) => {
+        const retirementReasons = filteredScrappedByDate.reduce((acc, tire) => {
             tire.procedures?.forEach(proc => {
-                if (proc.retirementReason?.description) {
+                const date = new Date(proc.startDate);
+                if (date >= startDate && proc.retirementReason?.description) {
                     const reason = proc.retirementReason.description;
                     if (!acc[reason]) acc[reason] = 0;
                     acc[reason]++;
@@ -131,24 +164,41 @@ export default function TyresKPI() {
             return acc;
         }, {} as Record<string, number>);
 
+        const avgTread = totalOperational > 0
+            ? filteredOperational.reduce((sum, t) => {
+                const int = t.lastInspection?.internalTread ?? 0;
+                const ext = t.lastInspection?.externalTread ?? 0;
+                return sum + (int + ext) / 2;
+            }, 0) / totalOperational
+            : 0;
+
         const mainRetirementReason = Object.entries(retirementReasons)
             .sort(([, a], [, b]) => b - a)[0];
 
-        // Neumático con más horas
-        const topTire = operationalTires
+        const topTire = filteredOperational
             .sort((a, b) => (b.lastInspection?.hours || 0) - (a.lastInspection?.hours || 0))[0];
 
-        // Neumáticos en riesgo (más de 8000 horas o cerca del promedio de baja)
+        const wearRate = totalOperational > 0
+            ? filteredOperational.reduce((sum, t) => {
+                const original = t.initialTread ?? 100; // o un valor fijo
+                const actual = ((t.lastInspection?.internalTread ?? 0) + (t.lastInspection?.externalTread ?? 0)) / 2;
+                const used = t.lastInspection?.hours ?? 0;
+
+                const worn = original - actual;
+                const rate = worn > 0 ? used / worn : 0;
+
+                return sum + rate;
+            }, 0) / totalOperational
+            : 0;
+
+
         const riskThreshold = Math.max(8000, avgHoursScrapped * 0.9);
-        const tiresAtRisk = operationalTires.filter(tire =>
+        const tiresAtRisk = filteredOperational.filter(tire =>
             (tire.lastInspection?.hours || 0) >= riskThreshold
         ).length;
 
-        // Tasa de operatividad
         const operationalRate = totalTires > 0 ? (totalOperational / totalTires) * 100 : 0;
-
-        // Proyección de reemplazo (basado en ritmo actual)
-        const avgMonthlyRetirements = totalScrapped / 12; // Asumiendo datos del último año
+        const avgMonthlyRetirements = totalScrapped / (monthRange || 1);
         const monthsToReplace = totalOperational > 0 ? totalOperational / Math.max(avgMonthlyRetirements, 1) : 0;
 
         return {
@@ -164,23 +214,67 @@ export default function TyresKPI() {
             tiresAtRisk,
             riskThreshold,
             monthsToReplace,
-            dimensionStats
+            dimensionStats,
+            avgTread,
+            wearRate
         };
-    }, [operationalTires, scrappedTires, loading]);
+    }, [operationalTires, scrappedTires, loading, selectedDimension, monthRange]);
 
-    if (loading) {
-        return (
-            <div className="text-center my-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-                <p className="mt-2 text-gray-600">Cargando KPIs...</p>
-            </div>
-        );
-    }
-
+    if (loading) return <Skeleton_KPI_Operational_Scrapped />;
     if (!kpis) return null;
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-4">
+            {/* Filtro por dimensión */}
+            <div className='flex w-full gap-x-5 items-center'>
+                <div className="flex items-center gap-3">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Filtrar por dimensión:</label>
+                    <Select
+                        options={allDimensions.map(dim => {
+                            const count = [...operationalTires, ...scrappedTires].filter(t => t.model.dimensions === dim).length;
+                            return {
+                                value: dim,
+                                label: `${dim} (${count} neumáticos)`
+                            };
+                        })}
+                        isClearable
+                        placeholder="Todas las dimensiones"
+                        onChange={(e) => setSelectedDimension(e?.value || null)}
+                        value={
+                            selectedDimension
+                                ? {
+                                    value: selectedDimension,
+                                    label: `${selectedDimension} (${[...operationalTires, ...scrappedTires].filter(t => t.model.dimensions === selectedDimension).length
+                                        } neumáticos)`
+                                }
+                                : null
+                        }
+                        className="react-select-container text-black w-full sm:w-72"
+                        classNamePrefix="react-select"
+                    />
+
+
+
+
+                </div>
+                <div className='flex items-center gap-3'>
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rango de tiempo:</label>
+                    <Select
+                        options={[
+                            { value: 12, label: 'Últimos 12 meses' },
+                            { value: 24, label: 'Últimos 24 meses' },
+                            { value: 36, label: 'Últimos 36 meses' },
+                            { value: 48, label: 'Últimos 48 meses' }
+                        ]}
+                        defaultValue={{ value: 12, label: 'Últimos 12 meses' }}
+                        onChange={(e) => setMonthRange(e?.value || 12)}
+                        className="react-select-container text-black w-full sm:w-48"
+                        classNamePrefix="react-select"
+                    />
+                </div>
+            </div>
+
+
             {/* KPIs Principales */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900 dark:to-emerald-900 p-4 rounded-lg shadow-md border border-green-200 dark:border-green-700">
@@ -205,10 +299,10 @@ export default function TyresKPI() {
 
                 <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900 dark:to-cyan-900 p-4 rounded-lg shadow-md border border-blue-200 dark:border-blue-700">
                     <div className="flex items-center gap-3">
-                        <FaPercentage className="text-blue-500 text-3xl" />
+                        <Donut size={35} className="text-blue-500 text-3xl" />
                         <div>
-                            <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{kpis.operationalRate.toFixed(1)}%</p>
-                            <p className="text-sm text-blue-600 dark:text-blue-400">Tasa de operatividad</p>
+                            <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{kpis.wearRate.toFixed(1)} h/mm</p>
+                            <p className="text-sm text-blue-600 dark:text-blue-400">Horas en las que se consume un milimetro</p>
                         </div>
                     </div>
                 </div>
@@ -293,44 +387,6 @@ export default function TyresKPI() {
                 </div>
             )}
 
-            {/* Resumen por Dimensiones */}
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
-                    <FaIndustry className="text-gray-500" />
-                    Análisis por Dimensiones
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {Object.entries(kpis.dimensionStats).slice(0, 6).map(([dimension, stats]) => {
-                        const total = stats.operational + stats.scrapped;
-                        const operationalRate = (stats.operational / total) * 100;
-                        const avgHours = stats.totalHours / total;
-
-                        return (
-                            <div key={dimension} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border dark:border-gray-600">
-                                <p className="font-semibold text-gray-800 dark:text-gray-200 text-sm">{dimension}</p>
-                                <div className="mt-2 space-y-1">
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-gray-600 dark:text-gray-400">Operativos:</span>
-                                        <span className="font-medium text-green-600">{stats.operational}</span>
-                                    </div>
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-gray-600 dark:text-gray-400">Dados de baja:</span>
-                                        <span className="font-medium text-red-600">{stats.scrapped}</span>
-                                    </div>
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-gray-600 dark:text-gray-400">Operatividad:</span>
-                                        <span className="font-medium text-blue-600">{operationalRate.toFixed(1)}%</span>
-                                    </div>
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-gray-600 dark:text-gray-400">Prom. horas:</span>
-                                        <span className="font-medium text-purple-600">{Math.round(avgHours)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
         </div>
     );
 }
