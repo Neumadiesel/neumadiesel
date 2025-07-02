@@ -9,8 +9,6 @@ import {
     FaTimesCircle,
     FaAward,
     FaChartLine,
-    FaIndustry,
-    FaPercentage,
     FaClock
 } from 'react-icons/fa';
 import Skeleton_KPI_Operational_Scrapped from './skeleton/Skeleton_KPI_Operational';
