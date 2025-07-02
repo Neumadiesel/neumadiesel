@@ -504,7 +504,7 @@ export default function ScrappedTyresChart() {
         </div>
 
         {/* 🎯 INFO DE DATOS */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+        {/* <section className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
           <div className="flex items-center justify-between text-sm">
             <div className="text-blue-800 dark:text-blue-200">
               <span className="font-semibold">Analizando:</span> {totalTires} neumáticos en {filters.year}
@@ -515,7 +515,7 @@ export default function ScrappedTyresChart() {
               {filters.fleet && `• ${filters.fleet}`}
             </div>
           </div>
-        </div>
+        </section> */}
       </div>
 
       {/* 🎯 GRÁFICOS CON ANCHO DINÁMICO */}

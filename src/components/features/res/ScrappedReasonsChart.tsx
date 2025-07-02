@@ -10,6 +10,7 @@ import {
     Legend,
     ResponsiveContainer,
     LabelList,
+    Label,
 } from 'recharts';
 import Select from 'react-select';
 import dayjs from 'dayjs';
@@ -174,8 +175,8 @@ export default function ScrappedReasonsChart() {
     return (
         <section className="my-4">
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 shadow-lg">
-                <h2 className="text-xl font-bold mb-4 text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    📊 Rendimiento Mensual por Motivo de Baja
+                <h2 className="text-2xl font-bold mb-4 text-center bg-black  bg-clip-text text-transparent">
+                    Rendimiento Mensual por Motivo de Baja
                 </h2>
 
                 <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md mb-4">
@@ -270,12 +271,20 @@ export default function ScrappedReasonsChart() {
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md">
-                <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={processed}>
+            <div className="bg-white dark:bg-gray-800 p-3 m-2 rounded-lg shadow-md">
+                <ResponsiveContainer width="100%" height={350} className={" p-2"}>
+                    <BarChart data={processed} >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="month" />
-                        <YAxis />
+                        <YAxis>
+                            <Label
+                                value="Horas"
+                                angle={-90}
+                                position="insideLeft"
+                                dx={-10} // mueve hacia la derecha (dentro del gráfico)
+                                style={{ textAnchor: 'middle' }}
+                            />
+                        </YAxis>
                         <Tooltip />
                         <Legend />
                         {selectedReasons.map(motivo => (
