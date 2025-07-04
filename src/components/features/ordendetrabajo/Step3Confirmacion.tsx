@@ -90,6 +90,9 @@ export default function Step3Desinstalacion({ datos, setDatos, onBack, onNext }:
     return (
         <div className="space-y-2 w-full">
             <h3 className="text-lg font-semibold mb-4">Desinstalación de Neumáticos</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                Aquí puedes ingresar los datos de los neumáticos que serán desinstalados. Asegúrate de completar todos los campos requeridos.
+            </p>
             <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(datos.posicionesSeleccionadas ?? []).map((pos) => {
                     const instalado = getTireInstalado(pos);

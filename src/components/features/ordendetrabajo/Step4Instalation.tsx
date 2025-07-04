@@ -96,6 +96,9 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
     return (
         <div className="space-y-2 w-full">
             <h3 className="text-lg font-semibold mb-4">Instalación de Nuevos Neumáticos</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                Aquí puedes ingresar los datos de los neumáticos que serán instalados. Asegúrate de completar todos los campos requeridos.
+            </p>
             <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(datos.posicionesSeleccionadas ?? []).map((pos) => {
                     const actual: InstallationData = datos.instalaciones.find((i) => i.posicion === pos) ?? { posicion: pos };
