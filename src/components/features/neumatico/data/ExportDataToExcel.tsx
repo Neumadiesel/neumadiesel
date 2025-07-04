@@ -27,6 +27,9 @@ export default function ExportTireReport({ tire, records }: Props) {
 
     const fetchImageAsBase64 = async (url: string): Promise<string> => {
         const response = await authFetch(url);
+        if (!response || !response.ok) {
+            throw new Error(`Error fetching image: ${response?.statusText || 'Unknown error'}`);
+        }
         const blob = await response.blob();
         return new Promise((resolve, reject) => {
             const reader = new FileReader();

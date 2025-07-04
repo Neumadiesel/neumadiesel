@@ -67,11 +67,11 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
         try {
             setLoading(true);
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteSelected}/year/${yearSelected}`);
-            if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
             }
+            if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
 
             setBudgetByYear(data);

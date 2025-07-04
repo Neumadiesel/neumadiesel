@@ -57,9 +57,17 @@ export default function TyresKPI() {
     const fetchData = async () => {
         try {
             const opRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            if (!opRes) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const opData = await opRes.json();
 
             const scrRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+            if (!scrRes) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const scrData = await scrRes.json();
 
             setOperationalTires(opData);

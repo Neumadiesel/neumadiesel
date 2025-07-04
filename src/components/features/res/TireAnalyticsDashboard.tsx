@@ -48,6 +48,11 @@ export default function TireAnalyticsDashboard() {
                 authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`)
             ]);
 
+            if (!opRes || !scrRes) {
+                console.warn("No se pudo obtener alguna de las respuestas (res es null).");
+                return;
+            }
+
             const [opData, scrData] = await Promise.all([
                 opRes.json(),
                 scrRes.json()

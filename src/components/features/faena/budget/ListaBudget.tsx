@@ -48,15 +48,14 @@ export default function Budget({ siteId }: BudgetProps) {
 
     const client = useAxiosWithAuth();
     const fetchBudget = async () => {
-
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}`);
-            if (!response.ok) throw new Error("Error al obtener el presupuesto");
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
             }
+            if (!response.ok) throw new Error("Error al obtener el presupuesto");
             const data = await response.json();
 
             setBudget(data);
@@ -72,11 +71,11 @@ export default function Budget({ siteId }: BudgetProps) {
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}/year/${year}`);
-            if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
             }
+            if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
             const data = await response.json();
 
             setBudgetByYear(data);
