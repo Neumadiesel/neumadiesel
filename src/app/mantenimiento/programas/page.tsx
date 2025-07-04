@@ -12,7 +12,7 @@ import ModalProgramaMantenimiento from "@/components/features/mantenimiento/Moda
 
 // import { CheckCircle, CircleX } from "lucide-react";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
-import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+// import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -35,7 +35,7 @@ interface ProgramasDTO {
 export default function Programas() {
     const authFetch = useAuthFetch();
     const { user } = useAuth();
-    const client = useAxiosWithAuth();
+    // const client = useAxiosWithAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [loading, setLoading] = useState(true);
