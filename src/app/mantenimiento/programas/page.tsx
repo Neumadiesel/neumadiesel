@@ -10,7 +10,7 @@ import Modal from "@/components/common/modal/CustomModal";
 import Button from "@/components/common/button/Button";
 import ModalProgramaMantenimiento from "@/components/features/mantenimiento/ModalProgramaMantenimiento";
 
-import { CheckCircle, CircleX } from "lucide-react";
+// import { CheckCircle, CircleX } from "lucide-react";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
@@ -156,17 +156,17 @@ export default function Programas() {
         return fin.toISOString(); // Devuelve en formato UTC con la Z
     }
 
-    const handleDeleteProgram = async (id: number) => {
-        try {
-            setLoading(true);
-            const response = await client.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/${id}`);
-            fetchData();
-            setLoading(false);
-            return response.data;
-        } catch (error) {
-            console.error("Error al eliminar el programa:", error);
-        }
-    };
+    // const handleDeleteProgram = async (id: number) => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await client.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/${id}`);
+    //         fetchData();
+    //         setLoading(false);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Error al eliminar el programa:", error);
+    //     }
+    // };
 
     const handleConfirm = () => {
         setIsOpen(false);
@@ -270,7 +270,7 @@ export default function Programas() {
                                 <th scope="col" className="px-2 py-3">Programado</th>
                                 <th scope="col" className="px-6 py-3 w-32">Realizado</th>
                                 <th scope="col" className="px-6 py-3 w-32">Estado</th>
-                                <th scope="col" className="px-6 py-3 w-32">Acciones</th>
+                                {/* <th scope="col" className="px-6 py-3 w-32">Acciones</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -318,9 +318,8 @@ export default function Programas() {
                                         <td className="px-6 bg-white dark:bg-neutral-800 py-4 whitespace-nowrap">
                                             <div className="text-sm">{programa.status}</div>
                                         </td>
-                                        <td className="px-6  py-4 whitespace-nowrap">
+                                        {/* <td className="px-6  py-4 whitespace-nowrap">
                                             <div className="text-sm flex justify-center items-center">
-                                                {/* button check */}
                                                 <button className="text-emerald-500 hover:text-emerald-600 font-bold rounded-full p-1 transition-all mr-2" onClick={() => setIsOpenModal(true)}>
                                                     <CheckCircle size={25} />
                                                 </button>
@@ -328,7 +327,7 @@ export default function Programas() {
                                                     <CircleX size={25} />
                                                 </button>
                                             </div>
-                                        </td>
+                                        </td> */}
                                     </tr>
                                 ))
                             )}
