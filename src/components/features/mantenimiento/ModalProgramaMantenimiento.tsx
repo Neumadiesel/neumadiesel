@@ -155,9 +155,9 @@ export default function ModalProgramaMantenimiento({
                         className="border border-gray-300 p-2 rounded"
                     >
                         <option value="Programada">Programada</option>
-                        <option value="En ejecución">En ejecución</option>
+                        {/* <option value="En ejecución">En ejecución</option> */}
                         <option value="Completada">Completada</option>
-                        <option value="Cancelada">Cancelada</option>
+                        {/* <option value="Cancelada">Cancelada</option> */}
                     </select>
                     {/* Descripcion del trabajo */}
                     <Label title="Motivo" isNotEmpty={true} />
