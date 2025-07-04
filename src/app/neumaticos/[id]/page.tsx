@@ -145,7 +145,12 @@ export default function TirePage() {
         try {
             setLoading(true);
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/${id}`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setTires(data);
             setLoading(false);
         } catch (error) {

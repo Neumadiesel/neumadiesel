@@ -14,6 +14,7 @@ import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useAuth } from "@/contexts/AuthContext";
 
+
 interface FaenaDTO {
     id: number;
     name: string;
@@ -42,11 +43,22 @@ export default function Page() {
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setLoading(false);
-            setRazones(data);
+            if (Array.isArray(data)) {
+                setRazones(data);
+            } else {
+                setRazones([]); // O setear un valor seguro por defecto
+                console.warn('La respuesta no es un array válido:', data);
+            }
         } catch (error) {
             console.error("Error fetching reasons:", error);
+            setRazones([]);
         }
     };
 
@@ -90,17 +102,15 @@ export default function Page() {
         }
     };
 
-    useEffect(() => {
-        fetchFaenas();
-    }, []);
-
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenReactivar, setIsOpenReactivar] = useState(false);
 
     useEffect(() => {
-        fetchFaenas();
+        if (token) {
+            fetchFaenas();
+        }
     }, [isOpen, mostrarEditar, modalRegistarFaena, isOpenReactivar, token]);
 
 

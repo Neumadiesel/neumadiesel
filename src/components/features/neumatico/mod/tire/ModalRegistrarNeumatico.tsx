@@ -58,7 +58,12 @@ export default function ModalRegistrarNeumatico({
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setLoading(false);
             setTireModels(data);
         } catch (error) {
@@ -70,7 +75,12 @@ export default function ModalRegistrarNeumatico({
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setLoading(false);
             setSites(data);
         } catch (error) {

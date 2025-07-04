@@ -53,7 +53,12 @@ export default function Budget({ siteId }: BudgetProps) {
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto");
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setBudget(data);
         } catch (error) {
             console.error("Error al obtener el presupuesto:", error);
@@ -68,7 +73,12 @@ export default function Budget({ siteId }: BudgetProps) {
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}/year/${year}`);
             if (!response.ok) throw new Error("Error al obtener el presupuesto por año");
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setBudgetByYear(data);
             setEditedBudgetByYear(JSON.parse(JSON.stringify(data))); // Clonar
         } catch (error) {

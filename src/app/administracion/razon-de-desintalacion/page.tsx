@@ -34,7 +34,12 @@ export default function Page() {
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/retirement-reason`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setLoading(false);
             setRazones(data);
         } catch (error) {

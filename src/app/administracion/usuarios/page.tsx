@@ -70,21 +70,25 @@ export default function Page() {
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             console.log("Faenas Fetched:", data);
             setLoading(false);
-            setFaenas(data);
+            setFaenas(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error("Error fetching reasons:", error);
+            setFaenas([]);
         }
     };
 
     useEffect(() => {
-        fetchFaenas();
-    }, []);
-
-    useEffect(() => {
-        fetchFaenas();
+        if (token) {
+            fetchFaenas();
+        }
     }, [token]);
 
     useEffect(() => {
@@ -288,9 +292,8 @@ export default function Page() {
                             <td className="p-2 text-start bg-gray-50 dark:bg-neutral-800">
                                 {usuario.role?.name || "Sin Rol"}
                             </td>
-
                             <td className="p-2 text-start bg-gray-50 dark:bg-neutral-800">
-                                {faenas.find(faena => faena.id === usuario.faena_id)?.name || "Sin faena"}
+                                {Array.isArray(faenas) && faenas.find(faena => faena.id === usuario.faena_id)?.name || "Sin faena"}
                             </td>
 
                             <td className="p-2 relative text-center bg-gray-50 dark:bg-neutral-800">

@@ -36,7 +36,12 @@ export default function Page() {
             if (!response.ok) {
                 throw new Error('Error al obtener los datos de la inspección');
             }
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             console.log('Datos de la inspección:', data);
             setInspectionData(data);
         } catch (error) {

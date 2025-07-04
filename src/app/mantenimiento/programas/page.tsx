@@ -184,7 +184,12 @@ export default function Programas() {
             console.log("Fechas:", isoInicio, isoFin);
             setLoading(true);
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             console.log("Programas", data);
             setProgramMaintenance(Array.isArray(data) ? data : []); // 👈 Asegura que siempre sea un array
             setLoading(false);

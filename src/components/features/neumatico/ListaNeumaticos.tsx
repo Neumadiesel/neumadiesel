@@ -49,7 +49,12 @@ export default function ListaNeumaticos() {
     const fetchVehicles = async () => {
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setVehicles(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error("Error fetching vehicles:", error);
@@ -72,7 +77,12 @@ export default function ListaNeumaticos() {
         }
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/yearStart/${yearStart}/yearEnd/${yearEnd}/site/${faenaId}`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setLoading(false);
             console.log("INFORMACION NEUMATICOS ✅", data);
             setTires(data);
@@ -86,7 +96,12 @@ export default function ListaNeumaticos() {
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setLoading(false);
             setLocations(Array.isArray(data) ? data : []);
         } catch (error) {

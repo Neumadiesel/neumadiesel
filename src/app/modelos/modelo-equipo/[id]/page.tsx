@@ -42,7 +42,12 @@ export default function EquiposPorModelo() {
             const baseURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/withVehicles/${id}/site/${user?.faena_id}`
 
             const response = await authFetch(baseURL);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             console.log("Fetched vehicle model data:", data);
             setModel(data);
             setVehicles(data.vehicles || data[0]?.vehicles || []);

@@ -108,7 +108,12 @@ export default function ModaleditarEquipo({
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/dataForm/registerVehicle`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setLoading(false);
             setSites(data.sites);
             setVehicleModels(data.vehicleModels);

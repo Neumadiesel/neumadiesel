@@ -77,6 +77,10 @@ export default function OperationalTyres() {
         setLoading(true);
         try {
             const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            if (!res) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await res.json();
             setTires(data);
         } catch (error) {

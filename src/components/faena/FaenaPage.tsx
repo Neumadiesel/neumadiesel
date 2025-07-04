@@ -29,7 +29,12 @@ export default function Faena({ id }: { id?: string }) {
     const fetchFaenas = async () => {
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${id}/with-contract`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setFaena(data);
         } catch (error) {
             console.error("Error fetching reasons:", error);

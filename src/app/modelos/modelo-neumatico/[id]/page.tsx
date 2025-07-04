@@ -41,7 +41,12 @@ export default function EquiposPorModelo() {
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/${id}/with-tires`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             console.log(data);
             console.log("Vehiculos", data.vehicles)
             setModel(data);

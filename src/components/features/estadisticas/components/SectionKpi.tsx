@@ -26,7 +26,12 @@ export default function SectionKpi() {
     const fetchKpis = async () => {
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/1`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setKpis(data);
         } catch (error) {
             console.error("Error fetching tyre models:", error);

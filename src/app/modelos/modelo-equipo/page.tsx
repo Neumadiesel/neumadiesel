@@ -39,7 +39,12 @@ export default function ModelosEquipo() {
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/site/${user.faena_id}`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setVehicleModels(data);
         } catch (error) {
             console.error("Error fetching vehicle models:", error);

@@ -137,7 +137,12 @@ export default function ScrappedTyresChart() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      if (!response) {
+        console.warn("No se pudo obtener la respuesta (res es null).");
+        return;
+      }
       const data = await response.json();
+
 
       if (!Array.isArray(data)) {
         throw new Error('Los datos recibidos no son un array válido');

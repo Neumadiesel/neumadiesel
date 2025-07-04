@@ -80,7 +80,12 @@ export default function ModalFormularioUsuario({
     const fetchFaenas = async () => {
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             console.log("Faenas Fetched:", data);
             setFaenas(data);
         } catch (error) {

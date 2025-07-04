@@ -51,7 +51,17 @@ export default function RootLayout({
                 if (user.faena_id === 99) {
                     // Admin: obtener todos los vehículos
                     const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles`);
+                    if (!response) {
+                        console.warn("No se pudo obtener la respuesta (res es null).");
+                        return;
+                    }
+                    if (!response) {
+                        console.warn("No se pudo obtener la respuesta (res es null).");
+                        return;
+                    }
                     const data = await response.json();
+
+
                     if (Array.isArray(data)) {
                         setVehicles(data);
                     } else {
@@ -61,7 +71,12 @@ export default function RootLayout({
                 } else {
                     // Usuario común: obtener solo vehículos de su faena
                     const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${user.faena_id}`);
+                    if (!response) {
+                        console.warn("No se pudo obtener la respuesta (res es null).");
+                        return;
+                    }
                     const data = await response.json();
+
                     if (Array.isArray(data)) {
                         setVehicles(data);
                     } else {

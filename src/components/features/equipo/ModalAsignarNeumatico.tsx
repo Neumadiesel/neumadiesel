@@ -101,7 +101,12 @@ export default function ModalAsignarNeumatico({
         setLoading(true);
         try {
             const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/available/site/${vehicle?.siteId}`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             const data = await response.json();
+
             setTires(Array.isArray(data) ? data : []); // <-- Asegura que siempre sea un array
             console.log("Neumáticos", data);
             setLoading(false);
