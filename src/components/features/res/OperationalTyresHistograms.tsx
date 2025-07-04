@@ -454,23 +454,7 @@ export default function OperationalTyresHistograms() {
 
         const discrepanciesList: Discrepancy[] = [];
 
-        selectedTires.forEach((t, index) => {
-            let hasValidStructure = false;
-
-            if (dataType === 'operativo') {
-                // 🎯 VALIDACIÓN PARA NEUMÁTICOS OPERATIVOS
-                hasValidStructure = t &&
-                    typeof t === 'object' &&
-                    isOperationalTire(t) &&
-                    Array.isArray(t.installedTires) &&
-                    t.installedTires.length > 0;
-            } else {
-                // 🎯 VALIDACIÓN PARA NEUMÁTICOS DADOS DE BAJA
-                hasValidStructure = t &&
-                    typeof t === 'object' &&
-                    isScrappedTire(t);
-            }
-
+        selectedTires.forEach((t) => {
 
 
             if (dataType === 'operativo' && isOperationalTire(t)) {
