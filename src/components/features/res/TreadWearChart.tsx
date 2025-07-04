@@ -140,7 +140,7 @@ export default function TreadWearChart() {
     }
 
     return (
-        <div className="bg-white border dark:bg-gray-900 p-4 rounded-lg shadow-md">
+        <div className="bg-white border dark:bg-gray-900 p-2 lg:p-4 rounded-lg shadow-md">
             <div className="flex flex-col  items-center justify-between ">
                 <h2 className="text-2xl font-bold text-center bg-black  bg-clip-text text-transparent">
                     Tasa de desgaste promedio por tramo de goma (hrs/mm)
@@ -163,7 +163,7 @@ export default function TreadWearChart() {
                     className="w-full sm:w-52 text-black"
                 />
             </div>
-            <ResponsiveContainer width="100%" className={"py-4"} height={350}>
+            <ResponsiveContainer className={"py-2"} height={300}>
                 <ComposedChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="mm" label={{ value: "Remanente (mm)", position: "insideBottom", offset: -5 }} />
@@ -177,11 +177,12 @@ export default function TreadWearChart() {
                         <LabelList
                             dataKey="tasa"
                             position="top"
+                            className="max-lg:hidden"
                             formatter={(val: number) => Math.round(val)}
                             style={{ fill: 'black', fontWeight: 600 }}
                         />
                     </Bar>
-                    <Line type="monotone" dataKey="tasa" stroke="#f97316" strokeWidth={3} dot={{ r: 3 }} />
+                    <Line type="monotone" className="max-lg:hidden" dataKey="tasa" stroke="#f97316" strokeWidth={3} dot={{ r: 3 }} />
                 </ComposedChart>
             </ResponsiveContainer>
         </div>

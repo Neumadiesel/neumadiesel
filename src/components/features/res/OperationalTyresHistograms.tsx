@@ -233,9 +233,9 @@ const renderHistogram = (
     }
 
     return (
-        <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md border">
+        <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-2 lg:p-4 rounded-md border">
             <h3 className="text-md font-semibold dark:text-white mb-2 text-center">{label}</h3>
-            <ResponsiveContainer width="100%" height="90%">
+            <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={histogramData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
@@ -1052,7 +1052,7 @@ export default function OperationalTyresHistograms() {
     }
 
     return (
-        <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border dark:border-gray-700">
+        <section className="bg-white dark:bg-gray-800 p-2 lg:p-6 rounded-lg shadow-md border dark:border-gray-700">
             <h2 className="text-xl font-bold mb-4 dark:text-white">Histogramas de Frecuencia</h2>
 
             {/* 🎯 ALERTAS DE ERRORES PARCIALES */}

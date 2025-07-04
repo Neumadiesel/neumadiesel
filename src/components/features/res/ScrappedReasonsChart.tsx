@@ -176,7 +176,7 @@ export default function ScrappedReasonsChart() {
     )).sort();
 
     return (
-        <section className=" bg-white dark:bg-gray-800 border  rounded-md p-4 shadow-sm">
+        <section className=" bg-white dark:bg-gray-800 border  rounded-md p-2 lg:p-4 shadow-sm">
             <div className="">
                 <h2 className="text-2xl font-bold mb-2 text-center bg-black  bg-clip-text text-transparent">
                     Rendimiento Mensual por Motivo de Baja
