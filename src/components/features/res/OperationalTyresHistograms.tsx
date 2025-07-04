@@ -318,15 +318,9 @@ export default function OperationalTyresHistograms() {
         setFetchErrors({});
 
         try {
-            console.log('🔍 Iniciando fetch de neumáticos...');
-            console.log('🌐 Backend URL:', process.env.NEXT_PUBLIC_BACKEND_URL);
-
             // 🎯 URLs que estás intentando usar
             const urlOperational = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`;
             const urlScrapped = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`;
-
-            console.log('📡 URL Operacional:', urlOperational);
-            console.log('📡 URL Desechados:', urlScrapped);
 
             // 🎯 FETCH CON MANEJO INDEPENDIENTE DE ERRORES
             const [resOp, resScrap] = await Promise.allSettled([
@@ -358,11 +352,7 @@ export default function OperationalTyresHistograms() {
 
                         // 🎯 DEBUG: Mostrar ejemplo de fechas
                         if (dataOp.length > 0 && dataOp[0]?.lastInspection?.inspectionDate) {
-                            console.log('🔍 Ejemplo de fecha operacional:', dataOp[0].lastInspection.inspectionDate);
                             const sampleDate = new Date(dataOp[0].lastInspection.inspectionDate);
-                            console.log('🔍 Fecha parseada:', sampleDate);
-                            console.log('🔍 Año UTC:', sampleDate.getUTCFullYear());
-                            console.log('🔍 Mes UTC:', sampleDate.getUTCMonth() + 1);
                         }
                     } else {
                         console.warn('⚠️ Datos operacionales no son un array:', typeof dataOp);
@@ -394,26 +384,11 @@ export default function OperationalTyresHistograms() {
                     const dataScrap = await resScrap.value.json();
                     if (Array.isArray(dataScrap)) {
                         scrappedData = dataScrap;
-                        console.log('✅ Datos desechados:', dataScrap.length, 'items');
 
                         // 🎯 DEBUG: Mostrar ejemplo real de dados de baja
                         if (dataScrap.length > 0 && dataScrap[0]?.procedures?.[0]?.startDate) {
-                            console.log('🔍 === ESTRUCTURA REAL DE DADOS DE BAJA ===');
-                            console.log('🔍 Ejemplo de fecha baja:', dataScrap[0].procedures[0].startDate);
                             const sampleDate = new Date(dataScrap[0].procedures[0].startDate);
-                            console.log('🔍 Fecha parseada (baja):', sampleDate);
-                            console.log('🔍 Año UTC (baja):', sampleDate.getUTCFullYear());
-                            console.log('🔍 Mes UTC (baja):', sampleDate.getUTCMonth() + 1);
-                            console.log('🔍 Estructura procedures[0]:', {
-                                tireHours: dataScrap[0].procedures[0].tireHours,
-                                tireKilometres: dataScrap[0].procedures[0].tireKilometres,
-                                position: dataScrap[0].procedures[0].position,
-                                internalTread: dataScrap[0].procedures[0].internalTread,
-                                externalTread: dataScrap[0].procedures[0].externalTread,
-                                startDate: dataScrap[0].procedures[0].startDate
-                            });
-                            console.log('🔍 installedTires está vacío:', dataScrap[0].installedTires.length === 0);
-                            console.log('🔍 Tiene retirementReason:', !!dataScrap[0].retirementReason);
+
                         }
                     } else {
                         console.warn('⚠️ Datos desechados no son un array:', typeof dataScrap);
@@ -487,11 +462,7 @@ export default function OperationalTyresHistograms() {
             console.log(`⚠️ No hay datos para el tipo: ${dataType}`);
             return [];
         }
-
-        console.log(`🔄 Procesando ${selectedTires.length} neumáticos (${dataType})`);
-
         // 🎯 ANÁLISIS DE POSICIONES - DIAGNÓSTICO DETALLADO DIFERENCIADO POR TIPO
-        console.log('📊 === ANÁLISIS DE POSICIONES ===');
         let positionDiscrepancies = 0;
         let positionZeroCount = 0;
         let correctedPositions = 0;
@@ -575,11 +546,6 @@ export default function OperationalTyresHistograms() {
             validTires++;
         });
 
-        console.log(`📊 Análisis de posiciones en ${selectedTires.length} neumáticos (${dataType}):`);
-        console.log(`✅ Neumáticos válidos: ${validTires}`);
-        console.log(`❌ Neumáticos inválidos: ${invalidTires}`);
-        console.log(`📍 Position 0: ${positionZeroCount} neumáticos`);
-
         if (dataType === 'operativo') {
             console.log(`⚠️ Discrepancias de posición: ${positionDiscrepancies} neumáticos`);
         }
@@ -588,7 +554,6 @@ export default function OperationalTyresHistograms() {
             console.log(`📋 Lista de ${dataType === 'operativo' ? 'discrepancias' : 'neumáticos dados de baja'} (primeros 10):`);
             discrepanciesList.slice(0, 10).forEach((item, i) => {
                 if (item.type === 'operativo') {
-                    console.log(`${i + 1}. Código: ${item.code} | LastInsp: ${item.lastInspectionPosition} | Installed: ${item.installedTiresPosition} | Fecha: ${item.inspectionDate}`);
                 } else {
                     console.log(`${i + 1}. Código: ${item.code} | Posición: ${item.position} | Fecha baja: ${item.startDate}`);
                 }
@@ -719,8 +684,6 @@ export default function OperationalTyresHistograms() {
                 }
             });
 
-        console.log(`🔄 Correcciones aplicadas: ${correctedPositions} neumáticos usaron installedTires.position`);
-        console.log(`✅ Datos procesados: ${processedData.length} neumáticos válidos (antes: ${validTires} filtrados por position=0)`);
 
         // 🎯 ANÁLISIS DE DISTRIBUCIÓN DE POSICIONES FINAL
         const positionDistribution: { [key: string]: number } = {};
@@ -728,7 +691,6 @@ export default function OperationalTyresHistograms() {
             positionDistribution[item.posicion] = (positionDistribution[item.posicion] || 0) + 1;
         });
 
-        console.log('📊 Distribución final de posiciones:');
         Object.entries(positionDistribution)
             .sort(([a], [b]) => parseInt(a) - parseInt(b))
             .forEach(([pos, count]) => {
@@ -762,7 +724,6 @@ export default function OperationalTyresHistograms() {
         const scrappedTires = Array.isArray(tiresScrapped) ? tiresScrapped : [];
         const allTires = dataType === 'operativo' ? operationalTires : scrappedTires;
 
-        console.log(`📅 Generando opciones de años desde ${allTires.length} neumáticos (${dataType})`);
 
         const years = Array.from(new Set(
             allTires
@@ -786,8 +747,6 @@ export default function OperationalTyresHistograms() {
                             return null;
                         }
 
-                        console.log(`🔍 Procesando fecha (${dataType}): ${dateStr}`);
-
                         // Crear fecha usando UTC para evitar problemas de zona horaria
                         const date = new Date(dateStr);
 
@@ -799,7 +758,6 @@ export default function OperationalTyresHistograms() {
 
                         // Usar getUTCFullYear para mantener consistencia
                         const year = date.getUTCFullYear().toString();
-                        console.log(`✅ Año extraído: ${year} de fecha ${dateStr} (${dataType})`);
                         return year;
                     } catch (error) {
                         console.warn(`⚠️ Error procesando fecha (${dataType}):`, error);
@@ -809,7 +767,6 @@ export default function OperationalTyresHistograms() {
                 .filter((year): year is string => year !== null && year !== 'NaN' && year !== 'Invalid Date')
         ));
 
-        console.log(`📅 Años únicos encontrados (${dataType}): [${years.join(', ')}]`);
 
         return years
             .sort((a, b) => parseInt(b) - parseInt(a)) // Más reciente primero
@@ -824,7 +781,6 @@ export default function OperationalTyresHistograms() {
         ];
 
         if (!selectedYear) {
-            console.log(`📅 No hay año seleccionado, mostrando todos los meses disponibles (${dataType})`);
 
             // Si no hay año seleccionado, mostrar todos los meses que tienen datos
             const operationalTires = Array.isArray(tiresOperational) ? tiresOperational : [];

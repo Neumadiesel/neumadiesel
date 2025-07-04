@@ -65,7 +65,6 @@ export default function ModalProgramaMantenimiento({
             const response = await client.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/`,
                 {
-                    // vehicleCode, siteId, description, scheduledDate
                     vehicleCode: code,
                     siteId: 1,
                     scheduledDate: date,
@@ -101,7 +100,7 @@ export default function ModalProgramaMantenimiento({
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
-            <div className="relative bg-white h-[70dvh] dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-1/2 w-full">
+            <div className="relative bg-white lg:h-[70dvh] dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-4/5 lg:max-w-2/3 w-full">
                 <h2 className="text-xl font-bold">Programar Nuevo Mantenimiento</h2>
                 <p className="text-sm text-gray-500 mb-4">Completa los campos para programar un nuevo mantenimiento.</p>
                 {/* Mostrar error si existe */}
