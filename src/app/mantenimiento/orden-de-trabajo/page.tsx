@@ -26,7 +26,11 @@ interface Procedure {
 
 interface WorkOrderDTO {
     id: number;
+    code: string;
+    description: string;
+    type: string; // Programada, En ejecución, Completada, Cancelada
     date: string; // formato ISO
+    responsibleName: string;
     dispatchDate: string; // formato ISO
     siteId: number;
     checkInHour: string; // formato HH:mm
@@ -196,11 +200,10 @@ export default function OrdenDeTrabajoPage() {
                     <thead className="">
                         <tr className="py-6 border-b dark:border-neutral-400 h-14 items-center">
                             <th className="px-4 py-2 text-left">Código</th>
-                            <th className="px-4 py-2 text-left">Equipo</th>
-                            <th className="px-4 py-2 text-left">Estado</th>
-                            <th className="px-4 py-2 text-left">Tipo</th>
-                            <th className="px-4 py-2 text-left">Fecha Programada</th>
+                            <th className="px-4 py-2 text-left">Descripción</th>
                             <th className="px-4 py-2 text-left">Fecha Ejecución</th>
+                            <th className="px-4 py-2 text-left">Tipo</th>
+
                             <th className="px-4 py-2 text-left">Responsable</th>
                             <th className="px-4 py-2 text-left">Acciones</th>
                         </tr>
@@ -219,19 +222,11 @@ export default function OrdenDeTrabajoPage() {
                         {
                             workOrders.map((orden) => (
                                 <tr key={orden.id} className="border-b dark:border-neutral-400 h-14">
-                                    <td className="px-4 py-2">{orden.id}</td>
-                                    <td className="px-4 py-2">{orden.vehicleId}</td>
-                                    <td className="px-4 py-2">
-                                        {orden.interventionType === "completada" ? (
-                                            <span className="text-green-500">Completada</span>
-                                        ) : (
-                                            <span className="text-yellow-500">Pendiente</span>
-                                        )}
-                                    </td>
-                                    <td className="px-4 py-2">{orden.interventionType}</td>
-                                    <td className="px-4 py-2">{new Date(orden.date).toLocaleDateString()}</td>
+                                    <td className="px-4 py-2">{orden.code}</td>
+                                    <td className="px-4 py-2">{orden.description}</td>
                                     <td className="px-4 py-2">{new Date(orden.dispatchDate).toLocaleDateString()}</td>
-                                    <td className="px-4 py-2">{orden.technician}</td>
+                                    <td className="px-4 py-2">{orden.type}</td>
+                                    <td className="px-4 py-2">{orden.responsibleName}</td>
                                     <td className="px-4 py-2">
                                         <Link href={`/mantenimiento/orden-de-trabajo/${orden.id}`} className="text-blue-500 hover:underline">
                                             <Eye className="inline cursor-pointer text-blue-500 mr-2" />

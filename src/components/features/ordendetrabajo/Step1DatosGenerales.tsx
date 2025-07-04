@@ -174,7 +174,7 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                             className="w-full border rounded-lg px-3 py-2"
                         >
                             <option value="">Selecciona el tipo</option>
-                            <option value="preventiva">Preventiva</option>
+                            <option value="imprevisto">Imprevisto</option>
                             <option value="correctiva">Correctiva</option>
                             <option value="programada">Programada</option>
                             <option value="apoyo">Apoyo Mecánico</option>
