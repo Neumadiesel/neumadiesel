@@ -75,6 +75,11 @@ export default function TirePage() {
                 authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/tire/${id}`),
             ]);
 
+            if (!inspectionsRes || !proceduresRes || !maintenancesRes) {
+                console.warn("No se pudo obtener alguna de las respuestas (res es null).");
+                return;
+            }
+
             const inspections = await inspectionsRes.json();
             const procedures = await proceduresRes.json();
             const maintenances = await maintenancesRes.json();
