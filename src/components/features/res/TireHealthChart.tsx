@@ -91,8 +91,16 @@ export default function TireHealthChart() {
     useEffect(() => {
         if (user) {
             authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
-                .then(res => res.json())
-                .then(setTires)
+                .then(res => {
+                    if (!res) {
+                        console.error("No se pudo obtener la respuesta del backend.");
+                        return;
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data) setTires(data);
+                })
                 .catch(err => console.error("Error cargando neumáticos:", err));
         }
     }, [user]);
