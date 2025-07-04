@@ -50,7 +50,7 @@ export default function Budget({ siteId }: BudgetProps) {
     const fetchBudget = async () => {
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/1`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -70,7 +70,7 @@ export default function Budget({ siteId }: BudgetProps) {
         setSelectedYear(year);
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}/year/${year}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/1/year/${year}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -109,14 +109,13 @@ export default function Budget({ siteId }: BudgetProps) {
         }
     }
 
-    useEffect(() => {
-        fetchBudget();
-        fetchBudgetByYear(selectedYear); // Cargar el presupuesto del año 2025 por defecto
-    }, []);
 
     useEffect(() => {
-        fetchBudget();
-        fetchBudgetByYear(selectedYear); // Cargar el presupuesto del año 2025 por defecto
+        if (user) {
+
+            fetchBudget();
+            fetchBudgetByYear(selectedYear); // Cargar el presupuesto del año 2025 por defecto
+        }
     }, [user]);
 
     return (

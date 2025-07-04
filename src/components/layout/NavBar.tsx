@@ -65,7 +65,7 @@ export default function NavBar() {
             title: "Faena",
             icon: <Mountain className="text-2xl" />,
             path: "/faena",
-            allowedRoles: ["planificador", "demo", "supervisor"],
+            allowedRoles: ["planificador"],
         },
         {
             title: "Resumen",
@@ -83,7 +83,7 @@ export default function NavBar() {
         {
             title: "Modelos",
             icon: <FaWpforms className="text-2xl" />,
-            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
+            allowedRoles: ["administrador", "planificador", "demo"],
             children: [
                 { title: "Crear Modelo Equipo", path: "/modelos/modelo-equipo" },
                 { title: "Crear Modelo Neumático", path: "/modelos/modelo-neumatico" },
@@ -106,11 +106,19 @@ export default function NavBar() {
         {
             title: "Mantenimiento",
             icon: <FaWrench className="text-2xl" />,
-            allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
+            allowedRoles: ["administrador", "planificador", "demo"],
             children: [
                 // { title: "Cadenas", path: "/mantenimiento/cadenas" },
                 // { title: "Sensores", path: "/mantenimiento/sensores" },
                 { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
+                { title: "Programa semanal", path: "/mantenimiento/programas" },
+            ],
+        },
+        {
+            title: "Mantenimiento",
+            icon: <FaWrench className="text-2xl" />,
+            allowedRoles: ["supervisor"],
+            children: [
                 { title: "Programa semanal", path: "/mantenimiento/programas" },
             ],
         },

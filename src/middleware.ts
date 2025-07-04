@@ -95,6 +95,16 @@ const rolePermissions = {
         ...routePermissions.mantenimiento,
         ...routePermissions.medicion,
     ],
+    administrador_de_contratos: [
+        ...routePermissions.reportabilidad,
+        ...routePermissions.resumen,
+        ...routePermissions.equipos,
+        ...routePermissions.neumaticos,
+        ...routePermissions.modelos,
+        ...routePermissions.faena,
+        ...routePermissions.mantenimiento,
+        ...routePermissions.medicion,
+    ],
     supervisor: [
         ...routePermissions.resumen,
         ...routePermissions.reportabilidad,

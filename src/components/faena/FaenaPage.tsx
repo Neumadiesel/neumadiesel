@@ -28,13 +28,13 @@ export default function Faena({ id }: { id?: string }) {
 
     const fetchFaenas = async () => {
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/${id}/with-contract`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/1/with-contract`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
             }
             const data = await response.json();
-
+            console.log("Datos de la faena:", data);
             setFaena(data);
         } catch (error) {
             console.error("Error fetching reasons:", error);
@@ -42,11 +42,9 @@ export default function Faena({ id }: { id?: string }) {
     };
 
     useEffect(() => {
-        fetchFaenas();
-    }, []);
-
-    useEffect(() => {
-        fetchFaenas();
+        if (user) {
+            fetchFaenas();
+        }
     }, [user]);
 
     return (
