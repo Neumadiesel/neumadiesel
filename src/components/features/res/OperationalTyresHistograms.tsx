@@ -348,12 +348,6 @@ export default function OperationalTyresHistograms() {
                     const dataOp = await resOp.value.json();
                     if (Array.isArray(dataOp)) {
                         operationalData = dataOp;
-                        console.log('✅ Datos operacionales:', dataOp.length, 'items');
-
-                        // 🎯 DEBUG: Mostrar ejemplo de fechas
-                        if (dataOp.length > 0 && dataOp[0]?.lastInspection?.inspectionDate) {
-                            const sampleDate = new Date(dataOp[0].lastInspection.inspectionDate);
-                        }
                     } else {
                         console.warn('⚠️ Datos operacionales no son un array:', typeof dataOp);
                     }
@@ -385,11 +379,6 @@ export default function OperationalTyresHistograms() {
                     if (Array.isArray(dataScrap)) {
                         scrappedData = dataScrap;
 
-                        // 🎯 DEBUG: Mostrar ejemplo real de dados de baja
-                        if (dataScrap.length > 0 && dataScrap[0]?.procedures?.[0]?.startDate) {
-                            const sampleDate = new Date(dataScrap[0].procedures[0].startDate);
-
-                        }
                     } else {
                         console.warn('⚠️ Datos desechados no son un array:', typeof dataScrap);
                     }
@@ -461,13 +450,7 @@ export default function OperationalTyresHistograms() {
         if (!Array.isArray(selectedTires) || selectedTires.length === 0) {
             console.log(`⚠️ No hay datos para el tipo: ${dataType}`);
             return [];
-        }
-        // 🎯 ANÁLISIS DE POSICIONES - DIAGNÓSTICO DETALLADO DIFERENCIADO POR TIPO
-        let positionDiscrepancies = 0;
-        let positionZeroCount = 0;
-        let correctedPositions = 0;
-        let validTires = 0;
-        let invalidTires = 0;
+        };
 
         const discrepanciesList: Discrepancy[] = [];
 
@@ -488,35 +471,15 @@ export default function OperationalTyresHistograms() {
                     isScrappedTire(t);
             }
 
-            if (!hasValidStructure) {
-                invalidTires++;
-                console.log(`⚠️ Neumático ${index} estructura inválida (${dataType}):`, {
-                    code: t?.code || 'Sin código',
-                    hasLastInspection: isOperationalTire(t),
-                    hasInstalledTires: dataType === 'operativo'
-                        ? Array.isArray(t?.installedTires)
-                        : (isScrappedTire(t) ? Array.isArray(t.procedures) : false),
-                    installedTiresLength: dataType === 'operativo'
-                        ? (t?.installedTires?.length || 0)
-                        : (isScrappedTire(t) && Array.isArray(t.procedures) ? t.procedures.length : 0),
-                    hasStartDate: dataType === 'baja' && isScrappedTire(t) ? !!(getScrappedTireData(t)?.startDate) : 'N/A'
-                });
-                return;
-            }
+
 
             if (dataType === 'operativo' && isOperationalTire(t)) {
                 // 🎯 LÓGICA PARA OPERATIVOS (usando lastInspection y installedTires)
                 const lastInspectionPosition = t.lastInspection.position;
                 const installedTiresPosition = t.installedTires?.[0]?.position;
 
-                // Contar neumáticos con lastInspection.position = 0
-                if (lastInspectionPosition === 0) {
-                    positionZeroCount++;
-                }
-
                 // Detectar discrepancias
                 if (lastInspectionPosition !== installedTiresPosition) {
-                    positionDiscrepancies++;
                     discrepanciesList.push({
                         code: t.code,
                         lastInspectionPosition,
@@ -530,9 +493,6 @@ export default function OperationalTyresHistograms() {
                 const scrappedData = getScrappedTireData(t);
                 const installedTiresPosition = scrappedData?.position || 0;
 
-                if (installedTiresPosition === 0) {
-                    positionZeroCount++;
-                }
 
                 // Para dados de baja, registrar info básica
                 discrepanciesList.push({
@@ -543,12 +503,8 @@ export default function OperationalTyresHistograms() {
                 });
             }
 
-            validTires++;
         });
 
-        if (dataType === 'operativo') {
-            console.log(`⚠️ Discrepancias de posición: ${positionDiscrepancies} neumáticos`);
-        }
 
         if (discrepanciesList.length > 0) {
             console.log(`📋 Lista de ${dataType === 'operativo' ? 'discrepancias' : 'neumáticos dados de baja'} (primeros 10):`);
@@ -597,10 +553,6 @@ export default function OperationalTyresHistograms() {
                     const correctPosition = inspection.position === 0 && t.installedTires?.[0]?.position
                         ? t.installedTires[0].position
                         : inspection.position;
-
-                    if (inspection.position === 0 && t.installedTires?.[0]?.position) {
-                        correctedPositions++;
-                    }
 
                     return {
                         codigo: t.code || 'Sin código',
