@@ -2,7 +2,7 @@
 import ModalCrearOrden from "@/components/features/ordendetrabajo/ModalCrearOrden";
 import { useAuth } from "@/contexts/AuthContext";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
-import { CirclePlus, Eye, FileCog, Funnel } from "lucide-react";
+import { CirclePlus, Eye, FileCog } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -140,7 +140,7 @@ export default function OrdenDeTrabajoPage() {
             </section>
 
             {/* Seccion de filtros */}
-            <section className="mt-6 dark:bg-neutral-800 p-4 rounded-md shadow border dark:border-neutral-700">
+            {/* <section className="mt-6 dark:bg-neutral-800 p-4 rounded-md shadow border dark:border-neutral-700">
                 <h2 className="text-3xl font-semibold mb-4">
                     <Funnel size={35} className=" text-blue-500 inline mr-2" />
                     Filtros</h2>
@@ -153,7 +153,6 @@ export default function OrdenDeTrabajoPage() {
                             className="w-full h-10 p-2 border dark:border-neutral-600 rounded dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors"
                         />
                     </div>
-                    {/* Filtro por estado */}
                     <div className="bg-white dark:bg-neutral-800  p-2">
                         <label className="block mb-2">Estado</label>
                         <select
@@ -165,7 +164,6 @@ export default function OrdenDeTrabajoPage() {
                             <option value="cancelada">Cancelada</option>
                         </select>
                     </div>
-                    {/* Filtro por Tipo */}
                     <div className="bg-white dark:bg-neutral-800  p-2">
                         <label className="block mb-2">Tipo de Orden</label>
                         <select
@@ -177,7 +175,6 @@ export default function OrdenDeTrabajoPage() {
                             <option value="inspeccion">Preventiva</option>
                         </select>
                     </div>
-                    {/* Boton de limpiar filtro */}
                     <div className="bg-white dark:bg-neutral-800  p-2">
                         <label className="block mb-2">Limpiar Filtros</label>
                         <button className=" w-full py-2 bg-gray-200 dark:bg-neutral-700 text-black dark:text-white h-10 font-semibold rounded hover:bg-gray-300 transition-colors">
@@ -186,7 +183,7 @@ export default function OrdenDeTrabajoPage() {
                     </div>
 
                 </div>
-            </section>
+            </section> */}
 
             {/* ===================================== */}
             {/* Seccion de tabla de ordenes */}

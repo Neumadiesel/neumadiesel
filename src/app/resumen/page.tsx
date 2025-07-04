@@ -1,6 +1,6 @@
 // import OldTyres from "@/components/common/charts/neumatico/OldTyres";
 import TyresKPI from "@/components/features/res/KPI_Operational_Scrapped";
-import TireHealthDashboard from "@/components/features/res/TireHealthDashboard";
+// import TireHealthDashboard from "@/components/features/res/TireHealthDashboard";
 import TreadWearChart from "@/components/features/res/TreadWearChart";
 export default function Page() {
     return (
@@ -15,7 +15,7 @@ export default function Page() {
             </main>
             <TyresKPI />
             <TreadWearChart />
-            <TireHealthDashboard />
+            {/* <TireHealthDashboard /> */}
             {/* <OldTyres /> */}
             {/* <TreadWearChart /> */}
             {/* <ScrapTyres />

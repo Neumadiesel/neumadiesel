@@ -369,7 +369,7 @@ export default function ModalAsignarNeumatico({
                             }))}
                             selected={selectModelsId} // Ensure selected values are strings
                             onChange={setSelectModelsId}
-                            placeholder="Filtrar por estado..."
+                            placeholder="Filtrar por modelo..."
                         />
                         {selectModelsId.length > 0 ? (
                             <button
