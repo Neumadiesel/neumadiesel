@@ -15,11 +15,11 @@ export default function Page() {
             </main>
             <TyresKPI />
 
+            <TreadWearChart />
             <TireHealthDashboard />
-            <OldTyres />
+            {/* <OldTyres /> */}
 
             {/* <TreadWearChart /> */}
-            <TreadWearChart />
             {/* <ScrapTyres />
             <OperationalTyres /> */}
             {/* <OperationalTyresHistograms /> */}

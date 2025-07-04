@@ -323,7 +323,7 @@ export default function TyresKPI() {
             </div>
 
             {/* KPIs de Análisis Avanzado */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4">
 
 
                 {/* Promedio de Horas de Baja */}
@@ -339,12 +339,42 @@ export default function TyresKPI() {
                 </div>
 
 
+                {/* Neumático Destacado */}
+                {kpis.topTire && (
+                    <div className="bg-gradient-to-r col-span-2 from-yellow-50 to-orange-50 dark:from-yellow-900 dark:to-orange-900 p-4 rounded-lg shadow-md border border-yellow-200 dark:border-yellow-700">
+                        <div className="flex items-center gap-4">
+                            <FaAward className="text-yellow-500 text-4xl" />
+                            <div className="flex-1">
+                                <p className="text-xl font-semibold text-yellow-700 dark:text-yellow-300">Neumático con Mayor Rendimiento</p>
+                                <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-sm text-yellow-600 dark:text-yellow-400">Dimensión</p>
+                                        <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.model?.dimensions}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-yellow-600 dark:text-yellow-400">Código</p>
+                                        <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.code}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-yellow-600 dark:text-yellow-400">Horas Acumuladas</p>
+                                        <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.lastInspection?.hours?.toLocaleString()} hrs</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-yellow-600 dark:text-yellow-400">Kilometraje</p>
+                                        <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.lastInspection?.kilometrage?.toLocaleString()} km</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {kpis.mainRetirementReason && (
                     <div className="bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900 dark:to-pink-900 w-full p-4 rounded-lg shadow-md border border-rose-200 dark:border-rose-700">
                         <div className="flex items-start gap-3">
                             <FaChartLine className="text-rose-500 text-3xl mt-1" />
                             <div className="flex-1">
-                                <p className="text-lg font-semibold text-rose-700 dark:text-rose-300">📊 Principal Motivo de Baja</p>
+                                <p className="text-lg font-semibold text-rose-700 dark:text-rose-300">Principal Motivo de Baja</p>
                                 <p className="text-lg font-bold text-rose-800 dark:text-rose-200">{kpis.mainRetirementReason[0]}</p>
                                 <div className="mt-2">
                                     <p className="text-sm text-rose-600 dark:text-rose-400">
@@ -358,38 +388,9 @@ export default function TyresKPI() {
                         </div>
                     </div>
                 )}
-
             </div>
 
-            {/* Neumático Destacado */}
-            {kpis.topTire && (
-                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900 dark:to-orange-900 p-4 rounded-lg shadow-md border border-yellow-200 dark:border-yellow-700">
-                    <div className="flex items-center gap-4">
-                        <FaAward className="text-yellow-500 text-4xl" />
-                        <div className="flex-1">
-                            <p className="text-xl font-semibold text-yellow-700 dark:text-yellow-300">🥇 Neumático con Mayor Rendimiento</p>
-                            <div className="mt-2 grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div>
-                                    <p className="text-sm text-yellow-600 dark:text-yellow-400">Dimensión</p>
-                                    <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.model?.dimensions}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-yellow-600 dark:text-yellow-400">Código</p>
-                                    <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.code}</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-yellow-600 dark:text-yellow-400">Horas Acumuladas</p>
-                                    <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.lastInspection?.hours?.toLocaleString()} hrs</p>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-yellow-600 dark:text-yellow-400">Kilometraje</p>
-                                    <p className="text-lg font-bold text-yellow-800 dark:text-yellow-200">{kpis.topTire.lastInspection?.kilometrage?.toLocaleString()} km</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+
 
         </div>
     );

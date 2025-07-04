@@ -130,26 +130,25 @@ export default function MedicionPage() {
     }, []);
 
     useEffect(() => {
-        console.log("token", token);
         fetchPendingInspections();
         fetchLastInspections();
         fetchKpi();
-    }, [user, token]);
+    }, [user]);
 
     return (
-        <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col  p-4">
-            <div className="w-full flex justify-between mb-2">
+        <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col p-2 lg:p-4">
+            <div className="w-full flex max-lg:flex-col justify-between mb-2">
 
                 <h1 className="text-4xl dark:text-white font-semibold">Panel de Inspecciones</h1>
-                <div className="flex items-center gap-2">
+                <div className="flex max-lg:flex-col items-center gap-2 max-lg:py-2">
                     {/* Inspeccionar equipo */}
-                    <Link href="/medicion/medicion-por-equipo" className="bg-emerald-500 text-white px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-emerald-600 transition-colors">
+                    <Link href="/medicion/medicion-por-equipo" className="bg-green-500 max-lg:w-full text-center text-white px-4 py-2 rounded flex justify-center  items-center gap-2 hover:bg-emerald-600 transition-colors">
                         <p className="text-lg font-semibold">
                             Inspeccionar Equipo
                         </p>
                     </Link>
                     {/* Inspeccionar neumatico */}
-                    <Link href="/medicion/medicion-por-neumatico" className="bg-blue-500 text-white px-4 py-2 rounded flex justify-between items-center gap-2 hover:bg-blue-600 transition-colors">
+                    <Link href="/medicion/medicion-por-neumatico" className="bg-blue-500 max-lg:w-full text-white px-4 py-2 rounded flex justify-center items-center gap-2 hover:bg-blue-600 transition-colors">
                         <p className="text-lg font-semibold">
                             Inspeccionar Neumático
                         </p>
@@ -160,7 +159,7 @@ export default function MedicionPage() {
                 Aquí puedes realizar inspecciones de neumáticos, verificar su estado y registrar cualquier anomalía.
             </p>
             {/* Seccion de principales estadisticas */}
-            <section className="w-full p-4 rounded-lg mb-4">
+            <section className="w-full p-2 lg:p-4 rounded-lg mb-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                     <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg shadow-sm shadow-gray-200 dark:shadow-neutral-800  flex flex-col items-center">
                         <p className="text-xl font-semibold mb-2">Chequeos Pendientes</p>
