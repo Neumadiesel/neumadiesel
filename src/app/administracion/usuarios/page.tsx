@@ -187,7 +187,7 @@ export default function Page() {
             name: usuario.name,
             last_name: usuario.last_name,
             email: usuario.email,
-            role: usuario.role,
+            role: usuario.role ?? { role_id: 0, name: "Sin Rol" },
             faena_id: usuario.faena_id,
             is_active: usuario.is_active,
         });

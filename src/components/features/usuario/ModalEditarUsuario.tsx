@@ -55,6 +55,7 @@ export default function ModalEditarUsuario({
         rol: "operador",
         faena_id: 0,
     });
+    const { user } = useAuth()
     const authFetch = useAuthFetch();
     const [roles, setRoles] = useState<Role[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -90,11 +91,6 @@ export default function ModalEditarUsuario({
         }
     };
 
-    useEffect(() => {
-        if (visible) {
-            fetchRoles();
-        }
-    }, [visible, token]);
 
 
     const fetchFaenas = async () => {
@@ -115,10 +111,15 @@ export default function ModalEditarUsuario({
         }
     };
 
-
     useEffect(() => {
-        fetchFaenas();
-    }, []);
+        if (visible) {
+            if (token) {
+                fetchFaenas();
+                fetchRoles();
+            }
+        }
+    }, [visible, token]);
+
 
     if (!visible || !usuario) return null;
 
