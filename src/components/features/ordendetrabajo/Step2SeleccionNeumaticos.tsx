@@ -221,7 +221,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                 {vehicle && (
                     <>
                         <div className="mb-2 text-sm text-gray-700 dark:text-white">
-                            Equipo encontrado: <strong>{vehicle.model.brand} {vehicle.model.model}</strong> con <strong>{vehicle.model.wheelCount}</strong> posiciones
+                            Equipo encontrado: <strong>{vehicle.model.brand} {vehicle.model.model}</strong> con <strong>{vehicle.model.wheelCount}</strong> posiciones, km actual: <strong>{vehicle.kilometrage || 0}</strong> y horas actuales: <strong>{vehicle.hours || 0}</strong>.
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
