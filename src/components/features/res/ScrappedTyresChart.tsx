@@ -132,7 +132,10 @@ export default function ScrappedTyresChart() {
     try {
       setLoading(true);
       const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
-
+      if (!response) {
+        console.warn("No se pudo obtener la respuesta (res es null).");
+        return;
+      }
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

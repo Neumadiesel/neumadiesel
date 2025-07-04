@@ -63,6 +63,10 @@ export default function ScrappedReasonsChart() {
 
     const fetchData = async () => {
         const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+        if (!res) {
+            console.warn("No se pudo obtener la respuesta (res es null).");
+            return;
+        }
         const json = await res.json();
         setData(json);
 

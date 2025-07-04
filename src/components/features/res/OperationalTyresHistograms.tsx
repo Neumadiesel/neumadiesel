@@ -334,12 +334,22 @@ export default function OperationalTyresHistograms() {
                 authFetch(urlScrapped) // 🎯 CAMBIO: Prueba sin el filtro initialTread
             ]);
 
+            if (!resOp || !resScrap) {
+                console.error('❌ Error: Respuesta de fetch es null o undefined');
+                setError('Error al obtener datos de neumáticos');
+                setLoading(false);
+                return;
+            }
+
             let operationalData: OperationalTire[] = [];
             let scrappedData: ScrappedTire[] = [];
             const errors: { operational?: string; scrapped?: string } = {};
-
             // 🎯 PROCESAR RESULTADO OPERACIONAL
-            if (resOp.status === 'fulfilled' && resOp.value.ok) {
+            if (
+                resOp.status === 'fulfilled' &&
+                resOp.value !== null &&
+                resOp.value.ok
+            ) {
                 try {
                     const dataOp = await resOp.value.json();
                     if (Array.isArray(dataOp)) {
@@ -362,14 +372,24 @@ export default function OperationalTyresHistograms() {
                     errors.operational = 'Error al procesar datos operacionales';
                 }
             } else {
-                const status = resOp.status === 'fulfilled' ? resOp.value.status : 'rejected';
-                const statusText = resOp.status === 'fulfilled' ? resOp.value.statusText : 'Connection failed';
+                const status =
+                    resOp.status === 'fulfilled' && resOp.value
+                        ? resOp.value.status
+                        : 'rejected';
+                const statusText =
+                    resOp.status === 'fulfilled' && resOp.value
+                        ? resOp.value.statusText
+                        : 'Connection failed';
                 console.error('❌ Error fetch operacional:', status, statusText);
                 errors.operational = `Error ${status}: ${statusText}`;
             }
 
             // 🎯 PROCESAR RESULTADO DESECHADOS (NO BLOQUEAR SI FALLA)
-            if (resScrap.status === 'fulfilled' && resScrap.value.ok) {
+            if (
+                resScrap.status === 'fulfilled' &&
+                resScrap.value !== null &&
+                resScrap.value.ok
+            ) {
                 try {
                     const dataScrap = await resScrap.value.json();
                     if (Array.isArray(dataScrap)) {
@@ -403,8 +423,14 @@ export default function OperationalTyresHistograms() {
                     errors.scrapped = 'Error al procesar datos desechados';
                 }
             } else {
-                const status = resScrap.status === 'fulfilled' ? resScrap.value.status : 'rejected';
-                const statusText = resScrap.status === 'fulfilled' ? resScrap.value.statusText : 'Connection failed';
+                const status =
+                    resScrap.status === 'fulfilled' && resScrap.value
+                        ? resScrap.value.status
+                        : 'rejected';
+                const statusText =
+                    resScrap.status === 'fulfilled' && resScrap.value
+                        ? resScrap.value.statusText
+                        : 'Connection failed';
                 console.warn('⚠️ Error fetch desechados (no crítico):', status, statusText);
                 errors.scrapped = `Error ${status}: ${statusText}`;
             }
