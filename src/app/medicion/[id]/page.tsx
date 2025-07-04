@@ -33,6 +33,11 @@ export default function Page() {
                     'Content-Type': 'application/json',
                 },
             });
+
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
             if (!response.ok) {
                 throw new Error('Error al obtener los datos de la inspección');
             }
