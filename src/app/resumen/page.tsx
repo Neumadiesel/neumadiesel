@@ -1,3 +1,4 @@
+import OldTyres from "@/components/common/charts/neumatico/OldTyres";
 import TyresKPI from "@/components/features/res/KPI_Operational_Scrapped";
 import TireKPIOverview from "@/components/features/res/TireAlerts/TireKPIOverview";
 export default function Page() {
@@ -13,6 +14,7 @@ export default function Page() {
             </main>
             <TyresKPI />
             <TireKPIOverview />
+            <OldTyres />
         </div>
     );
 }

@@ -24,7 +24,7 @@ export const kpiItems: {
         {
             key: 'finVida',
             title: 'Fin de Vida',
-            criterio: 'Desgaste igual o mayor al 80% de la banda original.',
+            criterio: 'Desgaste igual o mayor al 75% de la banda original.',
             color: 'red', // rojo
         },
         {
@@ -57,7 +57,7 @@ export const getKpiData = (tires: TireDTO[]) => {
 
         finVida: tires.filter(t =>
             t.initialTread > 0 &&
-            (1 - ((t.lastInspection.externalTread + t.lastInspection.internalTread) / 2) / t.initialTread) >= 0.8
+            (1 - ((t.lastInspection.externalTread + t.lastInspection.internalTread) / 2) / t.initialTread) >= 0.75
         ),
 
         temperatura: tires.filter(t => (t.lastInspection.temperature ?? 0) > 75),

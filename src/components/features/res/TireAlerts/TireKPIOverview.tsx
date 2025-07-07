@@ -8,6 +8,8 @@ import { TireDTO } from '@/types/Tire';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Info, Siren } from 'lucide-react';
+import ExportOldTyresReport from '../../../../utils/export/ExportOldTyreesToExcel';
+import ExportListOfTires from '@/utils/export/ExportListofTyresToExcel';
 
 type KpiKey = 'inversion' | 'rotacion' | 'finVida' | 'temperatura' | 'posicionCritica';
 
@@ -96,7 +98,18 @@ export default function TireKPIOverview() {
 
 
             <section className="bg-white dark:bg-neutral-900  rounded-sm ">
-                <h2 className="text-xl font-bold mb-4">{kpiItems.find(i => i.key === selectedKpi)?.title}</h2>
+                <div className='w-full flex justify-between items-center p-2  dark:bg-gray-800 rounded-t-sm'>
+                    <div>
+                        <h2 className="text-2xl font-bold">{kpiItems.find(i => i.key === selectedKpi)?.title}</h2>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            {kpiItems.find(i => i.key === selectedKpi)?.criterio}
+                        </p>
+                    </div>
+                    <ExportListOfTires
+                        title={`LISTA DE NEUMÁTICOS EN ALERTA POR: ${kpiItems.find(i => i.key === selectedKpi)?.title.toUpperCase()}` || "RESUMEN DE NEUMÁTICOS"}
+                        tireList={filteredTires}
+                    />
+                </div>
                 {loading ? (
                     <p>Cargando neumáticos...</p>
                 ) : filteredTires.length === 0 ? (

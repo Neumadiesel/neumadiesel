@@ -1,6 +1,6 @@
 'use client';
 import LabelLoading from "@/components/common/forms/LabelLoading";
-import ExportTireReport from "@/components/features/neumatico/data/ExportDataToExcel";
+import ExportTireReport from "@/utils/export/ExportDataToExcel";
 import Breadcrumb from "@/components/layout/BreadCrumb";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import { useAuth } from "@/contexts/AuthContext";

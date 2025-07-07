@@ -183,7 +183,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import ExportOldTyresReport from "@/components/features/neumatico/data/ExportOldTyreesToExcel";
+import ExportOldTyresReport from "@/utils/export/ExportOldTyreesToExcel";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuth } from "@/contexts/AuthContext";
