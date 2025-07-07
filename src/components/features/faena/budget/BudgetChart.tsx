@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 import {
     Card,
     CardContent,
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/chart"
 import { useAuth } from "@/contexts/AuthContext"
 import { useAuthFetch } from "@/utils/AuthFetch"
+import { toPng } from "html-to-image"
 
 const chartConfig = {
     budget: {
@@ -110,11 +111,21 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
         consumo: item.actual,
     }))
 
+    const downloadImage = async () => {
+        const node = document.getElementById('grafico-budget-consumo');
+        if (!node) return;
+
+        const dataUrl = await toPng(node);
+        const link = document.createElement('a');
+        link.download = `grafico_budget_vs_consumo_${yearSelected}.png`;
+        link.href = dataUrl;
+        link.click();
+    };
     return (
-        <Card className="border-2 border-amber-400 dark:border-amber-300">
-            <CardHeader className="flex justify-between items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-                {/* Selector de faena */}
-                <div className="flex items-center w-1/4 col-start-1">
+        <div>
+            <div className="w-full grid gird-cols-3 mb-2">
+
+                <div className="flex items-center w-full col-start-1">
                     {
                         isAdmin &&
                         <select
@@ -132,14 +143,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
                         </select>
                     }
                 </div>
-
-                <div className="flex-1 space-y-1 w-full col-start-2">
-                    <CardTitle className="dark:text-white text-xl">Budget vs Consumo {yearSelected}</CardTitle>
-                    <CardDescription className="dark:text-white">
-                        Comparación mensual del presupuesto y consumo de neumáticos.
-                    </CardDescription>
-                </div>
-                <div className="flex items-center w-1/4 justify-end">
+                <div className="flex items-center w-full  lg:justify-end">
                     <select
                         value={yearSelected}
                         onChange={(e) => setYearSelected(Number(e.target.value))}
@@ -152,46 +156,79 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
                         ))}
                     </select>
                 </div>
-            </CardHeader>
-            <CardContent>
-                {
-                    loading ? (
-                        <div className="flex justify-center items-center h-48">
-                            <div className="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin" />
-                        </div>
-                    )
-                        :
-                        <ChartContainer config={chartConfig}>
-                            <BarChart accessibilityLayer data={chartData}>
-                                <CartesianGrid vertical={false} />
-                                <XAxis
-                                    dataKey="month"
-                                    tickLine={false}
-                                    tickMargin={10}
-                                    axisLine={false}
-                                    tickFormatter={(value) => value.slice(0, 3)}
-                                />
-                                <ChartTooltip
-                                    cursor={false}
-                                    content={<ChartTooltipContent indicator="dashed" />}
-                                />
-                                <Bar dataKey="budget" fill="#0370dd" radius={3} />
-                                <Bar dataKey="consumo" fill="#f1c40f" radius={3} />
-                            </BarChart>
-                        </ChartContainer>
-                }
+                <button
+                    onClick={downloadImage}
+                    className=" px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                    Descargar como Imagen
+                </button>
+            </div>
+            <Card className="border-2 border-amber-400 dark:border-amber-300" id="grafico-budget-consumo">
+                <CardHeader className="flex justify-between items-center gap-2 space-y-0 border-b py-5 max-lg:flex-col">
 
-            </CardContent>
-            <CardFooter className="flex items-start gap-2 text-sm dark:text-white">
-                <div className="flex gap-2 font-medium leading-none">
-                    <div className="bg-[#0370dd] h-4 w-4 rounded-sm"></div>
-                    <span>Budget</span>
-                </div>
-                <div className="flex gap-2 font-medium leading-none">
-                    <div className="bg-[#f1c40f] h-4 w-4 rounded-sm"></div>
-                    <span>Consumo</span>
-                </div>
-            </CardFooter>
-        </Card>
+                    {/* Selector de faena */}
+
+
+                    <div className="flex-1 space-y-1 w-full col-start-2">
+                        <CardTitle className="dark:text-white text-xl">Budget vs Consumo {yearSelected}</CardTitle>
+                        <CardDescription className="dark:text-white">
+                            Comparación mensual del presupuesto y consumo de neumáticos.
+                        </CardDescription>
+                    </div>
+
+                </CardHeader>
+                <CardContent>
+                    {
+                        loading ? (
+                            <div className="flex justify-center items-center h-48">
+                                <div className="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin" />
+                            </div>
+                        )
+                            :
+                            <ChartContainer config={chartConfig}>
+                                <BarChart accessibilityLayer data={chartData}>
+                                    <CartesianGrid vertical={false} />
+                                    <XAxis
+                                        dataKey="month"
+                                        tickLine={false}
+                                        tickMargin={10}
+                                        axisLine={false}
+                                        tickFormatter={(value) => value.slice(0, 3)}
+                                    />
+                                    <ChartTooltip
+                                        cursor={false}
+                                        content={<ChartTooltipContent indicator="dashed" />}
+                                    />
+                                    <Bar dataKey="budget" fill="#0370dd" radius={3} >
+                                        <LabelList
+                                            dataKey="budget"
+                                            position="top"
+                                            style={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
+                                        />
+                                    </Bar>
+                                    <Bar dataKey="consumo" fill="#f1c40f" radius={3} >
+                                        <LabelList
+                                            dataKey="consumo"
+                                            position="top"
+                                            style={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
+                                        />
+                                    </Bar>
+                                </BarChart>
+                            </ChartContainer>
+                    }
+
+                </CardContent>
+                <CardFooter className="flex items-start gap-2 text-sm dark:text-white">
+                    <div className="flex gap-2 font-medium leading-none">
+                        <div className="bg-[#0370dd] h-4 w-4 rounded-sm"></div>
+                        <span>Budget</span>
+                    </div>
+                    <div className="flex gap-2 font-medium leading-none">
+                        <div className="bg-[#f1c40f] h-4 w-4 rounded-sm"></div>
+                        <span>Consumo</span>
+                    </div>
+                </CardFooter>
+            </Card>
+        </div>
     )
 }

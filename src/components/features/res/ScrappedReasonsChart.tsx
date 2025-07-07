@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
+import { toPng } from 'html-to-image';
 import {
     XAxis,
     YAxis,
@@ -175,6 +176,17 @@ export default function ScrappedReasonsChart() {
             .filter(Boolean)
     )).sort();
 
+    const downloadChartAsImage = async () => {
+        const node = document.getElementById('grafico-bajas');
+        if (!node) return;
+
+        const dataUrl = await toPng(node);
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `grafico_baja_mensual_${year}_S${semester}.png`;
+        link.click();
+    };
+
     return (
         <section className=" bg-white dark:bg-gray-800 border  rounded-md p-2 lg:p-4 shadow-sm">
             <div className="">
@@ -275,8 +287,14 @@ export default function ScrappedReasonsChart() {
                     </div>
                 </div>
             </div>
+            <button
+                onClick={downloadChartAsImage}
+                className="px-4 py-2 bg-blue-600 text-white rounded mt-4"
+            >
+                Descargar como Imagen
+            </button>
 
-            <div className="bg-white dark:bg-gray-800 p-3 m-2">
+            <div className="bg-white dark:bg-gray-800 p-3 m-2" id="grafico-bajas">
                 <ResponsiveContainer width="100%" height={350} className="p-2">
                     <BarChart data={processed}>
                         <CartesianGrid strokeDasharray="3 3" />

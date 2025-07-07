@@ -119,14 +119,14 @@ export default function Budget({ siteId }: BudgetProps) {
     }, [user]);
 
     return (
-        <div className="p-6 bg-white h-auto min-h-screen dark:bg-[#212121] shadow-md rounded-lg">
+        <div className=" p-2 lg:p-6 bg-white h-auto min-h-screen dark:bg-[#212121] shadow-md rounded-lg">
             <div className="flex flex-col h-full">
-                <div className="flex justify-between items-center  w-full lg:w-2/3 pb-3">
+                <div className="flex max-lg:flex-col justify-between items-center  w-full lg:w-2/3 pb-3">
                     <h2 className="text-2xl font-bold mt-4">Control de Budget - Neumáticos</h2>
                     <Button text="Ingresar Nuevo Budget" onClick={() => { setModAddBudget(true); fetchBudget() }} />
                 </div>
-                <div className="flex gap-2">
-                    <div className="overflow-x-auto mt-2 w-1/2">
+                <div className="flex max-lg:flex-col gap-2">
+                    <div className="overflow-x-auto mt-2 w-full lg:w-1/2 ">
                         {budget.length > 0 && (
                             <div className="flex justify-between items-center">
                                 <div className="flex flex-wrap gap-2 mb-2 w-full mr-2 bg-gray-50 dark:bg-[#2b2b2b] p-1 rounded-md">
@@ -168,7 +168,7 @@ export default function Budget({ siteId }: BudgetProps) {
                             ) : budgetByYear.length === 0 ? (
                                 <div className="text-center text-gray-500 p-4">No hay datos de presupuesto disponibles.</div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-4">
                                     {editedBudgetByYear.map(item => (
                                         <div
                                             key={item.id}
@@ -209,18 +209,20 @@ export default function Budget({ siteId }: BudgetProps) {
                             )}
                         </div>
                     </div>
-                    <div className="w-1/2 mt-4">
+                    <div className="w-full lg:w-1/2 mt-4">
                         <BudgetChart year={selectedYear} siteId={siteId} />
                     </div>
                 </div>
             </div>
-
-            <ModAddBudget
-                siteId={siteId}
-                visible={modAddBudget}
-                onClose={() => setModAddBudget(false)}
-                onGuardar={() => setModAddBudget(false)}
-            />
+            {
+                modAddBudget &&
+                <ModAddBudget
+                    siteId={siteId}
+                    visible={modAddBudget}
+                    onClose={() => setModAddBudget(false)}
+                    onGuardar={() => setModAddBudget(false)}
+                />
+            }
         </div>
     );
 }
