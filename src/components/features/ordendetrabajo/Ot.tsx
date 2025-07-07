@@ -28,19 +28,19 @@ interface WorkOrderDTO {
     code: string;
     description: string;
     type: string;
-
-
-    // "entryDate": "2025-07-01T16:00:00.000Z",
-    // "dispatchDate": "2025-07-01T17:00:00.000Z",
+    status: string;
     dispatchDate: string; // formato ISO
     entryDate: string; // formato ISO
     siteId: number;
+    tool: string;
+    toolSerial: string;
     checkInHour: string; // formato HH:mm
     checkOutHour: string; // formato HH:mm
     observations: string;
     responsibleName: string;
     interventionType: string;
     peopleCount: number;
+    shift: string;
     locationId: number;
     vehicleId: number;
     vehicle: VehicleDTO;
@@ -76,279 +76,281 @@ export default function OT({ id }: { id: number }) {
         }
     }, [user]);
     return (
-        <div className="flex flex-col p-3 items-center min-h-full bg-amber-200 dark:bg-neutral-800 dark:text-white gap-y-4">
-            <h1 className="text-2xl font-bold">Orden de Trabajo de Neumaticos {workOrder?.code}</h1>
+        <div className="flex flex-col p-3 items-center min-h-full bg-gray-100 dark:bg-neutral-800 dark:text-white gap-y-4">
+            <div className="bg-gray-900 dark:bg-neutral-800 text-white w-full h-16 flex items-center justify-between  px-3">
+
+                <h1 className="text-2xl font-bold">ORDEN DE TRABAJO NEUMÁTICOS - CMZ</h1>
+                <p className="text-xl font-bold bg-white p-2 text-black">
+                    {workOrder?.code}
+                </p>
+            </div>
             {/* Seccion de informacion de trabajo */}
-            <section className="flex flex-col w-full h-[15%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
-                <div className="flex flex-col w-full h-full gap-y-2">
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        {/* Descripcion del trabajo */}
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-64 border-r border-gray-500">
-                            Descripcion del trabajo
-                        </label>
-                        <input
-                            disabled
-                            type="text"
-                            value={workOrder?.description || ""}
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
+            <section className="flex flex-col w-full  shadow-sm rounded-sm border border-gray-100 p-3 bg-white dark:bg-neutral-900">
+                <div className="flex flex-col  gap-y-2">
+                    <div className="flex flex-row gap-x-2 items-center">
+                        <h2 className="text-2xl uppercase font-bold ">
+                            {workOrder?.description || "No hay descripción disponible"}
+                        </h2>
+                        <p className="flex justify-center items-center border border-green-600 bg-green-50 text-emerald-800 rounded-lg text-sm w-24  font-semibold ">
+                            {workOrder?.status || "No disponible"}
+                        </p>
                     </div>
-                    {/* Zona donde se desarrolla y tipo de intervencion */}
-                    <section className="flex flex-row w-full h-full gap-x-2">
-                        {/* Zona de trabajo */}
-                        <div className="flex flex-row w-[50%] h-10 border border-gray-500">
-                            <label className="text-md font-bold bg-amber-300 text-black p-2 w-[54%] border-r border-gray-500">
-                                Zona de trabajo
+                    <div className="grid grid-cols-4 gap-x-2 w-full h-full">
+                        {/* Ubicacion */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Ubicación de mantenimiento:
                             </label>
-                            <input
-                                disabled
-                                type="text"
-                                value={workOrder?.locationMaintenance.description || ""}
-                                className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                            />
+                            <p className="font-bold ">
+                                {workOrder?.locationMaintenance.description || "No disponible"}
+                            </p>
                         </div>
-                        {/* Tipo de intervencion */}
-                        <div className="flex flex-row w-[50%] h-10 border border-gray-500 ">
-                            <label className="text-md font-bold bg-amber-300 text-black p-2 w-[60%] border-r border-gray-500">
-                                Tipo de intervencion
+                        {/* Tipo de Mantencion */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Tipo de mantención:
                             </label>
-                            <input
-                                disabled
-                                type="text"
-                                value={workOrder?.type || ""}
-                                className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                            />
+                            <p className="font-bold ">
+                                {workOrder?.type || "No disponible"}
+                            </p>
                         </div>
-                    </section>
+                        {/* Codio EQuipo */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Código del equipo:
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.vehicle.code || "No disponible"}
+                            </p>
+                        </div>
+                        {/* Modelo del equipo */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Modelo del equipo:
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.vehicle.model.brand} {workOrder?.vehicle.model.model || "No disponible"}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </section>
-            {/* Modelo del equipo */}
-            <section className="flex items-center  w-full h-[10%] border border-gray-500 rounded-sm p-3 gap-x-2 bg-white dark:bg-neutral-900">
-                <div className="flex flex-row w-full h-10 border border-gray-500 ">
-                    <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                        Modelo del equipo
-                    </label>
-                    <input
-                        type="text"
-                        disabled
-                        value={`${workOrder?.vehicle.model.brand} ${workOrder?.vehicle.model.model}` || ""}
-
-                        className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                    />
-                </div>
-                {/* Codigo del equipo */}
-                <div className="flex flex-row w-full h-10 border border-gray-500 ">
-                    <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                        Codigo del equipo
-                    </label>
-                    <input
-                        type="text"
-                        disabled
-                        value={workOrder?.vehicle.code || ""}
-                        placeholder="H-41"
-                        className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                    />
-                </div>
-            </section>
-            {/* Infomracion registro de detencion */}
-            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
-                <div className="grid grid-cols-2  gap-x-2 w-full h-full">
-                    {/* Fecha */}
-                    <div className="flex flex-row w-full h-10 border border-gray-500 ">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Fecha
-                        </label>
-                        <input
-                            disabled
-                            value={workOrder?.entryDate ? new Date(workOrder.entryDate).toISOString().split("T")[0] : ""}
-                            type="date"
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
+            {/* Fecha del trabajo y personal */}
+            <section className="flex flex-col w-full  shadow-sm rounded-sm border border-gray-100 p-3 bg-white dark:bg-neutral-900">
+                <div className="flex flex-col  gap-y-2">
+                    <div className="flex flex-row gap-x-2 items-center">
+                        <h2 className="text-lg text-gray-900 uppercase font-bold ">
+                            Fecha de trabajo y Personal asignado
+                        </h2>
                     </div>
-                    {/* Hora de detencion */}
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Hora de Detencion
-                        </label>
-                        <input
-                            type="time"
-                            disabled
-                            value={workOrder?.entryDate ? new Date(workOrder.entryDate).toISOString().split("T")[1].slice(0, 5) : ""}
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
-                    </div>
-                    {/* Personal ejecutor */}
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Responsable
-                        </label>
-                        <input
-                            type="text"
-                            disabled
-                            value={workOrder?.responsibleName || ""}
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
-                    </div>
-                    {/* Hora Entrega de Despacho */}
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Hora Entrega Despacho
-                        </label>
-                        <input
-                            disabled
-                            value={workOrder?.dispatchDate ? new Date(workOrder.dispatchDate).toISOString().split("T")[1].slice(0, 5) : ""}
-
-                            type="time"
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
-                    </div>
-                    {/* Cantidad de personas */}
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Cantidad de personas
-                        </label>
-                        <input
-                            type="number"
-                            disabled
-                            value={workOrder?.peopleCount || ""}
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
-                    </div>
-                    {/* Horas Hombre */}
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Horas Hombre
-                        </label>
-                        <input
-                            type="number"
-                            disabled
-                            value={
-                                workOrder?.peopleCount && workOrder?.entryDate && workOrder?.dispatchDate
+                    <div className="grid grid-cols-4 gap-x-2 w-full h-full">
+                        {/* Personal */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Responsable
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.responsibleName || "No disponible"}
+                            </p>
+                        </div>
+                        {/* Fecha */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Fecha
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.entryDate ? new Date(workOrder.entryDate).toLocaleDateString() : "No disponible"}
+                            </p>
+                        </div>
+                        {/* Hora Ingreso */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Hora de Ingreso:
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.entryDate ? new Date(workOrder.entryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "No disponible"}
+                            </p>
+                        </div>
+                        {/* Hora Despacho */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Hora de Despacho:
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.dispatchDate ? new Date(workOrder.dispatchDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "No disponible"}
+                            </p>
+                        </div>
+                        {/* Cantidad de Personas */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Cantidad Personas
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.peopleCount || "No disponible"}
+                            </p>
+                        </div>
+                        {/* Horas Hombre */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Horas Hombre
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.peopleCount && workOrder?.entryDate && workOrder?.dispatchDate
                                     ? (workOrder.peopleCount * dayjs(workOrder.dispatchDate).diff(dayjs(workOrder.entryDate), 'hour', true)).toFixed(2)
-                                    : ""
-                            }
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
+                                    : "No disponible"}
+                            </p>
+                        </div>
+                        {/* Turno */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Turno
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.shift || "No disponible"}
+                            </p>
+                        </div>
+                        {/* Personal */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Personal Asignado:
+                            </label>
+                            <p className="font-bold ">
+                                Neumadiesel
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
-            {/* Seccion de registro torque utilizado */}
-            {/* <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
-                <div className="grid grid-cols-2  gap-x-2 w-full h-full">
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Torque aplicado
-                        </label>
-                        <input
-                            type="number"
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
+            {/* Registro de Torque */}
+            <section className="flex flex-col w-full  shadow-sm rounded-sm border border-gray-100 p-3 bg-white dark:bg-neutral-900">
+                <div className="flex flex-col  gap-y-2">
+                    <div className="flex flex-row gap-x-2 items-center">
+                        <h2 className="text-lg text-gray-900 uppercase font-bold ">
+                            Registro de Torque Aplicado
+                        </h2>
                     </div>
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Torquit utilizado
-                        </label>
-                        <input
-                            type="number"
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
-                    </div>
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            1ra verif. torque
-                        </label>
-                        <input
-                            type="datetime-local"
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
-                    </div>
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            Serie torquit
-                        </label>
-                        <input
-                            type="text"
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
-                    </div>
-                    <div className="flex flex-row w-full h-10 border border-gray-500">
-                        <label className="text-md font-bold bg-amber-300 text-black p-2 w-[50%] border-r border-gray-500">
-                            2da verif. torque
-                        </label>
-                        <input
-                            type="datetime-local"
-                            className="w-full p-2 px-4 font-bold outline-amber-300 focus:outline-amber-300"
-                        />
+                    <div className="grid grid-cols-4 gap-x-2 w-full h-full">
+                        {/* Personal */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Torquit Utilizado:
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.tool}
+                            </p>
+                        </div>
+                        {/* Fecha */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Serie Torquit
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.toolSerial || "No disponible"}
+                            </p>
+                        </div>
+                        {/* Hora Ingreso */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                Torque Aplicado
+                            </label>
+                            <p className="font-bold ">
+                                850 lb/pie
+                            </p>
+                        </div>
+                        {/* Hora Despacho */}
+                        <div className="flex flex-col  p-2">
+                            <label className="text-sm   text-gray-700">
+                                1ra Verif. Torque
+                            </label>
+                            <p className="font-bold ">
+                                {workOrder?.dispatchDate ? new Date(workOrder.dispatchDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "No disponible"}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </section> */}
-            {/* Seccion neumatico desintalado,*/}
-            {/* <section className="flex flex-col w-full h-[80%] border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
+            </section>
+            {/* Sección neumáticos desinstalados */}
+            <section className="flex flex-col w-full border border-gray-200 rounded-sm p-3 bg-white dark:bg-neutral-900">
                 <h2 className="text-xl font-bold mb-4">Neumáticos Desinstalados</h2>
-                <div className="overflow-x-auto rounded-sm shadow">
-                    <table className="border min-w-full text-sm text-left">
-                        <tbody>
-                            {campos.map((campo, index) => (
-                                <tr key={index} className="border-b">
-                                    <th className="bg-gray-100 dark:bg-[#000] dark:text-white text-gray-700 px-4 py-2 font-semibold w-48">
-                                        {campo.label}
-                                    </th>
-                                    {neumaticos.map((neumatico, idx) => (
-                                        <td key={idx} className="px-4 py-2">
-                                            {neumatico[campo.key as keyof typeof neumatico]}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </section> */}
-            {/* Seccion neumatico instalado,*/}
-            <section className="flex flex-col w-full border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-900">
-                <h2 className="text-xl font-bold mb-4">Neumáticos Instalados</h2>
-                <div className="overflow-x-auto rounded-xl shadow">
+                <div className="overflow-x-auto">
                     <table className="min-w-full text-sm text-left border">
-                        <thead className="bg-gray-100 dark:bg-black text-gray-700 dark:text-white">
+                        <thead className="bg-gray-800 dark:bg-black text-white dark:text-white">
                             <tr>
-                                <th className="px-4 py-2 border">Pos</th>
-                                <th className="px-4 py-2 border">Código</th>
-                                <th className="px-4 py-2 border">Medidas</th>
-                                <th className="px-4 py-2 border">Fabricante</th>
-                                <th className="px-4 py-2 border">Remanente</th>
-                                <th className="px-4 py-2 border">Presión</th>
+                                <th className="px-4 py-2">Pos</th>
+                                <th className="px-4 py-2">Serie</th>
+                                <th className="px-4 py-2">Sensor</th>
+                                <th className="px-4 py-2">Aro</th>
+                                <th className="px-4 py-2">Medidas</th>
+                                <th className="px-4 py-2">Fabricante</th>
+                                <th className="px-4 py-2">Remanente Final</th>
+                                <th className="px-4 py-2">Razón de Retiro</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {workOrder?.vehicle.installedTires.map((neumatico) => (
-                                <tr key={neumatico.id} className="border-t">
-                                    <td className="px-4 py-2 border">{neumatico.position}</td>
-                                    <td className="px-4 py-2 border">{neumatico.tire.code}</td>
-                                    <td className="px-4 py-2 border">{neumatico.tire?.model?.dimensions || ''}</td>
-                                    <td className="px-4 py-2 border">{neumatico.tire?.model?.brand || ''}</td>
+                            {[...Array(6)].map((_, idx) => {
+                                // Buscar el neumático desinstalado en la posición correspondiente (position = idx + 1)
+                                const neumatico = workOrder?.vehicle.installedTires
+                                    ?.find(t => t.position === idx + 1);
 
-                                    <td className="px-4 py-2 border">{neumatico.tire.lastInspection && `${neumatico.tire.lastInspection.internalTread} / ${neumatico.tire.lastInspection.externalTread}`}</td>
-                                    <td className="px-4 py-2 border">
-                                        {neumatico.tire.lastInspection.pressure ? `${neumatico.tire.lastInspection.pressure} PSI` : '-'}
-                                    </td>
-                                </tr>
-                            ))}
+                                return (
+                                    <tr key={idx} className="border-t border-gray-200 dark:border-neutral-700">
+                                        <td className="px-4 py-2">{idx + 1}</td>
+                                        <td className="px-4 py-2">{neumatico?.tire?.code ?? '-'}</td>
+                                        <td className="px-4 py-2">{'-'}</td>
+                                        <td className="px-4 py-2">{'-'}</td>
+                                        <td className="px-4 py-2">{neumatico?.tire?.model?.dimensions ?? '-'}</td>
+                                        <td className="px-4 py-2">{neumatico?.tire?.model?.brand ?? '-'}</td>
+                                        <td className="px-4 py-2">
+                                            {neumatico?.tire?.lastInspection
+                                                ? `${neumatico.tire.lastInspection.internalTread} / ${neumatico.tire.lastInspection.externalTread}`
+                                                : '-'}
+                                        </td>
+                                        <td className="px-4 py-2">{neumatico?.tire?.code ?? '-'}</td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
             </section>
-            {/* Seccion comentarios/observaciones */}
-            <section className="flex flex-col w-full h-40 border border-gray-500 rounded-sm p-3 bg-white dark:bg-neutral-800">
-                <div className="flex flex-col w-full  border border-gray-500">
-                    <label className="text-md font-bold border-b border-gray-500 bg-amber-300 text-black p-2 text-center w-full ">
-                        Comentarios/Observaciones del trabajo realizado
-                    </label>
-                    <input
-                        type="text"
-                        disabled
-                        value={workOrder?.observations || ""}
-                        className="w-full p-2 px-4 font-bold   min-h-20 outline-amber-300 focus:outline-amber-300"
-                    />
+
+            {/* Seccion neumatico instalado,*/}
+            <section className="flex flex-col w-full border border-gray-200 rounded-sm p-3 bg-white dark:bg-neutral-900">
+                <h2 className="text-xl font-bold mb-4">Neumáticos Instalados</h2>
+                <div className="overflow-x-auto ">
+                    <table className="min-w-full text-sm text-left border">
+                        <thead className="bg-gray-800 dark:bg-black text-white dark:text-white">
+                            <tr>
+                                <th className="px-4 py-2">Pos</th>
+                                <th className="px-4 py-2">Serie</th>
+                                <th className="px-4 py-2">Sensor</th>
+                                <th className="px-4 py-2">Aro</th>
+                                <th className="px-4 py-2">Medidas</th>
+                                <th className="px-4 py-2">Fabricante</th>
+                                <th className="px-4 py-2">Remanente</th>
+                                <th className="px-4 py-2">Presión</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {workOrder?.vehicle.installedTires
+                                .slice() // create a shallow copy to avoid mutating original array
+                                .sort((a, b) => a.position - b.position)
+                                .map((neumatico) => (
+                                    <tr key={neumatico.id} className="border-t border-gray-200 dark:border-neutral-700">
+                                        <td className="px-4 py-2 ">{neumatico.position}</td>
+                                        <td className="px-4 py-2 ">{neumatico.tire.code}</td>
+                                        <td className="px-4 py-2 ">{'-'}</td>
+                                        <td className="px-4 py-2 ">{'-'}</td>
+                                        <td className="px-4 py-2 ">{neumatico.tire?.model?.dimensions || ''}</td>
+                                        <td className="px-4 py-2 ">{neumatico.tire?.model?.brand || ''}</td>
+                                        <td className="px-4 py-2 ">{neumatico.tire.lastInspection && `${neumatico.tire.lastInspection.internalTread} / ${neumatico.tire.lastInspection.externalTread}`}</td>
+                                        <td className="px-4 py-2 ">
+                                            {neumatico.tire.lastInspection?.pressure ? `${neumatico.tire.lastInspection.pressure} PSI` : '-'}
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </div>
