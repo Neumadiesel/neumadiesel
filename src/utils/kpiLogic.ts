@@ -64,7 +64,7 @@ export const getKpiData = (tires: TireDTO[]) => {
 
 
 
-        posicionCritica: [] as any[],
+        posicionCritica: [] as TireDTO[],
     };
 
     // Promedio de desgaste por posición
