@@ -170,7 +170,7 @@ export default function MedicionPorEquipo() {
     }, [tire, user]);
 
     return (
-        <div className="  p-4 gap-y-2 bg-white dark:bg-[#212121] dark:text-white">
+        <div className=" p-2 lg:p-4 gap-y-2 bg-white dark:bg-[#212121] dark:text-white">
             <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Inspección Individual de Neumático</h1>
             <p className='text-gray-700 dark:text-white text-sm mb-4'>
                 Ingresa el código para inspeccionar un neumático específico

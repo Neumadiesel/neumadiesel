@@ -193,57 +193,60 @@ export default function MedicionPage() {
                     Aquí puedes ver las inspecciones que requieren tu aprobación.
                 </p>
                 {/* Tabla de inspecciones pendientes */}
-                <table className="min-w-full bg-white dark:bg-neutral-800 border dark:border-neutral-600">
-                    <thead>
-                        <tr className="border-b dark:border-neutral-600">
-                            <th className="px-4 py-2 text-left">Neumático</th>
-                            <th className="px-4 py-2 text-left">Fecha</th>
-                            <th className="px-4 py-2 text-left">Remanente</th>
-                            <th className="px-4 py-2 text-left">Inspector</th>
-                            <th className="px-4 py-2 text-left">Observacion</th>
-                            <th className="px-4 py-2 text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            pendingInspections.length === 0 && (
-                                <tr className="border-b dark:border-neutral-600">
-                                    <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
-                                        No hay inspecciones pendientes
-                                    </td>
-                                </tr>
-                            )
-                        }
-                        {
-                            pendingInspections.map((inspection) => (
-                                <tr key={inspection.id} className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
-                                    <td className="px-4 py-2">{inspection.tire.code}</td>
-                                    <td className="px-4 py-2">{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
-                                    <td className="px-4 py-2">{`${inspection.externalTread}/${inspection.internalTread}`}</td>
-                                    <td className="px-4 py-2">{inspection.inspectorName}</td>
-                                    <td className="px-4 py-2">{inspection.observation || "N/A"}</td>
-                                    <td className="px-4 py-2 gap-2 flex">
-                                        <Link href={`/medicion/${inspection.id}`} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
-                                            Revisar
-                                        </Link>
-                                        <button
-                                            onClick={() => aproveInspection(inspection.id)}
-                                            className="bg-amber-300 text-black hover:cursor-pointer px-4 py-2 rounded hover:bg-amber-400 transition-colors font-semibold">
-                                            Aprobar
-                                        </button>
-                                        {/* Denegar */}
-                                        <button
-                                            onClick={() => handleDenyInspection(inspection.id)}
-                                            className="bg-red-500 text-white hover:cursor-pointer px-4 py-2 rounded hover:bg-red-600 transition-colors font-semibold">
-                                            Denegar
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))
-                        }
 
-                    </tbody>
-                </table>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white dark:bg-neutral-800 border dark:border-neutral-600">
+                        <thead>
+                            <tr className="border-b dark:border-neutral-600">
+                                <th className="px-4 py-2 text-left">Neumático</th>
+                                <th className="px-4 py-2 text-left">Fecha</th>
+                                <th className="px-4 py-2 text-left">Remanente</th>
+                                <th className="px-4 py-2 text-left">Inspector</th>
+                                <th className="px-4 py-2 text-left">Observacion</th>
+                                <th className="px-4 py-2 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                pendingInspections.length === 0 && (
+                                    <tr className="border-b dark:border-neutral-600">
+                                        <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
+                                            No hay inspecciones pendientes
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                            {
+                                pendingInspections.map((inspection) => (
+                                    <tr key={inspection.id} className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
+                                        <td className="px-4 py-2">{inspection.tire.code}</td>
+                                        <td className="px-4 py-2">{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
+                                        <td className="px-4 py-2">{`${inspection.externalTread}/${inspection.internalTread}`}</td>
+                                        <td className="px-4 py-2">{inspection.inspectorName}</td>
+                                        <td className="px-4 py-2">{inspection.observation || "N/A"}</td>
+                                        <td className="px-4 py-2 gap-2 flex">
+                                            <Link href={`/medicion/${inspection.id}`} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
+                                                Revisar
+                                            </Link>
+                                            <button
+                                                onClick={() => aproveInspection(inspection.id)}
+                                                className="bg-amber-300 text-black hover:cursor-pointer px-4 py-2 rounded hover:bg-amber-400 transition-colors font-semibold">
+                                                Aprobar
+                                            </button>
+                                            {/* Denegar */}
+                                            <button
+                                                onClick={() => handleDenyInspection(inspection.id)}
+                                                className="bg-red-500 text-white hover:cursor-pointer px-4 py-2 rounded hover:bg-red-600 transition-colors font-semibold">
+                                                Denegar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
             </section>
             {/* Ultimas Inspecciones Aprobadas */}
             <section className="w-full bg-white shadow-sm dark:bg-neutral-800 border dark:border-neutral-600 p-4 rounded-lg mb-4">
@@ -256,52 +259,55 @@ export default function MedicionPage() {
                 </p>
                 {/* Tabla de mediciones semanales */}
                 {/* Tabla de inspecciones pendientes */}
-                <table className="min-w-full bg-white dark:bg-neutral-800 border dark:border-neutral-600">
-                    <thead>
-                        <tr className="border-b dark:border-neutral-600">
-                            <th className="px-4 py-2 text-left">Neumático</th>
-                            <th className="px-4 py-2 text-left">Fecha</th>
-                            <th className="px-4 py-2 text-left">Equipo</th>
-                            <th className="px-4 py-2 text-left">Remanente</th>
-                            <th className="px-4 py-2 text-left">Inspector</th>
-                            {/* aprobado por */}
-                            <th className="px-4 py-2 text-left">Aprobado por</th>
-                            <th className="px-4 py-2 text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            lastApprovedInspection.length === 0 && (
-                                <tr className="border-b dark:border-neutral-600">
-                                    <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
-                                        No hay inspecciones pendientes
-                                    </td>
-                                </tr>
-                            )
-                        }
-                        {
-                            lastApprovedInspection.map((inspection) => (
-                                <tr key={inspection.id} className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
-                                    <td className="px-4 py-2">{inspection.tire.code}</td>
-                                    <td className="px-4 py-2">{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
-                                    <td className="px-4 py-2">
-                                        {inspection.tire.installedTires?.[0]?.vehicle?.code ?? "N/A"}
-                                    </td>
-                                    <td className="px-4 py-2">{`${inspection.externalTread}/${inspection.internalTread}`}</td>
-                                    <td className="px-4 py-2">{inspection.approvedByName}</td>
-                                    <td className="px-4 py-2">{inspection.inspectorName}</td>
-                                    <td className="px-4 py-2 gap-2 flex">
-                                        <ToolTipCustom content="Ver Inspección">
-                                            <Link href={`/medicion/${inspection.id}`}>
-                                                <Info className="w-6 h-6 text-emerald-400 hover:text-emerald-500 transition-colors" />
-                                            </Link>
-                                        </ToolTipCustom>
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
+
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white dark:bg-neutral-800 border dark:border-neutral-600">
+                        <thead>
+                            <tr className="border-b dark:border-neutral-600">
+                                <th className="px-4 py-2 text-left">Neumático</th>
+                                <th className="px-4 py-2 text-left">Fecha</th>
+                                <th className="px-4 py-2 text-left">Equipo</th>
+                                <th className="px-4 py-2 text-left">Remanente</th>
+                                <th className="px-4 py-2 text-left">Inspector</th>
+                                {/* aprobado por */}
+                                <th className="px-4 py-2 text-left">Aprobado por</th>
+                                <th className="px-4 py-2 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                lastApprovedInspection.length === 0 && (
+                                    <tr className="border-b dark:border-neutral-600">
+                                        <td colSpan={6} className="px-4 py-2 text-center text-gray-500">
+                                            No hay inspecciones pendientes
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                            {
+                                lastApprovedInspection.map((inspection) => (
+                                    <tr key={inspection.id} className="border-b dark:border-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors">
+                                        <td className="px-4 py-2">{inspection.tire.code}</td>
+                                        <td className="px-4 py-2">{new Date(inspection.inspectionDate).toLocaleDateString()}</td>
+                                        <td className="px-4 py-2">
+                                            {inspection.tire.installedTires?.[0]?.vehicle?.code ?? "N/A"}
+                                        </td>
+                                        <td className="px-4 py-2">{`${inspection.externalTread}/${inspection.internalTread}`}</td>
+                                        <td className="px-4 py-2">{inspection.approvedByName}</td>
+                                        <td className="px-4 py-2">{inspection.inspectorName}</td>
+                                        <td className="px-4 py-2 gap-2 flex">
+                                            <ToolTipCustom content="Ver Inspección">
+                                                <Link href={`/medicion/${inspection.id}`}>
+                                                    <Info className="w-6 h-6 text-emerald-400 hover:text-emerald-500 transition-colors" />
+                                                </Link>
+                                            </ToolTipCustom>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </section>
             <Modal isOpen={isDenyModalOpen} onClose={() => setIsDenyModalOpen(false)} onConfirm={denyInspection} title="¿Estás seguro?">
                 <p>

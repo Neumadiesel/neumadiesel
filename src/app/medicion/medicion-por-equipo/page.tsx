@@ -329,7 +329,7 @@ export default function MedicionPorEquipo() {
     };
 
     return (
-        <div className="  p-4 gap-y-2 bg-white dark:bg-[#212121] dark:text-white">
+        <div className=" p-2 lg:p-4 gap-y-2 bg-white dark:bg-[#212121] dark:text-white">
             <h1 className='text-2xl lg:text-3xl mb-2 font-bold'>Nueva Inspección por Equipo</h1>
             <section className=''>
                 <div className='flex flex-col gap-y-2 border-b border-b-gray-100 py-4'>
