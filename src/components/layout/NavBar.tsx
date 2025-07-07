@@ -58,7 +58,7 @@ export default function NavBar() {
             children: [
                 { title: "Usuarios", path: "/administracion/usuarios" },
                 { title: "Faena", path: "/administracion/faena" },
-                { title: "Razón de desintalacion", path: "/administracion/razon-de-desintalacion" },
+                { title: "Razón de Baja", path: "/administracion/razon-de-baja" },
             ],
         },
         {

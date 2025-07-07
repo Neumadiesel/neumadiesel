@@ -60,11 +60,11 @@ export default function Page() {
     };
 
     return (
-        <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Razon de desintalación de neumaticos</h1>
+        <div className="bg-white dark:bg-[#212121] dark:text-white lg:p-3 rounded-md shadow-lg h-[100%] pb-4">
+            <div className="flex justify-between items-center max-lg:p-3">
+                <h1 className="text-2xl font-bold">Razones de Baja de neumaticos</h1>
                 <div className="flex">
-                    <Button onClick={handleOpenModal} text="Agregar Razon de Desintalación" />
+                    <Button onClick={handleOpenModal} text="Agregar Baja" />
                 </div>
             </div>
             {/* Lista de razones de retiro */}
@@ -151,20 +151,26 @@ export default function Page() {
                     </tbody>
                 </table>
             </div>
-            <ModalRegistrarRazon
-                visible={openRegisterModal}
-                onClose={() => setOpenRegisterModal(false)}
-                onGuardar={() => {
-                    setOpenRegisterModal(false);
-                }} />
-
-            <ModalEditarRazon
-                visible={isOpen}
-                razon={razonSeleccionada}
-                onClose={() => setIsOpen(false)}
-                onGuardar={() => {
-                    setIsOpen(false);
-                }} />
+            {
+                openRegisterModal && (
+                    <ModalRegistrarRazon
+                        visible={openRegisterModal}
+                        onClose={() => setOpenRegisterModal(false)}
+                        onGuardar={() => {
+                            setOpenRegisterModal(false);
+                        }} />
+                )
+            }
+            {
+                razonSeleccionada &&
+                <ModalEditarRazon
+                    visible={isOpen}
+                    razon={razonSeleccionada}
+                    onClose={() => setIsOpen(false)}
+                    onGuardar={() => {
+                        setIsOpen(false);
+                    }} />
+            }
 
         </div>
     );
