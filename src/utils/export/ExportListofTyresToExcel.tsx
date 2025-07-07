@@ -148,7 +148,7 @@ export default function ExportListOfTires({ title, tireList }: Props) {
                 tire.lastInspection.hours,
                 tire.lastInspection.kilometrage,
                 tire.lastInspection.position,
-                tire.installedTires[0].vehicle.code,
+                tire.installedTires[0]?.vehicle?.code || '-',
             ]);
             row.eachCell((cell) => {
                 const baseStyle = { ...dataStyle, ...infoRowStyle };

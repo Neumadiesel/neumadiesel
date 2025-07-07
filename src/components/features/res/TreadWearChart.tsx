@@ -28,24 +28,11 @@ export default function TreadWearChart() {
     const { user } = useAuth();
 
     const [dimensionSeleccionada, setDimensionSeleccionada] = useState<string | null>("46/90R57");
-    const [dimensiones, setDimensiones] = useState<string[]>([]);
+    const [dimensiones] = useState<string[]>([]);
     const [data, setData] = useState<DesgastePorTramo[]>([]);
 
     // Cargar dimensiones únicas desde el backend
-    useEffect(() => {
-        if (!user) return;
 
-        const fetchDimensiones = async () => {
-            try {
-                const res = await client.get("http://localhost:3002/tires/dimensions");
-                setDimensiones(res.data);
-            } catch (err) {
-                console.error("Error al cargar dimensiones", err);
-            }
-        };
-
-        fetchDimensiones();
-    }, [user]);
 
     // Cargar tasa de desgaste desde backend
     useEffect(() => {

@@ -17,6 +17,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { VehicleDTO } from "@/types/Vehicle";
 import MultiSelect from "@/components/common/select/MultiSelect";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import ExportListOfTires from "@/utils/export/ExportListofTyresToExcel";
 
 export default function ListaNeumaticos() {
     const { user } = useAuth();
@@ -24,7 +25,7 @@ export default function ListaNeumaticos() {
 
     const faenaId = user?.faena_id;
     const [codigo, setCodigo] = useState('');
-    const [estado, setEstado] = useState('');
+    const [estado, setEstado] = useState('Operativo');
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 20;
@@ -165,11 +166,20 @@ export default function ListaNeumaticos() {
                         <h1 className=" mb-2 text-2xl font-bold">
                             Lista de Neumáticos
                         </h1>
-                        <Button
-                            text="Agregar Neumático"
-                            onClick={() => setOpenRegisterModal(true)}
-                            className="w-1/3 lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
-                        />
+                        <div className="flex gap-2 items-center justify-between">
+                            {
+                                filteredTires && filteredTires.length > 0 &&
+                                <ExportListOfTires
+                                    title={`LISTA DE NEUMÁTICOS ${estado}` || "RESUMEN DE NEUMÁTICOS"}
+                                    tireList={filteredTires}
+                                />
+                            }
+                            <Button
+                                text="Agregar Neumático"
+                                onClick={() => setOpenRegisterModal(true)}
+                                className="w-1/3 lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
+                            />
+                        </div>
                     </div>
                     {/* Filtros */}
                     <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-2 items-center justify-between px-4">
@@ -241,7 +251,7 @@ export default function ListaNeumaticos() {
                                 setCurrentPage(1);
                             }}
                         >
-                            <option value="">Filtro por Estado</option>
+                            <option value="">Filtro por Ubicación</option>
                             {
                                 locations.map((location) => (
                                     <option key={location.id} value={location.name}>
@@ -475,46 +485,55 @@ export default function ListaNeumaticos() {
                 </button>
             </div>
 
-            <ModalEditarNeumatico
-                visible={editarNeumatico}
-                onClose={() => setEditarNeumatico(false)}
-                tire={tireSelected}
-                onGuardar={() => {
-                    setEditarNeumatico(false);
-                }} />
-            <ModalRegistrarNeumatico
-                visible={openRegisterModal}
-                onClose={() => setOpenRegisterModal(false)}
-                onGuardar={() => {
-                    setOpenRegisterModal(false);
-                }} />
+            {
+                editarNeumatico &&
+                <ModalEditarNeumatico
+                    visible={editarNeumatico}
+                    onClose={() => setEditarNeumatico(false)}
+                    tire={tireSelected}
+                    onGuardar={() => {
+                        setEditarNeumatico(false);
+                    }} />}
+            {openRegisterModal &&
+                <ModalRegistrarNeumatico
+                    visible={openRegisterModal}
+                    onClose={() => setOpenRegisterModal(false)}
+                    onGuardar={() => {
+                        setOpenRegisterModal(false);
+                    }} />}
             {/* Mandar Neumatico a stock disponible */}
-            <ModalStockDisponible
-                visible={stockDisponible}
-                onClose={() => setStockDisponible(false)}
-                tire={tireSelected}
-                onGuardar={() => {
-                    fetchTires();
-                    setStockDisponible(false);
-                }} />
+            {
+                stockDisponible &&
+                <ModalStockDisponible
+                    visible={stockDisponible}
+                    onClose={() => setStockDisponible(false)}
+                    tire={tireSelected}
+                    onGuardar={() => {
+                        fetchTires();
+                        setStockDisponible(false);
+                    }} />
+            }
             {/* Mandar Nuematico a Mantencion */}
-            <ModalTireMaintenance
-                visible={maintenanceTire}
-                onClose={() => setMaintenanceTire(false)}
-                tire={tireSelected}
-                onGuardar={() => {
-                    fetchTires();
-                    setMaintenanceTire(false);
-                }} />
+            {
+                maintenanceTire &&
+                <ModalTireMaintenance
+                    visible={maintenanceTire}
+                    onClose={() => setMaintenanceTire(false)}
+                    tire={tireSelected}
+                    onGuardar={() => {
+                        fetchTires();
+                        setMaintenanceTire(false);
+                    }} />
+            }
             {/* Modal Retirar neumatico */}
-            <ModalRetireTire
+            {retireTire && <ModalRetireTire
                 visible={retireTire}
                 onClose={() => setRetireTire(false)}
                 tire={tireSelected}
                 onGuardar={() => {
                     fetchTires();
                     setRetireTire(false);
-                }} />
+                }} />}
         </div>
     );
 }
