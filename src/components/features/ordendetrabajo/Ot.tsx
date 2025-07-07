@@ -76,17 +76,17 @@ export default function OT({ id }: { id: number }) {
         }
     }, [user]);
     return (
-        <div className="flex flex-col p-3 items-center min-h-full bg-gray-100 dark:bg-neutral-800 dark:text-white gap-y-4">
-            <div className="bg-gray-900 dark:bg-neutral-800 text-white w-full h-16 flex items-center justify-between  px-3">
+        <div className="flex flex-col lg:p-3 items-center min-h-full bg-gray-100 dark:bg-neutral-800 dark:text-white gap-y-4">
+            <div className="bg-gray-900 dark:bg-neutral-800 text-white w-full h-22 lg:h-16 flex items-center justify-between  px-3 mb-2">
 
-                <h1 className="text-2xl font-bold">ORDEN DE TRABAJO NEUMÁTICOS - CMZ</h1>
-                <p className="text-xl font-bold bg-white p-2 text-black">
+                <h1 className="text-xl lg:text-2xl font-bold">ORDEN DE TRABAJO NEUMÁTICOS - CMZ</h1>
+                <p className="text-md lg:text-xl font-bold bg-white p-2 text-black">
                     {workOrder?.code}
                 </p>
             </div>
             {/* Seccion de informacion de trabajo */}
-            <section className="flex flex-col w-full  shadow-sm rounded-sm border border-gray-100 p-3 bg-white dark:bg-neutral-900">
-                <div className="flex flex-col  gap-y-2">
+            <section className="flex flex-col w-full  shadow-sm rounded-sm border dark:border-neutral-700 border-gray-100 p-1 lg:p-3 bg-white dark:bg-neutral-900">
+                <div className="flex flex-col  gap-y-2 ">
                     <div className="flex flex-row gap-x-2 items-center">
                         <h2 className="text-2xl uppercase font-bold ">
                             {workOrder?.description || "No hay descripción disponible"}
@@ -98,16 +98,16 @@ export default function OT({ id }: { id: number }) {
                     <div className="grid grid-cols-4 gap-x-2 w-full h-full">
                         {/* Ubicacion */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white ">
                                 Ubicación de mantenimiento:
                             </label>
-                            <p className="font-bold ">
+                            <p className="font-bold dark:text-white ">
                                 {workOrder?.locationMaintenance.description || "No disponible"}
                             </p>
                         </div>
                         {/* Tipo de Mantencion */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white ">
                                 Tipo de mantención:
                             </label>
                             <p className="font-bold ">
@@ -116,7 +116,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Codio EQuipo */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Código del equipo:
                             </label>
                             <p className="font-bold ">
@@ -125,7 +125,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Modelo del equipo */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white ">
                                 Modelo del equipo:
                             </label>
                             <p className="font-bold ">
@@ -136,17 +136,17 @@ export default function OT({ id }: { id: number }) {
                 </div>
             </section>
             {/* Fecha del trabajo y personal */}
-            <section className="flex flex-col w-full  shadow-sm rounded-sm border border-gray-100 p-3 bg-white dark:bg-neutral-900">
+            <section className="flex flex-col w-full  shadow-sm rounded-sm border dark:border-neutral-700 border-gray-100 p-3 bg-white dark:bg-neutral-900">
                 <div className="flex flex-col  gap-y-2">
                     <div className="flex flex-row gap-x-2 items-center">
-                        <h2 className="text-lg text-gray-900 uppercase font-bold ">
+                        <h2 className="text-lg text-gray-900 dark:text-white uppercase font-bold ">
                             Fecha de trabajo y Personal asignado
                         </h2>
                     </div>
                     <div className="grid grid-cols-4 gap-x-2 w-full h-full">
                         {/* Personal */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white ">
                                 Responsable
                             </label>
                             <p className="font-bold ">
@@ -155,7 +155,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Fecha */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Fecha
                             </label>
                             <p className="font-bold ">
@@ -164,7 +164,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Hora Ingreso */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Hora de Ingreso:
                             </label>
                             <p className="font-bold ">
@@ -173,7 +173,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Hora Despacho */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Hora de Despacho:
                             </label>
                             <p className="font-bold ">
@@ -182,7 +182,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Cantidad de Personas */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Cantidad Personas
                             </label>
                             <p className="font-bold ">
@@ -191,7 +191,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Horas Hombre */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Horas Hombre
                             </label>
                             <p className="font-bold ">
@@ -202,7 +202,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Turno */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Turno
                             </label>
                             <p className="font-bold ">
@@ -211,7 +211,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Personal */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Personal Asignado:
                             </label>
                             <p className="font-bold ">
@@ -222,17 +222,17 @@ export default function OT({ id }: { id: number }) {
                 </div>
             </section>
             {/* Registro de Torque */}
-            <section className="flex flex-col w-full  shadow-sm rounded-sm border border-gray-100 p-3 bg-white dark:bg-neutral-900">
+            <section className="flex flex-col w-full  shadow-sm rounded-sm border dark:border-neutral-700 border-gray-100 p-3 bg-white dark:bg-neutral-900">
                 <div className="flex flex-col  gap-y-2">
                     <div className="flex flex-row gap-x-2 items-center">
-                        <h2 className="text-lg text-gray-900 uppercase font-bold ">
+                        <h2 className="text-lg text-gray-900 dark:text-white uppercase font-bold ">
                             Registro de Torque Aplicado
                         </h2>
                     </div>
                     <div className="grid grid-cols-4 gap-x-2 w-full h-full">
                         {/* Personal */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Torquit Utilizado:
                             </label>
                             <p className="font-bold ">
@@ -241,7 +241,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Fecha */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Serie Torquit
                             </label>
                             <p className="font-bold ">
@@ -250,7 +250,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Hora Ingreso */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 Torque Aplicado
                             </label>
                             <p className="font-bold ">
@@ -259,7 +259,7 @@ export default function OT({ id }: { id: number }) {
                         </div>
                         {/* Hora Despacho */}
                         <div className="flex flex-col  p-2">
-                            <label className="text-sm   text-gray-700">
+                            <label className="text-sm   text-gray-700 dark:text-white">
                                 1ra Verif. Torque
                             </label>
                             <p className="font-bold ">
@@ -270,8 +270,8 @@ export default function OT({ id }: { id: number }) {
                 </div>
             </section>
             {/* Sección neumáticos desinstalados */}
-            <section className="flex flex-col w-full border border-gray-200 rounded-sm p-3 bg-white dark:bg-neutral-900">
-                <h2 className="text-xl font-bold mb-4">Neumáticos Desinstalados</h2>
+            <section className="flex flex-col w-full border dark:border-neutral-700 border-gray-200 rounded-sm lg:p-3 bg-white dark:bg-neutral-900">
+                <h2 className="text-xl font-bold mb-4 p-2">Neumáticos Desinstalados</h2>
                 <div className="overflow-x-auto">
                     <table className="min-w-full text-sm text-left border">
                         <thead className="bg-gray-800 dark:bg-black text-white dark:text-white">
@@ -293,7 +293,7 @@ export default function OT({ id }: { id: number }) {
                                     ?.find(t => t.position === idx + 1);
 
                                 return (
-                                    <tr key={idx} className="border-t border-gray-200 dark:border-neutral-700">
+                                    <tr key={idx} className="border-t border-gray-200  dark:border-neutral-700">
                                         <td className="px-4 py-2">{idx + 1}</td>
                                         <td className="px-4 py-2">{neumatico?.tire?.code ?? '-'}</td>
                                         <td className="px-4 py-2">{'-'}</td>

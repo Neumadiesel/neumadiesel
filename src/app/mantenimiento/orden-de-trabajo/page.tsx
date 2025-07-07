@@ -88,14 +88,12 @@ export default function OrdenDeTrabajoPage() {
         }
     };
 
-    useEffect(() => {
-        fetchWorkOrders();
-        fetchKpis();
-    }, []);
 
     useEffect(() => {
-        fetchWorkOrders();
-        fetchKpis();
+        if (user) {
+            fetchWorkOrders();
+            fetchKpis();
+        }
     }, [user]);
 
     return (
@@ -195,48 +193,52 @@ export default function OrdenDeTrabajoPage() {
             <main className="mt-6 bg-white dark:bg-neutral-800 p-4 rounded-md shadow border dark:border-neutral-700">
                 <h2 className="text-3xl font-semibold mb-4">
                     <FileCog size={35} className="inline mr-2 text-amber-300" />
-                    Lista de Órdenes de Trabajo</h2>
-                <table className="w-full table-auto">
-                    <thead className="">
-                        <tr className="py-6 border-b dark:border-neutral-400 h-14 items-center">
-                            <th className="px-4 py-2 text-left">Código</th>
-                            <th className="px-4 py-2 text-left">Descripción</th>
-                            <th className="px-4 py-2 text-left">Fecha Ejecución</th>
-                            <th className="px-4 py-2 text-left">Tipo</th>
+                    Lista de Órdenes de Trabajo
+                </h2>
+                <div className="overflow-x-auto">
+                    <table className="min-w-full table-auto">
 
-                            <th className="px-4 py-2 text-left">Responsable</th>
-                            <th className="px-4 py-2 text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {/* Simulación de datos */}
-                        {
-                            workOrders.length === 0 && (
-                                <tr className="text-center">
-                                    <td colSpan={8} className="py-4 text-gray-500">
-                                        No hay órdenes de trabajo registradas.
-                                    </td>
-                                </tr>
-                            )
-                        }
-                        {
-                            workOrders.map((orden) => (
-                                <tr key={orden.id} className="border-b dark:border-neutral-400 h-14">
-                                    <td className="px-4 py-2">{orden.code}</td>
-                                    <td className="px-4 py-2">{orden.description}</td>
-                                    <td className="px-4 py-2">{new Date(orden.dispatchDate).toLocaleDateString()}</td>
-                                    <td className="px-4 py-2">{orden.type}</td>
-                                    <td className="px-4 py-2">{orden.responsibleName}</td>
-                                    <td className="px-4 py-2">
-                                        <Link href={`/mantenimiento/orden-de-trabajo/${orden.id}`} className="text-blue-500 hover:underline">
-                                            <Eye className="inline cursor-pointer text-blue-500 mr-2" />
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
+                        <thead className="">
+                            <tr className="py-6 border-b dark:border-neutral-400 h-14 items-center">
+                                <th className="px-4 py-2 text-left">Código</th>
+                                <th className="px-4 py-2 text-left">Descripción</th>
+                                <th className="px-4 py-2 text-left">Fecha Ejecución</th>
+                                <th className="px-4 py-2 text-left">Tipo</th>
+
+                                <th className="px-4 py-2 text-left">Responsable</th>
+                                <th className="px-4 py-2 text-left">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* Simulación de datos */}
+                            {
+                                workOrders.length === 0 && (
+                                    <tr className="text-center">
+                                        <td colSpan={8} className="py-4 text-gray-500">
+                                            No hay órdenes de trabajo registradas.
+                                        </td>
+                                    </tr>
+                                )
+                            }
+                            {
+                                workOrders.map((orden) => (
+                                    <tr key={orden.id} className="border-b dark:border-neutral-400 h-14">
+                                        <td className="px-4 py-2">{orden.code}</td>
+                                        <td className="px-4 py-2">{orden.description}</td>
+                                        <td className="px-4 py-2">{new Date(orden.dispatchDate).toLocaleDateString()}</td>
+                                        <td className="px-4 py-2">{orden.type}</td>
+                                        <td className="px-4 py-2">{orden.responsibleName}</td>
+                                        <td className="px-4 py-2">
+                                            <Link href={`/mantenimiento/orden-de-trabajo/${orden.id}`} className="text-blue-500 hover:underline">
+                                                <Eye className="inline cursor-pointer text-blue-500 mr-2" />
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </main>
 
             {modalAbierto && (
