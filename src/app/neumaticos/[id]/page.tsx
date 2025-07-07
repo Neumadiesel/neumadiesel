@@ -189,7 +189,7 @@ export default function TirePage() {
                 <h1 className="text-2xl font-bold dark:text-white">
                     Información del Neumático: {tire?.code} - {tire?.model?.dimensions}
                 </h1>
-                <div className="flex flex-row justify-between items-center gap-2">
+                <div className="flex flex-col lg:flex-row justify-between items-center gap-2">
                     <Link href={`/medicion/${tire?.lastInspectionId}`}>
                         <div className="bg-neutral-100 text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors w-full flex items-center justify-center font-bold">
                             Ver Última Inspección
@@ -218,7 +218,7 @@ export default function TirePage() {
             </div>
             <section className="flex flex-col gap-4 mt-2">
                 <div className="flex flex-col gap-2">
-                    <div className="bg-gray-50 dark:bg-[#313131] dark:text-white p-4 rounded-md border grid grid-cols-1 lg:grid-cols-3">
+                    <div className="bg-gray-50 dark:bg-[#313131] dark:text-white p-4 rounded-md border dark:border-neutral-700 grid grid-cols-1 lg:grid-cols-3">
                         <div className="grid grid-cols-2 gap-2 max-lg:pb-4">
                             <LabelLoading loading={loading} title="Marca:" text={tire?.model?.brand || ""} />
                             <LabelLoading loading={loading} title="Patrón:" text={tire?.model?.pattern || ""} />
@@ -226,7 +226,7 @@ export default function TirePage() {
                             <LabelLoading loading={loading} title="Medidas:" text={tire?.model?.dimensions || ""} />
                             <LabelLoading loading={loading} title="OTD:" text={tire?.model?.originalTread?.toString() || ""} />
                         </div>
-                        <div className="lg:px-4 max-lg:py-4 grid grid-cols-2 gap-2 max-lg:border-y lg:border-x border-gray-200">
+                        <div className="lg:px-4 max-lg:py-4 grid grid-cols-2 gap-2 max-lg:border-y  lg:border-x border-gray-200 dark:border-neutral-700">
                             <LabelLoading
                                 loading={loading}
                                 title="Desgaste Interior:"
@@ -339,7 +339,7 @@ export default function TirePage() {
                                 </tr>
                             ) : (
                                 unifiedRecords.map((record) => (
-                                    <tr key={`${record.type}-${record.id}`} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200 dark:text-white">
+                                    <tr key={`${record.type}-${record.id}`} className="bg-white border-b dark:bg-neutral-800 dark:border-amber-300 border-gray-200  dark:text-white">
                                         <td className="p-4 bg-gray-50 dark:bg-neutral-800">
                                             {/* Fecha UTC */}
                                             {new Date(record.date).toISOString().split("T")[0]}

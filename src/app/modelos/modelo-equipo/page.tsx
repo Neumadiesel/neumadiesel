@@ -71,8 +71,8 @@ export default function ModelosEquipo() {
 
 
     return (
-        <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
-            <section className="flex justify-between items-center">
+        <div className="bg-white dark:bg-[#212121] dark:text-white lg:p-3 rounded-md shadow-lg h-[100%] pb-4 gap-4 flex flex-col">
+            <section className="flex justify-between items-center max-lg:p-3">
                 <h1 className="text-2xl font-bold">Modelos de Equipos</h1>
                 <Button
                     onClick={() => setModalRegistrarFaena(true)}
@@ -87,9 +87,12 @@ export default function ModelosEquipo() {
                             <tr>
                                 <th className="p-4">Marca</th>
                                 <th className="p-4">Modelo</th>
-                                <th className="p-4">Tipo de Equipo</th>
-                                <th className="p-4">Cantidad de Ruedas</th>
-                                <th className="p-4">Cantidad de Equipos</th>
+                                <th className="p-4 max-lg:hidden">Cantidad de Nuemáticos</th>
+                                <th className="p-4 lg:hidden">Neumáticos</th>
+
+                                <th className="p-4 max-lg:hidden">Cantidad de Equipos</th>
+                                <th className="p-4 lg:hidden">Equipos</th>
+
                                 <th className="p-4">Acciones</th>
                             </tr>
                         </thead>
@@ -119,7 +122,6 @@ export default function ModelosEquipo() {
                                     <tr key={vehicleModel.id} className="bg-white border-b dark:text-white dark:bg-neutral-800 dark:border-amber-300">
                                         <td className="p-4 ">{vehicleModel.brand}</td>
                                         <td className="p-4">{vehicleModel.model}</td>
-                                        <td className="p-4 ">CAEX</td>
                                         <td className="p-4">{vehicleModel.wheelCount}</td>
                                         <td className="p-4 ">{vehicleModel.vehicleCount}</td>
                                         <td className="px-2 ">

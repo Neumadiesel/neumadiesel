@@ -96,11 +96,6 @@ export default function EquiposPorModelo() {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Tipo de Equipo
-                                    </p>
-                                </th>
-                                <th className="p-4">
-                                    <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
                                         Acciones
                                     </p>
                                 </th>
@@ -158,11 +153,6 @@ export default function EquiposPorModelo() {
                                         <td className="p-4 ">
                                             <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                                 {tire.initialKilometrage}
-                                            </p>
-                                        </td>
-                                        <td className="p-4  ">
-                                            <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                                CAEX
                                             </p>
                                         </td>
                                         <td className="   px-2">

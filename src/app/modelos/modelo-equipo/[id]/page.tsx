@@ -85,7 +85,6 @@ export default function EquiposPorModelo() {
                                 <th className="p-4">Código</th>
                                 <th className="p-4">Horas</th>
                                 <th className="p-4">Kilometraje</th>
-                                <th className="p-4">Tipo de Equipo</th>
                                 <th className="p-4">Acciones</th>
                             </tr>
                         </thead>
@@ -118,7 +117,6 @@ export default function EquiposPorModelo() {
                                         <td className="p-4 ">{vehicle.code}</td>
                                         <td className="p-4">{vehicle.hours}</td>
                                         <td className="p-4">{vehicle.kilometrage}</td>
-                                        <td className="p-4 ">CAEX</td>
                                         <td className="px-2 ">
                                             <div className="flex gap-2">
                                                 <Link href={`/maquinaria/${vehicle.id}`} className="p-2 text-blue-500 hover:text-blue-600 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center">
