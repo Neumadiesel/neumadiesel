@@ -188,15 +188,15 @@ export default function ScrappedReasonsChart() {
     };
 
     return (
-        <section className=" bg-white dark:bg-gray-800 border  rounded-md p-2 lg:p-4 shadow-sm">
+        <section className=" bg-white dark:bg-neutral-800 border dark:border-neutral-700  rounded-md p-2 lg:p-4 shadow-sm">
             <div className="">
-                <h2 className="text-2xl font-bold mb-2 text-center bg-black  bg-clip-text text-transparent">
+                <h2 className="text-2xl font-bold mb-2 text-center bg-black dark:text-white bg-clip-text text-transparent">
                     Rendimiento Mensual por Motivo de Baja
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 text-center">
+                <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-4 text-center">
                     Aquí puedes ver el rendimiento mensual de los neumáticos dados de baja, desglosado por motivo de baja.
                 </p>
-                <div className="bg-white dark:bg-gray-800 ">
+                <div className="bg-white dark:bg-neutral-800 ">
                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
                         {/* Año */}
                         <div className="flex flex-col items-start space-y-1">
@@ -206,7 +206,7 @@ export default function ScrappedReasonsChart() {
                             <select
                                 value={year}
                                 onChange={(e) => setYear(Number(e.target.value))}
-                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-sm"
                             >
                                 {availableYears.map(y => (
                                     <option key={y} value={y}>{y}</option>
@@ -221,7 +221,7 @@ export default function ScrappedReasonsChart() {
                             <select
                                 value={semester}
                                 onChange={(e) => setSemester(e.target.value as '1' | '2')}
-                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-sm"
                             >
                                 <option value="1">1er Semestre</option>
                                 <option value="2">2do Semestre</option>
@@ -235,7 +235,7 @@ export default function ScrappedReasonsChart() {
                             <select
                                 value={dimension ?? ''}
                                 onChange={(e) => setDimension(e.target.value || null)}
-                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-sm"
                             >
                                 <option value="">Todas</option>
                                 {availableDimensions.map(d => (
@@ -251,7 +251,7 @@ export default function ScrappedReasonsChart() {
                             <select
                                 value={equipmentModel ?? ''}
                                 onChange={(e) => setEquipmentModel(e.target.value || null)}
-                                className="w-full p-2 text-sm border border-gray-200 rounded-sm"
+                                className="w-full p-2 text-sm border border-neutral-200 rounded-sm"
                             >
                                 <option value="">Todos</option>
                                 {availableEquipmentModels.map(model => (
@@ -294,7 +294,7 @@ export default function ScrappedReasonsChart() {
                 Descargar como Imagen
             </button>
 
-            <div className="bg-white dark:bg-gray-800 p-3 m-2" id="grafico-bajas">
+            <div className="bg-white dark:bg-neutral-800 p-3 m-2" id="grafico-bajas">
                 <ResponsiveContainer width="100%" height={350} className="p-2">
                     <BarChart data={processed}>
                         <CartesianGrid strokeDasharray="3 3" />

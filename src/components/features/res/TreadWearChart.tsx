@@ -61,13 +61,13 @@ export default function TreadWearChart() {
     }
 
     return (
-        <div className="bg-white border dark:bg-gray-900 p-2 lg:p-4 rounded-lg shadow-md">
+        <div className="bg-white border dark:bg-neutral-800 dark:border-neutral-700 p-2 lg:p-4 rounded-lg shadow-md">
             <div className="flex flex-col items-center justify-between">
-                <h2 className="text-2xl font-bold text-center bg-black bg-clip-text text-transparent">
+                <h2 className="text-2xl font-bold text-center bg-black dark:text-white bg-clip-text text-transparent">
                     Tasa de desgaste promedio por tramo de goma (hrs/mm)
                 </h2>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 text-sm text-center mb-2">
+            <p className="text-neutral-600 dark:text-neutral-300 text-sm text-center mb-2">
                 Análisis del rendimiento de desgaste a lo largo del ciclo de vida del neumático
             </p>
             <div className="flex flex-col items-start space-y-1 mb-4">

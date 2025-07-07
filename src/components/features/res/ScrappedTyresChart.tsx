@@ -383,20 +383,20 @@ export default function ScrappedTyresChart() {
   const totalTires = chartData.reduce((sum, item) => sum + item.count, 0);
 
   return (
-    <section className=" space-y-6 bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md border dark:border-gray-700">
+    <section className=" space-y-6 bg-white dark:bg-neutral-800 p-3 lg:p-6 rounded-lg shadow-md border dark:border-gray-700">
       <h2 className="text-2xl font-bold mb-6 dark:text-white text-center">
         Rendimiento de Neumáticos Dados de Baja
       </h2>
 
       {/* 🎯 FILTROS INTELIGENTES CON SSR SAFE */}
-      <div className="bg-white dark:bg-[#313131] p-6 rounded-lg  space-y-4">
+      <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg  space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           <div>
             <label className="block mb-2 text-sm font-semibold dark:text-white">Año:</label>
             <select
               value={filters.year}
               onChange={(e) => setFilters((f) => ({ ...f, year: +e.target.value }))}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
             >
               {options.years.map((y) => (
                 <option key={y} value={y}>{y}</option>
@@ -466,7 +466,7 @@ export default function ScrappedTyresChart() {
             <select
               value={filters.view}
               onChange={(e) => setFilters((f) => ({ ...f, view: e.target.value as ViewType }))}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
             >
               <option value="both">Ambos Gráficos</option>
               <option value="km">Solo Kilómetros</option>
@@ -486,7 +486,7 @@ export default function ScrappedTyresChart() {
                 type="number"
                 value={metaKm ?? ""}
                 onChange={(e) => setMetaKm(Number(e.target.value) || null)}
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                 placeholder="Ej: 75000"
               />
             </div>
@@ -501,7 +501,7 @@ export default function ScrappedTyresChart() {
                 type="number"
                 value={metaHrs ?? ""}
                 onChange={(e) => setMetaHrs(Number(e.target.value) || null)}
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
                 placeholder="Ej: 5200"
               />
             </div>
@@ -545,7 +545,7 @@ export default function ScrappedTyresChart() {
             })}
         </div>
       ) : (
-        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 text-center">
+        <div className="bg-neutral-50 dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 text-center">
           <p className="text-gray-600 dark:text-gray-400 text-lg">
             No hay datos disponibles para los filtros seleccionados 📊
           </p>

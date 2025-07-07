@@ -230,8 +230,8 @@ export default function TyresKPI() {
     return (
         <div className="space-y-4">
             {/* Filtro por dimensión */}
-            <div className='flex max-lg:flex-col  w-full gap-x-5 items-center'>
-                <div className="flex items-center gap-3">
+            <div className='flex max-lg:flex-col gap-y-2 w-full gap-x-5 items-center'>
+                <div className="flex justify-between max-lg:w-full items-center lg:gap-3">
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Filtrar por dimensión:</label>
                     <Select
                         options={allDimensions.map(dim => {

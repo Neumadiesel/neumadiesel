@@ -235,15 +235,15 @@ export default function TireHealthChart() {
     const uniquePositions = Array.from(new Set(tires.flatMap(t => t.installedTires.map(i => i.position)))).sort((a, b) => a - b);
 
     return (
-        <div className="flex flex-col bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-neutral-700 border-gray-200 dark:text-white">
+        <div className="flex flex-col bg-white dark:bg-neutral-800 rounded-md shadow-sm border dark:border-neutral-700 border-neutral-200 dark:text-white">
 
             <main className="p-6">
                 <div className="flex flex-col items-center  mb-2">
 
-                    <h2 className="text-2xl font-bold mb-2 text-center bg-black  bg-clip-text text-transparent">
+                    <h2 className="text-2xl font-bold mb-2 text-center dark:text-white bg-black  bg-clip-text text-transparent">
                         Panel de Salud de Neumáticos OTR
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 text-center">
+                    <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-4 text-center">
                         Monitoreo en tiempo real del estado de neumáticos con análisis detallado
                     </p>
 
@@ -307,7 +307,7 @@ export default function TireHealthChart() {
                 {validPressureTemperatureCount >= 40 && (
                     <div className="p-3">
                         <div className="flex items-center gap-2 mb-4">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                            <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">
                                 Temperatura vs Presión por Posición
                             </h3>
                         </div>
@@ -388,7 +388,7 @@ export default function TireHealthChart() {
 
                 <section id="chart-area" className="p-3">
                     <div className="flex items-center gap-2 mb-4">
-                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                        <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">
                             Desgaste Interno vs Externo por Posición
                         </h3>
                     </div>

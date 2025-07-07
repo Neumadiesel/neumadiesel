@@ -160,7 +160,7 @@ const CustomHistogramTooltip = ({ active, payload }: TooltipProps<number, string
     if (active && payload && payload.length > 0) {
         const data = payload[0].payload as HistogramBin;
         return (
-            <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded 
+            <div className="bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-800 p-3 rounded 
              text-sm text-black dark:text-white">
                 <p><strong>Rango:</strong> {data.range}</p>
                 <p><strong>Frecuencia:</strong> {data.count} neumáticos</p>
@@ -836,7 +836,7 @@ export default function OperationalTyresHistograms() {
                 .filter((month): month is number => typeof month === 'number' && month > 0 && month <= 12)
         ));
 
-        console.log(`📅 Meses encontrados para ${selectedYear} (${dataType}): [${months.join(', ')}]`);
+        console.log(`Meses encontrados para ${selectedYear} (${dataType}): [${months.join(', ')}]`);
 
         return months
             .sort((a, b) => b - a) // Más reciente primero
@@ -944,7 +944,7 @@ export default function OperationalTyresHistograms() {
     }
 
     return (
-        <section className="bg-white dark:bg-gray-800 p-2 lg:p-6 rounded-lg shadow-md border dark:border-gray-700">
+        <section className="bg-white dark:bg-neutral-800 p-2 lg:p-6 rounded-lg shadow-md border dark:border-neutral-700">
             <h2 className="text-xl font-bold mb-4 dark:text-white">Histogramas de Frecuencia</h2>
 
             {/* 🎯 ALERTAS DE ERRORES PARCIALES */}
@@ -1010,7 +1010,7 @@ export default function OperationalTyresHistograms() {
 
                 <div>
                     <label className="block mb-2 font-semibold text-sm dark:text-white">
-                        📅 Año:
+                        Año:
                     </label>
                     <Select
                         instanceId="histogram-year-select"
@@ -1031,7 +1031,7 @@ export default function OperationalTyresHistograms() {
 
                 <div>
                     <label className="block mb-2 font-semibold text-sm dark:text-white">
-                        📅 Mes:
+                        Mes:
                     </label>
                     <Select
                         instanceId="histogram-month-select"
@@ -1079,9 +1079,9 @@ export default function OperationalTyresHistograms() {
                         setSelectedYear('');
                         setSelectedMonth('');
                     }}
-                    className="px-3 py-1 bg-gray-500 text-white rounded text-sm hover:bg-gray-600 transition-colors"
+                    className="px-3 py-1 bg-neutral-500 text-white rounded text-sm hover:bg-neutral-600 transition-colors"
                 >
-                    🗑️ Limpiar filtros
+                    Limpiar filtros
                 </button>
                 <button
                     onClick={() => {
@@ -1090,11 +1090,11 @@ export default function OperationalTyresHistograms() {
                     }}
                     className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
                 >
-                    📅 Limpiar fechas
+                    Limpiar fechas
                 </button>
                 {(selectedYear || selectedMonth || selectedDims.length > 0 || selectedPositions.length > 0) && (
                     <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                        ℹ️ Filtros activos: {
+                        Filtros activos: {
                             [
                                 selectedDims.length > 0 && `${selectedDims.length} dimensiones`,
                                 selectedPositions.length > 0 && `${selectedPositions.length} posiciones`,
@@ -1107,7 +1107,7 @@ export default function OperationalTyresHistograms() {
             </div>
 
             {/* 🎯 INFO EXPANDIDA */}
-            <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+            <div className="mb-4 p-3 bg-neutral-100 dark:bg-neutral-800 rounded-lg">
                 <p className="text-sm text-gray-700 dark:text-gray-300">
                     <strong>Datos analizados:</strong> {Array.isArray(filteredData) ? filteredData.length : 0} neumáticos.
                     <br />

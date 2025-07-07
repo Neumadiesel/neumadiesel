@@ -52,7 +52,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload?.length) {
         const data = payload[0].payload;
         return (
-            <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white max-w-xs">
+            <div className="bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white max-w-xs">
                 <p><strong>Neumático:</strong> {data.codigo}</p>
                 <p><strong>Dimensión:</strong> {data.dimension}</p>
                 <p><strong>Equipo:</strong> {data.equipo}</p>
@@ -135,7 +135,7 @@ export default function OperationalTyres() {
     );
 
     return (
-        <section className=" border rounded-xl p-4 bg-white dark:bg-gray-900 shadow-sm">
+        <section className=" border rounded-xl p-4 bg-white dark:bg-neutral-800 dark:border-neutral-700 shadow-sm">
             <h2 className="text-xl font-bold mb-2 dark:text-white">
                 % Desgaste vs. Horas de uso desde última inspección - Neumáticos Operacionales
             </h2> <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 text-center">
@@ -158,8 +158,8 @@ export default function OperationalTyres() {
                 {trendInfo && (
                     <div className="flex flex-col items-start space-y-1">
                         <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por dimensión:</label>
-                        <div className="flex px-2 w-full bg-gray-100/70 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-lg py-2 items-center gap-2 text-sm">
-                            <span className="inline-block w-4 h-0.5 bg-gray-600" style={{ borderTop: "2px dashed" }}></span>
+                        <div className="flex px-2 w-full bg-neutral-100/70 dark:bg-neutral-800/40 border border-neutral-300 dark:border-neutral-700 rounded-lg py-2 items-center gap-2 text-sm">
+                            <span className="inline-block w-4 h-0.5 bg-neutral-600" style={{ borderTop: "2px dashed" }}></span>
                             <span className="font-semibold text-gray-700 dark:text-gray-200">Línea de Tendencia:</span>
                             <span className="text-gray-700 dark:text-gray-300">
                                 {trendInfo.equation}
@@ -175,7 +175,7 @@ export default function OperationalTyres() {
                 )}
             </div>
 
-            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md 
+            <div className="w-full h-[400px] bg-white dark:bg-neutral-800 p-4 rounded-md 
              relative">
                 {loading ? (
                     <p className="text-gray-600 dark:text-gray-300">Cargando datos...</p>

@@ -55,7 +55,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload?.length) {
         const data = payload[0].payload;
         return (
-            <div className="bg-white dark:bg-neutral-800 border border-gray-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white max-w-xs">
+            <div className="bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-600 p-3 rounded shadow text-sm text-black dark:text-white max-w-xs">
                 <p><strong>Neumático:</strong> {data.codigo}</p>
                 <p><strong>Motivo de Baja:</strong> {data.descripcionMotivo}</p>
                 <p><strong>Fecha:</strong> {data.fecha}</p>
@@ -168,11 +168,11 @@ export default function ScrapTyres() {
     );
 
     return (
-        <section className="p-4 bg-white dark:bg-gray-900 rounded-md shadow-sm border dark:border-gray-700">
+        <section className="p-4 bg-white dark:bg-neutral-800 rounded-md shadow-sm border dark:border-neutral-700">
             <h2 className="text-xl font-bold mb-2 dark:text-white">
                 % Desgaste vs. Horas de Operación al Momento de la Baja
             </h2>
-            <p className="text-sm text-gray-700 dark:text-gray-200 mb-2">
+            <p className="text-sm text-neutral-700 dark:text-neutral-200 mb-2">
                 Mostrando <strong>{visiblePointsCount}</strong> neumáticos de dimensión <strong>{selectedDimension}</strong> dados de baja del año <strong>{selectedYear}</strong>
             </p>
 
@@ -225,9 +225,9 @@ export default function ScrapTyres() {
             </div>
 
 
-            <div className="w-full h-[400px] bg-white dark:bg-[#313131] p-4 rounded-md ">
+            <div className="w-full h-[400px] bg-white dark:bg-neutral-800 p-4 rounded-md ">
                 {loading ? (
-                    <p className="text-gray-600 dark:text-gray-300">Cargando datos...</p>
+                    <p className="text-neutral-600 dark:text-neutral-300">Cargando datos...</p>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
                         <ScatterChart>
