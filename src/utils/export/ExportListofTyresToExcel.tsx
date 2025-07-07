@@ -184,7 +184,7 @@ export default function ExportListOfTires({ title, tireList }: Props) {
     };
 
     return (
-        <button onClick={exportToExcel} className=" bg-amber-300 font-semibold p-2 rounded-sm hover:bg-amber-400 transition-colors">
+        <button onClick={exportToExcel} className=" bg-amber-300 font-semibold p-2 rounded-sm hover:bg-amber-400 transition-colors text-black">
             <FileDown className="inline mr-2" />
             Exportar Excel
         </button>

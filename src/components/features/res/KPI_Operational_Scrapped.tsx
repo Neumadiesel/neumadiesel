@@ -230,7 +230,7 @@ export default function TyresKPI() {
     return (
         <div className="space-y-4">
             {/* Filtro por dimensión */}
-            <div className='flex w-full gap-x-5 items-center'>
+            <div className='flex max-lg:flex-col  w-full gap-x-5 items-center'>
                 <div className="flex items-center gap-3">
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Filtrar por dimensión:</label>
                     <Select
@@ -253,7 +253,7 @@ export default function TyresKPI() {
                                 }
                                 : null
                         }
-                        className="react-select-container text-black w-full sm:w-72"
+                        className="react-select-container text-black max-w-3/5 w-full sm:w-72"
                         classNamePrefix="react-select"
                     />
 
@@ -261,7 +261,7 @@ export default function TyresKPI() {
 
 
                 </div>
-                <div className='flex items-center gap-3'>
+                <div className='flex items-center max-lg:justify-between w-full gap-3'>
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Rango de tiempo:</label>
                     <Select
                         options={[
@@ -272,7 +272,7 @@ export default function TyresKPI() {
                         ]}
                         defaultValue={{ value: 12, label: 'Últimos 12 meses' }}
                         onChange={(e) => setMonthRange(e?.value || 12)}
-                        className="react-select-container text-black w-full sm:w-48"
+                        className="react-select-container text-black max-w-3/5 w-full sm:w-48"
                         classNamePrefix="react-select"
                     />
                 </div>
@@ -323,12 +323,12 @@ export default function TyresKPI() {
             </div>
 
             {/* KPIs de Análisis Avanzado */}
-            <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1  md:grid-cols-4 lg:grid-cols-4 max-lg:gap-y-4 lg:gap-4">
 
 
                 {/* Promedio de Horas de Baja */}
                 <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900 dark:to-slate-900 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 ">
                         <FaClock className="text-gray-500 text-3xl" />
                         <div>
                             <p className="text-xl font-bold text-gray-700 dark:text-gray-300">{Math.round(kpis.avgHoursScrapped)} hrs</p>

@@ -78,8 +78,8 @@ export default function TireKPIOverview() {
     return (
         <div className="">
             <h1 className="text-2xl font-bold mb-4">Alertas de Neumáticos</h1>
-            <div className="mb-4   flex gap-x-2 items-center">
-                <label className="text-lg font-semibold text-gray-700">
+            <div className="mb-4   flex gap-x-2 items-center ">
+                <label className="text-lg font-semibold text-gray-700 dark:text-white">
                     Seleccione una Dimensión:
                 </label>
                 <Select
@@ -118,7 +118,7 @@ export default function TireKPIOverview() {
                 {kpiItems.map((kpi: KpiItem) => (
                     <div
                         key={kpi.key}
-                        className={`bg-gradient-to-br from-${kpi.color}-50 to-${kpi.color}-100 text-${kpi.color}-500  border border-${kpi.color}-500 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1`}
+                        className={`bg-${kpi.color}-50 dark:bg-nuetral-800 text-${kpi.color}-500 dark:text-${kpi.color}-600  border border-${kpi.color}-500 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1`}
                         onClick={() => handleKpiClick(kpi.key)}
                     >
                         <div className="p-4">
@@ -139,8 +139,8 @@ export default function TireKPIOverview() {
 
 
             <section className="bg-white dark:bg-neutral-900  rounded-sm ">
-                <div className='w-full flex justify-between items-center p-2  dark:bg-gray-800 rounded-t-sm'>
-                    <div>
+                <div className='w-full flex justify-between items-center p-2  dark:bg-[#212121] rounded-t-sm'>
+                    <div className="flex flex-col gap-1 max-lg:w-1/2">
                         <h2 className="text-2xl font-bold">{kpiItems.find(i => i.key === selectedKpi)?.title}</h2>
                         <p className="text-gray-600 dark:text-gray-400">
                             {kpiItems.find(i => i.key === selectedKpi)?.criterio}
@@ -154,8 +154,8 @@ export default function TireKPIOverview() {
                         />
                     }
                 </div>
-                <table className="w-full table-auto text-sm border min-h-[60dvh] max-h-[70dvh] overflow-scroll">
-                    <thead className="bg-gray-800 text-white dark:bg-gray-700">
+                <table className="w-full table-auto text-sm  min-h-[60dvh] max-h-[70dvh] overflow-scroll">
+                    <thead className="bg-gray-800 text-white dark:bg-gray-800">
                         <tr className='text-start'>
                             <th className="p-2 text-start">Código</th>
                             <th className="p-2">Posición</th>
@@ -169,7 +169,7 @@ export default function TireKPIOverview() {
                     </thead>
                     <tbody>
                         {paddedTires.map((tire: TireDTO | null, index: number) => (
-                            <tr key={index} className="border-t text-center">
+                            <tr key={index} className="border-t dark:border-gray-800 text-center">
                                 <td className="p-2 text-start">{tire?.code || "-"}</td>
                                 <td className="p-2">{tire?.lastInspection.position || "-"}</td>
                                 <td className="p-2">{tire?.installedTires[0].vehicle.code || "-"}</td>
