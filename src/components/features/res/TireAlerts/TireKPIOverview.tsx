@@ -1,6 +1,7 @@
 // components/kpi/TireKPIOverview.tsx
 'use client';
 
+import Select from "react-select";
 import { useEffect, useState } from 'react';
 import { getKpiData, kpiItems } from '@/utils/kpiLogic';
 import useAxiosWithAuth from '@/hooks/useAxiosWithAuth';
@@ -8,7 +9,6 @@ import { TireDTO } from '@/types/Tire';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Info, Siren } from 'lucide-react';
-import ExportOldTyresReport from '../../../../utils/export/ExportOldTyreesToExcel';
 import ExportListOfTires from '@/utils/export/ExportListofTyresToExcel';
 
 type KpiKey = 'inversion' | 'rotacion' | 'finVida' | 'temperatura' | 'posicionCritica';
@@ -25,20 +25,23 @@ export default function TireKPIOverview() {
 
     const [selectedKpi, setSelectedKpi] = useState<KpiKey>(kpiItems[0].key as KpiKey);
     const [allTires, setAllTires] = useState<TireDTO[]>([]);
-    const [filteredTires, setFilteredTires] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [filteredTires, setFilteredTires] = useState<TireDTO[] | null>([]);
+    const [selectedDimension, setSelectedDimension] = useState<string | null>("46/90R57");
+    const [allDimensions, setAllDimensions] = useState<string[]>([]);
 
     const fetchOperationalTires = async () => {
-        setLoading(true);
         try {
             const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
             setAllTires(response.data);
+            const dimensions = Array.from(
+                new Set(response.data.map((t: TireDTO) => t.model.dimensions))
+            ).filter((d): d is string => typeof d === "string");
+            setAllDimensions(dimensions);
+
             const initialFiltered = getKpiData(response.data)[kpiItems[0].key as KpiKey] || [];
             setFilteredTires(initialFiltered);
         } catch (error) {
             console.error("Error al obtener neumáticos operativos:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -51,28 +54,66 @@ export default function TireKPIOverview() {
     const handleKpiClick = (kpiKey: KpiKey) => {
         setCurrentPage(1)
         setSelectedKpi(kpiKey);
-        const filtered = getKpiData(allTires)[kpiKey] || [];
+        let filtered = getKpiData(allTires)[kpiKey] || [];
+        if (selectedDimension) {
+            filtered = filtered.filter(t => t.model.dimensions === selectedDimension);
+        }
         setFilteredTires(filtered);
     };
 
     const ITEMS_PER_PAGE = 10;
     const [currentPage, setCurrentPage] = useState(1);
 
-    const paginatedTires = filteredTires.slice(
+    const paginatedTires = (filteredTires ?? []).slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
 
-    const paddedTires = [...paginatedTires];
+    const paddedTires: (TireDTO | null)[] = [...paginatedTires];
     while (paddedTires.length < ITEMS_PER_PAGE) {
         paddedTires.push(null);
     }
 
-    const totalPages = Math.ceil(filteredTires.length / ITEMS_PER_PAGE);
-
+    const totalPages = Math.ceil((filteredTires ?? []).length / ITEMS_PER_PAGE);
     return (
         <div className="">
             <h1 className="text-2xl font-bold mb-4">Alertas de Neumáticos</h1>
+            <div className="mb-4   flex gap-x-2 items-center">
+                <label className="text-lg font-semibold text-gray-700">
+                    Seleccione una Dimensión:
+                </label>
+                <Select
+                    options={allDimensions.map(dim => {
+                        const count = allTires.filter(t => t.model.dimensions === dim).length;
+                        return {
+                            value: dim,
+                            label: `${dim} (${count} neumáticos)`
+                        };
+                    })}
+                    isClearable
+                    placeholder="Todas las dimensiones"
+                    onChange={(e) => {
+                        setSelectedDimension(e?.value || null);
+                        // volver a aplicar filtro
+                        const filtered = getKpiData(allTires)[selectedKpi] || [];
+                        setFilteredTires(
+                            e?.value ? filtered.filter(t => t.model.dimensions === e.value) : filtered
+                        );
+                        setCurrentPage(1); // reiniciar paginación
+                    }}
+                    value={
+                        selectedDimension
+                            ? {
+                                value: selectedDimension,
+                                label: `${selectedDimension} (${allTires.filter(t => t.model.dimensions === selectedDimension).length} neumáticos)`
+                            }
+                            : null
+                    }
+                    className="react-select-container text-black w-full sm:w-96"
+                    classNamePrefix="react-select"
+                />
+            </div>
+
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
                 {kpiItems.map((kpi: KpiItem) => (
                     <div
@@ -105,52 +146,51 @@ export default function TireKPIOverview() {
                             {kpiItems.find(i => i.key === selectedKpi)?.criterio}
                         </p>
                     </div>
-                    <ExportListOfTires
-                        title={`LISTA DE NEUMÁTICOS EN ALERTA POR: ${kpiItems.find(i => i.key === selectedKpi)?.title.toUpperCase()}` || "RESUMEN DE NEUMÁTICOS"}
-                        tireList={filteredTires}
-                    />
+                    {
+                        filteredTires && filteredTires.length > 0 &&
+                        <ExportListOfTires
+                            title={`LISTA DE NEUMÁTICOS EN ALERTA POR: ${kpiItems.find(i => i.key === selectedKpi)?.title.toUpperCase()}` || "RESUMEN DE NEUMÁTICOS"}
+                            tireList={filteredTires}
+                        />
+                    }
                 </div>
-                {loading ? (
-                    <p>Cargando neumáticos...</p>
-                ) : filteredTires.length === 0 ? (
-                    <p>No hay neumáticos en esta categoría.</p>
-                ) : (
-                    <table className="w-full table-auto text-sm border min-h-[60dvh] max-h-[70dvh] overflow-scroll">
-                        <thead className="bg-gray-800 text-white dark:bg-gray-700">
-                            <tr className='text-start'>
-                                <th className="p-2 text-start">Código</th>
-                                <th className="p-2">Posición</th>
-                                <th className='p-2'>Equipo</th>
-                                <th className="p-2">Interno</th>
-                                <th className="p-2">Externo</th>
-                                <th className="p-2">Presión</th>
-                                <th className="p-2">Temperatura</th>
-                                <th className="p-2">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {paddedTires.map((tire: TireDTO | null, index: number) => (
-                                <tr key={index} className="border-t text-center">
-                                    <td className="p-2 text-start">{tire?.code || "-"}</td>
-                                    <td className="p-2">{tire?.lastInspection.position || "-"}</td>
-                                    <td className="p-2">{tire?.installedTires[0].vehicle.code || "-"}</td>
+                <table className="w-full table-auto text-sm border min-h-[60dvh] max-h-[70dvh] overflow-scroll">
+                    <thead className="bg-gray-800 text-white dark:bg-gray-700">
+                        <tr className='text-start'>
+                            <th className="p-2 text-start">Código</th>
+                            <th className="p-2">Posición</th>
+                            <th className='p-2'>Equipo</th>
+                            <th className="p-2">Interno</th>
+                            <th className="p-2">Externo</th>
+                            <th className="p-2">Presión</th>
+                            <th className="p-2">Temperatura</th>
+                            <th className="p-2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {paddedTires.map((tire: TireDTO | null, index: number) => (
+                            <tr key={index} className="border-t text-center">
+                                <td className="p-2 text-start">{tire?.code || "-"}</td>
+                                <td className="p-2">{tire?.lastInspection.position || "-"}</td>
+                                <td className="p-2">{tire?.installedTires[0].vehicle.code || "-"}</td>
 
-                                    <td className="p-2">{tire?.lastInspection.internalTread || "-"}</td>
-                                    <td className="p-2">{tire?.lastInspection.externalTread || "-"}</td>
-                                    <td className="p-2">{tire?.lastInspection.pressure || "-"}</td>
-                                    <td className="p-2">{tire?.lastInspection.temperature || "-"}</td>
-                                    <td className={`p-2 flex justify-center ${tire === null ? "hidden" : "flex"}`}>
-                                        <Link href={`/neumaticos/${tire?.id}`}
-                                            className="text-blue-500 hover:underline"
-                                        >
-                                            <Info className="inline mr-1" />
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
+                                <td className="p-2">{tire?.lastInspection.internalTread || "-"}</td>
+                                <td className="p-2">{tire?.lastInspection.externalTread || "-"}</td>
+                                <td className="p-2">{tire?.lastInspection.pressure || "-"}</td>
+                                <td className="p-2">{tire?.lastInspection.temperature || "-"}</td>
+                                <td className={`p-2 flex justify-center ${tire === null ? "hidden" : "flex"}`}>
+                                    <Link href={`/neumaticos/${tire?.id}`}
+                                        className="text-blue-500 hover:underline"
+                                    >
+                                        <Info className="inline mr-1" />
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+
             </section>
             {totalPages > 1 ? (
                 <div className="flex justify-center gap-2 p-4">

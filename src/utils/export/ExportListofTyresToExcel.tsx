@@ -150,7 +150,7 @@ export default function ExportListOfTires({ title, tireList }: Props) {
                 tire.lastInspection.position,
                 tire.installedTires[0].vehicle.code,
             ]);
-            row.eachCell((cell, colNumber) => {
+            row.eachCell((cell) => {
                 const baseStyle = { ...dataStyle, ...infoRowStyle };
 
                 cell.style = baseStyle;
