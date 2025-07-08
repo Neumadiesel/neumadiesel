@@ -51,11 +51,8 @@ export interface OrdenTrabajoForm {
     vehicle?: VehicleDTO;
 }
 
-interface Props {
-    onClose: () => void;
-}
 
-export default function ModalCrearOrden({ onClose }: Props) {
+export default function ModalCrearOrden() {
     const { user } = useAuth();
     const [step, setStep] = useState<number>(1);
     const [datos, setDatos] = useState<OrdenTrabajoForm>({
@@ -136,7 +133,6 @@ export default function ModalCrearOrden({ onClose }: Props) {
             }
 
             router.push(`/mantenimiento/orden-de-trabajo/${nuevaOrdenId}`);
-            onClose();
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 alert(`err.message: ${err.message}`);
@@ -171,7 +167,7 @@ export default function ModalCrearOrden({ onClose }: Props) {
             programasSeleccionados: [],
             posicionesSeleccionadas: [],
         });
-        onClose();
+        setStep(1);
     };
 
     return (
