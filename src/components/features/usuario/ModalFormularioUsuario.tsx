@@ -45,7 +45,6 @@ export default function ModalFormularioUsuario({
     const [rol, setRol] = useState<Usuario["rol"]>("operador");
     const [roleId, setRoleId] = useState<number>(0);
     const [faena, setFaena] = useState<number>(0);
-    const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [roles, setRoles] = useState<Role[]>([]);
     const { register, token } = useAuth();
@@ -124,7 +123,6 @@ export default function ModalFormularioUsuario({
             setCorreo("");
             setRol("operador");
             setFaena(0);
-            setPassword("");
 
             // Llamar a onSuccess si está definido
             if (onSuccess) {
@@ -146,7 +144,6 @@ export default function ModalFormularioUsuario({
         setCorreo("");
         setRol("operador");
         setFaena(0);
-        setPassword("");
         setError("");
         onClose();
     };
