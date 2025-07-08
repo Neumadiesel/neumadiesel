@@ -87,7 +87,7 @@ export default function ModelosEquipo() {
                             <tr>
                                 <th className="p-4">Marca</th>
                                 <th className="p-4">Modelo</th>
-                                <th className="p-4 max-lg:hidden">Cantidad de Nuemáticos</th>
+                                <th className="p-4 max-lg:hidden">Cantidad de Neumáticos</th>
                                 <th className="p-4 lg:hidden">Neumáticos</th>
 
                                 <th className="p-4 max-lg:hidden">Cantidad de Equipos</th>

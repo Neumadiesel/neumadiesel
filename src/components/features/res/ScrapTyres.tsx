@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useAuth } from "@/contexts/AuthContext";
+import { toPng } from "html-to-image";
 
 type TireWithModel = { model?: { dimensions?: string } };
 type TireScrapResponse = {
@@ -50,6 +51,18 @@ interface CustomTooltipProps {
     active?: boolean;
     payload?: { payload: ScatterPoint }[];
 }
+
+const downloadChartAsImage = async () => {
+    const node = document.getElementById("grafico-bajo-neumaticos");
+    if (!node) return;
+    console.log("exportando")
+
+    const dataUrl = await toPng(node);
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `grafico-bajo-neumaticos.png`;
+    link.click();
+};
 
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload?.length) {
@@ -176,7 +189,7 @@ export default function ScrapTyres() {
                 Mostrando <strong>{visiblePointsCount}</strong> neumáticos de dimensión <strong>{selectedDimension}</strong> dados de baja del año <strong>{selectedYear}</strong>
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div className="mb-4">
                     <label className="font-semibold text-sm dark:text-white mb-2 block">Filtrar por tipo de baja:</label>
                     <Select
@@ -222,6 +235,14 @@ export default function ScrapTyres() {
                         className="text-black"
                     />
                 </div>
+                <div className="flex items-center justify-end">
+                    <button
+                        onClick={downloadChartAsImage}
+                        className="px-4 py-2 bg-blue-600 font-semibold text-white rounded mt-4"
+                    >
+                        Exportar como Imagen
+                    </button>
+                </div>
             </div>
 
 
@@ -229,23 +250,26 @@ export default function ScrapTyres() {
                 {loading ? (
                     <p className="text-neutral-600 dark:text-neutral-300">Cargando datos...</p>
                 ) : (
-                    <ResponsiveContainer width="100%" height="100%">
-                        <ScatterChart>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis type="number" dataKey="horas" name="Horas" unit="h" stroke="#888" />
-                            <YAxis type="number" dataKey="desgaste" name="% Desgaste" unit="%" stroke="#888" />
-                            <Tooltip content={<CustomTooltip />} />
-                            <Legend wrapperStyle={{ color: '#000', fontWeight: 'bold' }} />
-                            {visibleGroups.map(([descripcionMotivo, data]) => (
-                                <Scatter
-                                    key={descripcionMotivo}
-                                    name={descripcionMotivo}
-                                    data={data}
-                                    fill={colorMap[descripcionMotivo]}
-                                />
-                            ))}
-                        </ScatterChart>
-                    </ResponsiveContainer>
+                    <div className="w-full h-full bg-white dark:bg-neutral-800 p-3 m-2" id="grafico-bajo-neumaticos">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <ScatterChart>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis type="number" dataKey="horas" name="Horas" unit="h" stroke="#888" />
+                                <YAxis type="number" dataKey="desgaste" name="% Desgaste" unit="%" stroke="#888" />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Legend wrapperStyle={{ color: '#000', fontWeight: 'bold' }} />
+                                {visibleGroups.map(([descripcionMotivo, data]) => (
+                                    <Scatter
+                                        key={descripcionMotivo}
+                                        name={descripcionMotivo}
+                                        data={data}
+                                        fill={colorMap[descripcionMotivo]}
+                                    />
+                                ))}
+                            </ScatterChart>
+                        </ResponsiveContainer>
+                    </div>
+
                 )}
             </div>
         </section>

@@ -65,7 +65,7 @@ export default function ModelosNeumaticos() {
                             <tr>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Codigo
+                                        Código
                                     </p>
                                 </th>
                                 <th className="p-4">
@@ -80,7 +80,7 @@ export default function ModelosNeumaticos() {
                                 </th>
                                 <th className="p-4">
                                     <p className="block font-sans text-sm antialiased font-semibold leading-none text-black">
-                                        Patron
+                                        Patrón
                                     </p>
                                 </th>
                                 <th className="p-4">

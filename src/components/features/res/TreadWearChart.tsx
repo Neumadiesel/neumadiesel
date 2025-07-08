@@ -16,6 +16,7 @@ import {
 import Select from "react-select";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuth } from "@/contexts/AuthContext";
+import { toPng } from "html-to-image";
 
 interface DesgastePorTramo {
     tramo: string;
@@ -59,6 +60,16 @@ export default function TreadWearChart() {
         const factor = Math.min(1, Math.max(0, (mm - min) / (max - min)));
         return interpolateColor('#92e5d2', '#F5B7B1', 1 - factor);
     }
+    const downloadChartAsImage = async () => {
+        const node = document.getElementById('grafico-desgaste');
+        if (!node) return;
+
+        const dataUrl = await toPng(node);
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `grafico_tasa_desgaste.png`;
+        link.click();
+    };
 
     return (
         <div className="bg-white border dark:bg-neutral-800 dark:border-neutral-700 p-2 lg:p-4 rounded-lg shadow-md">
@@ -70,55 +81,66 @@ export default function TreadWearChart() {
             <p className="text-neutral-600 dark:text-neutral-300 text-sm text-center mb-2">
                 Análisis del rendimiento de desgaste a lo largo del ciclo de vida del neumático
             </p>
-            <div className="flex flex-col items-start space-y-1 mb-4">
-                <label className="block text-xs font-semibold">Dimensión:</label>
-                <Select
-                    options={dimensiones.map((d) => ({ value: d, label: d }))}
-                    value={dimensionSeleccionada ? { value: dimensionSeleccionada, label: dimensionSeleccionada } : null}
-                    onChange={(opt) => setDimensionSeleccionada(opt?.value || null)}
-                    isClearable
-                    placeholder="Todas las dimensiones"
-                    className="w-full sm:w-52 text-black"
-                />
+            <div className="w-full flex justify-between items-center mb-4">
+
+                <div className="flex flex-col items-start space-y-1">
+                    <label className="block text-xs font-semibold">Dimensión:</label>
+                    <Select
+                        options={dimensiones.map((d) => ({ value: d, label: d }))}
+                        value={dimensionSeleccionada ? { value: dimensionSeleccionada, label: dimensionSeleccionada } : null}
+                        onChange={(opt) => setDimensionSeleccionada(opt?.value || null)}
+                        isClearable
+                        placeholder="Todas las dimensiones"
+                        className="w-full sm:w-52 text-black"
+                    />
+                </div>
+                <button
+                    onClick={downloadChartAsImage}
+                    className="px-4 py-2 bg-blue-600 font-semibold text-white rounded mt-4"
+                >
+                    Exportar como Imagen
+                </button>
             </div>
-            <ResponsiveContainer height={300}>
-                <ComposedChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                        dataKey="mm"
-                        label={{ value: "Remanente (mm)", position: "insideBottom", offset: -5 }}
-                    />
-                    <YAxis
-                        label={{
-                            value: "Hrs/mm",
-                            angle: -90,
-                            position: "insideLeft",
-                        }}
-                        domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.15)]}
-                    />
-                    <Tooltip formatter={(val) => `${Math.round(val as number)} hrs/mm`} />
-                    <Bar dataKey="tasa">
-                        {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={getGradientColorByRemanente(entry.mm)} />
-                        ))}
-                        <LabelList
-                            dataKey="tasa"
-                            position="top"
-                            className="max-lg:hidden"
-                            formatter={(val: number) => Math.round(val)}
-                            style={{ fill: 'black', fontWeight: 600 }}
+            <div className="bg-white dark:bg-neutral-800 " id={"grafico-desgaste"} >
+                <ResponsiveContainer height={300} >
+                    <ComposedChart data={data}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                            dataKey="mm"
+                            label={{ value: "Remanente (mm)", position: "insideBottom", offset: -5 }}
                         />
-                    </Bar>
-                    <Line
-                        type="monotone"
-                        className="max-lg:hidden"
-                        dataKey="tasa"
-                        stroke="#f97316"
-                        strokeWidth={3}
-                        dot={{ r: 3 }}
-                    />
-                </ComposedChart>
-            </ResponsiveContainer>
+                        <YAxis
+                            label={{
+                                value: "Hrs/mm",
+                                angle: -90,
+                                position: "insideLeft",
+                            }}
+                            domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.15)]}
+                        />
+                        <Tooltip formatter={(val) => `${Math.round(val as number)} hrs/mm`} />
+                        <Bar dataKey="tasa">
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={getGradientColorByRemanente(entry.mm)} />
+                            ))}
+                            <LabelList
+                                dataKey="tasa"
+                                position="top"
+                                className="max-lg:hidden "
+                                formatter={(val: number) => Math.round(val)}
+                                style={{ fill: "#f1760f", fontWeight: 600 }}
+                            />
+                        </Bar>
+                        <Line
+                            type="monotone"
+                            className="max-lg:hidden"
+                            dataKey="tasa"
+                            stroke="#f97316"
+                            strokeWidth={3}
+                            dot={{ r: 3 }}
+                        />
+                    </ComposedChart>
+                </ResponsiveContainer>
+            </div>
         </div>
     );
 }

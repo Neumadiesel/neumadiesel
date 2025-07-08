@@ -1,6 +1,7 @@
 "use client"
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import { toPng } from "html-to-image";
 import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import {
@@ -234,6 +235,18 @@ export default function TireHealthChart() {
 
     const uniquePositions = Array.from(new Set(tires.flatMap(t => t.installedTires.map(i => i.position)))).sort((a, b) => a - b);
 
+    const downloadChartAsImage = async () => {
+        const node = document.getElementById("chart-area");
+        if (!node) return;
+        console.log("exportando")
+
+        const dataUrl = await toPng(node);
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `grafico_salud_neumaticos.png`;
+        link.click();
+    };
+
     return (
         <div className="flex flex-col bg-white dark:bg-neutral-800 rounded-md shadow-sm border dark:border-neutral-700 border-neutral-200 dark:text-white">
 
@@ -250,7 +263,7 @@ export default function TireHealthChart() {
                 </div>
 
                 {/* Filtros mejorados */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                     <div className="flex flex-col items-start space-y-1 ">
                         <label className="block text-xs font-semibold">
                             Dimensión del neumático:
@@ -300,12 +313,21 @@ export default function TireHealthChart() {
                             classNamePrefix="react-select"
                         />
                     </div>
+                    <div className="flex items-center justify-end">
+                        <button
+                            onClick={downloadChartAsImage}
+                            className="px-4 py-2 bg-blue-600 font-semibold text-white rounded mt-4"
+                        >
+                            Exportar como Imagen
+                        </button>
+                    </div>
                 </div>
             </main>
             <main className={`grid grid-cols-1 ${validPressureTemperatureCount >= 40 ? 'lg:grid-cols-2' : ''}`}>
 
                 {validPressureTemperatureCount >= 40 && (
-                    <div className="p-3">
+                    <div className="bg-white dark:bg-neutral-800 p-3 m-2" id={"grafico_presion_neumaticos"}>
+
                         <div className="flex items-center gap-2 mb-4">
                             <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">
                                 Temperatura vs Presión por Posición
@@ -386,7 +408,7 @@ export default function TireHealthChart() {
                 )
                 }
 
-                <section id="chart-area" className="p-3">
+                <section id="chart-area" className="bg-white dark:bg-neutral-800 p-3 m-2" >
                     <div className="flex items-center gap-2 mb-4">
                         <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">
                             Desgaste Interno vs Externo por Posición

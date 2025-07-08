@@ -197,7 +197,7 @@ export default function ScrappedReasonsChart() {
                     Aquí puedes ver el rendimiento mensual de los neumáticos dados de baja, desglosado por motivo de baja.
                 </p>
                 <div className="bg-white dark:bg-neutral-800 ">
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
                         {/* Año */}
                         <div className="flex flex-col items-start space-y-1">
                             <label className="block text-xs font-semibold">
@@ -259,6 +259,12 @@ export default function ScrappedReasonsChart() {
                                 ))}
                             </select>
                         </div>
+                        <button
+                            onClick={downloadChartAsImage}
+                            className="px-4 py-2 bg-blue-600 font-semibold text-white rounded mt-4"
+                        >
+                            Exportar como Imagen
+                        </button>
                     </div>
                 </div>
 
@@ -287,12 +293,7 @@ export default function ScrappedReasonsChart() {
                     </div>
                 </div>
             </div>
-            <button
-                onClick={downloadChartAsImage}
-                className="px-4 py-2 bg-blue-600 text-white rounded mt-4"
-            >
-                Descargar como Imagen
-            </button>
+
 
             <div className="bg-white dark:bg-neutral-800 p-3 m-2" id="grafico-bajas">
                 <ResponsiveContainer width="100%" height={350} className="p-2">
