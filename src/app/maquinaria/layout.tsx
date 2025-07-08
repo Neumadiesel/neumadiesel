@@ -36,13 +36,6 @@ interface VehicleDTO {
         isActive: boolean;
     };
 }
-
-interface VehicleTypeDTO {
-    id: number;
-    name: string;
-    code: string;
-}
-
 export default function RootLayout({
     children,
 }: Readonly<{
