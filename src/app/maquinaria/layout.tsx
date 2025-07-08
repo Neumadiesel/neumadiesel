@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { LayoutProvider, useLayoutContext } from "@/contexts/LayoutContext";
 import ModalRegistrarVehiculo from "@/components/features/equipo/ModalRegistrarVehiculo";
 import Breadcrumb from "@/components/layout/BreadCrumb";
@@ -8,12 +8,19 @@ import Button from "@/components/common/button/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import MineTruck from "@/components/common/icons/MineTruck";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import Grader from "@/components/common/icons/Grader";
+import WheelDozer from "@/components/common/icons/WheelDozer";
+import Loader from "@/components/common/icons/Loader";
+import WaterTruck from "@/components/common/icons/WaterTruck";
+import ServiceTruck from "@/components/common/icons/ServiceTruck";
+
 
 interface VehicleDTO {
     id: number;
     code: string;
     modelId: number;
     siteId: number;
+    typeId: number;
     kilometrage: number;
     hours: number;
     model: {
@@ -30,6 +37,12 @@ interface VehicleDTO {
     };
 }
 
+interface VehicleTypeDTO {
+    id: number;
+    name: string;
+    code: string;
+}
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -42,6 +55,15 @@ export default function RootLayout({
     const { hasChanged, setHasChanged } = useLayoutContext();
     const [codigo, setCodigo] = useState("");
     const { user } = useAuth();
+
+    const iconosPorTipoId: Record<number, ReactElement> = {
+        1: <Grader className="w-16 h-16 text-gray-500 dark:text-white" />,        // Motoniveladora
+        2: <WheelDozer className="w-16 h-16 text-gray-500 dark:text-white" />,    // Bulldozer de ruedas
+        3: <Loader className="w-16 h-16 text-gray-500 dark:text-white" />,        // Cargador
+        4: <WaterTruck className="w-16 h-16 text-gray-500 dark:text-white" />,    // Camión de agua
+        5: <ServiceTruck className="w-16 h-16 text-gray-500 dark:text-white" />,  // Camión de servicio
+        6: <MineTruck className="w-16 h-16 text-gray-500 dark:text-white" />,     // Camión de extracción
+    };
 
     const fetchVehicleModels = async () => {
         setLoading(true);
@@ -113,7 +135,6 @@ export default function RootLayout({
     useEffect(() => {
         if (hasChanged) {
             fetchVehicleModels();
-            console.log("hasChanged", hasChanged);
             setHasChanged(false);
         }
     }, [hasChanged]);
@@ -157,7 +178,10 @@ export default function RootLayout({
                                             key={vehicle.id}
                                             className="lg:flex max-lg:flex-col grid grid-cols-2  min-w-52 h-[90%] lg:h-20 lg:justify-between border items-center p-2 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-950 lg:gap-4 rounded-md hover:bg-gray-200 dark:hover:bg-[#212121] transition-all ease-in-out"
                                         >
-                                            <MineTruck className="w-16 h-16 text-gray-500  dark:text-white" />
+                                            {iconosPorTipoId[vehicle.typeId] ?? (
+                                                <MineTruck className="w-16 h-16 text-gray-500 dark:text-white" />
+                                            )}
+
                                             <p className="text-2xl font-semibold   dark:text-white">{vehicle.code}</p>
                                             <div className="flex flex-col items-start justify-center max-lg:min-w-[100%] max-lg:col-span-2">
 

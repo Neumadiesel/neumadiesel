@@ -137,15 +137,11 @@ export default function ModalAsignarNeumatico({
     }
 
     useEffect(() => {
-        fetchLocations();
-        fetchModels();
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        fetchLocations();
-        fetchModels();
-        fetchData();
+        if (user) {
+            fetchLocations();
+            fetchModels();
+            fetchData();
+        }
     }, [user]);
 
     useEffect(() => {
