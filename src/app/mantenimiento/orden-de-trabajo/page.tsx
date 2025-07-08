@@ -1,5 +1,4 @@
 "use client"
-import ModalCrearOrden from "@/components/features/ordendetrabajo/ModalCrearOrden";
 import { useAuth } from "@/contexts/AuthContext";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { CirclePlus, Eye, FileCog } from "lucide-react";
@@ -54,7 +53,6 @@ interface kpis {
 }
 export default function OrdenDeTrabajoPage() {
 
-    const [modalAbierto, setModalAbierto] = useState(false);
     const { user } = useAuth();
     // axios get work orders
     const client = useAxiosWithAuth();
@@ -105,10 +103,10 @@ export default function OrdenDeTrabajoPage() {
                 </div>
                 <aside className="mt-4">
                     {/* Boton para crear nueva orden */}
-                    <button onClick={() => { setModalAbierto(true) }} className="px-4 py-3 hover:cursor-pointer  bg-amber-300 text-black font-semibold rounded hover:bg-amber-400 transition-colors">
+                    <Link href={"/mantenimiento/orden-de-trabajo/crear-orden"} className="px-4 py-3 hover:cursor-pointer  bg-amber-300 text-black font-semibold rounded hover:bg-amber-400 transition-colors">
                         <CirclePlus className="inline mr-2" />
                         Nueva Orden
-                    </button>
+                    </Link>
                 </aside>
             </div>
             {/* Seccion de kpis */}
@@ -241,9 +239,6 @@ export default function OrdenDeTrabajoPage() {
                 </div>
             </main>
 
-            {modalAbierto && (
-                <ModalCrearOrden onClose={() => setModalAbierto(false)} />
-            )}
         </div>
     );
 }

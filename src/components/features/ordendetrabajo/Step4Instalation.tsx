@@ -23,6 +23,20 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [openRegisterModal, setOpenRegisterModal] = useState(false);
+    const [filtrosPorPosicion, setFiltrosPorPosicion] = useState<Record<number, { codigo: string; dimension: string }>>({});
+
+
+
+    const setFiltro = (pos: number, campo: "codigo" | "dimension", valor: string) => {
+        setFiltrosPorPosicion(prev => ({
+            ...prev,
+            [pos]: {
+                ...prev[pos],
+                [campo]: valor,
+            },
+        }));
+    };
+
 
     useEffect(() => {
         if (user) fetchNeumaticos();
@@ -100,8 +114,9 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
             <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(datos.posicionesSeleccionadas ?? []).map((pos) => {
                     const actual: InstallationData = datos.instalaciones.find(i => i.posicion === pos) ?? { posicion: pos };
-                    const [codigoFiltro, setCodigoFiltro] = useState("");
-                    const [dimensionFiltro, setDimensionFiltro] = useState(datos.dimension || "");
+                    const codigoFiltro = filtrosPorPosicion[pos]?.codigo || "";
+                    const dimensionFiltro = filtrosPorPosicion[pos]?.dimension || datos.dimension || "";
+
 
                     const idsSeleccionados = (datos.instalaciones ?? [])
                         .filter(i => i.nuevoTireId && i.posicion !== pos)
@@ -127,12 +142,14 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                                     placeholder="Filtrar por código"
                                     className="w-full mb-2 border rounded px-2 py-1"
                                     value={codigoFiltro}
-                                    onChange={(e) => setCodigoFiltro(e.target.value)}
+
+                                    onChange={(e) => setFiltro(pos, "codigo", e.target.value)}
                                 />
                                 <select
                                     className="w-full mb-3 border rounded px-2 py-1"
                                     value={dimensionFiltro}
-                                    onChange={(e) => setDimensionFiltro(e.target.value)}
+                                    onChange={(e) => setFiltro(pos, "dimension", e.target.value)}
+
                                 >
                                     <option value="">Todas las dimensiones</option>
                                     {[...new Set(neumaticosDisponibles.map(n => n.model?.dimensions))].map(dim => (
