@@ -263,8 +263,8 @@ export default function ModalRegistrarNeumatico({
                     <Label title="Fecha de Creación" isNotEmpty={true} />
                     <input
                         name="fechaCreacion"
-                        type="date"
-                        value={tyreModelEdited.creationDate.split("T")[0]}
+                        type="datetime-local"
+                        value={tyreModelEdited.creationDate}
                         onChange={(e) => {
                             setTyreModelEdited({
                                 ...tyreModelEdited,

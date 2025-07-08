@@ -13,7 +13,7 @@ export const kpiItems: {
             key: 'inversion',
             title: 'Inversión',
             criterio: 'Diferencia de goma interna y externa mayor a 10mm.',
-            color: 'orange', // naranja
+            color: 'indigo', // naranja
         },
         {
             key: 'rotacion',

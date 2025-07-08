@@ -111,6 +111,7 @@ export default function NavBar() {
                 // { title: "Cadenas", path: "/mantenimiento/cadenas" },
                 // { title: "Sensores", path: "/mantenimiento/sensores" },
                 { title: "Orden de trabajo", path: "/mantenimiento/orden-de-trabajo" },
+                { title: "Crear Orden", path: "/mantenimiento/orden-de-trabajo/crear-orden" },
                 { title: "Programa semanal", path: "/mantenimiento/programas" },
             ],
         },

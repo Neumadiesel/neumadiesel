@@ -112,7 +112,7 @@ export default function ModalRegistrarVehiculo({
     const handleSubmit = async () => {
         setError("");
         setLoading(true);
-        console.log("Submitting vehicle data:", vehicleEdited.siteId);
+        console.log("Type_vehicle:", vehicleEdited.typeId);
         const { code, modelId, typeId, siteId, hours, kilometrage } = vehicleEdited;
         if (!code || !modelId || !typeId || !siteId || hours === null || kilometrage === null) {
             setError("Por favor, completa todos los campos");

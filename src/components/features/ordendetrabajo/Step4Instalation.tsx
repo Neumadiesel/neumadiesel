@@ -7,6 +7,7 @@ import { OrdenTrabajoForm } from "./ModalCrearOrden";
 import { TireDTO, InstallationData } from "@/types/ordenTrabajoTypes";
 import { useAuth } from "@/contexts/AuthContext";
 import dayjs from "dayjs";
+import ModalRegistrarNeumatico from "../neumatico/mod/tire/ModalRegistrarNeumatico";
 
 interface Props {
     datos: OrdenTrabajoForm;
@@ -21,19 +22,20 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
     const [neumaticosDisponibles, setNeumaticosDisponibles] = useState<TireDTO[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
     useEffect(() => {
-        const fetchNeumaticos = async () => {
-            try {
-                const res = await axios.get(`/tires/available/site/${user?.faena_id}`);
-                setNeumaticosDisponibles(res.data || []);
-            } catch (error) {
-                console.error("Error cargando neumáticos disponibles:", error);
-            }
-        };
+        if (user) fetchNeumaticos();
+    }, [user]);
 
-        fetchNeumaticos();
-    }, [axios, user]);
+    const fetchNeumaticos = async () => {
+        try {
+            const res = await axios.get(`/tires/available/site/${user?.faena_id}`);
+            setNeumaticosDisponibles(res.data || []);
+        } catch (error) {
+            console.error("Error cargando neumáticos disponibles:", error);
+        }
+    };
 
     const handleChange = (
         posicion: number,
@@ -55,25 +57,15 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
     const handleSubmitInstalacion = async () => {
         setLoading(true);
         setError(null);
-
         try {
             const executionDate = dayjs(new Date(datos.entryDate!)).toISOString();
             const executionFinal = dayjs(new Date(datos.dispatchDate!)).toISOString();
             const vehicleId = datos.vehicleId!;
 
             for (const instalacion of datos.instalaciones) {
-                const {
-                    nuevoTireId,
-                    posicion,
-                    internalTread,
-                    externalTread,
-                } = instalacion;
+                const { nuevoTireId, posicion, internalTread, externalTread } = instalacion;
+                if (!nuevoTireId || !posicion || internalTread === undefined || externalTread === undefined) continue;
 
-                if (!nuevoTireId || !posicion || internalTread === undefined || externalTread === undefined) {
-                    continue; // Ignora los incompletos
-                }
-
-                console.log("datos", nuevoTireId, posicion, internalTread, externalTread, vehicleId, executionDate, executionFinal);
                 await axios.post(`/procedures/install-tire`, {
                     tireId: nuevoTireId,
                     vehicleId,
@@ -93,19 +85,61 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
             setLoading(false);
         }
     };
+
     return (
         <div className="space-y-2 w-full">
             <h3 className="text-lg font-semibold mb-4">Instalación de Nuevos Neumáticos</h3>
             <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 Aquí puedes ingresar los datos de los neumáticos que serán instalados. Asegúrate de completar todos los campos requeridos.
             </p>
+
+            <Button onClick={() => setOpenRegisterModal(true)} className="mb-4">
+                Crear Neumático
+            </Button>
+
             <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(datos.posicionesSeleccionadas ?? []).map((pos) => {
-                    const actual: InstallationData = datos.instalaciones.find((i) => i.posicion === pos) ?? { posicion: pos };
+                    const actual: InstallationData = datos.instalaciones.find(i => i.posicion === pos) ?? { posicion: pos };
+                    const [codigoFiltro, setCodigoFiltro] = useState("");
+                    const [dimensionFiltro, setDimensionFiltro] = useState(datos.dimension || "");
+
+                    const idsSeleccionados = (datos.instalaciones ?? [])
+                        .filter(i => i.nuevoTireId && i.posicion !== pos)
+                        .map(i => i.nuevoTireId!);
+
+                    const neumaticosFiltrados = neumaticosDisponibles
+                        .filter(n => !idsSeleccionados.includes(n.id))
+                        .filter(n => !dimensionFiltro || n.model?.dimensions === dimensionFiltro)
+                        .filter(n => n.code.toLowerCase().includes(codigoFiltro.toLowerCase()))
+                        .sort((a, b) => {
+                            const aTread = (a.lastInspection?.internalTread ?? 0) + (a.lastInspection?.externalTread ?? 0);
+                            const bTread = (b.lastInspection?.internalTread ?? 0) + (b.lastInspection?.externalTread ?? 0);
+                            return bTread - aTread;
+                        });
 
                     return (
                         <section key={pos} className="border p-4 rounded-xl shadow bg-white dark:bg-neutral-800">
                             <h4 className="font-bold mb-4">Posición {pos}</h4>
+
+                            <div className="mb-2">
+                                <input
+                                    type="text"
+                                    placeholder="Filtrar por código"
+                                    className="w-full mb-2 border rounded px-2 py-1"
+                                    value={codigoFiltro}
+                                    onChange={(e) => setCodigoFiltro(e.target.value)}
+                                />
+                                <select
+                                    className="w-full mb-3 border rounded px-2 py-1"
+                                    value={dimensionFiltro}
+                                    onChange={(e) => setDimensionFiltro(e.target.value)}
+                                >
+                                    <option value="">Todas las dimensiones</option>
+                                    {[...new Set(neumaticosDisponibles.map(n => n.model?.dimensions))].map(dim => (
+                                        <option key={dim} value={dim}>{dim}</option>
+                                    ))}
+                                </select>
+                            </div>
 
                             <div className="mb-3">
                                 <label className="block font-medium mb-1">Neumático a instalar</label>
@@ -115,24 +149,13 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                                     className="w-full border rounded px-3 py-2"
                                 >
                                     <option value="">Seleccionar neumático</option>
-                                    {neumaticosDisponibles.map((t) => (
+                                    {neumaticosFiltrados.map((t) => (
                                         <option key={t.id} value={t.id}>
-                                            {t.code} ({t.model?.dimensions}) -  ext: {t.lastInspection.externalTread}mm - int: {t.lastInspection.internalTread}mm
+                                            {t.code} ({t.model?.dimensions}) - ext: {t.lastInspection?.externalTread ?? "-"}mm - int: {t.lastInspection?.internalTread ?? "-"}mm
                                         </option>
                                     ))}
                                 </select>
                             </div>
-
-                            {actual.nuevoTire && (
-                                <div className="mt-2 p-3 rounded-md bg-gray-100 dark:bg-neutral-700 text-sm">
-                                    <p><strong>Código:</strong> {actual.nuevoTire.code}</p>
-                                    <p><strong>Marca:</strong> {actual.nuevoTire.model.brand || "N/A"}</p>
-                                    <p><strong>Modelo:</strong> {actual.nuevoTire.model?.code || "N/A"}</p>
-                                    <p><strong>Dimensiones:</strong> {actual.nuevoTire.model?.dimensions || "N/A"}</p>
-                                    <p><strong>Remanente original:</strong> {actual.nuevoTire.model?.originalTread ?? "N/A"}</p>
-                                    {/* Agrega más campos si lo deseas */}
-                                </div>
-                            )}
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -140,10 +163,7 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                                     <input
                                         type="number"
                                         value={actual.internalTread ?? ""}
-                                        placeholder={actual.internalTread?.toString()}
-                                        onChange={(e) =>
-                                            handleChange(pos, "internalTread", Number(e.target.value))
-                                        }
+                                        onChange={(e) => handleChange(pos, "internalTread", Number(e.target.value))}
                                         className="w-full border rounded px-3 py-2"
                                     />
                                 </div>
@@ -153,14 +173,10 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                                     <input
                                         type="number"
                                         value={actual.externalTread ?? ""}
-                                        onChange={(e) =>
-                                            handleChange(pos, "externalTread", Number(e.target.value))
-                                        }
+                                        onChange={(e) => handleChange(pos, "externalTread", Number(e.target.value))}
                                         className="w-full border rounded px-3 py-2"
                                     />
                                 </div>
-
-
                             </div>
                         </section>
                     );
@@ -175,6 +191,16 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                     {loading ? "Guardando..." : "Confirmar Orden"}
                 </Button>
             </div>
+
+            {/* Modal para crear neumático */}
+            <ModalRegistrarNeumatico
+                visible={openRegisterModal}
+                onClose={() => setOpenRegisterModal(false)}
+                onGuardar={() => {
+                    setOpenRegisterModal(false);
+                    fetchNeumaticos(); // Refresca lista tras crear
+                }}
+            />
         </div>
     );
 }

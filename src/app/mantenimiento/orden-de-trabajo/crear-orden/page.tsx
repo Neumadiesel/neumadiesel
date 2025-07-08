@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Step1DatosGenerales from "./Step1DatosGenerales";
-import Step2SeleccionNeumaticos from "./Step2SeleccionNeumaticos";
-import Step3Confirmacion from "./Step3Confirmacion";
+import Step1DatosGenerales from "@/components/features/ordendetrabajo/Step1DatosGenerales";
+import Step2SeleccionNeumaticos from "@/components/features/ordendetrabajo/Step2SeleccionNeumaticos";
+import Step3Confirmacion from "@/components/features/ordendetrabajo/Step3Confirmacion";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
-import PasoStepper from "./components/PasoStepper";
+import PasoStepper from "@/components/features/ordendetrabajo/components/PasoStepper";
 import { VehicleDTO } from "@/types/Vehicle";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
-import Step4Instalacion from "./Step4Instalation";
+import Step4Instalacion from "@/components/features/ordendetrabajo/Step4Instalation";
 
 // Tipos
 export type Instalacion = {
@@ -31,8 +31,8 @@ export interface OrdenTrabajoForm {
     description: string;
     locationMaintenanceId: number | null;
     type: string;
-    status: string;
     dimension?: string;
+    status: string;
     entryDate: string;
     dispatchDate: string;
     shift: string;
@@ -175,56 +175,53 @@ export default function ModalCrearOrden({ onClose }: Props) {
     };
 
     return (
-        <div className="fixed inset-0 flex">
-            <div className="absolute inset-0 bg-white dark:bg-neutral-900"></div>
-            <div className="relative bg-white dark:bg-[#212121] h-full dark:text-white p-3 rounded-md shadow-lg flex flex-col gap-y-2 items-center w-full overflow-y-auto pb-10">
-                <h2 className="text-3xl font-bold mb-4">Crear Orden de Trabajo</h2>
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Completa los pasos para crear una nueva orden de trabajo.
-                </p>
+        <div className="relative bg-white dark:bg-[#212121] h-full dark:text-white p-3 rounded-md shadow-lg flex flex-col gap-y-2 items-center w-full overflow-y-auto pb-10">
+            <h2 className="text-3xl font-bold mb-4">Crear Orden de Trabajo</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Completa los pasos para crear una nueva orden de trabajo.
+            </p>
 
-                <PasoStepper pasoActual={step} />
-                <div className="flex justify-center mt-4 w-full ">
-                    <button
-                        onClick={handleCancelar}
-                        className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition"
-                    >
-                        Cancelar
-                    </button>
-                </div>
-                <div className="w-full max-w-5xl h-full">
-                    {step === 1 && (
-                        <Step1DatosGenerales
-                            datos={datos}
-                            setDatos={setDatos}
-                            onNext={() => setStep(2)}
-                        />
-                    )}
-                    {step === 2 && (
-                        <Step2SeleccionNeumaticos
-                            datos={datos}
-                            setDatos={setDatos}
-                            onNext={() => setStep(3)}
-                            onBack={() => setStep(1)}
-                        />
-                    )}
-                    {step === 3 && (
-                        <Step3Confirmacion
-                            datos={datos}
-                            setDatos={setDatos}
-                            onBack={() => setStep(2)}
-                            onNext={() => setStep(4)}
-                        />
-                    )}
-                    {step === 4 && (
-                        <Step4Instalacion
-                            datos={datos}
-                            setDatos={setDatos}
-                            onBack={() => setStep(3)}
-                            onConfirm={handleCrearOrden}
-                        />
-                    )}
-                </div>
+            <PasoStepper pasoActual={step} />
+            <div className="flex justify-center mt-4 w-full ">
+                <button
+                    onClick={handleCancelar}
+                    className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition"
+                >
+                    Cancelar
+                </button>
+            </div>
+            <div className="w-full max-w-5xl h-full">
+                {step === 1 && (
+                    <Step1DatosGenerales
+                        datos={datos}
+                        setDatos={setDatos}
+                        onNext={() => setStep(2)}
+                    />
+                )}
+                {step === 2 && (
+                    <Step2SeleccionNeumaticos
+                        datos={datos}
+                        setDatos={setDatos}
+                        onNext={() => setStep(3)}
+                        onBack={() => setStep(1)}
+                    />
+                )}
+                {step === 3 && (
+                    <Step3Confirmacion
+                        datos={datos}
+                        setDatos={setDatos}
+                        onBack={() => setStep(2)}
+                        onNext={() => setStep(4)}
+                    />
+                )}
+                {step === 4 && (
+                    <Step4Instalacion
+                        datos={datos}
+                        setDatos={setDatos}
+                        onBack={() => setStep(3)}
+                        onConfirm={handleCrearOrden}
+                    />
+                )}
             </div>
         </div>
     );

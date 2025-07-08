@@ -35,7 +35,9 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
         }
     };
     useEffect(() => {
-        fetchLocations();
+        if (user) {
+            fetchLocations();
+        }
 
         // Solo setear responsable una vez al cargar (no si lo borra manualmente)
         if (user && datos.responsibleName === undefined) {
