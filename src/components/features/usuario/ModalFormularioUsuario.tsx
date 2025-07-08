@@ -109,7 +109,7 @@ export default function ModalFormularioUsuario({
         try {
             setError("");
             // Primero registramos el usuario en el sistema de autenticación
-            await register(nombre, apellido, correo, password, roleId, faena);
+            await register(nombre, apellido, correo, roleId, faena);
 
             // Luego creamos el usuario en la base de datos
             const nuevoUsuario: Usuario = {
@@ -193,16 +193,6 @@ export default function ModalFormularioUsuario({
                         className="w-full p-2 border border-gray-300 rounded"
                         value={correo}
                         onChange={e => setCorreo(e.target.value)}
-                    />
-                    <label className="text-sm font-semibold">
-                        Contraseña<span className="font-bold text-lg text-red-500">*</span>
-                    </label>
-                    <input
-                        type="password"
-                        placeholder="Contraseña"
-                        className="w-full p-2 border border-gray-300 rounded"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
                     />
                     <label className="text-sm font-semibold">
                         Rol del usuario<span className="font-bold text-lg text-red-500">*</span>

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { FaCheckCircle } from "react-icons/fa";
 import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
+import { Eye, EyeClosed } from "lucide-react";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ export default function Login() {
     const [success, setSuccess] = useState(false);
     const { login } = useAuth();
     const [loading, setLoading] = useState(false);
-
+    const [showPassword, setShowPassword] = useState(false);
     const handleSubmit = async (e: React.FormEvent) => {
         setLoading(true);
         e.preventDefault();
@@ -89,14 +90,28 @@ export default function Login() {
                             onChange={e => setEmail(e.target.value)}
                             required
                         />
-                        <input
-                            type="password"
-                            placeholder="Contraseña"
-                            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
-                            required
-                        />
+                        <div className="w-full relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Contraseña"
+                                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800 focus:outline-none"
+                                tabIndex={-1}
+                                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                                {showPassword ?
+                                    <EyeClosed className="w-5 h-5" />
+                                    : <Eye className="w-5 h-5" />
+                                }
+                            </button>
+                        </div>
                         <button
                             type="submit"
                             className="w-full p-3 rounded-md bg-amber-300 text-black text-xl hover:bg-amber-500 transition-colors font-bold"

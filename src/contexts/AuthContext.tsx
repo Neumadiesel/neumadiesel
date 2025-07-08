@@ -30,7 +30,6 @@ interface AuthContextType {
         name: string,
         last_name: string,
         email: string,
-        password: string,
         role_id: number,
         faena_id: number
     ) => Promise<void>;
@@ -97,7 +96,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         name: string,
         last_name: string,
         email: string,
-        password: string,
         role_id: number,
         faena_id: number
     ) => {
@@ -106,10 +104,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 name,
                 last_name,
                 email,
-                password,
                 role_id,
                 faena_id,
-            });
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+
+            );
         } catch (error) {
             console.error("Error al registrarse:", error);
             throw error;
