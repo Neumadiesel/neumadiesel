@@ -140,6 +140,17 @@ export default function ModalFormularioUsuario({
         }
     };
 
+    const handleClose = () => {
+        setNombre("");
+        setApellido("");
+        setCorreo("");
+        setRol("operador");
+        setFaena(0);
+        setPassword("");
+        setError("");
+        onClose();
+    };
+
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
@@ -243,7 +254,7 @@ export default function ModalFormularioUsuario({
                         Guardar
                     </button>
                     <button
-                        onClick={onClose}
+                        onClick={handleClose}
                         className="bg-gray-200 dark:bg-neutral-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-neutral-800 text-black px-4 py-2 rounded"
                     >
                         Cancelar
