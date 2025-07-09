@@ -15,6 +15,7 @@ import LoadingSpinner from "@/components/common/lodaing/LoadingSpinner";
 // import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { useAuth } from "@/contexts/AuthContext";
+import GraficoCumplimientoPrograma from "@/components/features/mantenimiento/GraficoCumplimientoPrograma";
 
 interface ProgramasDTO {
     id: number;
@@ -41,6 +42,86 @@ export default function Programas() {
     const [loading, setLoading] = useState(true);
     const [programMaintenance, setProgramMaintenance] = useState<ProgramasDTO[]>([]);
     const [startDate, setStartDate] = useState(new Date()); // NUEVO: fecha base
+
+    const [kpiTotal, setKpiTotal] = useState(0);
+    const [kpiCompletados, setKpiCompletados] = useState(0);
+    const [kpiCumplimiento, setKpiCumplimiento] = useState(0);
+
+
+    const calcularKPIs = (programas: ProgramasDTO[]) => {
+        const total = programas.length;
+        const completados = programas.filter(p => p.status?.toLowerCase() === "completada").length;
+        const programados = programas.filter(p => p.status?.toLowerCase() === "programada").length;
+        const cumplimiento = total > 0 ? Math.round((completados / total) * 100) : 0;
+        setKpiTotal(programados);
+        setKpiCompletados(completados);
+        setKpiCumplimiento(cumplimiento);
+    };
+
+
+
+    function formatearFechaLocal(fecha: Date): string {
+        const año = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+        return `${año}-${mes}-${dia}T00:00:00.000`;
+    }
+
+    function formatearFechaFinUTC(fecha: Date): string {
+        const fin = new Date(fecha);
+        fin.setHours(23, 59, 59, 999);
+        return fin.toISOString(); // Devuelve en formato UTC con la Z
+    }
+
+    // const handleDeleteProgram = async (id: number) => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await client.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/${id}`);
+    //         fetchData();
+    //         setLoading(false);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Error al eliminar el programa:", error);
+    //     }
+    // };
+
+    const handleConfirm = () => {
+        setIsOpen(false);
+    };
+
+    const fetchData = async () => {
+        const fechaInicio = new Date(startDate);
+        const fechaFin = new Date(startDate);
+        fechaFin.setDate(fechaInicio.getDate() + 6);
+
+        const isoInicio = formatearFechaLocal(fechaInicio);
+        const isoFin = formatearFechaFinUTC(fechaFin);
+
+        try {
+            console.log("Fechas:", isoInicio, isoFin);
+            setLoading(true);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
+            const data = await response.json();
+            const programas = Array.isArray(data) ? data : [];
+            setProgramMaintenance(programas);
+            calcularKPIs(programas);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching:", error);
+            setProgramMaintenance([]); // 👈 En caso de error, también deja un array vacío
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            fetchData();
+        }
+    }, [startDate, isOpenModal, user]);
+
 
     const exportToExcel = async () => {
         const table = document.querySelector("table") as HTMLTableElement;
@@ -121,10 +202,6 @@ export default function Programas() {
         });
         saveAs(blob, ` "programa_mantenimiento_semana_${fechaInicio}_${formattedFechaFin}.xlsx`);
     };
-
-
-
-
     // NUEVO: función para rango de 7 días desde fecha base
     function getRangoDeFechas(fecha: Date): string {
         const inicio = new Date(fecha);
@@ -143,71 +220,9 @@ export default function Programas() {
         return `${formatear(inicio)} - ${formatear(fin)}`;
     }
 
-    function formatearFechaLocal(fecha: Date): string {
-        const año = fecha.getFullYear();
-        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-        const dia = String(fecha.getDate()).padStart(2, "0");
-        return `${año}-${mes}-${dia}T00:00:00.000`;
-    }
-
-    function formatearFechaFinUTC(fecha: Date): string {
-        const fin = new Date(fecha);
-        fin.setHours(23, 59, 59, 999);
-        return fin.toISOString(); // Devuelve en formato UTC con la Z
-    }
-
-    // const handleDeleteProgram = async (id: number) => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await client.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/${id}`);
-    //         fetchData();
-    //         setLoading(false);
-    //         return response.data;
-    //     } catch (error) {
-    //         console.error("Error al eliminar el programa:", error);
-    //     }
-    // };
-
-    const handleConfirm = () => {
-        setIsOpen(false);
-    };
-
-    const fetchData = async () => {
-        const fechaInicio = new Date(startDate);
-        const fechaFin = new Date(startDate);
-        fechaFin.setDate(fechaInicio.getDate() + 6);
-
-        const isoInicio = formatearFechaLocal(fechaInicio);
-        const isoFin = formatearFechaFinUTC(fechaFin);
-
-        try {
-            console.log("Fechas:", isoInicio, isoFin);
-            setLoading(true);
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/time-period/${isoInicio}/${isoFin}`);
-            if (!response) {
-                console.warn("No se pudo obtener la respuesta (res es null).");
-                return;
-            }
-            const data = await response.json();
-
-            console.log("Programas", data);
-            setProgramMaintenance(Array.isArray(data) ? data : []); // 👈 Asegura que siempre sea un array
-            setLoading(false);
-        } catch (error) {
-            console.error("Error fetching:", error);
-            setProgramMaintenance([]); // 👈 En caso de error, también deja un array vacío
-        }
-    }
-
-    useEffect(() => {
-        fetchData();
-    }, [startDate, isOpenModal, user]);
-
-
-
     return (
-        <div className="bg-[#f1f1f1] dark:bg-[#313131]">
-            <div className="lg:p-3 bg-white dark:bg-[#212121] dark:text-white h-[95%]">
+        <div className="bg-gray-100 dark:bg-[#313131]">
+            <div className="lg:p-3 bg-gray-100 dark:bg-[#212121] dark:text-white h-[95%]">
                 <div className="flex flex-col gap-y-2 p-2">
                     <section className="lg:flex items-center justify-between gap-x-2">
                         <h1 className="text-2xl   font-bold">Programa Semanal de Mantenciones</h1>
@@ -259,14 +274,30 @@ export default function Programas() {
                         </div>
                     </section>
                 </div>
+                {/* KPIs */}
+                <section className="grid grid-cols-1 md:grid-cols-3 gap-4 my-4">
+                    <div className="bg-white dark:bg-neutral-800 p-4 border rounded shadow">
+                        <h4 className="text-sm text-gray-500 dark:text-gray-300">Mantenimientos Programados Pendientes</h4>
+                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{kpiTotal}</p>
+                    </div>
+                    <div className="bg-white dark:bg-neutral-800 p-4 border rounded shadow">
+                        <h4 className="text-sm text-gray-500 dark:text-gray-300">Completados</h4>
+                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">{kpiCompletados}</p>
+                    </div>
+                    <div className="bg-white dark:bg-neutral-800 p-4 border rounded shadow">
+                        <h4 className="text-sm text-gray-500 dark:text-gray-300">% Cumplimiento</h4>
+                        <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{kpiCumplimiento}%</p>
+                    </div>
+                </section>
+                {/* Grafico */}
+                <GraficoCumplimientoPrograma />
 
                 <div className="relative overflow-x-auto h-[85%] my-2">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-lg rounded-t-md overflow-hidden">
-                        <thead className="text-xs text-gray-700 uppercase bg-amber-300 text-center">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-lg rounded-t-[4px] overflow-hidden">
+                        <thead className="text-xs text-white uppercase bg-gray-800 text-center">
                             <tr>
                                 <th scope="col" className="px-6 py-3">Equipo</th>
                                 <th scope="col" className="px-6 py-3">Motivo</th>
-                                <th scope="col" className="px-6 py-3">Neumático</th>
                                 <th scope="col" className="px-2 py-3">Programado</th>
                                 <th scope="col" className="px-6 py-3 w-32">Realizado</th>
                                 <th scope="col" className="px-6 py-3 w-32">Estado</th>
@@ -295,9 +326,6 @@ export default function Programas() {
                                         </td>
                                         <td className="px-6 bg-white dark:bg-neutral-800 py-4 whitespace-nowrap">
                                             <div className="text-sm">{programa.description}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm">{programa.tyreCode}</div>
                                         </td>
                                         <td className="px-6 bg-white dark:bg-neutral-800 py-4 whitespace-nowrap">
                                             <div className="text-sm">{new Date(programa.scheduledDate).toLocaleDateString("es-CL", {
@@ -335,16 +363,19 @@ export default function Programas() {
                     </table>
                 </div>
                 <LoadingSpinner isOpen={loading} />
+                {isOpenModal &&
+                    <ModalProgramaMantenimiento
+                        visible={isOpenModal}
+                        onClose={() => setIsOpenModal(false)}
+                        onGuardar={() => { setIsOpenModal(false) }}
+                    />}
 
-                <ModalProgramaMantenimiento
-                    visible={isOpenModal}
-                    onClose={() => setIsOpenModal(false)}
-                    onGuardar={() => { setIsOpenModal(false) }}
-                />
-
-                <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} title="¿Estás seguro?">
-                    <p>¿Quieres confirmar esta acción?</p>
-                </Modal>
+                {
+                    isOpen &&
+                    <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleConfirm} title="¿Estás seguro?">
+                        <p>¿Quieres confirmar esta acción?</p>
+                    </Modal>
+                }
             </div>
         </div>
     );

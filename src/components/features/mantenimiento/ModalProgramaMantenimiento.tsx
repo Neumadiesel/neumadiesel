@@ -7,7 +7,6 @@ import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 
 interface ProgramDTO {
     code: string;
-    tyreCode: string;
     date: string;
     description: string;
     status?: string; // Programada, En ejecución, Completada, Cancelada
@@ -31,7 +30,6 @@ export default function ModalProgramaMantenimiento({
 }: ModalProgramaMantenimientoProps) {
     const [newProgram, setNewProgram] = useState<ProgramDTO>({
         code: "",
-        tyreCode: "",
         date: "",
         description: "",
         status: "Programada", // Default status
@@ -50,7 +48,7 @@ export default function ModalProgramaMantenimiento({
         setError("");
         setLoading(true);
 
-        const { code, date, description } = newProgram;
+        const { code, date, description, status } = newProgram;
         if (
             !code ||
             !date ||
@@ -67,6 +65,7 @@ export default function ModalProgramaMantenimiento({
                 {
                     vehicleCode: code,
                     siteId: 1,
+                    status: status,
                     scheduledDate: date,
                     description: description,
                 },
@@ -74,7 +73,6 @@ export default function ModalProgramaMantenimiento({
 
             setNewProgram({
                 code: "",
-                tyreCode: "",
                 date: "",
                 description: "",
                 status: "Programada", // Reset to default status
@@ -122,7 +120,7 @@ export default function ModalProgramaMantenimiento({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Codigo Nuematico */}
-                    <Label title="Codigo Neumatico" isNotEmpty={false} />
+                    {/* <Label title="Codigo Neumatico" isNotEmpty={false} />
                     <input
                         name="Codigo Neumatico"
                         value={newProgram.tyreCode}
@@ -131,7 +129,7 @@ export default function ModalProgramaMantenimiento({
                         }
                         placeholder="Codigo Neumatico"
                         className="border border-gray-300 p-2 rounded"
-                    />
+                    /> */}
                     {/* Fecha de Mantenimiento */}
                     <Label title="Fecha Programada" isNotEmpty={true} />
                     <input
@@ -155,7 +153,7 @@ export default function ModalProgramaMantenimiento({
                         className="border border-gray-300 p-2 rounded"
                     >
                         <option value="Programada">Programada</option>
-                        {/* <option value="En ejecución">En ejecución</option> */}
+                        <option value="Imprevisto">Imprevisto</option>
                         <option value="Completada">Completada</option>
                         {/* <option value="Cancelada">Cancelada</option> */}
                     </select>
