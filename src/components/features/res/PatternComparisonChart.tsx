@@ -145,7 +145,7 @@ export default function PatternComparisonVisual() {
     const histogramData = bins.slice(0, -1).map((start, idx) => {
         const end = bins[idx + 1];
         const binLabel = `${start}-${end}%`;
-        const row: any = { bin: binLabel };
+        const row: { bin: string;[key: string]: number | string } = { bin: binLabel };
         stats.forEach(s => {
             row[s.pattern] = s.histogram[idx];
         });

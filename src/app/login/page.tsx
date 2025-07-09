@@ -43,15 +43,16 @@ export default function Login() {
                 src="/video-1.mp4"
                 muted
                 loop
-                className="hidden lg:block absolute  w-full h-full object-cover"
+                playsInline
+                className="absolute w-full h-full object-cover"
             />
 
             {/* Overlay semi-transparente */}
-            <div className="absolute w-full h-full bg-black/40" />
+            <div className="absolute w-full h-full bg-black/30 md:bg-black/50" />
 
             {/* Contenido centrado */}
-            <div className="relative z-10 bg-white md:bg-transparent flex flex-col items-center justify-center h-full">
-                <div className="bg-white p-8 rounded-lg md:shadow-xl max-w-md w-full mx-4">
+            <div className="relative z-10  bg-transparent flex flex-col items-center justify-center h-full">
+                <div className="bg-amber-100/20 backdrop-blur-lg p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 border border-white/20">
                     <div className="flex flex-col items-center mb-6">
                         <Link href="/">
                             <Image
@@ -62,10 +63,10 @@ export default function Login() {
                                 className="mb-4"
                             />
                         </Link>
-                        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                        <h1 className="text-2xl font-bold text-white mb-2">
                             Bienvenido a Neumasystem
                         </h1>
-                        <p className="text-gray-600">Inicia sesión para continuar</p>
+                        <p className="text-gray-200">Inicia sesión para continuar</p>
                     </div>
 
                     {error && (
@@ -85,7 +86,7 @@ export default function Login() {
                         <input
                             type="email"
                             placeholder="Correo electrónico"
-                            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 text-white focus:ring-blue-500 placeholder:text-white"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                             required
@@ -94,7 +95,7 @@ export default function Login() {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Contraseña"
-                                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12"
+                                className="w-full p-3 rounded-md border border-gray-300 focus:outline-none placeholder:text-white text-white focus:ring-2 focus:ring-blue-500 pr-12"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 required
@@ -120,7 +121,7 @@ export default function Login() {
                         </button>
                         <Link
                             href="/forgot-password"
-                            className="text-gray-600 hover:text-yellow-500"
+                            className="text-gray-200 hover:text-yellow-500"
                         >
                             ¿Olvidaste tu contraseña?
                         </Link>
