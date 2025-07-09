@@ -130,19 +130,19 @@ export default function NavBar() {
             allowedRoles: ["operador"],
         },
         {
-            title: "Mediciones",
+            title: "Inspección",
             icon: <FaFile className="text-2xl" />,
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
-                { title: "Mediciones", path: "/medicion/" },
+                { title: "Inspecciones", path: "/inspeccion/" },
                 // { title: "Equipo", path: "/medicion/equipo" },
                 {
-                    title: "Medición por Neumático",
-                    path: "/medicion/medicion-por-neumatico",
+                    title: "Inspección por Neumático",
+                    path: "/inspeccion/inspeccion-por-neumatico",
                 },
                 {
-                    title: "Medición por Equipo",
-                    path: "/medicion/medicion-por-equipo",
+                    title: "Inspección por Equipo",
+                    path: "/inspeccion/inspeccion-por-equipo",
                 },
             ],
         },

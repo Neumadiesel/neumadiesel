@@ -206,9 +206,14 @@ export default function GraficoCumplimientoPrograma() {
 
     return (
         <div className="p-4 bg-white dark:bg-neutral-900 rounded-xl shadow">
-            <h2 className="text-xl font-bold mb-4 dark:text-white">Cumplimiento del Programa</h2>
-
-            <div className="flex gap-4 mb-4">
+            <h2 className="text-2xl font-bold mb-2 dark:text-white" style={{ textAlign: "center" }}
+            >
+                Cumplimiento del Programa
+            </h2>
+            <div className="flex items-center gap-4 mb-4 justify-center">
+                <p className="text-lg font-semibold dark:text-white">
+                    Seleccionar Mes y Año:
+                </p>
                 <Select
                     options={optionsMes}
                     value={{ label: meses[mes], value: mes }}
@@ -221,21 +226,16 @@ export default function GraficoCumplimientoPrograma() {
                     onChange={(opt) => setAnio(opt?.value ?? anio)}
                     className="text-black w-32"
                 />
-            </div>
-            <div className="flex items-center justify-end">
                 <button
                     onClick={downloadChartAsImage}
-                    className="px-4 py-2 bg-blue-600 font-semibold text-white rounded mt-4"
+                    className="px-4 py-2 bg-blue-600 font-semibold text-white rounded "
                 >
                     Exportar como Imagen
                 </button>
             </div>
 
             <div id="grafico-cumplimiento" className="w-full h-full bg-white dark:bg-neutral-800 p-3 m-2">
-                <h2 className="text-2xl font-bold mb-2 dark:text-white" style={{ textAlign: "center" }}
-                >
-                    Cumplimiento del Programa
-                </h2>
+
                 {/* Gráfico semanal */}
                 <div className="mb-10">
                     <h3 className="font-semibold mb-2 dark:text-white">Cumplimiento semanal - {meses[mes]} {anio}</h3>

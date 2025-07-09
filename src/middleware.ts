@@ -55,11 +55,11 @@ const routePermissions = {
     ],
 
     // Rutas de ingreso de datos
-    medicion: [
-        '/medicion',
-        '/medicion/medicion-por-equipo',
-        '/medicion/medicion-por-neumatico',
-        '/medicion/equipo',
+    inspeccion: [
+        '/inspeccion',
+        '/inspeccion/inspeccion-por-equipo',
+        '/inspeccion/inspeccion-por-neumatico',
+        '/inspeccion/equipo',
     ],
 };
 
@@ -73,7 +73,7 @@ const rolePermissions = {
         ...routePermissions.neumaticos,
         ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
-        ...routePermissions.medicion,
+        ...routePermissions.inspeccion,
     ],
     demo: [
         ...routePermissions.reportabilidad,
@@ -83,7 +83,7 @@ const rolePermissions = {
         ...routePermissions.modelos,
         ...routePermissions.faena,
         ...routePermissions.mantenimiento,
-        ...routePermissions.medicion,
+        ...routePermissions.inspeccion,
     ],
     planificador: [
         ...routePermissions.reportabilidad,
@@ -93,7 +93,7 @@ const rolePermissions = {
         ...routePermissions.modelos,
         ...routePermissions.faena,
         ...routePermissions.mantenimiento,
-        ...routePermissions.medicion,
+        ...routePermissions.inspeccion,
     ],
     administrador_de_contratos: [
         ...routePermissions.reportabilidad,
@@ -103,7 +103,7 @@ const rolePermissions = {
         ...routePermissions.modelos,
         ...routePermissions.faena,
         ...routePermissions.mantenimiento,
-        ...routePermissions.medicion,
+        ...routePermissions.inspeccion,
     ],
     supervisor: [
         ...routePermissions.resumen,
@@ -113,11 +113,11 @@ const rolePermissions = {
         ...routePermissions.faena,
         ...routePermissions.modelos,
         ...routePermissions.mantenimiento,
-        ...routePermissions.medicion,
+        ...routePermissions.inspeccion,
     ],
     // Cambiar nombre a tecnico
     operador: [
-        '/medicion/medicion-por-equipo',
+        '/inspeccion/inspeccion-por-equipo',
     ],
     // Modificar agregar Equipos y Neumáticos
     stakeholder: [
