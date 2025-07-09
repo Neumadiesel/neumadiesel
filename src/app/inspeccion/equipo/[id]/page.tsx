@@ -1,6 +1,6 @@
 'use client'
-import CardCheck from "@/components/features/medicion/page/CardCheck";
-import PhotoCard from "@/components/features/medicion/page/PhotoCard";
+import CardCheck from "@/components/features/inspeccion/page/CardCheck";
+import PhotoCard from "@/components/features/inspeccion/page/PhotoCard";
 import { Calendar, Camera, FileCheck, FileDown, Gauge, MessageCircle, User } from "lucide-react";
 import { useParams } from "next/navigation";
 

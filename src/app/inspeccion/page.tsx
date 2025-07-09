@@ -142,13 +142,13 @@ export default function MedicionPage() {
                 <h1 className="text-4xl dark:text-white font-semibold">Panel de Inspecciones</h1>
                 <div className="flex max-lg:flex-col items-center gap-2 max-lg:py-2">
                     {/* Inspeccionar equipo */}
-                    <Link href="/medicion/medicion-por-equipo" className="bg-green-500 max-lg:w-full text-center text-white px-4 py-2 rounded flex justify-center  items-center gap-2 hover:bg-emerald-600 transition-colors">
+                    <Link href="/inspeccion/inspeccion-por-equipo" className="bg-green-500 max-lg:w-full text-center text-white px-4 py-2 rounded flex justify-center  items-center gap-2 hover:bg-emerald-600 transition-colors">
                         <p className="text-lg font-semibold">
                             Inspeccionar Equipo
                         </p>
                     </Link>
                     {/* Inspeccionar neumatico */}
-                    <Link href="/medicion/medicion-por-neumatico" className="bg-blue-500 max-lg:w-full text-white px-4 py-2 rounded flex justify-center items-center gap-2 hover:bg-blue-600 transition-colors">
+                    <Link href="/inspeccion/inspeccion-por-neumatico" className="bg-blue-500 max-lg:w-full text-white px-4 py-2 rounded flex justify-center items-center gap-2 hover:bg-blue-600 transition-colors">
                         <p className="text-lg font-semibold">
                             Inspeccionar Neumático
                         </p>
@@ -225,7 +225,7 @@ export default function MedicionPage() {
                                         <td className="px-4 py-2">{inspection.inspectorName}</td>
                                         <td className="px-4 py-2">{inspection.observation || "N/A"}</td>
                                         <td className="px-4 py-2 gap-2 flex">
-                                            <Link href={`/medicion/${inspection.id}`} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
+                                            <Link href={`/inspeccion/${inspection.id}`} className="bg-gray-50 text-black border hover:cursor-pointer px-4 py-2 rounded hover:bg-gray-100 transition-colors font-semibold">
                                                 Revisar
                                             </Link>
                                             <button
@@ -297,7 +297,7 @@ export default function MedicionPage() {
                                         <td className="px-4 py-2">{inspection.inspectorName}</td>
                                         <td className="px-4 py-2 gap-2 flex">
                                             <ToolTipCustom content="Ver Inspección">
-                                                <Link href={`/medicion/${inspection.id}`}>
+                                                <Link href={`/inspeccion/${inspection.id}`}>
                                                     <Info className="w-6 h-6 text-emerald-400 hover:text-emerald-500 transition-colors" />
                                                 </Link>
                                             </ToolTipCustom>

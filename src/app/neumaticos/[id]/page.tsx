@@ -190,7 +190,7 @@ export default function TirePage() {
                     Información del Neumático: {tire?.code} - {tire?.model?.dimensions}
                 </h1>
                 <div className="flex flex-col lg:flex-row justify-between items-center gap-2">
-                    <Link href={`/medicion/${tire?.lastInspectionId}`}>
+                    <Link href={`/inspeccion/${tire?.lastInspectionId}`}>
                         <div className="bg-neutral-100 text-black border border-gray-200 px-4 py-2 rounded-md hover:bg-white transition-colors w-full flex items-center justify-center font-bold">
                             Ver Última Inspección
                         </div>
@@ -362,7 +362,7 @@ export default function TirePage() {
                                         <td className="p-4 bg-gray-50 dark:bg-neutral-800">
                                             {record.type === "inspection" ? (
                                                 <ToolTipCustom content="Ver Inspección">
-                                                    <Link href={`/medicion/${record.id}`}>
+                                                    <Link href={`/inspeccion/${record.id}`}>
                                                         <Info className="w-6 h-6 text-blue-500 hover:text-blue-700 transition-colors" />
                                                     </Link>
                                                 </ToolTipCustom>

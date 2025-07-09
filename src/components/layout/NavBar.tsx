@@ -126,7 +126,7 @@ export default function NavBar() {
         {
             title: "Ingresar Medición por Equipo",
             icon: <FaFile className="text-2xl" />,
-            path: "/medicion/medicion-por-equipo",
+            path: "/inspeccion/inspeccion-por-equipo",
             allowedRoles: ["operador"],
         },
         {
@@ -135,7 +135,7 @@ export default function NavBar() {
             allowedRoles: ["administrador", "planificador", "demo", "supervisor"],
             children: [
                 { title: "Inspecciones", path: "/inspeccion/" },
-                // { title: "Equipo", path: "/medicion/equipo" },
+                // { title: "Equipo", path: "/inspeccion/equipo" },
                 {
                     title: "Inspección por Neumático",
                     path: "/inspeccion/inspeccion-por-neumatico",

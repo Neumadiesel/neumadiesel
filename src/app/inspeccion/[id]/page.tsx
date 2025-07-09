@@ -99,7 +99,7 @@ export default function Page() {
             // Actualizar la lista de inspecciones pendientes
             setDenyModalOpen(false); // Cerrar el modal de confirmación
             // quiero redirigirme a la pagina de inspecciones
-            window.location.href = '/medicion';
+            window.location.href = '/inspeccion';
         } catch (error) {
             console.error("Error denying inspection:", error);
             return [];
