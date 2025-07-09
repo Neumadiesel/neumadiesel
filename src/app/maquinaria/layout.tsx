@@ -119,11 +119,7 @@ export default function RootLayout({
         if (user && user.faena_id !== undefined) {
             fetchVehicleModels();
         }
-    }, [user]);
-
-    useEffect(() => {
-        fetchVehicleModels();
-    }, [modalRegistrarVehiculo]);
+    }, [user, modalRegistrarVehiculo]);
 
     useEffect(() => {
         if (hasChanged) {

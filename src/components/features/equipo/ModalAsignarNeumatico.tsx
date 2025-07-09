@@ -142,11 +142,7 @@ export default function ModalAsignarNeumatico({
             fetchModels();
             fetchData();
         }
-    }, [user]);
-
-    useEffect(() => {
-        fetchData();
-    }, [vehicle?.siteId]);
+    }, [user, vehicle?.siteId]);
 
     if (!visible || !vehicle) return null;
 

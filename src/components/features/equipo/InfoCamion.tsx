@@ -85,13 +85,11 @@ export default function ListaMaquinaria() {
     };
 
     useEffect(() => {
-        fetchVehicleModels();
-    }, []);
-
-    useEffect(() => {
-        handleUpdate();
-        fetchVehicleModels();
-    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarAddKms, siteId]);
+        if (user) {
+            handleUpdate();
+            fetchVehicleModels();
+        }
+    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarAddKms, siteId, user]);
 
     return (
         <div className="p-2 h-[100%] w-full bg-white dark:bg-[#212121] relative shadow-md">
@@ -186,16 +184,17 @@ export default function ListaMaquinaria() {
                     </div>
                 </div>
             </div>
-            <ModalDesmontarNeumatico
-                visible={mostrarDesmontar}
-                onClose={() => setMostrarDesmontar(false)}
-                tire={tireDesmontado}
-                onGuardar={() => {
-                    setHasChanged(true);
-                    setMostrarDesmontar(false);
-                }}
-            />
-            <ModalAddKms
+            {mostrarDesmontar &&
+                <ModalDesmontarNeumatico
+                    visible={mostrarDesmontar}
+                    onClose={() => setMostrarDesmontar(false)}
+                    tire={tireDesmontado}
+                    onGuardar={() => {
+                        setHasChanged(true);
+                        setMostrarDesmontar(false);
+                    }}
+                />}
+            {mostrarAddKms && <ModalAddKms
                 visible={mostrarAddKms}
                 onClose={() => setMostrarAddKms(false)}
                 vehicle={vehicle}
@@ -203,8 +202,8 @@ export default function ListaMaquinaria() {
 
                     setHasChanged(true);
                     setMostrarEditar(false);
-                }} />
-            <ModaleditarEquipo
+                }} />}
+            {mostrarEditar && <ModaleditarEquipo
                 visible={mostrarEditar}
                 onClose={() => setMostrarEditar(false)}
                 vehicle={vehicle}
@@ -212,8 +211,8 @@ export default function ListaMaquinaria() {
 
                     setHasChanged(true);
                     setMostrarEditar(false);
-                }} />
-            <ModalAsignarNeumatico
+                }} />}
+            {mostrarAsignarNeumatico && <ModalAsignarNeumatico
                 visible={mostrarAsignarNeumatico}
                 onClose={() => setMostrarAsignarNeumatico(false)}
                 vehicle={vehicle}
@@ -222,7 +221,7 @@ export default function ListaMaquinaria() {
                     setHasChanged(true);
                     setMostrarAsignarNeumatico(false);
                 }} />
-
+            }
         </div>
     );
 }
