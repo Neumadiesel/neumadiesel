@@ -289,11 +289,9 @@ export default function Programas() {
                         <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{kpiCumplimiento}%</p>
                     </div>
                 </section>
-                {/* Grafico */}
-                <GraficoCumplimientoPrograma />
 
-                <div className="relative overflow-x-auto h-[85%] my-2">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-lg rounded-t-[4px] overflow-hidden">
+                <div className="relative overflow-x-auto h-[80dvh] my-2">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 shadow-sm rounded-t-[4px] overflow-hidden">
                         <thead className="text-xs text-white uppercase bg-gray-800 text-center">
                             <tr>
                                 <th scope="col" className="px-6 py-3">Equipo</th>
@@ -305,7 +303,16 @@ export default function Programas() {
                             </tr>
                         </thead>
                         <tbody>
-                            {programMaintenance.length === 0 ? (
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={7} className="py-10">
+                                        <div className="flex flex-col items-center justify-center gap-y-4">
+                                            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+                                            <p className="text-sm text-gray-500">Cargando mantenimientos programados...</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : programMaintenance.length === 0 ? (
                                 <tr className="text-center">
                                     <td colSpan={7} className="py-4 h-[60vh]">
                                         <div className="flex flex-col items-center justify-center gap-y-4">
@@ -344,7 +351,20 @@ export default function Programas() {
                                                 : "—"}</div>
                                         </td>
                                         <td className="px-6 bg-white dark:bg-neutral-800 py-4 whitespace-nowrap">
-                                            <div className="text-sm">{programa.status}</div>
+                                            <div
+                                                className={
+                                                    `text-xs p-1 border rounded-xl ` +
+                                                    (programa.status?.toLowerCase() === "programada"
+                                                        ? "text-blue-700 border-blue-600 bg-blue-200"
+                                                        : programa.status?.toLowerCase() === "completada"
+                                                            ? "text-emerald-700 border-emerald-600 bg-emerald-200"
+                                                            : programa.status?.toLowerCase() === "imprevisto"
+                                                                ? "text-amber-700 border-amber-600 bg-amber-200"
+                                                                : "text-gray-700 border-gray-400 bg-gray-200")
+                                                }
+                                            >
+                                                {programa.status}
+                                            </div>
                                         </td>
                                         {/* <td className="px-6  py-4 whitespace-nowrap">
                                             <div className="text-sm flex justify-center items-center">
@@ -361,8 +381,11 @@ export default function Programas() {
                             )}
                         </tbody>
                     </table>
+
                 </div>
-                <LoadingSpinner isOpen={loading} />
+                {/* Grafico */}
+                <GraficoCumplimientoPrograma />
+
                 {isOpenModal &&
                     <ModalProgramaMantenimiento
                         visible={isOpenModal}

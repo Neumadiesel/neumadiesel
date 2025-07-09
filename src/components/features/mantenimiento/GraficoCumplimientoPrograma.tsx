@@ -18,6 +18,7 @@ import { useAuthFetch } from "@/utils/AuthFetch";
 import { useAuth } from "@/contexts/AuthContext";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { toPng } from "html-to-image";
 dayjs.locale("es");
 
 interface MaintenanceProgram {
@@ -55,6 +56,22 @@ export default function GraficoCumplimientoPrograma() {
         "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
     ];
 
+    const calcularAcumulado = (data: CumplimientoDTO[]): CumplimientoDTO => {
+        return data.reduce((acc, item) => {
+            acc.programado += item.programado;
+            acc.realizado += item.realizado;
+            acc.imprevistos += item.imprevistos;
+            acc.apoyo += item.apoyo;
+            return acc;
+        }, {
+            periodo: "Acumulado",
+            programado: 0,
+            realizado: 0,
+            imprevistos: 0,
+            apoyo: 0,
+        });
+    };
+
     const agruparPorSemana = (data: MaintenanceProgram[]): CumplimientoDTO[] => {
         const semanas: Record<string, CumplimientoDTO> = {};
 
@@ -88,7 +105,9 @@ export default function GraficoCumplimientoPrograma() {
             }
         });
 
-        return Object.values(semanas);
+        const resultado = Object.values(semanas);
+        resultado.push(calcularAcumulado(resultado));
+        return resultado;
     };
 
     const agruparPorMes = (data: MaintenanceProgram[]): CumplimientoDTO[] => {
@@ -124,7 +143,9 @@ export default function GraficoCumplimientoPrograma() {
             }
         });
 
-        return Object.values(mesesAgrupados);
+        const resultado = Object.values(mesesAgrupados);
+        resultado.push(calcularAcumulado(resultado));
+        return resultado;
     };
 
     const fetchCumplimiento = async () => {
@@ -160,16 +181,28 @@ export default function GraficoCumplimientoPrograma() {
     const optionsMes = meses.map((m, i) => ({ label: m, value: i }));
     const optionsAnio = [2024, 2025].map(a => ({ label: String(a), value: a }));
 
+    const dataSemanalWithPct = dataSemanal.map(entry => ({
+        ...entry,
+        porcentaje: calcularPorcentaje(entry),
+    }));
 
     const dataMensualWithPct = dataMensual.map(entry => ({
         ...entry,
         porcentaje: calcularPorcentaje(entry),
     }));
 
-    const dataSemanalWithPct = dataSemanal.map(entry => ({
-        ...entry,
-        porcentaje: calcularPorcentaje(entry),
-    }));
+    const downloadChartAsImage = async () => {
+        const node = document.getElementById("grafico-cumplimiento");
+        if (!node) return;
+        console.log("exportando")
+
+        const dataUrl = await toPng(node);
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `grafico-cumplimiento-programa.png`;
+        link.click();
+    };
+
 
     return (
         <div className="p-4 bg-white dark:bg-neutral-900 rounded-xl shadow">
@@ -189,73 +222,101 @@ export default function GraficoCumplimientoPrograma() {
                     className="text-black w-32"
                 />
             </div>
-
-            {/* Gráfico semanal */}
-            <div className="mb-10">
-                <h3 className="font-semibold mb-2 dark:text-white">Cumplimiento semanal - {meses[mes]} {anio}</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={dataSemanalWithPct} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="periodo" />
-                        <YAxis yAxisId="left" />
-                        <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="programado" fill="#8884d8" name="Programado" yAxisId="left" />
-                        <Bar dataKey="realizado" fill="#82ca9d" name="Realizado" yAxisId="left" />
-                        <Bar dataKey="imprevistos" fill="#ffc658" name="Imprevistos" yAxisId="left" />
-                        <Bar dataKey="apoyo" fill="#a6a6a6" name="Apoyo Mec." yAxisId="left" />
-                        <Line
-                            type="monotone"
-                            dataKey="porcentaje"
-                            stroke="#0000FF"
-                            yAxisId="right"
-                            name="% Cumplimiento"
-                            dot={false}
-                        >
-                            <LabelList
-                                dataKey="porcentaje"
-                                position="top"
-                                fill="#000"
-                                formatter={(value: number) => `${value}%`}
-                            />
-                        </Line>
-                    </BarChart>
-                </ResponsiveContainer>
+            <div className="flex items-center justify-end">
+                <button
+                    onClick={downloadChartAsImage}
+                    className="px-4 py-2 bg-blue-600 font-semibold text-white rounded mt-4"
+                >
+                    Exportar como Imagen
+                </button>
             </div>
 
-            {/* Gráfico mensual */}
-            <div>
-                <h3 className="font-semibold mb-2 dark:text-white">Cumplimiento mensual - Año {anio}</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={dataMensualWithPct} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="periodo" />
-                        <YAxis yAxisId="left" />
-                        <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="programado" fill="#8884d8" name="Programado" yAxisId="left" />
-                        <Bar dataKey="realizado" fill="#82ca9d" name="Realizado" yAxisId="left" />
-                        <Bar dataKey="imprevistos" fill="#ffc658" name="Imprevistos" yAxisId="left" />
-                        <Bar dataKey="apoyo" fill="#a6a6a6" name="Apoyo Mec." yAxisId="left" />
-                        <Line
-                            type="monotone"
-                            dataKey="porcentaje"
-                            stroke="#0000FF"
-                            yAxisId="right"
-                            name="% Cumplimiento"
-                            dot={false}
-                        >
-                            <LabelList
+            <div id="grafico-cumplimiento" className="w-full h-full bg-white dark:bg-neutral-800 p-3 m-2">
+                <h2 className="text-2xl font-bold mb-2 dark:text-white" style={{ textAlign: "center" }}
+                >
+                    Cumplimiento del Programa
+                </h2>
+                {/* Gráfico semanal */}
+                <div className="mb-10">
+                    <h3 className="font-semibold mb-2 dark:text-white">Cumplimiento semanal - {meses[mes]} {anio}</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={dataSemanalWithPct} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="periodo" />
+                            <YAxis yAxisId="left" />
+                            <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="programado" fill="#8884d8" name="Programado" yAxisId="left">
+                                <LabelList dataKey="programado" position="top" fill="#000" />
+                            </Bar>
+                            <Bar dataKey="realizado" fill="#82ca9d" name="Realizado" yAxisId="left" >
+                                <LabelList dataKey="realizado" position="top" fill="#000" />
+                            </Bar>
+                            <Bar dataKey="imprevistos" fill="#ffc658" name="Imprevistos" yAxisId="left" >
+                                <LabelList dataKey="imprevistos" position="top" fill="#000" />
+                            </Bar>
+                            <Bar dataKey="apoyo" fill="#a6a6a6" name="Apoyo Mec." yAxisId="left" >
+                                <LabelList dataKey="apoyo" position="top" fill="#000" />
+                            </Bar>
+                            <Line
+                                type="monotone"
                                 dataKey="porcentaje"
-                                position="top"
-                                fill="#000"
-                                formatter={(value: number) => `${value}%`}
-                            />
-                        </Line>
-                    </BarChart>
-                </ResponsiveContainer>
+                                stroke="#0000FF"
+                                yAxisId="right"
+                                name="% Cumplimiento"
+                                dot={false}
+                            >
+                                <LabelList
+                                    dataKey="porcentaje"
+                                    position="top"
+                                    fill="#000"
+                                    formatter={(value: number) => `${value}%`}
+                                />
+                            </Line>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+
+                {/* Gráfico mensual */}
+                <div>
+                    <h3 className="font-semibold mb-2 dark:text-white">Cumplimiento mensual - Año {anio}</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={dataMensualWithPct} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="periodo" />
+                            <YAxis yAxisId="left" />
+                            <YAxis yAxisId="right" orientation="right" domain={[0, 100]} />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="programado" fill="#8884d8" name="Programado" yAxisId="left" >
+                                <LabelList dataKey="programado" position="top" fill="#000" />
+                            </Bar>
+                            <Bar dataKey="realizado" fill="#82ca9d" name="Realizado" yAxisId="left" >
+                                <LabelList dataKey="realizado" position="top" fill="#000" />
+                            </Bar>
+                            <Bar dataKey="imprevistos" fill="#ffc658" name="Imprevistos" yAxisId="left" >
+                                <LabelList dataKey="imprevistos" position="top" fill="#000" />
+                            </Bar>
+                            <Bar dataKey="apoyo" fill="#a6a6a6" name="Apoyo Mec." yAxisId="left" />
+                            <Line
+                                type="monotone"
+                                dataKey="porcentaje"
+                                stroke="#0000FF"
+                                yAxisId="right"
+                                name="% Cumplimiento"
+                                dot={false}
+                            >
+                                <LabelList
+                                    dataKey="porcentaje"
+                                    position="top"
+                                    fill="#000"
+                                    formatter={(value: number) => `${value}%`}
+                                />
+                            </Line>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
         </div>
     );

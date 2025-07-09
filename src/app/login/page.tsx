@@ -39,20 +39,35 @@ export default function Login() {
     return (
         <div className="relative w-full h-screen">
             {/* Video de fondo */}
-            <video
+            {/* <video
                 src="/video-1.mp4"
                 muted
                 loop
                 playsInline
-                className="absolute w-full h-full object-cover"
+                className="absolute w-full h-full object-cover hidden lg:block"
+            /> */}
+            {/* Imagen de fondo pc */}
+            <Image
+                src="/mine-ilustration-pc.png"
+                alt="Fondo"
+                fill
+                className="absolute w-full h-full  object-cover max-md:hidden "
+                priority
             />
-
-            {/* Overlay semi-transparente */}
-            <div className="absolute w-full h-full bg-black/30 md:bg-black/50" />
+            {/* Imagen de fondo solo en móvil */}
+            <Image
+                src="/mine-ilustration.png"
+                alt="Fondo"
+                fill
+                className="absolute w-full   object-cover md:hidden"
+                priority
+            />
+            {/* Overlay con gradiente semi-transparente */}
+            <div className="absolute w-full h-full min-md:backdrop-blur-[6px] bg-black/20" />
 
             {/* Contenido centrado */}
             <div className="relative z-10  bg-transparent flex flex-col items-center justify-center h-full">
-                <div className="bg-amber-100/20 backdrop-blur-lg p-8 rounded-xl shadow-2xl max-w-md w-full mx-4 border border-white/20">
+                <div className="bg-amber-100/20 backdrop-blur-sm lg:backdrop-blur-lg p-4 md:p-8 rounded-xl shadow-2xl max-w-md w-5/6 mx-4 border border-white/20">
                     <div className="flex flex-col items-center mb-6">
                         <Link href="/">
                             <Image
@@ -63,10 +78,10 @@ export default function Login() {
                                 className="mb-4"
                             />
                         </Link>
-                        <h1 className="text-2xl font-bold text-white mb-2">
+                        <h1 className="text-xl md:text-2xl  uppercase font-bold text-black md:text-white mb-2">
                             Bienvenido a Neumasystem
                         </h1>
-                        <p className="text-gray-200">Inicia sesión para continuar</p>
+                        <p className="text-gray-800 md:text-gray-200">Inicia sesión para continuar</p>
                     </div>
 
                     {error && (
@@ -86,7 +101,7 @@ export default function Login() {
                         <input
                             type="email"
                             placeholder="Correo electrónico"
-                            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 text-white focus:ring-blue-500 placeholder:text-white"
+                            className="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 text-black md:text-white  focus:ring-blue-500 placeholder:text-white"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                             required
@@ -108,8 +123,8 @@ export default function Login() {
                                 aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                             >
                                 {showPassword ?
-                                    <EyeClosed className="w-5 h-5" />
-                                    : <Eye className="w-5 h-5" />
+                                    <EyeClosed className="w-5 h-5 text-black" />
+                                    : <Eye className="w-5 h-5 text-black" />
                                 }
                             </button>
                         </div>
