@@ -50,12 +50,12 @@ export default function RootLayout({
     const { user } = useAuth();
 
     const iconosPorTipoId: Record<number, ReactElement> = {
-        1: <Grader className="w-16 h-16 text-gray-500 dark:text-white" />,        // Motoniveladora
-        2: <WheelDozer className="w-16 h-16 text-gray-500 dark:text-white" />,    // Bulldozer de ruedas
-        3: <Loader className="w-16 h-16 text-gray-500 dark:text-white" />,        // Cargador
-        4: <WaterTruck className="w-16 h-16 text-gray-500 dark:text-white" />,    // Camión de agua
-        5: <ServiceTruck className="w-16 h-16 text-gray-500 dark:text-white" />,  // Camión de servicio
-        6: <MineTruck className="w-16 h-16 text-gray-500 dark:text-white" />,     // Camión de extracción
+        1: <Grader className="w-16 h-16 text-black dark:text-white" />,        // Motoniveladora
+        2: <WheelDozer className="w-16 h-16 text-black dark:text-white" />,    // Bulldozer de ruedas
+        3: <Loader className="w-20 h-20 rotate-y-180  text-black dark:text-white" />,        // Cargador
+        4: <WaterTruck className="w-16 h-16 text-black dark:text-white" />,    // Camión de agua
+        5: <ServiceTruck className="w-16 h-16 text-black dark:text-white" />,  // Camión de servicio
+        6: <MineTruck className="w-16 h-16 text-black dark:text-white" />,     // Camión de extracción
     };
 
     const fetchVehicleModels = async () => {
