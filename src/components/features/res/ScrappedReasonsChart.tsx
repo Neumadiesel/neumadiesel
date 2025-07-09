@@ -10,7 +10,8 @@ import {
     ResponsiveContainer,
     Label,
     BarChart,
-    Bar
+    Bar,
+    LabelList
 } from 'recharts';
 import Select from 'react-select';
 import dayjs from 'dayjs';
@@ -294,35 +295,73 @@ export default function ScrappedReasonsChart() {
                 </div>
             </div>
 
+            <main className="bg-white dark:bg-neutral-800 p-3 m-2" id="grafico-bajas">
+                <div>
+                    <h3 className="text-lg font-semibold text-center dark:text-white mb-2">
+                        Rendimiento Mensual por Motivo de Baja
+                    </h3>
+                    <ResponsiveContainer width="100%" height={350} className="p-2">
+                        <BarChart data={processed}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="month" />
+                            <YAxis>
+                                <Label
+                                    value="Horas"
+                                    angle={-90}
+                                    position="insideLeft"
+                                    dx={-10}
+                                    style={{ textAnchor: 'middle' }}
+                                />
+                            </YAxis>
+                            <Tooltip />
+                            <Legend />
+                            {selectedReasons.map(motivo => (
+                                <Bar
+                                    key={motivo}
+                                    dataKey={motivo}
+                                    fill={COLORS[motivo] || '#999'}
+                                >
+                                    <LabelList dataKey={motivo} position="top" fill="#000" z={10} />
+                                </Bar>
+                            ))}
+                        </BarChart>
+                    </ResponsiveContainer>
 
-            <div className="bg-white dark:bg-neutral-800 p-3 m-2" id="grafico-bajas">
-                <ResponsiveContainer width="100%" height={350} className="p-2">
-                    <BarChart data={processed}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis>
-                            <Label
-                                value="Horas"
-                                angle={-90}
-                                position="insideLeft"
-                                dx={-10}
-                                style={{ textAnchor: 'middle' }}
-                            />
-                        </YAxis>
-                        <Tooltip />
-                        <Legend />
-                        {selectedReasons.map(motivo => (
-                            <Bar
-                                key={motivo}
-                                dataKey={motivo}
-                                fill={COLORS[motivo] || '#999'}
-                            />
-                        ))}
-                    </BarChart>
-                </ResponsiveContainer>
 
-
-            </div>
+                </div>
+                <div className="bg-white dark:bg-neutral-800 p-3 m-2 mt-8">
+                    <h3 className="text-lg font-semibold text-center dark:text-white mb-2">
+                        Cantidad de Neumáticos Dados de Baja por Motivo
+                    </h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={processed}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="month" />
+                            <YAxis>
+                                <Label
+                                    value="Cantidad"
+                                    angle={-90}
+                                    position="insideLeft"
+                                    dx={-10}
+                                    style={{ textAnchor: 'middle' }}
+                                />
+                            </YAxis>
+                            <Tooltip />
+                            <Legend />
+                            {selectedReasons.map(motivo => (
+                                <Bar
+                                    key={`${motivo}_count`}
+                                    dataKey={`${motivo}_count`}
+                                    fill={COLORS[motivo] || '#999'}
+                                    name={motivo}
+                                >
+                                    <LabelList dataKey={`${motivo}_count`} position="top" fill="#000" />
+                                </Bar>
+                            ))}
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            </main>
         </section>
     );
 }

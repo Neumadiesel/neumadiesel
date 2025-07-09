@@ -137,23 +137,12 @@ export default function ListaNeumaticos() {
     );
 
     useEffect(() => {
-        fetchLocations();
-        fetchTires();
-    }, []);
-
-    useEffect(() => {
-        fetchVehicles();
-    }, [faenaId]);
-
-    useEffect(() => {
-        fetchTires();
-    }, [openRegisterModal, editarNeumatico, yearStart, yearEnd, faenaId]);
-
-    useEffect(() => {
-        fetchTires();
-        fetchLocations();
-        fetchVehicles();
-    }, [user]);
+        if (user) {
+            fetchTires();
+            fetchLocations();
+            fetchVehicles();
+        }
+    }, [openRegisterModal, editarNeumatico, yearStart, yearEnd, faenaId, user]);
 
     return (
         <div className="w-full">
