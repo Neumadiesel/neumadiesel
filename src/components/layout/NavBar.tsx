@@ -228,7 +228,10 @@ export default function NavBar() {
                                 <div>
                                     <button
                                         className={`flex items-center justify-between w-full p-2 text-left hover:bg-gray-700 rounded`}
-                                        onClick={() => toggleCategory(item.title)}
+                                        onClick={() => {
+                                            setIsCollapsed(false)
+                                            toggleCategory(item.title)
+                                        }}
                                     >
                                         <div className="flex items-center gap-x-2">
                                             {item.icon}
