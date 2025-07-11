@@ -28,14 +28,14 @@ interface Tire {
 
 export default function TireHealthDashboard() {
   const authFetch = useAuthFetch();
-  const { user } = useAuth();
+  const { user, siteId } = useAuth();
   const [tires, setTires] = useState<Tire[]>([]);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   ;
 
   useEffect(() => {
     if (user) {
-      authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
+      authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`)
         .then(res => {
           if (!res) {
             console.error("No se pudo obtener la respuesta del backend.");
@@ -48,7 +48,7 @@ export default function TireHealthDashboard() {
         })
         .catch(err => console.error("Error cargando neumáticos:", err));
     }
-  }, [user]);
+  }, [user, siteId]);
 
   // Función para obtener color por posición
   const getPositionColor = (position: number) => {

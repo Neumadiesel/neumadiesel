@@ -14,7 +14,7 @@ interface KpiDto {
 
 export default function SectionKpi() {
     // const [siteId, setSiteId] = useState<number>(1)
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const [kpis, setKpis] = useState<KpiDto>({
         operationalTires: 0,
         operationalVehicles: 0
@@ -25,7 +25,7 @@ export default function SectionKpi() {
 
     const fetchKpis = async () => {
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/1`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/${siteId}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -39,12 +39,10 @@ export default function SectionKpi() {
     };
 
     useEffect(() => {
-        fetchKpis();
-    }, []);
-
-    useEffect(() => {
-        fetchKpis();
-    }, [user]);
+        if (user) {
+            fetchKpis();
+        }
+    }, [user, siteId]);
 
 
     return (
