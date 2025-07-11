@@ -19,7 +19,7 @@ export default function ModelosNeumaticos() {
     const fetchModelTyres = async () => {
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/site/${siteId}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
