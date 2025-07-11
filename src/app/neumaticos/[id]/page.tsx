@@ -302,7 +302,7 @@ export default function TirePage() {
             <section className="flex flex-col w-full h-full text-gray-700 bg-white dark:bg-[#212121] dark:text-white mt-2 rounded-md">
                 <h2 className="text-xl font-bold mt-4 mb-2">Historial de Movimientos</h2>
 
-                <div className=" h-[65dvh] bg-emerald-50 dark:bg-neutral-800 dark:border-neutral-800 overflow-y-scroll border  mb-4">
+                <div className=" h-[65dvh] bg-gray-50 dark:bg-neutral-800 dark:border-neutral-800 overflow-y-scroll border  mb-4">
 
                     <table className="w-full text-left table-auto min-w-max">
                         <thead className="text-xs text-black uppercase sticky top-0 z-10 bg-gray-100 dark:bg-neutral-900 dark:text-white">

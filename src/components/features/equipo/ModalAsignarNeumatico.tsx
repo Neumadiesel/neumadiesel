@@ -100,15 +100,17 @@ export default function ModalAsignarNeumatico({
     const fetchData = async () => {
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/available/site/${vehicle?.siteId}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/site/${vehicle?.siteId}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
             }
             const data = await response.json();
-
-            setTires(Array.isArray(data) ? data : []); // <-- Asegura que siempre sea un array
-            console.log("Neumáticos", data);
+            const filteredTires = Array.isArray(data)
+                ? data.filter((tire: TireDTO) => tire.locationId === 10 || tire.locationId === 2)
+                : [];
+            setTires(filteredTires);
+            console.log("data neumaticos", filteredTires)
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -127,8 +129,6 @@ export default function ModalAsignarNeumatico({
 
     const fetchModels = async () => {
         try {
-
-
             const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tireModels`);
             setModels(response.data);
         } catch (error) {
@@ -222,10 +222,9 @@ export default function ModalAsignarNeumatico({
     const getFilteredTires = (): TireDTO[] => {
         if (!Array.isArray(tires)) return [];
         return tires.filter((tire) => {
-            // Excluir los neumáticos en la ubicación 1
-            if (tire.locationId === 1) return false;
 
-            // Si no hay modelos seleccionados, mostrar todos
+
+            // Si no hay modelos seleccionados, mostrar todos los que cumplen la condición anterior
             if (selectModelsId.length === 0) return true;
 
             // Mostrar solo los que coincidan con los modelos seleccionados
@@ -357,7 +356,7 @@ export default function ModalAsignarNeumatico({
                         <MultiSelect
                             options={models.map((model) => ({
                                 value: model.id.toString(), // Convert number to string
-                                label: `${model.brand} - ${model.dimensions} - ${model.pattern}`,
+                                label: `${model.code} - ${model.dimensions} - ${model.pattern} - ${model.originalTread}mm`,
                             }))}
                             selected={selectModelsId} // Ensure selected values are strings
                             onChange={setSelectModelsId}
@@ -383,7 +382,7 @@ export default function ModalAsignarNeumatico({
                                 <tr>
                                     <th className="border-b p-2 text-left"></th>
                                     <th className="border-b p-2 text-left">Código</th>
-                                    <th className="border-b p-2 text-left">Marca</th>
+                                    <th className="border-b p-2 text-left">Modelo</th>
                                     <th className="border-b p-2 text-left">Dimensiones</th>
                                     <th className="border-b p-2 text-left">Patrón</th>
                                     <th className="border-b p-2 text-left">Estado</th>
@@ -392,39 +391,57 @@ export default function ModalAsignarNeumatico({
                             </thead>
                             <tbody>
                                 {getFilteredTires()
+                                    .sort((a, b) => {
+                                        // Primero los con locationId == 2
+                                        if (a.locationId === 2 && b.locationId !== 2) return -1;
+                                        if (a.locationId !== 2 && b.locationId === 2) return 1;
+                                        // Si ambos tienen lastInspection, comparar internalTread
+                                        const aTread = a.lastInspection?.internalTread ?? a.initialTread ?? 0;
+                                        const bTread = b.lastInspection?.internalTread ?? b.initialTread ?? 0;
+                                        return bTread - aTread;
+                                    })
                                     .map((tire) => (
-                                        tire.locationId === 10 && (
-                                            <tr key={tire.id} className={`border-b hover:bg-gray-100 dark:hover:bg-neutral-900 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}`}>
-                                                <td className="p-2 py-4 border-x bg-gray-100 dark:bg-[#121212]">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="mx-auto"
-                                                        checked={tireId === tire.id}
-                                                        onChange={() => {
-                                                            setTireId(tire.id);
-                                                            setTireSelected(tire);
-                                                        }}
-                                                    />
-                                                </td>
-                                                <td className="p-2">{tire.code}</td>
-                                                <td className="p-2">{tire.model.brand}</td>
-                                                <td className="p-2">{tire.model.dimensions}</td>
-                                                <td className="p-2">{tire.model.pattern}</td>
-                                                <td className="p-2">
-                                                    {tire.lastInspection
-                                                        ? `INT: ${tire.lastInspection.internalTread} | EXT: ${tire.lastInspection.externalTread}`
-                                                        : 'Nuevo'}
-                                                </td>
-                                                <td className="p-2 border-r">
-                                                    {tire.lastInspection
-                                                        ? `${tire.lastInspection.externalTread} - 
+                                        <tr
+                                            key={tire.id}
+                                            className={`border-b  dark:hover:bg-neutral-900
+                                                ${tireIdSelected === tire.id ? "bg-gray-200" : ""}
+                                                ${tire.locationId === 2 ? "bg-emerald-50 hover:bg-emerald-100" : "hover:bg-gray-100"}
+                                            `}
+                                        >
+                                            <td
+                                                className={`p-2 py-4 border-x ${tire.locationId === 2
+                                                    ? "bg-emerald-100 dark:bg-emerald-900"
+                                                    : "bg-gray-100 dark:bg-[#121212]"
+                                                    }`}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    className="mx-auto"
+                                                    checked={tireId === tire.id}
+                                                    onChange={() => {
+                                                        setTireId(tire.id);
+                                                        setTireSelected(tire);
+                                                    }}
+                                                />
+                                            </td>
+                                            <td className="p-2">{tire.code}</td>
+                                            <td className="p-2">{tire.model.code}</td>
+                                            <td className="p-2">{tire.model.dimensions}</td>
+                                            <td className="p-2">{tire.model.pattern}</td>
+                                            <td className="p-2">
+                                                {tire.lastInspection
+                                                    ? `INT: ${tire.lastInspection.internalTread} | EXT: ${tire.lastInspection.externalTread}`
+                                                    : 'Nuevo'}
+                                            </td>
+                                            <td className="p-2 border-r">
+                                                {tire.lastInspection
+                                                    ? `${tire.lastInspection.externalTread} - 
                                                     ${tire.lastInspection.internalTread}`
-                                                        : `${tire.initialTread} - ${tire.initialTread}`}
-                                                </td>
-
-                                            </tr>
-                                        )
-                                    ))}
+                                                    : `${tire.initialTread} - ${tire.initialTread}`}
+                                            </td>
+                                        </tr>
+                                    )
+                                    )}
                             </tbody>
                         </table>
                     </div>

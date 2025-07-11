@@ -109,36 +109,6 @@ export default function OrdenDeTrabajoPage() {
                     </Link>
                 </aside>
             </div>
-            {/* Seccion de kpis */}
-            <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Mantenimientos Programados</h2>
-                    <p className="text-3xl font-bold">{kpis.programadosSemana}</p>
-                    <p className="text-gray-600 dark:text-gray-400">
-                        Mantenimientos programados para esta semana.
-                    </p>
-                </div>
-                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Mantenimientos Completados</h2>
-                    <p className="text-3xl font-bold">{kpis.completadas}
-                    </p>
-                    <p className="text-gray-600 dark:text-gray-400">Mantenimientos completados .</p>
-                </div>
-                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Mantenimientos en Pendientes</h2>
-                    <p className="text-3xl font-bold">{kpis.pendientes}</p>
-                    <p className="text-gray-600 dark:text-gray-400">Mantenimientos que están pendientes de ejecución.</p>
-                </div>
-                {/* KPI Completadas */}
-                <div className="bg-white dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded shadow">
-                    <h2 className="text-xl font-semibold mb-2">Porcentaje de Cumplimiento</h2>
-                    <p className="text-3xl font-bold">{kpis.porcentajeCumplimiento}%</p>
-                    <p className="text-gray-600 dark:text-gray-400">
-                        Porcentaje de cumplimineto programa semanal
-                    </p>
-                </div>
-            </section>
-
             {/* Seccion de filtros */}
             {/* <section className="mt-6 dark:bg-neutral-800 p-4 rounded-md shadow border dark:border-neutral-700">
                 <h2 className="text-3xl font-semibold mb-4">
