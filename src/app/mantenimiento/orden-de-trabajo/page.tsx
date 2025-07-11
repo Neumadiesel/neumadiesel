@@ -45,24 +45,13 @@ interface WorkOrderDTO {
     procedures: Procedure[]; // Puedes definir un tipo más específico si es necesario
 }
 
-interface kpis {
-    programadosSemana: number;
-    completadas: number;
-    pendientes: number;
-    porcentajeCumplimiento: number;
-}
 export default function OrdenDeTrabajoPage() {
 
     const { user } = useAuth();
     // axios get work orders
     const client = useAxiosWithAuth();
     const [workOrders, setWorkOrders] = useState<WorkOrderDTO[]>([]);
-    const [kpis, setKpis] = useState<kpis>({
-        programadosSemana: 0,
-        completadas: 0,
-        pendientes: 0,
-        porcentajeCumplimiento: 0,
-    });
+
 
     const fetchWorkOrders = async () => {
         try {
@@ -75,22 +64,11 @@ export default function OrdenDeTrabajoPage() {
         }
     };
 
-    // fetch kpis maintenance-program/kpis
-    const fetchKpis = async () => {
-        try {
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/kpis`);
-            setKpis(response.data);
-            console.log("KPIs:", response.data);
-        } catch (error) {
-            console.error("Error al obtener KPIs:", error);
-        }
-    };
 
 
     useEffect(() => {
         if (user) {
             fetchWorkOrders();
-            fetchKpis();
         }
     }, [user]);
 
