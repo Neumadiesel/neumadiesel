@@ -68,7 +68,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 
 export default function OperationalTyres() {
     const authFetch = useAuthFetch();
-    const { user } = useAuth()
+    const { user, siteId } = useAuth()
     const [tires, setTires] = useState<OperationalTire[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectedDimensions, setSelectedDimensions] = useState<string[]>(["46/90R57"]);
@@ -77,7 +77,7 @@ export default function OperationalTyres() {
     const fetchTires = async () => {
         setLoading(true);
         try {
-            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`);
             if (!res) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -97,7 +97,7 @@ export default function OperationalTyres() {
             return;
         }
         fetchTires();
-    }, [user]);
+    }, [user, siteId]);
 
     const scatterData: ScatterPoint[] = tires.map((tire) => {
         const finalTread = (tire.lastInspection.externalTread + tire.lastInspection.internalTread) / 2;

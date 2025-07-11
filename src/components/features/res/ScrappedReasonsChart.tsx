@@ -54,7 +54,7 @@ interface Tire {
 
 export default function ScrappedReasonsChart() {
     const authFetch = useAuthFetch();
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const [data, setData] = useState<Tire[]>([]);
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [semester, setSemester] = useState<'1' | '2'>('1');
@@ -64,19 +64,13 @@ export default function ScrappedReasonsChart() {
     const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
 
     const fetchData = async () => {
-        const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+        const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/${siteId}`);
         if (!res) {
             console.warn("No se pudo obtener la respuesta (res es null).");
             return;
         }
         const json = await res.json();
         setData(json);
-
-        // Debug
-        if (json.length > 0) {
-            console.log('Estructura de datos:', json[0]);
-            console.log('Primer objeto completo:', JSON.stringify(json[0], null, 2));
-        }
 
     };
 
@@ -85,7 +79,7 @@ export default function ScrappedReasonsChart() {
         if (user) {
             fetchData();
         }
-    }, [user]);
+    }, [user, siteId]);
 
     const processed = useMemo(() => {
         const counts: Record<string, Record<string, { hrs: number; count: number }>> = {};

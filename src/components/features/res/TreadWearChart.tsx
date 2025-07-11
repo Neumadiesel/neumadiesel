@@ -26,7 +26,7 @@ interface DesgastePorTramo {
 
 export default function TreadWearChart() {
     const client = useAxiosWithAuth();
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
 
     const [dimensionSeleccionada, setDimensionSeleccionada] = useState<string | null>("46/90R57");
     const [dimensiones] = useState<string[]>([]);
@@ -42,7 +42,7 @@ export default function TreadWearChart() {
         const fetchData = async () => {
             try {
                 const res = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/wear-rate`, {
-                    params: { dimension: dimensionSeleccionada },
+                    params: { dimension: dimensionSeleccionada, siteId: siteId },
                 });
                 setData(res.data);
             } catch (err) {
@@ -51,7 +51,7 @@ export default function TreadWearChart() {
         };
 
         fetchData();
-    }, [user, dimensionSeleccionada]);
+    }, [user, dimensionSeleccionada, siteId]);
 
     // Función para colorear según remanente (mm)
     function getGradientColorByRemanente(mm: number): string {

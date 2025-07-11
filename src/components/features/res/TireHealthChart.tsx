@@ -55,7 +55,7 @@ type ProcessedTire = {
     positionName: string;
 };
 export default function TireHealthChart() {
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const authFetch = useAuthFetch();
 
     const getPositionColor = (position: number) => {
@@ -91,7 +91,7 @@ export default function TireHealthChart() {
 
     useEffect(() => {
         if (user) {
-            authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`)
+            authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`)
                 .then(res => {
                     if (!res) {
                         console.error("No se pudo obtener la respuesta del backend.");
@@ -104,7 +104,7 @@ export default function TireHealthChart() {
                 })
                 .catch(err => console.error("Error cargando neumáticos:", err));
         }
-    }, [user]);
+    }, [user, siteId]);
 
 
     const processedData = useMemo(() => {

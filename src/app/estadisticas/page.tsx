@@ -82,13 +82,11 @@ export default function Page() {
 
             <ScrappedReasonsChart />
             <GraficoCumplimientoPrograma />
-
             <TreadWearChart />
             <TireHealthChart />
             <ScrapTyres />
             <OperationalTyres />
             <OperationalTyresHistograms />
-            {/* <PatternComparisonChart /> */}
             <ScrappedTyresChart />
         </div>
     );

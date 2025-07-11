@@ -42,7 +42,7 @@ interface CumplimientoDTO {
 }
 
 export default function GraficoCumplimientoPrograma() {
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const authFetch = useAuthFetch();
 
     const [mes, setMes] = useState<number>(new Date().getMonth());
@@ -150,7 +150,7 @@ export default function GraficoCumplimientoPrograma() {
 
     const fetchCumplimiento = async () => {
         try {
-            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program`);
+            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance-program/site/${siteId}`);
             if (!res) return;
 
             const data: MaintenanceProgram[] = await res.json();
@@ -171,7 +171,7 @@ export default function GraficoCumplimientoPrograma() {
 
     useEffect(() => {
         if (user) fetchCumplimiento();
-    }, [mes, anio, user]);
+    }, [mes, anio, user, siteId]);
 
     const calcularPorcentaje = (p: CumplimientoDTO) => {
         const total = p.realizado + p.imprevistos + p.apoyo;

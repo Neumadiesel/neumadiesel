@@ -274,7 +274,7 @@ const renderHistogram = (
 
 export default function OperationalTyresHistograms() {
     const authFetch = useAuthFetch();
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const [tiresOperational, setTiresOperational] = useState<OperationalTire[]>([]);
     const [tiresScrapped, setTiresScrapped] = useState<ScrappedTire[]>([]);
     const [loading, setLoading] = useState(false);
@@ -319,8 +319,8 @@ export default function OperationalTyresHistograms() {
 
         try {
             // 🎯 URLs que estás intentando usar
-            const urlOperational = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`;
-            const urlScrapped = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`;
+            const urlOperational = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`;
+            const urlScrapped = `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/${siteId}`;
 
             // 🎯 FETCH CON MANEJO INDEPENDIENTE DE ERRORES
             const [resOp, resScrap] = await Promise.allSettled([
@@ -427,7 +427,7 @@ export default function OperationalTyresHistograms() {
         if (isMounted) {
             fetchTires();
         }
-    }, [isMounted, user]);
+    }, [isMounted, user, siteId]);
 
     // 🎯 VALIDAR SI HAY DATOS DISPONIBLES PARA EL TIPO SELECCIONADO
     const hasDataForCurrentType = useMemo(() => {
@@ -933,9 +933,6 @@ export default function OperationalTyresHistograms() {
                                 Error al cargar histogramas
                             </h3>
                             <p className="mt-1 text-sm text-red-700 dark:text-red-300">{error}</p>
-                            <p className="mt-2 text-xs text-red-600 dark:text-red-400">
-                                Verifica la consola del navegador para más detalles
-                            </p>
                         </div>
                     </div>
                 </div>

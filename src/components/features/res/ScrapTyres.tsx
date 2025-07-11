@@ -86,7 +86,7 @@ export default function ScrapTyres() {
     const [scatterData, setScatterData] = useState<ScatterPoint[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedMotivos, setSelectedMotivos] = useState<string[]>([]);
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
 
     const [selectedDimension, setSelectedDimension] = useState<string | null>("46/90R57");
     const [selectedYear, setSelectedYear] = useState<number | null>(2025);
@@ -94,7 +94,7 @@ export default function ScrapTyres() {
     const fetchScrappedTires = async () => {
         try {
             setLoading(true);
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1/`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/${siteId}/`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -146,7 +146,7 @@ export default function ScrapTyres() {
         if (user) {
             fetchScrappedTires();
         }
-    }, [user]);
+    }, [user, siteId]);
 
     const groupedData: Record<string, ScatterPoint[]> = {};
     scatterData

@@ -193,8 +193,6 @@ export default function NavBar() {
         },
     ];
 
-    console.log("User in NavBar:", user);
-
     const filteredMenuItems = menuItems.filter(item => hasAccess(item.allowedRoles));
 
     const toggleCategory = (title: string) => {

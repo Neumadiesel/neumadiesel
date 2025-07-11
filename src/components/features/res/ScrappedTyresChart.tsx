@@ -90,7 +90,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
 
 export default function ScrappedTyresChart() {
   const authFetch = useAuthFetch();
-  const { user } = useAuth();
+  const { user, siteId } = useAuth();
   const [tires, setTires] = useState<ScrappedTire[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false); // 🎯 ESTADO PARA HIDRATACIÓN
@@ -131,7 +131,7 @@ export default function ScrappedTyresChart() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+      const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/${siteId}`);
       if (!response) {
         console.warn("No se pudo obtener la respuesta (res es null).");
         return;
@@ -162,8 +162,8 @@ export default function ScrappedTyresChart() {
 
 
   useEffect(() => {
-    fetchData();
-  }, [user]);
+    if (user) { fetchData(); }
+  }, [user, siteId]);
 
   // 🎯 DATOS FILTRADOS PRIMERO (para opciones inteligentes)
   const filteredTires = useMemo(() => {
