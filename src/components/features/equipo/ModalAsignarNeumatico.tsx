@@ -405,13 +405,13 @@ export default function ModalAsignarNeumatico({
                                             key={tire.id}
                                             className={`border-b  dark:hover:bg-neutral-900
                                                 ${tireIdSelected === tire.id ? "bg-gray-200" : ""}
-                                                ${tire.locationId === 2 ? "bg-emerald-50 hover:bg-emerald-100" : "hover:bg-gray-100"}
+                                                ${tire.locationId === 2 ? "bg-emerald-50 dark:bg-emerald-900 hover:bg-emerald-100 dark:hover:bg-emerald-800" : "hover:bg-gray-100 dark:hover:bg-emerald-900"}
                                             `}
                                         >
                                             <td
                                                 className={`p-2 py-4 border-x ${tire.locationId === 2
                                                     ? "bg-emerald-100 dark:bg-emerald-900"
-                                                    : "bg-gray-100 dark:bg-[#121212]"
+                                                    : "bg-gray-100 dark:bg-emerald-800"
                                                     }`}
                                             >
                                                 <input
