@@ -19,7 +19,7 @@ type InspectionWithPhotos = CreateInspectionDTO & {
 };
 
 export default function MedicionPorEquipo() {
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const client = useAxiosWithAuth();
     const [error, setError] = useState<string | null>(null);
     const [inspections, setInspections] = useState<InspectionWithPhotos[]>([]);
@@ -128,7 +128,7 @@ export default function MedicionPorEquipo() {
         try {
 
 
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${vehicleCode}`);
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${siteId}/${vehicleCode}`);
             setVehicle(response.data);
             console.log("Vehículo", response.data);
             setInitialKilometrage(response.data.kilometrage);
@@ -213,7 +213,7 @@ export default function MedicionPorEquipo() {
             setKilometrage(vehicle.kilometrage);
             setHours(vehicle.hours);
         }
-    }, [vehicle]);
+    }, [vehicle, siteId]);
 
     // Error al enviar inspecciones
     const [errorInspection, setErrorInspection] = useState<string | null>(null);

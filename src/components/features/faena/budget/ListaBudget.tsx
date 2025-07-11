@@ -35,6 +35,7 @@ const monthNames = [
 
 export default function Budget({ siteId }: BudgetProps) {
     const { isDemo, user } = useAuth();
+
     const [budget, setBudget] = useState<BudgetData[]>([]);
     const [budgetByYear, setBudgetByYear] = useState<BudgetData[]>([]);
     const [editedBudgetByYear, setEditedBudgetByYear] = useState<BudgetData[]>([]);
@@ -50,7 +51,7 @@ export default function Budget({ siteId }: BudgetProps) {
     const fetchBudget = async () => {
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/1`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -70,7 +71,7 @@ export default function Budget({ siteId }: BudgetProps) {
         setSelectedYear(year);
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/1/year/${year}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/site/${siteId}/year/${year}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -116,7 +117,7 @@ export default function Budget({ siteId }: BudgetProps) {
             fetchBudget();
             fetchBudgetByYear(selectedYear); // Cargar el presupuesto del año 2025 por defecto
         }
-    }, [user]);
+    }, [user, siteId]);
 
     return (
         <div className=" p-2 lg:p-6 bg-white h-auto min-h-screen dark:bg-[#212121] shadow-md rounded-lg">

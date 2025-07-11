@@ -17,7 +17,7 @@ interface KpiDTO {
     tyresInspectedThisWeek: number;
 }
 export default function MedicionPage() {
-    const { user, token } = useAuth();
+    const { user, token, siteId } = useAuth();
     const client = useAxiosWithAuth();
     const [pendingInspections, setPendingInspections] = useState<InspectionDTO[]>([]);
     const [lastApprovedInspection, setLastApprovedInspection] = useState<InspectionDTO[]>([]);
@@ -30,7 +30,7 @@ export default function MedicionPage() {
         try {
 
             const response = await client.get(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/1/disapproved`,
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/${siteId}/disapproved`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -48,9 +48,7 @@ export default function MedicionPage() {
     // Get kpi
     const fetchKpi = async () => {
         try {
-
-
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/1`);
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reporting/kpis/${siteId}`);
             setKpi(response.data);
         } catch (error) {
             console.error("Error fetching KPI:", error);
@@ -58,12 +56,12 @@ export default function MedicionPage() {
         }
     }
 
-    // fetch las 50 inspecciones aprobadas http://localhost:3002/inspections/site/1/last-50
+    // fetch las 50 inspecciones aprobadas http://localhost:3002/inspections/site/${siteId}/last-50
     const fetchLastInspections = async () => {
         try {
 
 
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/1/last-25`);
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/site/${siteId}/last-25`);
             setLastApprovedInspection(response.data);
         } catch (error) {
             console.error("Error fetching last inspections:", error);
@@ -124,16 +122,11 @@ export default function MedicionPage() {
     }
 
     useEffect(() => {
+        if (!user) return; // Asegurarse de que el usuario esté autenticado antes de hacer las peticiones
         fetchPendingInspections();
         fetchLastInspections();
         fetchKpi();
-    }, []);
-
-    useEffect(() => {
-        fetchPendingInspections();
-        fetchLastInspections();
-        fetchKpi();
-    }, [user]);
+    }, [user, siteId]);
 
     return (
         <div className="bg-neutral-50 dark:bg-[#212121] dark:text-white flex flex-col p-2 lg:p-4">

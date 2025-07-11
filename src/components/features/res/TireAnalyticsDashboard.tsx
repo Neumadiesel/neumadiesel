@@ -39,13 +39,13 @@ export default function TireAnalyticsDashboard() {
     const [operationalTires, setOperationalTires] = useState<Tire[]>([]);
     const [scrappedTires, setScrappedTires] = useState<Tire[]>([]);
     const [loading, setLoading] = useState(true);
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
 
     const fetchData = async () => {
         try {
             const [opRes, scrRes] = await Promise.all([
-                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`),
-                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`)
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`),
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/${siteId}`)
             ]);
 
             if (!opRes || !scrRes) {
@@ -67,12 +67,9 @@ export default function TireAnalyticsDashboard() {
         }
     };
     useEffect(() => {
+        if (!user) return;
         fetchData();
-    }, []);
-
-    useEffect(() => {
-        fetchData();
-    }, [user]);
+    }, [user, siteId]);
 
     const analytics = useMemo(() => {
         if (loading) return null;

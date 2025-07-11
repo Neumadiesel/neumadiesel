@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { OrdenTrabajoForm } from "./ModalCrearOrden";
 import { ProgramasDTO, VehicleDTO } from "@/types/ordenTrabajoTypes";
 import QuickProgramForm from "./QuickProgramForm";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
     datos: OrdenTrabajoForm;
@@ -17,6 +18,7 @@ interface Props {
 
 export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBack }: Props) {
     const axios = useAxiosWithAuth();
+    const { siteId } = useAuth();
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [programas, setProgramas] = useState<ProgramasDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
             // Buscar vehículo por código
 
 
-            const veh = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1/${datos.vehicleCode}`);
+            const veh = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${siteId}/${datos.vehicleCode}`);
             const vehiculo = veh.data;
 
             setVehicle(vehiculo);
@@ -152,7 +154,7 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
         if (datos.vehicleCode) {
             buscarEquipoYProgramas();
         }
-    }, [datos.vehicleCode]);
+    }, [datos.vehicleCode, siteId]);
 
     const handleNext = () => {
         const errores: string[] = [];

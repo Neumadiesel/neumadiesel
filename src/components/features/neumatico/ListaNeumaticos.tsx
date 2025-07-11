@@ -20,7 +20,7 @@ import { useAuthFetch } from "@/utils/AuthFetch";
 import ExportListOfTires from "@/utils/export/ExportListofTyresToExcel";
 
 export default function ListaNeumaticos() {
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const authFetch = useAuthFetch();
 
     const faenaId = user?.faena_id;
@@ -49,7 +49,7 @@ export default function ListaNeumaticos() {
 
     const fetchVehicles = async () => {
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${siteId}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -142,7 +142,7 @@ export default function ListaNeumaticos() {
             fetchLocations();
             fetchVehicles();
         }
-    }, [openRegisterModal, editarNeumatico, yearStart, yearEnd, faenaId, user]);
+    }, [openRegisterModal, editarNeumatico, yearStart, yearEnd, faenaId, user, siteId]);
 
     return (
         <div className="w-full">

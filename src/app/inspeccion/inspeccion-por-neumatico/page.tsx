@@ -13,7 +13,7 @@ import useAxiosWithAuth from '@/hooks/useAxiosWithAuth';
 
 export default function MedicionPorEquipo() {
     const client = useAxiosWithAuth();
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const [error, setError] = useState<string | null>(null);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -39,7 +39,7 @@ export default function MedicionPorEquipo() {
         try {
 
 
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/code/${tireCode}/site/1`);
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/code/${tireCode}/site/${siteId}`);
             setTire(response.data);
             setError(null);
         } catch (error) {

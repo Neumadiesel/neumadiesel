@@ -14,7 +14,7 @@ import {
 export default function OldTyres() {
     const [tireCritical, setTireCritical] = useState<TireDTO[]>([]);
     const [showChart, setShowChart] = useState(true);
-    const { user } = useAuth(); // Assuming useAuth is defined in your context
+    const { user, siteId } = useAuth(); // Assuming useAuth is defined in your context
     const client = useAxiosWithAuth();
     function calculateWearPercentage(
         internalTread?: number,
@@ -39,7 +39,7 @@ export default function OldTyres() {
         try {
 
             const response = await client.get(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/more-than-4500-hours/site/1`
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/more-than-4500-hours/site/${siteId}`
             );
             const sortedTires = response.data.sort(
                 (a: TireDTO, b: TireDTO) => {
@@ -63,7 +63,7 @@ export default function OldTyres() {
         if (user) {
             fetchCriticalTires();
         }
-    }, [user]);
+    }, [user, siteId]);
 
     return (
         <section className="w-full h-[65dvh] bg-white shadow-sm dark:bg-gray-800 border dark:border-neutral-600 p-4 rounded-lg mb-4">

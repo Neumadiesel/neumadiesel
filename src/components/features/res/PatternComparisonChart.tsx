@@ -47,7 +47,7 @@ interface PatternStats {
 const bins = [0, 20, 40, 60, 80, 100];
 
 export default function PatternComparisonVisual() {
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const authFetch = useAuthFetch();
 
     const [tires, setTires] = useState<Tire[]>([]);
@@ -62,7 +62,7 @@ export default function PatternComparisonVisual() {
     const fetchTires = async () => {
         setLoading(true);
         try {
-            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            const res = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`);
             if (!res) throw new Error("No se pudo obtener la respuesta del servidor");
             const data = await res.json();
             setTires(data);
@@ -79,7 +79,7 @@ export default function PatternComparisonVisual() {
 
     useEffect(() => {
         if (user) fetchTires();
-    }, [user]);
+    }, [user, siteId]);
 
     useEffect(() => {
         if (!selectedDimension) {
