@@ -21,7 +21,7 @@ interface KpiItem {
 }
 export default function TireKPIOverview() {
     const client = useAxiosWithAuth();
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
 
     const [selectedKpi, setSelectedKpi] = useState<KpiKey>(kpiItems[0].key as KpiKey);
     const [allTires, setAllTires] = useState<TireDTO[]>([]);
@@ -31,7 +31,7 @@ export default function TireKPIOverview() {
 
     const fetchOperationalTires = async () => {
         try {
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`);
             setAllTires(response.data);
             const dimensions = Array.from(
                 new Set(response.data.map((t: TireDTO) => t.model.dimensions))
@@ -49,7 +49,7 @@ export default function TireKPIOverview() {
         if (user) {
             fetchOperationalTires();
         }
-    }, [user]);
+    }, [user, siteId]);
 
     const handleKpiClick = (kpiKey: KpiKey) => {
         setCurrentPage(1)

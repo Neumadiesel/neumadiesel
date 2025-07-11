@@ -6,13 +6,13 @@ import { useState, useEffect } from "react";
 import CardVehicleStatus from "./components/CardVehicleStatus";
 
 export default function StatusVehicle() {
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const client = useAxiosWithAuth();
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
 
     const fetchVehicles = async () => {
         try {
-            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/1`);
+            const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${siteId}`);
             setVehicles(response.data);
             console.log("Órdenes de trabajo:", response.data);
         } catch (error) {
@@ -25,7 +25,7 @@ export default function StatusVehicle() {
         if (user) {
             fetchVehicles();
         }
-    }, [user]);
+    }, [user, siteId]);
 
     return (
         <div className="flex flex-col overflow-x-hidden gap-y-4 lg:gap-y-5 bg-white dark:bg-[#212121] pt-4 p-2 dark:text-white w-full lg:p-3">

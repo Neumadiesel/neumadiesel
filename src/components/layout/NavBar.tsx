@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import {
     FaAngleDown,
@@ -22,6 +22,7 @@ import Cookies from "js-cookie";
 import { FileText, Mountain, QrCode } from "lucide-react";
 import MineTruck from "../common/icons/MineTruck";
 import QRModal from "./ModalQR/QRModal";
+import { useAuthFetch } from "@/utils/AuthFetch";
 
 interface MenuItem {
     title: string;
@@ -31,8 +32,22 @@ interface MenuItem {
     allowedRoles?: string[];
 }
 
+interface FaenaDTO {
+    id: number;
+    name: string;
+    region: string;
+    isActive: boolean;
+    contract: {
+        id: number;
+        startDate: string;
+        endDate: string;
+        siteId: number;
+    };
+}
+
+
 export default function NavBar() {
-    const { user, logout } = useAuth();
+    const { user, logout, siteId, setSiteId } = useAuth();
     const userData = Cookies.get("user-data");
     const userDataParsed = userData ? JSON.parse(userData) : null;
     const role = userDataParsed?.role;
@@ -42,12 +57,42 @@ export default function NavBar() {
     const [openCategories, setOpenCategories] = React.useState<Record<string, boolean>>({});
     const [menuOpen, setMenuOpen] = React.useState(false);
     const [isCollapsed, setIsCollapsed] = React.useState(false);
+    const authFetch = useAuthFetch();
+    const [faenas, setFaenas] = React.useState<FaenaDTO[]>([]);
 
     const hasAccess = (allowedRoles?: string[]) => {
         if (!allowedRoles) return true;
         if (!role?.name) return false;
         return allowedRoles.includes(role.name.toLowerCase());
     };
+
+    const fetchFaenas = async () => {
+        try {
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/with-contract`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
+            const data = await response.json();
+
+            if (Array.isArray(data)) {
+                setFaenas(data);
+            } else {
+                setFaenas([]); // O setear un valor seguro por defecto
+                console.warn('La respuesta no es un array válido:', data);
+            }
+        } catch (error) {
+            console.error("Error fetching reasons:", error);
+            setFaenas([]);
+        }
+    };
+
+    useEffect(() => {
+        if (user?.faena_id === 99) {
+            fetchFaenas();
+        }
+    }, [user]);
+
 
     const menuItems: MenuItem[] = [
 
@@ -148,6 +193,8 @@ export default function NavBar() {
         },
     ];
 
+    console.log("User in NavBar:", user);
+
     const filteredMenuItems = menuItems.filter(item => hasAccess(item.allowedRoles));
 
     const toggleCategory = (title: string) => {
@@ -198,11 +245,12 @@ export default function NavBar() {
             </div>
 
             <div
-                className={`hidden h-[90%] p-2 lg:flex lg:flex-col w-[100%] ${isCollapsed ? "items-center" : ""
+                className={`hidden h-[80dvh] p-2 lg:flex lg:flex-col w-[100%] ${isCollapsed ? "items-center" : ""
                     }`}
             >
                 <ul className="w-full">
-                    <li className="mb-2">
+
+                    <li className="">
                         <div
                             className={`flex items-center ${isCollapsed ? "justify-center" : "justify-end"
                                 }`}
@@ -221,9 +269,29 @@ export default function NavBar() {
                             )}
                         </Link>
                     </li>
+                    {/* Selector de faena para Admin */}
+                    <li >
+                        {user.faena_id === 99 && (
+                            <div className="flex items-center gap-x-2 p-2 hover:bg-neutral-700 w-full rounded">
+                                <select
+                                    className={`ml-2 bg-neutral-800 text-white rounded p-1 ${isCollapsed ? "w-full text-center" : "w-auto"
+                                        }`}
+                                    value={siteId ?? ""}
+                                    onChange={(e) => setSiteId(Number(e.target.value))}
+                                >
+                                    <option value="">Seleccione una faena</option>
+                                    {faenas.map((faena) => (
+                                        <option key={faena.id} value={faena.id}>
+                                            {faena.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                    </li>
 
                     {filteredMenuItems.map((item, index) => (
-                        <li key={index} className="mb-1">
+                        <li key={index} >
                             {item.children ? (
                                 <div>
                                     <button
@@ -281,7 +349,7 @@ export default function NavBar() {
                 </ul>
             </div>
             <div
-                className={`hidden h-[10%]  p-2 lg:flex lg:flex-col w-[100%] ${isCollapsed ? "items-center" : ""
+                className={`hidden h-[5%]  p-2 lg:flex lg:flex-col w-[100%] ${isCollapsed ? "items-center" : ""
                     }`}
             >
                 <ul className="w-full">

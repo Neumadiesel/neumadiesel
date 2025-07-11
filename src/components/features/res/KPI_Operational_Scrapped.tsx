@@ -52,18 +52,20 @@ export default function TyresKPI() {
     const [selectedDimension, setSelectedDimension] = useState<string | null>('46/90R57');
     const [monthRange, setMonthRange] = useState(12);
 
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
+    console.log("User in TyresKPI:", user);
+    console.log("Site ID in TyresKPI:", siteId);
 
     const fetchData = async () => {
         try {
-            const opRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/1`);
+            const opRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/operational/site/${siteId}`);
             if (!opRes) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
             }
             const opData = await opRes.json();
 
-            const scrRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/1`);
+            const scrRes = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/scrapped/site/${siteId}`);
             if (!scrRes) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -83,7 +85,7 @@ export default function TyresKPI() {
         if (user) {
             fetchData();
         }
-    }, [user]);
+    }, [user, siteId]);
 
     const allDimensions = useMemo(() => {
         const all = [...operationalTires, ...scrappedTires].map(t => t.model?.dimensions || 'Sin dimensión');

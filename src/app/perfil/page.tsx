@@ -12,7 +12,7 @@ export default function Perfil() {
         <div className="flex flex-col h-screen p-4 relative">
             {/* Imagen de fondo */}
             <div className="absolute inset-0 z-0">
-                <Image src="/banner.jpg" alt="banner" fill priority className="object-cover" />
+                <Image src="/mine-ilustration-pc.png" alt="banner" fill priority className="object-cover" />
                 <div className="absolute inset-0 bg-black/50" />
             </div>
             {/* Contenido principal */}

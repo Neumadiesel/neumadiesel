@@ -24,6 +24,8 @@ interface AuthContextType {
     user: User | null;
     token: string | null;
     isDemo: boolean;
+    siteId: number | null;
+    setSiteId: (id: number) => void;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     register: (
@@ -64,13 +66,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
+    const [siteId, setSiteIdState] = useState<number | null>(null);
+
+    const setSiteId = (id: number) => {
+        setSiteIdState(id);
+        Cookies.set("site-id", String(id), { expires: 7 });
+    };
+
     useEffect(() => {
         const token = Cookies.get("auth-token");
         const userData = Cookies.get("user-data");
+        const savedSiteId = Cookies.get("site-id");
+
         if (token && userData) {
+            const parsedUser = JSON.parse(userData);
             setToken(token);
-            setUser(JSON.parse(userData));
+            setUser(parsedUser);
+
+            // Si el usuario es admin (role_id === 1, por ejemplo), permitir elegir siteId
+            if (parsedUser.role?.role_id === 1 && savedSiteId) {
+                setSiteIdState(Number(savedSiteId)); // usa cookie si existe
+            } else {
+                setSiteIdState(parsedUser.faena_id ?? null); // si no, usa faena_id (en tu caso, 99)
+            }
         }
+
         setLoading(false);
     }, []);
 
@@ -148,6 +168,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // Eliminar cookies
         Cookies.remove("auth-token");
         Cookies.remove("user-data");
+        Cookies.remove("site-id");
+
 
         setUser(null);
         setToken(null);
@@ -237,6 +259,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 token,
                 isDemo,
                 login,
+                siteId,
+                setSiteId,
                 logout,
                 register,
                 deactivateUser,
