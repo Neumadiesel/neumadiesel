@@ -15,11 +15,11 @@ export default function ModelosNeumaticos() {
     const [tyreModels, setTyreModels] = useState<TyreModelDto[]>([]);
     const [tyreModelSelected, setTyreModelSelected] = useState<TyreModelDto | null>(null);
     const [loading, setLoading] = useState(true);
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
     const fetchModelTyres = async () => {
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tiremodels/site/${siteId}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -33,17 +33,13 @@ export default function ModelosNeumaticos() {
         }
     };
 
-    useEffect(() => {
-        fetchModelTyres();
-    }, []);
-
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistrarModelo, setModalRegistrarModelo] = useState(false);
 
 
     useEffect(() => {
-        fetchModelTyres();
-    }, [mostrarEditar, modalRegistrarModelo, user]);
+        if (user) { fetchModelTyres(); }
+    }, [mostrarEditar, modalRegistrarModelo, user, siteId]);
 
 
 

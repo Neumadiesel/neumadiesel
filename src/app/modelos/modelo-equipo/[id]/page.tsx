@@ -34,12 +34,12 @@ export default function EquiposPorModelo() {
     const [model, setModel] = useState<VehicleModelDto>({} as VehicleModelDto);
     const [loading, setLoading] = useState(true);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
 
     const fetchVehicleModels = useCallback(async () => {
         setLoading(true);
         try {
-            const baseURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/withVehicles/${id}/site/${user?.faena_id}`
+            const baseURL = `${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/withVehicles/${id}/site/${siteId}`
 
             const response = await authFetch(baseURL);
             if (!response) {
@@ -56,17 +56,12 @@ export default function EquiposPorModelo() {
         } finally {
             setLoading(false);
         }
-    }, [id, user?.faena_id]);
+    }, [id, siteId]);
 
     useEffect(() => {
-        if (!user?.faena_id) return;
+        if (!modalRegistarFaena) return;
         fetchVehicleModels();
-    }, [fetchVehicleModels, user?.faena_id]);
-
-    useEffect(() => {
-        if (!modalRegistarFaena || !user?.faena_id) return;
-        fetchVehicleModels();
-    }, [modalRegistarFaena, fetchVehicleModels, user?.faena_id]);
+    }, [modalRegistarFaena, fetchVehicleModels, siteId]);
 
     return (
         <div className="bg-white dark:bg-[#212121] dark:text-white p-3 rounded-md shadow-lg h-full pb-4 gap-4 flex flex-col">

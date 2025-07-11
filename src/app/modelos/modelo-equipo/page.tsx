@@ -26,19 +26,12 @@ export default function ModelosEquipo() {
     const [loading, setLoading] = useState(true);
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
-    const { user } = useAuth();
+    const { user, siteId } = useAuth();
 
     const fetchVehicleModels = useCallback(async () => {
-        if (!user?.faena_id) {
-            console.warn("No se puede cargar modelos sin faena_id");
-            setVehicleModels([]);
-            setLoading(false);
-            return;
-        }
-
         setLoading(true);
         try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/site/${user.faena_id}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicleModels/site/${siteId}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -51,12 +44,12 @@ export default function ModelosEquipo() {
         } finally {
             setLoading(false);
         }
-    }, [user?.faena_id]);
+    }, [siteId]);
 
     useEffect(() => {
-        console.log("User in fetchVehicleModels:", user?.faena_id);
+        if (!user) return;
         fetchVehicleModels();
-    }, [fetchVehicleModels, user]);
+    }, [fetchVehicleModels, user, siteId]);
 
     useEffect(() => {
         if (!mostrarEditar && !modalRegistarFaena) return;
