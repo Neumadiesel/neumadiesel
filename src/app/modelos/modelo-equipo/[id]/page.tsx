@@ -34,7 +34,7 @@ export default function EquiposPorModelo() {
     const [model, setModel] = useState<VehicleModelDto>({} as VehicleModelDto);
     const [loading, setLoading] = useState(true);
     const [modalRegistarFaena, setModalRegistrarFaena] = useState(false);
-    const { user, siteId } = useAuth();
+    const { siteId } = useAuth();
 
     const fetchVehicleModels = useCallback(async () => {
         setLoading(true);
