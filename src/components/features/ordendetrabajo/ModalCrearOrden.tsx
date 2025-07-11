@@ -48,6 +48,7 @@ export interface OrdenTrabajoForm {
     instalaciones: Instalacion[];
     programasSeleccionados?: number[];
     posicionesSeleccionadas?: number[];
+    proceduresListId?: number[];
     vehicle?: VehicleDTO;
 }
 
@@ -78,6 +79,7 @@ export default function ModalCrearOrden({ onClose }: Props) {
         instalaciones: [],
         programasSeleccionados: [],
         posicionesSeleccionadas: [],
+        proceduresListId: []
     });
 
     const router = useRouter();

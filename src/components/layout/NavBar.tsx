@@ -408,6 +408,26 @@ export default function NavBar() {
             {menuOpen && (
                 <div className="absolute w-[100%] h-[100%] top-16 left-0 bg-[#212121] text-white flex flex-col items-center z-50 lg:hidden">
                     <ul className="h-[50%] w-[80%]">
+                        {/* Selector de faena para Admin */}
+                        <li >
+                            {user.faena_id === 99 && (
+                                <div className="flex items-center gap-x-2 p-2 hover:bg-neutral-700 w-full rounded">
+                                    <select
+                                        className={` bg-neutral-800 text-white rounded p-2 
+                                            w-full `}
+                                        value={siteId ?? ""}
+                                        onChange={(e) => setSiteId(Number(e.target.value))}
+                                    >
+                                        <option value="">Seleccione una faena</option>
+                                        {faenas.map((faena) => (
+                                            <option key={faena.id} value={faena.id}>
+                                                {faena.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+                        </li>
                         {filteredMenuItems.map((item, index) => (
                             <li key={index} className="mb-2">
                                 {item.children ? (

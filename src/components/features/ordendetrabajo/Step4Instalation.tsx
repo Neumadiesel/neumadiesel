@@ -17,8 +17,8 @@ interface Props {
 }
 
 export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }: Props) {
-    const axios = useAxiosWithAuth();
-    const { user } = useAuth();
+    const client = useAxiosWithAuth();
+    const { user, siteId } = useAuth();
     const [neumaticosDisponibles, setNeumaticosDisponibles] = useState<TireDTO[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -44,8 +44,10 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
 
     const fetchNeumaticos = async () => {
         try {
-            const res = await axios.get(`/tires/available/site/${user?.faena_id}`);
-            setNeumaticosDisponibles(res.data || []);
+            const res = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/tires/site/${siteId}`);
+            const filtered = (res.data || []).filter((n: TireDTO) => n.locationId === 10 || n.locationId === 2);
+            console.log("Neumáticos disponibles:", filtered);
+            setNeumaticosDisponibles(filtered);
         } catch (error) {
             console.error("Error cargando neumáticos disponibles:", error);
         }
@@ -54,7 +56,7 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
     const handleChange = (
         posicion: number,
         field: keyof InstallationData,
-        value: number | string
+        value: number | string | undefined
     ) => {
         setDatos((prev) => {
             const nuevas = [...(prev.instalaciones || [])];
@@ -80,7 +82,7 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                 const { nuevoTireId, posicion, internalTread, externalTread } = instalacion;
                 if (!nuevoTireId || !posicion || internalTread === undefined || externalTread === undefined) continue;
 
-                await axios.post(`/procedures/install-tire`, {
+                const responde = await client.post(`/procedures/install-tire`, {
                     tireId: nuevoTireId,
                     vehicleId,
                     position: posicion,
@@ -89,6 +91,13 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                     internalTread,
                     externalTread,
                 });
+
+                console.log("Respuesta de instalación:", responde.data);
+
+                setDatos(prev => ({
+                    ...prev,
+                    proceduresListId: [...(prev.proceduresListId ?? []), instalacion.nuevoTireId!]
+                }));
             }
 
             await onConfirm();
@@ -127,6 +136,10 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                         .filter(n => !dimensionFiltro || n.model?.dimensions === dimensionFiltro)
                         .filter(n => n.code.toLowerCase().includes(codigoFiltro.toLowerCase()))
                         .sort((a, b) => {
+                            // Primero los de locationId == 2
+                            if (a.locationId === 2 && b.locationId !== 2) return -1;
+                            if (a.locationId !== 2 && b.locationId === 2) return 1;
+                            // Luego por suma de remanente
                             const aTread = (a.lastInspection?.internalTread ?? 0) + (a.lastInspection?.externalTread ?? 0);
                             const bTread = (b.lastInspection?.internalTread ?? 0) + (b.lastInspection?.externalTread ?? 0);
                             return bTread - aTread;
@@ -167,8 +180,8 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                                 >
                                     <option value="">Seleccionar neumático</option>
                                     {neumaticosFiltrados.map((t) => (
-                                        <option key={t.id} value={t.id}>
-                                            {t.code} ({t.model?.dimensions}) - ext: {t.lastInspection?.externalTread ?? "-"}mm - int: {t.lastInspection?.internalTread ?? "-"}mm
+                                        <option key={t.id} value={t.id} className="bg-emerald-200">
+                                            {t.locationId === 2 ? "(Nuevo)" : "(Stock)"} | {t.code} ({t.model?.dimensions}) - ext: {t.lastInspection?.externalTread ?? "-"}mm - int: {t.lastInspection?.internalTread ?? "-"}mm
                                         </option>
                                     ))}
                                 </select>
@@ -179,8 +192,13 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                                     <label className="block font-medium mb-1">Remanente interno</label>
                                     <input
                                         type="number"
+                                        min={0}
+                                        placeholder="Remanente interno"
                                         value={actual.internalTread ?? ""}
-                                        onChange={(e) => handleChange(pos, "internalTread", Number(e.target.value))}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            handleChange(pos, "internalTread", val === "" ? undefined : Number(val));
+                                        }}
                                         className="w-full border rounded px-3 py-2"
                                     />
                                 </div>
@@ -189,8 +207,13 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                                     <label className="block font-medium mb-1">Remanente externo</label>
                                     <input
                                         type="number"
+                                        min={0}
+                                        placeholder="Remanente externo"
                                         value={actual.externalTread ?? ""}
-                                        onChange={(e) => handleChange(pos, "externalTread", Number(e.target.value))}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            handleChange(pos, "externalTread", val === "" ? undefined : Number(val));
+                                        }}
                                         className="w-full border rounded px-3 py-2"
                                     />
                                 </div>
