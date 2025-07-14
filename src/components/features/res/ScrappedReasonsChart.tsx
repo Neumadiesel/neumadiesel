@@ -315,7 +315,7 @@ export default function ScrappedReasonsChart() {
                                     dataKey={motivo}
                                     fill={COLORS[motivo] || '#999'}
                                 >
-                                    <LabelList dataKey={motivo} position="top" fill="#000" z={10} />
+                                    <LabelList dataKey={motivo} position="top" fill="#f5b041" fontWeight={"bold"} z={10} />
                                 </Bar>
                             ))}
                         </BarChart>
@@ -346,10 +346,12 @@ export default function ScrappedReasonsChart() {
                                 <Bar
                                     key={`${motivo}_count`}
                                     dataKey={`${motivo}_count`}
-                                    fill={COLORS[motivo] || '#999'}
+                                    fill={COLORS[motivo] || '#000'}
+                                    activeBar={false}
                                     name={motivo}
                                 >
-                                    <LabelList dataKey={`${motivo}_count`} position="top" fill="#000" />
+                                    <LabelList dataKey={`${motivo}_count`} position="top" style={{
+                                    }} fill="#f5b041" fontWeight={"bold"} />
                                 </Bar>
                             ))}
                         </BarChart>

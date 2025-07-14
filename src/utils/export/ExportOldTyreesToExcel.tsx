@@ -91,37 +91,11 @@ export default function ExportOldTyresReport({ tireCritical }: Props) {
             cell.style = infoRowStyle;
         });
 
-        // // === INFO GENERAL ===
-        // const infoRows = [
-        //     ['Marca', tire.model.brand, 'Patrón', tire.model.pattern, ''],
-        //     ['Código', tire.model.code, 'Medidas', tire.model.dimensions, ''],
-        //     ['OTD', tire.initialTread, '', '', ''],
-        //     ['Desgaste Interior', tire.lastInspection?.internalTread || 'N/A', 'Desgaste Exterior', tire.lastInspection?.externalTread || 'N/A', ''],
-        //     ['Kilometraje', tire.lastInspection?.kilometrage || 'N/A', 'Horas', tire.lastInspection.hours?.toString() || 'N/A', ''],
-        //     ['Ubicación', tire.location.name, 'Código Vehículo', tire.installedTires[0]?.vehicle.code || 'N/A', ''],
-        //     ['Posición', tire.installedTires[0]?.position?.toString() || 'N/A', '', '', '']
-        // ];
-
-        // infoRows.forEach(row => {
-        //     const infoRow = sheet.addRow(row);
-        //     infoRow.eachCell((cell) => {
-        //         cell.style = { ...dataStyle, ...infoRowStyle };
-        //     });
-        // });
 
         const emptyRow = sheet.addRow(['', '', '', '', '']);
         emptyRow.eachCell(cell => {
             cell.style = infoRowStyle;
         });
-
-        // // === SECCIÓN MOVIMIENTOS ===
-        // const historyTitleRow = sheet.addRow(['Historial de Movimientos', '', '', '', '']);
-        // historyTitleRow.eachCell(cell => {
-        //     cell.style = titleStyle;
-        // });
-
-        // // Unir las primeras 5 columnas para el título
-        // sheet.mergeCells(`A${historyTitleRow.number}:E${historyTitleRow.number}`);
 
         const headerRow = sheet.addRow(['CÓDIGO', 'EQUIPO', 'POSICIÓN', 'HORAS', 'KILOMETRAJE']);
         headerRow.eachCell((cell) => {

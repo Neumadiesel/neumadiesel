@@ -249,16 +249,16 @@ export default function GraficoCumplimientoPrograma() {
                             <Tooltip />
                             <Legend />
                             <Bar dataKey="programado" fill="#8884d8" name="Programado" yAxisId="left">
-                                <LabelList dataKey="programado" position="top" fill="#000" />
+                                <LabelList dataKey="programado" position="top" fill="#f5b041" fontWeight={"bold"} />
                             </Bar>
                             <Bar dataKey="realizado" fill="#82ca9d" name="Realizado" yAxisId="left" >
-                                <LabelList dataKey="realizado" position="top" fill="#000" />
+                                <LabelList dataKey="realizado" position="top" fill="#f5b041" fontWeight={"bold"} />
                             </Bar>
                             <Bar dataKey="imprevistos" fill="#ffc658" name="Imprevistos" yAxisId="left" >
-                                <LabelList dataKey="imprevistos" position="top" fill="#000" />
+                                <LabelList dataKey="imprevistos" position="top" fill="#f5b041" fontWeight={"bold"} />
                             </Bar>
                             <Bar dataKey="apoyo" fill="#a6a6a6" name="Apoyo Mec." yAxisId="left" >
-                                <LabelList dataKey="apoyo" position="top" fill="#000" />
+                                <LabelList dataKey="apoyo" position="top" fill="#f5b041" fontWeight={"bold"} />
                             </Bar>
                             <Line
                                 type="monotone"
@@ -271,7 +271,7 @@ export default function GraficoCumplimientoPrograma() {
                                 <LabelList
                                     dataKey="porcentaje"
                                     position="top"
-                                    fill="#000"
+                                    fill="#f5b041" fontWeight={"bold"}
                                     formatter={(value: number) => `${value}%`}
                                 />
                             </Line>
@@ -291,13 +291,13 @@ export default function GraficoCumplimientoPrograma() {
                             <Tooltip />
                             <Legend />
                             <Bar dataKey="programado" fill="#8884d8" name="Programado" yAxisId="left" >
-                                <LabelList dataKey="programado" position="top" fill="#000" />
+                                <LabelList dataKey="programado" position="top" fill="#f5b041" fontWeight={"bold"} />
                             </Bar>
                             <Bar dataKey="realizado" fill="#82ca9d" name="Realizado" yAxisId="left" >
-                                <LabelList dataKey="realizado" position="top" fill="#000" />
+                                <LabelList dataKey="realizado" position="top" fill="#f5b041" fontWeight={"bold"} />
                             </Bar>
                             <Bar dataKey="imprevistos" fill="#ffc658" name="Imprevistos" yAxisId="left" >
-                                <LabelList dataKey="imprevistos" position="top" fill="#000" />
+                                <LabelList dataKey="imprevistos" position="top" fill="#f5b041" fontWeight={"bold"} />
                             </Bar>
                             <Bar dataKey="apoyo" fill="#a6a6a6" name="Apoyo Mec." yAxisId="left" />
                             <Line
@@ -311,7 +311,7 @@ export default function GraficoCumplimientoPrograma() {
                                 <LabelList
                                     dataKey="porcentaje"
                                     position="top"
-                                    fill="#000"
+                                    fill="#f5b041" fontWeight={"bold"}
                                     formatter={(value: number) => `${value}%`}
                                 />
                             </Line>
