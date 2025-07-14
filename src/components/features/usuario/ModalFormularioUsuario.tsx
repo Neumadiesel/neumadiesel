@@ -49,6 +49,7 @@ export default function ModalFormularioUsuario({
     const [roles, setRoles] = useState<Role[]>([]);
     const { register, token } = useAuth();
     const [faenas, setFaenas] = useState<FaenaDTO[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -92,19 +93,16 @@ export default function ModalFormularioUsuario({
         }
     };
 
-
-
     useEffect(() => {
-        fetchFaenas();
-    }, []);
-
-    useEffect(() => {
-        fetchFaenas();
+        if (user) {
+            fetchFaenas();
+        }
     }, [user]);
 
     if (!visible) return null;
 
     const handleSubmit = async () => {
+        setLoading(true);
         try {
             setError("");
             // Primero registramos el usuario en el sistema de autenticación
@@ -135,6 +133,9 @@ export default function ModalFormularioUsuario({
             } else {
                 setError(err instanceof Error ? err.message : "Error al registrar el usuario");
             }
+        }
+        finally {
+            setLoading(false);
         }
     };
 
@@ -235,13 +236,15 @@ export default function ModalFormularioUsuario({
 
                 <div className="mt-6 flex justify-end gap-2">
                     <button
+                        disabled={loading}
                         onClick={handleSubmit}
                         className="bg-amber-400 hover:bg-amber-500 text-black px-4 py-2 rounded font-bold"
                     >
-                        Guardar
+                        {loading ? "Guardando..." : "Guardar"}
                     </button>
                     <button
                         onClick={handleClose}
+                        disabled={loading}
                         className="bg-gray-200 dark:bg-neutral-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-neutral-800 text-black px-4 py-2 rounded"
                     >
                         Cancelar
