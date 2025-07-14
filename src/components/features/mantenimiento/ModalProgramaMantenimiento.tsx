@@ -1,9 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Label from "@/components/common/forms/Label";
 import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
+import { useAuth } from "@/contexts/AuthContext";
+import { useAuthFetch } from "@/utils/AuthFetch";
+import { VehicleDTO } from "@/types/Vehicle";
+import Select from "react-select";
 
 interface ProgramDTO {
     code: string;
@@ -41,8 +45,32 @@ export default function ModalProgramaMantenimiento({
     });
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const { siteId, user } = useAuth();
+    const [vehicles, setVehicles] = useState<VehicleDTO[]>([]); // Adjust type as needed
     const client = useAxiosWithAuth();
+    const authFetch = useAuthFetch();
 
+    const fetchVehicles = async () => {
+        try {
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${siteId}`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
+            const data = await response.json();
+
+            setVehicles(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error("Error fetching vehicles:", error);
+            setVehicles([]); // Asegura que siempre sea un array
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            fetchVehicles();
+        }
+    }, [user, siteId]);
 
     const handleSubmit = async () => {
         setError("");
@@ -98,9 +126,9 @@ export default function ModalProgramaMantenimiento({
     return (
         <div className="fixed inset-0 flex items-center justify-center">
             <div className="absolute inset-0 bg-neutral-900 opacity-80"></div>
-            <div className="relative bg-white lg:h-[70dvh] dark:bg-[#212121] p-6 rounded-md shadow-lg max-w-4/5 lg:max-w-2/3 w-full">
-                <h2 className="text-xl font-bold">Programar Nuevo Mantenimiento</h2>
-                <p className="text-sm text-gray-500 mb-4">Completa los campos para programar un nuevo mantenimiento.</p>
+            <div className="relative  lg:h-[70dvh] text-white bg-[#212121] p-6 rounded-md shadow-lg max-w-4/5 lg:max-w-2/3 w-full">
+                <h2 className="text-xl font-bold ">Programar Nuevo Mantenimiento</h2>
+                <p className="text-sm text-gray-300 mb-4">Completa los campos para programar un nuevo mantenimiento.</p>
                 {/* Mostrar error si existe */}
                 {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
                     <button onClick={() => setError("")} className=" text-red-500">
@@ -110,7 +138,7 @@ export default function ModalProgramaMantenimiento({
                 <div className="grid grid-cols-2 gap-1">
                     {/* Codigo */}
                     <Label title="Codigo Equipo" isNotEmpty={true} />
-                    <input
+                    {/* <input
                         name="Codigo Equipo"
                         value={newProgram.code}
                         onChange={
@@ -118,18 +146,63 @@ export default function ModalProgramaMantenimiento({
                         }
                         placeholder="Codigo"
                         className="border border-gray-300 p-2 rounded"
-                    />
-                    {/* Codigo Nuematico */}
-                    {/* <Label title="Codigo Neumatico" isNotEmpty={false} />
-                    <input
-                        name="Codigo Neumatico"
-                        value={newProgram.tyreCode}
-                        onChange={
-                            (e) => setNewProgram({ ...newProgram, tyreCode: e.target.value.toUpperCase() })
-                        }
-                        placeholder="Codigo Neumatico"
-                        className="border border-gray-300 p-2 rounded"
                     /> */}
+                    <Select
+                        name="vehicleCode"
+                        options={vehicles.map(v => ({
+                            value: v.code,
+                            label: v.code
+                        }))}
+                        value={
+                            newProgram.vehicleCode
+                                ? { value: newProgram.vehicleCode, label: newProgram.vehicleCode }
+                                : null
+                        }
+                        onChange={(option) =>
+                            setNewProgram({ ...newProgram, vehicleCode: option?.value || "" })
+                        }
+                        placeholder="Selecciona un Vehículo"
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                backgroundColor: "#313131",
+                                borderColor: state.isFocused ? "#3B82F6" : "#4B5563", // gris oscuro
+                                boxShadow: state.isFocused ? "0 0 0 2px rgba(59,130,246,0.3)" : "none",
+                                "&:hover": {
+                                    borderColor: "#3B82F6",
+                                },
+                                borderRadius: 6,
+                                padding: "2px 4px",
+                                minHeight: "42px",
+                                color: "white",
+                            }),
+                            placeholder: (base) => ({
+                                ...base,
+                                color: "#9CA3AF", // gris-400
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: "white",
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                backgroundColor: "#313131",
+                                color: "white",
+                                zIndex: 20,
+                            }),
+                            option: (base, state) => ({
+                                ...base,
+                                backgroundColor: state.isFocused
+                                    ? "#4B5563" // más claro al pasar el mouse
+                                    : "#313131",
+                                color: "white",
+                                "&:active": {
+                                    backgroundColor: "#1F2937", // al hacer clic
+                                },
+                            }),
+                        }}
+                        className="text-sm"
+                    />
                     {/* Fecha de Mantenimiento */}
                     <Label title="Fecha Programada" isNotEmpty={true} />
                     <input
@@ -140,7 +213,7 @@ export default function ModalProgramaMantenimiento({
                             (e) => setNewProgram({ ...newProgram, date: e.target.value })
                         }
                         placeholder="Fecha Programada"
-                        className="border border-gray-300 p-2 rounded"
+                        className="border border-gray-300 bg-[#313131] p-2 rounded"
                     />
                     {/* Estado */}
                     <Label title="Estado" isNotEmpty={false} />
@@ -150,7 +223,7 @@ export default function ModalProgramaMantenimiento({
                         onChange={
                             (e) => setNewProgram({ ...newProgram, status: e.target.value })
                         }
-                        className="border border-gray-300 p-2 rounded"
+                        className="border border-gray-300 bg-[#313131] p-2 rounded"
                     >
                         <option value="Programada">Programada</option>
                         <option value="Imprevisto">Imprevisto</option>
@@ -166,7 +239,7 @@ export default function ModalProgramaMantenimiento({
                             (e) => setNewProgram({ ...newProgram, description: e.target.value.toUpperCase() })
                         }
                         placeholder="Descripcion del trabajo"
-                        className="border border-gray-300 h-[20dvh] p-2 rounded"
+                        className="border border-gray-300 bg-[#313131] h-[20dvh] p-2 rounded"
                     />
 
                 </div>
@@ -177,7 +250,7 @@ export default function ModalProgramaMantenimiento({
                     </ButtonWithAuthControl>
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 border rounded hover:bg-gray-100 dark:hover:bg-[#414141]"
+                        className="px-4 py-2 border rounded hover:bg-[#414141]"
                     >
                         Cancelar
                     </button>

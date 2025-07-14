@@ -154,13 +154,14 @@ export default function GraficoCumplimientoPrograma() {
             if (!res) return;
 
             const data: MaintenanceProgram[] = await res.json();
+            const dataArray = Array.isArray(data) ? data : [];
 
-            const dataFiltrada = data.filter(p => {
+            const dataFiltrada = dataArray.filter(p => {
                 const fecha = dayjs(p.scheduledDate);
                 return fecha.year() === anio && fecha.month() === mes;
             });
 
-            const dataAnual = data.filter(p => dayjs(p.scheduledDate).year() === anio);
+            const dataAnual = dataArray.filter(p => dayjs(p.scheduledDate).year() === anio);
 
             setDataSemanal(agruparPorSemana(dataFiltrada));
             setDataMensual(agruparPorMes(dataAnual));
