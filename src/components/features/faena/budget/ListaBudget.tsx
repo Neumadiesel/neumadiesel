@@ -211,7 +211,7 @@ export default function Budget({ siteId }: BudgetProps) {
                         </div>
                     </div>
                     <div className="w-full lg:w-1/2 mt-4">
-                        <BudgetChart year={selectedYear} siteId={siteId} />
+                        <BudgetChart year={selectedYear} />
                     </div>
                 </div>
             </div>

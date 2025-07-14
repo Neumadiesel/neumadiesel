@@ -56,8 +56,13 @@ export default function OrdenDeTrabajoPage() {
     const fetchWorkOrders = async () => {
         try {
             const response = await client.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/work-order/`);
-            setWorkOrders(response.data);
-            console.log("Órdenes de trabajo:", response.data);
+            // Ordenar por dispatchDate descendente (más reciente primero)
+            const sortedOrders = response.data.sort(
+                (a: WorkOrderDTO, b: WorkOrderDTO) =>
+                    new Date(b.dispatchDate).getTime() - new Date(a.dispatchDate).getTime()
+            );
+            setWorkOrders(sortedOrders);
+            console.log("Órdenes de trabajo:", sortedOrders);
         } catch (error) {
             console.error("Error al obtener órdenes de trabajo:", error);
             setWorkOrders([]);
@@ -87,51 +92,6 @@ export default function OrdenDeTrabajoPage() {
                     </Link>
                 </aside>
             </div>
-            {/* Seccion de filtros */}
-            {/* <section className="mt-6 dark:bg-neutral-800 p-4 rounded-md shadow border dark:border-neutral-700">
-                <h2 className="text-3xl font-semibold mb-4">
-                    <Funnel size={35} className=" text-blue-500 inline mr-2" />
-                    Filtros</h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                    <div className="bg-white dark:bg-neutral-800  p-2">
-                        <label className="block mb-2 font-bold">Buscar</label>
-                        <input
-                            type="text"
-                            placeholder="Buscar por código o equipo."
-                            className="w-full h-10 p-2 border dark:border-neutral-600 rounded dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors"
-                        />
-                    </div>
-                    <div className="bg-white dark:bg-neutral-800  p-2">
-                        <label className="block mb-2">Estado</label>
-                        <select
-                            className="w-full p-2 border dark:border-neutral-600 rounded dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors h-10"
-                        >
-                            <option value="">Todos</option>
-                            <option value="pendiente">Pendiente</option>
-                            <option value="completada">Completada</option>
-                            <option value="cancelada">Cancelada</option>
-                        </select>
-                    </div>
-                    <div className="bg-white dark:bg-neutral-800  p-2">
-                        <label className="block mb-2">Tipo de Orden</label>
-                        <select
-                            className="w-full p-2 border dark:border-neutral-600 rounded dark:bg-neutral-700 dark:text-white  h-10 focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors"
-                        >
-                            <option value="">Todos</option>
-                            <option value="mantenimiento">Programada</option>
-                            <option value="reparacion">Imprevista</option>
-                            <option value="inspeccion">Preventiva</option>
-                        </select>
-                    </div>
-                    <div className="bg-white dark:bg-neutral-800  p-2">
-                        <label className="block mb-2">Limpiar Filtros</label>
-                        <button className=" w-full py-2 bg-gray-200 dark:bg-neutral-700 text-black dark:text-white h-10 font-semibold rounded hover:bg-gray-300 transition-colors">
-                            Limpiar Filtros
-                        </button>
-                    </div>
-
-                </div>
-            </section> */}
 
             {/* ===================================== */}
             {/* Seccion de tabla de ordenes */}
@@ -147,10 +107,8 @@ export default function OrdenDeTrabajoPage() {
                         <thead className="">
                             <tr className="py-6 border-b dark:border-neutral-400 h-14 items-center">
                                 <th className="px-4 py-2 text-left">Código</th>
-                                <th className="px-4 py-2 text-left">Descripción</th>
                                 <th className="px-4 py-2 text-left">Fecha Ejecución</th>
                                 <th className="px-4 py-2 text-left">Tipo</th>
-
                                 <th className="px-4 py-2 text-left">Responsable</th>
                                 <th className="px-4 py-2 text-left">Acciones</th>
                             </tr>
@@ -170,7 +128,6 @@ export default function OrdenDeTrabajoPage() {
                                 workOrders.map((orden) => (
                                     <tr key={orden.id} className="border-b dark:border-neutral-400 h-14">
                                         <td className="px-4 py-2">{orden.code}</td>
-                                        <td className="px-4 py-2">{orden.description}</td>
                                         <td className="px-4 py-2">{new Date(orden.dispatchDate).toLocaleDateString()}</td>
                                         <td className="px-4 py-2">{orden.type}</td>
                                         <td className="px-4 py-2">{orden.responsibleName}</td>

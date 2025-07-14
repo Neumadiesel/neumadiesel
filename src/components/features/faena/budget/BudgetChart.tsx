@@ -22,11 +22,11 @@ import { toPng } from "html-to-image"
 const chartConfig = {
     budget: {
         label: "budget",
-        color: "hsl(var(--chart-1))",
+        color: "#f9d374",
     },
     consumo: {
         label: "consumo",
-        color: "hsl(var(--chart-2))",
+        color: "#ff9e00",
     },
 } satisfies ChartConfig
 interface BudgetDataDTO {
@@ -36,38 +36,23 @@ interface BudgetDataDTO {
 
 }
 
-interface FaenaDTO {
-    id: number;
-    name: string;
-    region: string;
-    isActive: boolean;
-    contract: {
-        id: number;
-        startDate: string;
-        endDate: string;
-        siteId: number;
-    };
-}
 interface BudgetChartProps {
-    siteId: number
-    year: number
+    year?: number
 }
 
-export function BudgetChart({ siteId, year }: BudgetChartProps) {
-    const { user } = useAuth();
+export function BudgetChart({ year }: BudgetChartProps) {
+    const { user, siteId } = useAuth();
     const authFetch = useAuthFetch();
 
     const isAdmin = user?.role.name.toLowerCase() === "administrador";
     const [budgetByYear, setBudgetByYear] = useState<BudgetDataDTO[]>([]);
-    const [yearSelected, setYearSelected] = useState<number>(year);
-    const [sites, setSites] = useState<FaenaDTO[]>([]);
-    const [siteSelected, setSiteSelected] = useState<number>(siteId);
+    const [yearSelected, setYearSelected] = useState<number>(year || new Date().getFullYear());
     const [loading, setLoading] = useState<boolean>(false);
 
     const fetchBudgetByYear = async () => {
         try {
             setLoading(true);
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteSelected}/year/${yearSelected}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteId}/year/${yearSelected}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -82,28 +67,11 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
             setLoading(false);
         }
     };
-
-    const fetchSites = async () => {
-        try {
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sites/`);
-            if (!response) {
-                console.warn("No se pudo obtener la respuesta (res es null).");
-                return;
-            }
-            const data = await response.json();
-
-            setSites(data);
-        } catch (error) {
-            console.error("Error fetching reasons:", error);
-        }
-    };
-
     useEffect(() => {
         if (siteId && year) {
-            fetchSites();
             fetchBudgetByYear();
         }
-    }, [siteId, year, yearSelected, siteSelected]);
+    }, [siteId, year, yearSelected]);
 
     const chartData = budgetByYear.map((item) => ({
         month: item.month, // Convert month number to name
@@ -122,48 +90,18 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
         link.click();
     };
     return (
-        <div>
-            <div className="w-full grid gird-cols-3 mb-2">
+        <div className="w-full flex flex-col dark:bg-neutral-800 items-center justify-center">
+            <div className="w-1/3 grid gird-cols-1 mx-auto mt-2 mb-2">
 
-                <div className="flex items-center w-full col-start-1">
-                    {
-                        isAdmin &&
-                        <select
-                            value={siteSelected}
-                            onChange={(e) => {
-                                setSiteSelected(Number(e.target.value));
-                            }}
-                            className="bg-white dark:bg-[#212121] border dark:text-white border-gray-300 dark:border-gray-600 rounded-md p-2 px-4 text-sm"
-                        >
-                            {sites.map((site) => (
-                                <option key={site.id} value={site.id}>
-                                    {site.name}
-                                </option>
-                            ))}
-                        </select>
-                    }
-                </div>
-                <div className="flex items-center w-full  lg:justify-end">
-                    <select
-                        value={yearSelected}
-                        onChange={(e) => setYearSelected(Number(e.target.value))}
-                        className="bg-white dark:bg-[#212121] border dark:text-white border-gray-300 dark:border-gray-600 rounded-md p-2 px-4 text-sm"
-                    >
-                        {[2023, 2024, 2025, 2026, 2027, 2028].map((yearOption) => (
-                            <option key={yearOption} value={yearOption}>
-                                {yearOption}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+
                 <button
                     onClick={downloadImage}
-                    className=" px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className=" px-4 py-2 bg-blue-600 cols-start-3 text-white rounded hover:bg-blue-700"
                 >
                     Descargar como Imagen
                 </button>
             </div>
-            <Card className="border-2 border-amber-400 dark:border-amber-300" id="grafico-budget-consumo">
+            <Card className="dark:bg-neutral-800 bg-white border dark:border-neutral-700 w-[70%]" id="grafico-budget-consumo">
                 <CardHeader className="flex justify-between items-center gap-2 space-y-0 border-b py-5 max-lg:flex-col">
 
                     {/* Selector de faena */}
@@ -203,14 +141,14 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
                                         <LabelList
                                             dataKey="budget"
                                             position="top"
-                                            style={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
+                                            style={{ fill: "#0370dd", fontSize: 16, fontWeight: 600 }}
                                         />
                                     </Bar>
-                                    <Bar dataKey="consumo" fill="#f1c40f" radius={3} >
+                                    <Bar dataKey="consumo" fill="#ff9e00" radius={3} >
                                         <LabelList
                                             dataKey="consumo"
                                             position="top"
-                                            style={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
+                                            style={{ fill: "#ff9e00", fontSize: 16, fontWeight: 600 }}
                                         />
                                     </Bar>
                                 </BarChart>
@@ -224,7 +162,7 @@ export function BudgetChart({ siteId, year }: BudgetChartProps) {
                         <span>Budget</span>
                     </div>
                     <div className="flex gap-2 font-medium leading-none">
-                        <div className="bg-[#f1c40f] h-4 w-4 rounded-sm"></div>
+                        <div className="bg-[#ff9e00] h-4 w-4 rounded-sm"></div>
                         <span>Consumo</span>
                     </div>
                 </CardFooter>

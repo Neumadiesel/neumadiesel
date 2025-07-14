@@ -32,7 +32,7 @@ export default function SectionCharts() {
                     <ScrapChartByMonth />
                 </div>
                 <div className="h-[100%] w-full flex items-center justify-center rounded-md py-3 ">
-                    <BudgetChart siteId={siteId || 1} year={2025} />
+                    <BudgetChart year={2025} />
                 </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 w-full  gap-2">
