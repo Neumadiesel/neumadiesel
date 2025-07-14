@@ -7,6 +7,7 @@ import ButtonWithAuthControl from "@/components/common/button/ButtonWhitControl"
 import { useAuth } from "@/contexts/AuthContext";
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuthFetch } from "@/utils/AuthFetch";
+import axios from "axios";
 
 
 interface ModalRegistrarNeumaticoProps {
@@ -105,9 +106,8 @@ export default function ModalRegistrarNeumatico({
         setLoading(true);
 
         const {
-            code, modelId, initialTread, initialKilometrage, initialHours, siteId, creationDate
+            code, modelId, initialTread, siteId, creationDate
         } = tyreModelEdited;
-        console.log(tyreModelEdited);
         if (
             !code ||
             modelId === null ||
@@ -133,12 +133,12 @@ export default function ModalRegistrarNeumatico({
                     code,
                     modelId,
                     locationId,
-                    initialTread,
-                    initialKilometrage,
+                    initialTread: selectedModel?.originalTread,
+                    initialKilometrage: 0,
                     creationDate,
-                    initialHours,
-                    usedHours: initialHours || 0,
-                    usedKilometrage: initialKilometrage || 0,
+                    initialHours: 0,
+                    usedHours: 0,
+                    usedKilometrage: 0,
                     siteId
                 },
             );
@@ -157,7 +157,13 @@ export default function ModalRegistrarNeumatico({
             console.log("Neumatico registrado exitosamente:", response.data);
             return response.data;
         } catch (error) {
-            setError(error instanceof Error ? error.message : "Error al actualizar el modelo");
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Error desconocido";
+                console.error("Error al obtener los datos de la inspección:", message);
+                setError(message);
+            } else {
+                console.error("Error inesperado:", error);
+            }
         } finally {
             setLoading(false);
         }
@@ -173,11 +179,15 @@ export default function ModalRegistrarNeumatico({
                 <h2 className="text-xl font-bold">Registrar Nuevo Neumatico</h2>
                 <p className="text-sm text-gray-500 mb-4">Completa los campos para registrar un nuevo neumatico. Todos los nuevos neumaticos se almacenaran en bodega.</p>
                 {/* Mostrar error si existe */}
-                {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
-                    <button onClick={() => setError("")} className=" text-red-500">
-                        X
-                    </button>
-                </div>}
+                <div className="w-full h-10 mb-2">
+
+                    {error && <div className="text-red-500 flex justify-between text-sm bg-red-50 border border-red-300 p-2 rounded-sm">{error}
+                        <button onClick={() => setError("")} className=" text-red-500">
+                            X
+                        </button>
+                    </div>}
+                </div>
+
                 <div className="grid grid-cols-2 gap-1">
                     {/* Codigo */}
                     <Label title="Codigo" isNotEmpty={true} />
@@ -258,53 +268,32 @@ export default function ModalRegistrarNeumatico({
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Goma original */}
-                    <Label title="Goma Inicial" isNotEmpty={true} />
+                    <Label title="Goma Inicial" isNotEmpty={false} />
                     <input
-                        disabled={selectedModel === null}
-                        min={0}
+                        disabled
                         value={tyreModelEdited.initialTread === null ? "" : tyreModelEdited.initialTread}
                         name="gomaInicial"
                         type="number"
-                        onChange={(e) => {
-                            const val = e.target.value;
-                            setTyreModelEdited({
-                                ...tyreModelEdited,
-                                initialTread: val === "" ? null : Number(val),
-                            });
-                        }}
                         placeholder="Goma Inicial"
                         className={`border border-gray-300 p-2 rounded ${selectedModel === null ? "opacity-50" : ""}`}
                     />
                     {/* KM inicial */}
-                    <Label title="KM Inicial" isNotEmpty={true} />
+                    <Label title="KM Inicial" isNotEmpty={false} />
                     <input
                         name="kmInicial"
                         type="number"
-                        min={0}
-                        value={tyreModelEdited.initialKilometrage === null ? "" : tyreModelEdited.initialKilometrage}
-                        onChange={(e) => {
-                            setTyreModelEdited({
-                                ...tyreModelEdited,
-                                initialKilometrage: e.target.value.trim() === "" ? null : Number(e.target.value),
-                            });
-                        }}
-
+                        disabled
+                        value={0}
                         placeholder="KM Inicial"
                         className="border border-gray-300 p-2 rounded"
                     />
                     {/* Horas inciales */}
-                    <Label title="Horas Iniciales" isNotEmpty={true} />
+                    <Label title="Horas Iniciales" isNotEmpty={false} />
                     <input
-                        min={0}
+                        disabled
                         name="horasIniciales"
                         type="number"
-                        value={tyreModelEdited.initialHours === null ? "" : tyreModelEdited.initialHours}
-                        onChange={(e) => {
-                            setTyreModelEdited({
-                                ...tyreModelEdited,
-                                initialHours: e.target.value.trim() === "" ? null : Number(e.target.value),
-                            });
-                        }}
+                        value={0}
                         placeholder="Horas Iniciales"
                         className="border border-gray-300 p-2 rounded"
                     />

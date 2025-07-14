@@ -40,6 +40,10 @@ export default function ListaNeumaticos() {
     const [maintenanceTire, setMaintenanceTire] = useState(false);
     const [retireTire, setRetireTire] = useState(false);
 
+    // Filtro por dimension
+    const [availableDimensions, setAvailableDimensions] = useState<string[]>([]);
+    const [selectedDimension, setSelectedDimension] = useState<string>('');
+
     // states por este ano
     const [yearStart, setYearStart] = useState(2024);
     const [yearEnd, setYearEnd] = useState(2025);
@@ -84,9 +88,12 @@ export default function ListaNeumaticos() {
             }
             const data = await response.json();
 
-            setLoading(false);
-            console.log("INFORMACION NEUMATICOS ✅", data);
             setTires(data);
+            const uniqueDimensions = Array.from(
+                new Set(data.map((t: TireDTO) => t.model?.dimensions).filter(Boolean))
+            ) as string[];
+            setAvailableDimensions(uniqueDimensions);
+            setLoading(false);
         } catch (error) {
             console.error("Error fetching tyre models:", error);
             setLocations([]);
@@ -116,18 +123,18 @@ export default function ListaNeumaticos() {
 
     const filteredTires = tires.filter((tire) => {
         const matchCode = tire.code.toLowerCase().includes(codigo.toLowerCase());
-
-        const matchEstado = estado === "" ||
-            (estado === "Operativo"
+        const matchEstado = estado === "" || (
+            estado === "Operativo"
                 ? tire.location.name === "Operativo"
-                : tire.location.name === estado);
-
+                : tire.location.name === estado
+        );
         const matchVehiculo = selectedVehicles.length === 0 || (
             tire.location.name === "Operativo" &&
             selectedVehicles.includes(tire.installedTires[0]?.vehicleId)
         );
+        const matchDimension = selectedDimension === '' || tire.model?.dimensions === selectedDimension;
 
-        return matchCode && matchEstado && matchVehiculo;
+        return matchCode && matchEstado && matchVehiculo && matchDimension;
     });
 
     const totalPages = Math.ceil(filteredTires.length / itemsPerPage);
@@ -135,6 +142,16 @@ export default function ListaNeumaticos() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+
+    const handleResetFilters = () => {
+        setCodigo('');
+        setEstado('Operativo');
+        setSelectedDimension('');
+        setSelectedVehicles([]);
+        setYearStart(2024);
+        setYearEnd(2025);
+        setCurrentPage(1);
+    };
 
     useEffect(() => {
         if (user) {
@@ -155,7 +172,7 @@ export default function ListaNeumaticos() {
                         <h1 className=" mb-2 text-2xl font-bold">
                             Lista de Neumáticos
                         </h1>
-                        <div className="flex gap-2 items-center justify-between">
+                        <div className="flex max-md:w-3/5 gap-2 items-center justify-between">
                             {
                                 filteredTires && filteredTires.length > 0 &&
                                 <ExportListOfTires
@@ -166,7 +183,7 @@ export default function ListaNeumaticos() {
                             <Button
                                 text="Agregar Neumático"
                                 onClick={() => setOpenRegisterModal(true)}
-                                className="w-1/3 lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
+                                className="w-1/2 lg:w-52 h-10   font-semibold text-black bg-amber-300 hover:bg-amber-200"
                             />
                         </div>
                     </div>
@@ -202,6 +219,21 @@ export default function ListaNeumaticos() {
                                 ))}
                             </select>
                         </div>
+                        <select
+                            value={selectedDimension}
+                            onChange={(e) => {
+                                setSelectedDimension(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                            className="border p-2 h-10 rounded-md bg-gray-100 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700"
+                        >
+                            <option value="">Todas las Dimensiones</option>
+                            {availableDimensions.map((dim) => (
+                                <option key={dim} value={dim}>
+                                    {dim}
+                                </option>
+                            ))}
+                        </select>
                         {/* Multiselect */}
                         <div className="flex flex-row justify-center items-center ">
                             <MultiSelect
@@ -249,6 +281,20 @@ export default function ListaNeumaticos() {
                                 ))
                             }
                         </select>
+                        {/* Cantidad de neumáticos recuperados */}
+                        <div className="flex items-center justify-between w-full border h-10 rounded-md bg-gray-100 text-black dark:bg-gray-800 dark:text-white text-md px-2 outline-none dark:border-neutral-700 ">
+                            <p className="text-sm ">
+                                Total: <span className="font-bold">{filteredTires.length} Neumáticos</span>
+                            </p>
+                        </div>
+
+                        {/* handleResetFilters  */}
+                        <button
+                            onClick={handleResetFilters}
+                            className="border p-2 h-10 rounded-md bg-gray-100 text-black dark:bg-[#212121] dark:text-white text-md outline-none dark:border-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-700 hover:cursor-pointer"
+                        >
+                            <span className="text-sm font-bold">Limpiar Filtros</span>
+                        </button>
 
                     </div>
                 </div>
