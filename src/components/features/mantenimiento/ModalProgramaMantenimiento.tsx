@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { VehicleDTO } from "@/types/Vehicle";
 import Select from "react-select";
+import VehicleSelect from "@/components/common/select/SelectVehicle";
 
 interface ProgramDTO {
     code: string;
@@ -147,61 +148,12 @@ export default function ModalProgramaMantenimiento({
                         placeholder="Codigo"
                         className="border border-gray-300 p-2 rounded"
                     /> */}
-                    <Select
-                        name="vehicleCode"
-                        options={vehicles.map(v => ({
-                            value: v.code,
-                            label: v.code
-                        }))}
-                        value={
-                            newProgram.vehicleCode
-                                ? { value: newProgram.vehicleCode, label: newProgram.vehicleCode }
-                                : null
+                    <VehicleSelect
+                        vehicles={vehicles}
+                        value={newProgram.vehicleCode ?? ""}
+                        onChange={(code) =>
+                            setNewProgram((prev) => ({ ...prev, vehicleCode: code }))
                         }
-                        onChange={(option) =>
-                            setNewProgram({ ...newProgram, vehicleCode: option?.value || "" })
-                        }
-                        placeholder="Selecciona un Vehículo"
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                backgroundColor: "#313131",
-                                borderColor: state.isFocused ? "#3B82F6" : "#4B5563", // gris oscuro
-                                boxShadow: state.isFocused ? "0 0 0 2px rgba(59,130,246,0.3)" : "none",
-                                "&:hover": {
-                                    borderColor: "#3B82F6",
-                                },
-                                borderRadius: 6,
-                                padding: "2px 4px",
-                                minHeight: "42px",
-                                color: "white",
-                            }),
-                            placeholder: (base) => ({
-                                ...base,
-                                color: "#9CA3AF", // gris-400
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: "white",
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                backgroundColor: "#313131",
-                                color: "white",
-                                zIndex: 20,
-                            }),
-                            option: (base, state) => ({
-                                ...base,
-                                backgroundColor: state.isFocused
-                                    ? "#4B5563" // más claro al pasar el mouse
-                                    : "#313131",
-                                color: "white",
-                                "&:active": {
-                                    backgroundColor: "#1F2937", // al hacer clic
-                                },
-                            }),
-                        }}
-                        className="text-sm"
                     />
                     {/* Fecha de Mantenimiento */}
                     <Label title="Fecha Programada" isNotEmpty={true} />

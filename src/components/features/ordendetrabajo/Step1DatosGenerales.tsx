@@ -58,7 +58,6 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
         }
 
         if (!datos.responsibleName?.trim()) errores.push("Debes ingresar el nombre del responsable.");
-        if (!datos.description?.trim()) errores.push("Debes ingresar la descripción del trabajo.");
         if (!datos.locationMaintenanceId) errores.push("Debes seleccionar una ubicación.");
         if (!datos.type) errores.push("Debes seleccionar el tipo de intervención.");
         if (!datos.shift) errores.push("Debes seleccionar un turno.");
@@ -75,7 +74,7 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
         <div className="space-y-6">
             <section className="border rounded-xl p-6 bg-white dark:bg-neutral-800 dark:border-neutral-700 shadow-sm">
                 <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
-                    <span>📅</span> Información General
+                    Información General
                 </h3>
                 <p className="text-sm text-gray-500 mb-6">
                     Ingresa los datos básicos de la orden de trabajo
@@ -134,18 +133,6 @@ export default function Step1DatosGenerales({ datos, setDatos, onNext }: Props) 
                                 </div>
                             )
                         }
-                    </div>
-
-                    <div className="md:col-span-2">
-                        <label className="block font-medium mb-1">Descripción</label>
-                        <textarea
-                            value={datos.description}
-                            onChange={(e) =>
-                                setDatos((prev) => ({ ...prev, description: e.target.value }))
-                            }
-                            placeholder="Describe el trabajo a realizar…"
-                            className="w-full border rounded-lg px-3 py-2"
-                        />
                     </div>
 
                     <div>

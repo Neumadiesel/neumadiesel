@@ -8,6 +8,9 @@ import { OrdenTrabajoForm } from "./ModalCrearOrden";
 import { ProgramasDTO, VehicleDTO } from "@/types/ordenTrabajoTypes";
 import QuickProgramForm from "./QuickProgramForm";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAuthFetch } from "@/utils/AuthFetch";
+import { fetchVehiclesBySite } from "@/utils/fetch/FetchVehicles";
+import VehicleSelect from "@/components/common/select/SelectVehicle";
 
 interface Props {
     datos: OrdenTrabajoForm;
@@ -18,7 +21,7 @@ interface Props {
 
 export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBack }: Props) {
     const axios = useAxiosWithAuth();
-    const { siteId } = useAuth();
+    const { siteId, user } = useAuth();
     const [vehicle, setVehicle] = useState<VehicleDTO | null>(null);
     const [programas, setProgramas] = useState<ProgramasDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -26,6 +29,16 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
 
     const [loading, setLoading] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
+
+    const authFetch = useAuthFetch();
+    const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
+
+    useEffect(() => {
+        if (user && siteId) {
+            fetchVehiclesBySite({ siteId, authFetch }).then(setVehicles);
+        }
+    }, [user, siteId]);
+
     const buscarEquipoYProgramas = async () => {
         try {
             // Buscar vehículo por código
@@ -205,17 +218,17 @@ export default function Step2SeleccionNeumaticos({ datos, setDatos, onNext, onBa
                     </div>
                 </div>
 
-                <div className="flex gap-2 mb-4">
-                    <input
-                        placeholder="Código del equipo"
-                        value={datos.vehicleCode || ""}
-                        onChange={(e) =>
+                <div className="flex gap-2 mb-4 text-white">
+                    <VehicleSelect
+                        vehicles={vehicles}
+                        value={datos.vehicleCode}
+                        onChange={(code) =>
                             setDatos((prev) => ({
                                 ...prev,
-                                vehicleCode: e.target.value.toUpperCase(),
+                                vehicleCode: code,
                             }))
                         }
-                        className="flex-1 border rounded-lg px-3 py-2 dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-300 transition-colors"
+                        className="flex-1 text-white"
                     />
                     <Button onClick={buscarEquipoYProgramas}>Buscar</Button>
                 </div>
