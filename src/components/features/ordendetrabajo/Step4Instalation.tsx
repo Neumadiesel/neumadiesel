@@ -82,7 +82,7 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                 const { nuevoTireId, posicion, internalTread, externalTread } = instalacion;
                 if (!nuevoTireId || !posicion || internalTread === undefined || externalTread === undefined) continue;
 
-                const responde = await client.post(`/procedures/install-tire`, {
+                const response = await client.post(`/procedures/install-tire`, {
                     tireId: nuevoTireId,
                     vehicleId,
                     position: posicion,
@@ -92,12 +92,13 @@ export default function Step4Instalacion({ datos, setDatos, onBack, onConfirm }:
                     externalTread,
                 });
 
-                console.log("Respuesta de instalación:", responde.data);
+                console.log("Respuesta de instalación:", response.data);
 
                 setDatos(prev => ({
                     ...prev,
-                    proceduresListId: [...(prev.proceduresListId ?? []), instalacion.nuevoTireId!]
+                    proceduresListId: [...(prev.proceduresListId || []), response.data.procedure.id]
                 }));
+                console.log("Procedimientos Instalacion", datos.proceduresListId)
             }
 
             await onConfirm();

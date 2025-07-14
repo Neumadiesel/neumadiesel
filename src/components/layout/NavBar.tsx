@@ -270,9 +270,10 @@ export default function NavBar() {
                     {/* Selector de faena para Admin */}
                     <li >
                         {user.faena_id === 99 && (
-                            <div className="flex items-center gap-x-2 p-2 hover:bg-neutral-700 w-full rounded">
+                            <div className={`flex items-center gap-x-2 p-2 hover:bg-neutral-700 w-full rounded ${isCollapsed ? "hidden" : "w-full text-start"
+                                }`}>
                                 <select
-                                    className={`ml-2 bg-neutral-800 text-white rounded p-1 ${isCollapsed ? "w-full text-center" : "w-auto"
+                                    className={` bg-neutral-800 text-white rounded p-1 ${isCollapsed ? "hidden" : "w-full text-start"
                                         }`}
                                     value={siteId ?? ""}
                                     onChange={(e) => setSiteId(Number(e.target.value))}

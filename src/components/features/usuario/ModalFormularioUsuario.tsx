@@ -187,9 +187,9 @@ export default function ModalFormularioUsuario({
                     <input
                         type="email"
                         placeholder="Correo"
-                        className="w-full p-2 border border-gray-300 rounded"
-                        value={correo}
-                        onChange={e => setCorreo(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded lowercase"
+                        value={correo.toLowerCase()}
+                        onChange={e => setCorreo(e.target.value.toLowerCase())}
                     />
                     <label className="text-sm font-semibold">
                         Rol del usuario<span className="font-bold text-lg text-red-500">*</span>

@@ -126,12 +126,28 @@ export default function ModalCrearOrden({ onClose }: Props) {
 
             // ✅ Actualizar programas seleccionados si existen
             if (datos.programasSeleccionados && datos.programasSeleccionados.length > 0) {
+
                 await Promise.all(
-                    datos.programasSeleccionados.map((programaId) =>
+                    datos.programasSeleccionados.map((programaId) => {
+
                         client.patch(`/maintenance-program/${programaId}`, {
                             status: "Completada",
                             otId: nuevaOrdenId,
-                            workDate: datos.entryDate, // o dayjs().toISOString() si prefieres ahora
+                            workDate: datos.entryDate,
+                        })
+
+                        console.log("Actualizando programas seleccionados:", programaId, nuevaOrdenId);
+                    }
+                    )
+                );
+            }
+            console.log("Procedimientos :", datos.proceduresListId);
+            // Actualizar procedimientos de proceduresListId
+            if (datos.proceduresListId && datos.proceduresListId.length > 0) {
+                await Promise.all(
+                    datos.proceduresListId.map((procedureId) =>
+                        client.patch(`/procedures/${procedureId}`, {
+                            workOrderId: nuevaOrdenId,
                         })
                     )
                 );

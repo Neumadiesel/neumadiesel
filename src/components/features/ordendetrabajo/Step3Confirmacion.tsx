@@ -39,7 +39,7 @@ export default function Step3Desinstalacion({ datos, setDatos, onBack, onNext }:
             ) continue;
 
             try {
-                await axios.post("/procedures/uninstall-tire", {
+                const response = await axios.post("/procedures/uninstall-tire", {
                     tireId,
                     retirementReasonId: razonRetiroId,
                     executionDate: new Date().toISOString(),
@@ -47,6 +47,16 @@ export default function Step3Desinstalacion({ datos, setDatos, onBack, onNext }:
                     internalTread: finalInternalTread,
                     externalTread: finalExternalTread,
                 });
+
+                console.log("Neumático desmontado:", response.data);
+
+                console.log("Id Procedimiento", response.data.id);
+                setDatos(prev => ({
+                    ...prev,
+                    proceduresListId: [...(prev.proceduresListId || []), response.data.id]
+                }));
+                console.log("Procedimientos Instalacion", datos.proceduresListId)
+
             } catch (error) {
                 console.error("Error al desmontar neumático:", error);
             }
