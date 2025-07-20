@@ -30,6 +30,8 @@ interface UnifiedRecord {
     externalTread?: number;
     procedureName?: string;
     observation?: string;
+    hours?: number;
+    kilometrage?: number;
 }
 
 interface MaintenanceDTO {
@@ -54,6 +56,8 @@ interface normalizedInspectionDTO {
     procedureName?: string;
     approved?: boolean;
     observation?: string;
+    hours?: number;
+    kilometrage?: number;
 }
 
 export default function TirePage() {
@@ -70,7 +74,7 @@ export default function TirePage() {
         setLoading(true);
         try {
             const [inspectionsRes, proceduresRes, maintenancesRes] = await Promise.all([
-                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/tire/${id}/all`),
+                authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/inspections/tire/${id}/`),
                 authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/tire/${id}`),
                 authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/maintenance/tire/${id}`),
             ]);
@@ -83,10 +87,10 @@ export default function TirePage() {
             const inspections = await inspectionsRes.json();
             const procedures = await proceduresRes.json();
             const maintenances = await maintenancesRes.json();
-            console.log("Mantenciones:", maintenances);
+            console.log("Mantenciones:", inspections);
 
             const normalizedInspections: UnifiedRecord[] = inspections
-                .filter((item: normalizedInspectionDTO) => item.approved === true)
+                .filter((item: normalizedInspectionDTO) => item.approved === true) // o sin filtro si quieres todas
                 .map((item: normalizedInspectionDTO) => ({
                     id: item.id,
                     type: "inspection",
@@ -96,8 +100,9 @@ export default function TirePage() {
                     internalTread: item.internalTread,
                     externalTread: item.externalTread,
                     observation: item.observation,
+                    hours: item.hours ?? 0,
+                    kilometrage: item.kilometrage ?? 0,
                 }));
-
             const normalizedMaintenances: UnifiedRecord[] = maintenances.map((item: MaintenanceDTO) => ({
                 id: item.id,
                 type: "maintenance",
@@ -310,9 +315,11 @@ export default function TirePage() {
                                 <th className="p-4">Fecha</th>
                                 <th className="p-4">Acción</th>
                                 <th className="p-4">Posición</th>
-                                <th className="p-4">Remanente</th>
+                                <th className="p-4">Int</th>
+                                <th className="p-4">Ext</th>
+                                <th className="p-4">Horas</th>
+                                <th className="p-4">Kms</th>
                                 <th className="p-4">Ver</th>
-                                <th className="p-4">Descripción</th>
                                 <th className="p-4">Observaciones</th>
                             </tr>
                         </thead>
@@ -354,8 +361,29 @@ export default function TirePage() {
                                         <td className="p-4 dark:bg-neutral-800">
                                             {/* Remanente */}
                                             {record.type === "procedure" && record.procedureName === "Ingreso al sistema"
-                                                ? `${tire?.initialTread ?? "-"} / ${tire?.initialTread ?? "-"}`
-                                                : `${record.internalTread ?? "-"} / ${record.externalTread ?? "-"}`
+                                                ? `${tire?.initialTread ?? "-"} `
+                                                : `${record.internalTread ?? "-"} `
+                                            }
+                                        </td>
+                                        <td className="p-4 dark:bg-neutral-800">
+                                            {/* Remanente */}
+                                            {record.type === "procedure" && record.procedureName === "Ingreso al sistema"
+                                                ? `${tire?.initialTread ?? "-"} `
+                                                : `${record.externalTread ?? "-"} `
+                                            }
+                                        </td>
+                                        <td className="p-4 dark:bg-neutral-800">
+                                            {/* Remanente */}
+                                            {record.type === "procedure" && record.procedureName === "Ingreso al sistema"
+                                                ? `${tire?.initialHours ?? "-"} `
+                                                : `${record.hours ?? "-"} `
+                                            }
+                                        </td>
+                                        <td className="p-4 dark:bg-neutral-800">
+                                            {/* Remanente */}
+                                            {record.type === "procedure" && record.procedureName === "Ingreso al sistema"
+                                                ? `${tire?.initialHours ?? "-"} `
+                                                : `${record.kilometrage ?? "-"} `
                                             }
                                         </td>
                                         {/* link para las inspecciones */}
@@ -367,11 +395,6 @@ export default function TirePage() {
                                                     </Link>
                                                 </ToolTipCustom>
                                             ) : null}
-                                        </td>
-
-                                        <td className="p-4 dark:bg-neutral-800">
-                                            {/* Descripción */}
-                                            {record.description || "N/A"}
                                         </td>
                                         <td className="p-4 bg-gray-50 dark:bg-neutral-800">
                                             {/* Descripción */}
