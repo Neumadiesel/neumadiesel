@@ -97,6 +97,7 @@ export default function ModalAsignarNeumatico({
     const [finalDate, setFinalDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
+    const [codeFilter, setCodeFilter] = useState<string>("");
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -221,14 +222,12 @@ export default function ModalAsignarNeumatico({
 
     const getFilteredTires = (): TireDTO[] => {
         if (!Array.isArray(tires)) return [];
+
         return tires.filter((tire) => {
+            const matchesModel = selectModelsId.length === 0 || selectModelsId.includes(tire.model.id.toString());
+            const matchesCode = tire.code.toLowerCase().includes(codeFilter.toLowerCase());
 
-
-            // Si no hay modelos seleccionados, mostrar todos los que cumplen la condición anterior
-            if (selectModelsId.length === 0) return true;
-
-            // Mostrar solo los que coincidan con los modelos seleccionados
-            return selectModelsId.includes(tire.model.id.toString());
+            return matchesModel && matchesCode;
         });
     };
 
@@ -375,6 +374,15 @@ export default function ModalAsignarNeumatico({
                                 <FaPlusCircle className="text-2xl rotate-45 bg-gray-200  rounded-full" />
                             </div>
                         )}
+                    </div>
+                    <div className="flex flex-row justify-center items-center w-full gap-4 mb-4">
+                        <input
+                            type="text"
+                            placeholder="Filtrar por código..."
+                            value={codeFilter}
+                            onChange={(e) => setCodeFilter(e.target.value)}
+                            className="border border-gray-300 p-2 rounded w-full"
+                        />
                     </div>
                     <div className="overflow-y-auto h-[50dvh] mt-2">
                         <table className="w-full border-collapse">

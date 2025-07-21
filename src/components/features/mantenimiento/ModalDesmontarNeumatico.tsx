@@ -53,6 +53,8 @@ export default function ModalDesmontarNeumatico({
     const [endDate, setEndDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
+
+    const [locations, setLocations] = useState<{ id: number; name: string }[]>([]);
     const [locationId, setLocationId] = useState<number | null>(null);
     const [executeTime, setExecuteTime] = useState<number | null>(null);
     const [reasonId, setReasonId] = useState<number | null>(null);
@@ -106,13 +108,30 @@ export default function ModalDesmontarNeumatico({
         }
     };
 
+    // fetchLocations
+    const fetchLocations = async () => {
+        setLoading(true);
+        try {
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/locations`);
+            if (!response) {
+                console.warn("No se pudo obtener la respuesta (res es null).");
+                return;
+            }
+            const data = await response.json();
+            setLocations(data.filter((loc: { name: string }) =>
+                loc.name === "Inspección" || loc.name === "Stock Disponibles"
+            ));
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching locations:", error);
+        }
+    };
+
+
 
     useEffect(() => {
         fetchRazones();
-    }, []);
-
-    useEffect(() => {
-        fetchRazones();
+        fetchLocations();
     }, [user]);
 
     if (!visible || !tire) return null;
@@ -141,13 +160,14 @@ export default function ModalDesmontarNeumatico({
         try {
             const response = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/uninstall-tire`, {
                 tireId,
-                retirementReasonId: reasonId,  // ✅ CORREGIDO
+                retirementReasonId: reasonId,
                 executionDate: actionDate.toISOString(),
                 executionFinal: endDate.toISOString(),
+                locationId,
                 internalTread,
                 externalTread,
             }
-
+                // B4A001939
             );
             console.log("Response from server:", response.data);
             onGuardar();
@@ -246,6 +266,21 @@ export default function ModalDesmontarNeumatico({
                                 {razon.description}
                             </option>
 
+                        ))}
+                    </select>
+                    {/* Locacion */}
+                    <label className="text-sm mt-2 font-semibold mb-2">Destino:</label>
+                    <select
+                        name="Locacion"
+                        value={locationId || ""}
+                        onChange={(e) => setLocationId(parseInt(e.target.value))}
+                        className="border border-gray-300 p-2 rounded"
+                    >
+                        <option value="">Selecciona un Destino</option>
+                        {locations.map((location) => (
+                            <option key={location.id} value={location.id}>
+                                {location.name}
+                            </option>
                         ))}
                     </select>
                     {/* OT */}
