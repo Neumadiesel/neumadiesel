@@ -137,9 +137,12 @@ export default function TirePage() {
                 .map((item: normalizedInspectionDTO) => {
                     const avgRemanente = ((item.internalTread ?? 0) + (item.externalTread ?? 0)) / 2;
                     return {
-                        date: new Date(item.inspectionDate!).toISOString().split("T")[0], // formato yyyy-mm-dd
+                        date: new Date(item.inspectionDate!).toISOString().split("T")[0],
                         avgRemanente,
                     };
+                })
+                .sort((a: { date: string }, b: { date: string }) => {
+                    return new Date(a.date).getTime() - new Date(b.date).getTime();
                 });
 
             setChartData(chartData);
