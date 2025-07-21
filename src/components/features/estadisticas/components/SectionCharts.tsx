@@ -9,11 +9,9 @@ import { ScrapChart } from "@/components/features/estadisticas/graficos/ScrapCha
 import { ScrapChartByMonth } from "@/components/features/estadisticas/graficos/ScrapChartByMonth";
 import { ScrapChartByType } from "@/components/features/estadisticas/graficos/ScrapChartByType";
 import SectionKpi from "./SectionKpi";
-import { useAuth } from "@/contexts/AuthContext";
 
 
 export default function SectionCharts() {
-    const { siteId } = useAuth();
     return (
         <div className="grid grid-cols-1 py-4 px-2 gap-2 w-full">
             <div className="flex flex-col lg:flex-row-reverse gap-2 mb-2 w-full h-full">
