@@ -16,12 +16,6 @@ dayjs.extend(timezone);
 
 
 
-interface RazonDto {
-    id: number;
-    name: string;
-    description: string;
-}
-
 interface ModalInvertirNuematicoProps {
     visible: boolean;
     onClose: () => void;
@@ -177,18 +171,6 @@ export default function ModalInvertirNuematico({
                         placeholder="Fecha de Despacho"
                         className="border border-gray-300 p-2 rounded"
                     />
-                    {/* OT */}
-                    {/* <label className="text-sm mt-2 font-semibold mb-2">OT</label>
-                    <input
-                        type="text"
-                        name="OT"
-                        value={otCode || ""}
-                        onChange={
-                            (e) => setOtCode(e.target.value.toUpperCase())
-                        }
-                        placeholder="OT"
-                        className="border border-gray-300 p-2 rounded"
-                    /> */}
                     <div className="col-span-2 border border-teal-600 bg-teal-100 w-full py-2 px-4 rounded">
                         <h2 className="text-sm font-semibold text-teal-800">
                             Ingrese Nuevas Medidas del Neumático

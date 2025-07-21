@@ -76,6 +76,8 @@ export default function ModalAsignarNeumatico({
     vehicle,
     onGuardar,
 }: ModalAsignarNeumaticoProps) {
+    // Estoy plenamente orgulloso de este código, es una obra maestra de la ingeniería del software.
+    // Total si funciona, no? que refactorizar ni que ocho cuartos.
     const authFetch = useAuthFetch();
     const { user } = useAuth();
     const client = useAxiosWithAuth();
@@ -91,6 +93,8 @@ export default function ModalAsignarNeumatico({
     const [locationId, setLocationId] = useState<number | null>(null);
     const [models, setModels] = useState<TireModelDTO[]>([]);
     const [selectModelsId, setSelectModelsId] = useState<string[]>([]);
+    const [dimensionFilter, setDimensionFilter] = useState<string>("");
+    const [invertirNeumatico, setInvertirNeumatico] = useState(false);
     const [actionDate, setActionDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
@@ -185,6 +189,16 @@ export default function ModalAsignarNeumatico({
                     externalTread: externalTread || tireSelected?.initialTread,
                 }
             );
+            if (invertirNeumatico) {
+                const flipTire = await client.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/procedures/flip-tire`, {
+                    tireId: id,
+                    executionDate: utcDate,
+                    executionFinal: utcEndDate,
+                    internalTread: externalTread || tireSelected?.initialTread,
+                    externalTread: internalTread || tireSelected?.initialTread,
+                });
+                console.log("Neumático invertido correctamente", flipTire.data);
+            }
             setPosition(null);
             setTireIdSelected(null);
             handleReset();
@@ -224,10 +238,15 @@ export default function ModalAsignarNeumatico({
         if (!Array.isArray(tires)) return [];
 
         return tires.filter((tire) => {
-            const matchesModel = selectModelsId.length === 0 || selectModelsId.includes(tire.model.id.toString());
+            const matchesModel =
+                selectModelsId.length === 0 || selectModelsId.includes(tire.model.id.toString());
+
             const matchesCode = tire.code.toLowerCase().includes(codeFilter.toLowerCase());
 
-            return matchesModel && matchesCode;
+            const matchesDimension =
+                dimensionFilter === "" || tire.model.dimensions === dimensionFilter;
+
+            return matchesModel && matchesCode && matchesDimension;
         });
     };
 
@@ -339,6 +358,16 @@ export default function ModalAsignarNeumatico({
                                 </option>
                             ))}
                         </select>
+                        {/* Si querian un codigo mas lindo y ordenado, me hubiesen pagado primero */}
+                        <Label title="Instalar Invertido" isNotEmpty={false} />
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={invertirNeumatico}
+                                onChange={(e) => setInvertirNeumatico(e.target.checked)}
+                            />
+                            <span className="text-sm">Invertir remanente interno y externo</span>
+                        </div>
                     </div>
                     {/* Mostrar error si existe */}
                     {error && <div className="text-red-500 flex justify-between text-sm mt-2 overflow-y-scroll items-center bg-red-50 border border-red-300 p-2 rounded-sm">{error}
@@ -351,31 +380,47 @@ export default function ModalAsignarNeumatico({
                 {/* Lista de neumaticos */}
                 <aside className=" w-full max-lg:border-t max-lg:mt-4 max-lg:pt-2 border-t-gray-200 lg:w-[90dvh] lg:pl-4">
                     <h2 className="text-xl font-bold mb-4">Neumáticos Disponibles</h2>
-                    <div className="flex flex-row justify-center items-center w-[50%]">
-                        <MultiSelect
-                            options={models.map((model) => ({
-                                value: model.id.toString(), // Convert number to string
-                                label: `${model.code} - ${model.dimensions} - ${model.pattern} - ${model.originalTread}mm`,
-                            }))}
-                            selected={selectModelsId} // Ensure selected values are strings
-                            onChange={setSelectModelsId}
-                            placeholder="Filtrar por modelo..."
-                        />
-                        {selectModelsId.length > 0 ? (
-                            <button
-                                onClick={() => setSelectModelsId([])}
-                                className="text-black w-8 rounded-xl h-10 text-2xl flex justify-center items-center "
-                                title="Limpiar filtros"
+                    <div className="grid grid-cols-2 w-full gap-2 mb-2">
+                        <div className="flex flex-row justify-center items-center w-full">
+                            <MultiSelect
+                                options={models.map((model) => ({
+                                    value: model.id.toString(), // Convert number to string
+                                    label: `${model.code} - ${model.dimensions} - ${model.pattern} - ${model.originalTread}mm`,
+                                }))}
+                                selected={selectModelsId} // Ensure selected values are strings
+                                onChange={setSelectModelsId}
+                                placeholder="Filtrar por modelo..."
+                            />
+                            {selectModelsId.length > 0 ? (
+                                <button
+                                    onClick={() => setSelectModelsId([])}
+                                    className="text-black w-8 rounded-xl h-10 text-2xl flex justify-center items-center "
+                                    title="Limpiar filtros"
+                                >
+                                    <FaPlusCircle className="text-2xl rotate-45 bg-white rounded-full" />
+                                </button>
+                            ) : (
+                                <div className="flex flex-row text-gray-500 font-bold dark:bg-text-900 w-8 rounded-xl h-10 justify-center items-center ">
+                                    <FaPlusCircle className="text-2xl rotate-45 bg-gray-200  rounded-full" />
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex flex-row justify-center items-center w-full gap-4">
+                            <select
+                                value={dimensionFilter}
+                                onChange={(e) => setDimensionFilter(e.target.value)}
+                                className="border border-gray-300 p-2 rounded w-full"
                             >
-                                <FaPlusCircle className="text-2xl rotate-45 bg-white rounded-full" />
-                            </button>
-                        ) : (
-                            <div className="flex flex-row text-gray-500 font-bold dark:bg-text-900 w-8 rounded-xl h-10 justify-center items-center ">
-                                <FaPlusCircle className="text-2xl rotate-45 bg-gray-200  rounded-full" />
-                            </div>
-                        )}
+                                <option value="">Filtrar por dimensión...</option>
+                                {[...new Set(models.map((m) => m.dimensions))].map((dim) => (
+                                    <option key={dim} value={dim}>
+                                        {dim}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <div className="flex flex-row justify-center items-center w-full gap-4 mb-4">
+                    <div className="flex flex-row justify-center items-center w-full gap-4 mb-2">
                         <input
                             type="text"
                             placeholder="Filtrar por código..."
@@ -393,10 +438,10 @@ export default function ModalAsignarNeumatico({
                                     <th className="border-b p-2 text-left">Modelo</th>
                                     <th className="border-b p-2 text-left">Dimensiones</th>
                                     <th className="border-b p-2 text-left">Patrón</th>
-                                    <th className="border-b p-2 text-left">Estado</th>
                                     <th className="border-b p-2 text-left">Remanente</th>
                                 </tr>
                             </thead>
+                            {/* Int 54, Exte 47 B4A001795 */}
                             <tbody>
                                 {getFilteredTires()
                                     .sort((a, b) => {
@@ -441,15 +486,10 @@ export default function ModalAsignarNeumatico({
                                                     ? `INT: ${tire.lastInspection.internalTread} | EXT: ${tire.lastInspection.externalTread}`
                                                     : 'Nuevo'}
                                             </td>
-                                            <td className="p-2 border-r">
-                                                {tire.lastInspection
-                                                    ? `${tire.lastInspection.externalTread} - 
-                                                    ${tire.lastInspection.internalTread}`
-                                                    : `${tire.initialTread} - ${tire.initialTread}`}
-                                            </td>
                                         </tr>
                                     )
                                     )}
+                                {/* S4J003452 Int 58. Ext 63 */}
                             </tbody>
                         </table>
                     </div>
