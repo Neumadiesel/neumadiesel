@@ -4,21 +4,51 @@ import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 import { FileDown } from 'lucide-react';
 import { useAuthFetch } from '@/utils/AuthFetch';
+import { TireDTO } from '@/types/Tire';
 
 interface Props {
-    data: any[]; // Tire[]
-    processed: any[]; // resultado de useMemo
+    data: TireWithProcedures[];
+    processed: ProcessedRow[];
     selectedReasons: string[];
     year: number;
     semester: string;
 }
 
-export default function ExportScrappedReasonsReport({ data, processed, selectedReasons, year, semester }: Props) {
+interface ProcessedRow {
+    month: string;
+    [key: string]: number | string;
+}
+
+interface TireWithProcedures extends TireDTO {
+    procedures: ProcedureForExport[];
+}
+
+interface ProcedureForExport {
+    startDate: string;
+    tireHours: number;
+    retirementReason?: {
+        description: string;
+    };
+    vehicle?: {
+        model?: {
+            model: string;
+        };
+    };
+}
+
+export default function ExportScrappedReasonsReport({
+    data,
+    processed,
+    selectedReasons,
+    year,
+    semester,
+}: Props) {
     const authFetch = useAuthFetch();
 
     const fetchImageAsBase64 = async (url: string): Promise<string> => {
         const response = await authFetch(url);
-        if (!response || !response.ok) throw new Error(`Error al obtener imagen: ${response?.statusText}`);
+        if (!response || !response.ok)
+            throw new Error(`Error al obtener imagen: ${response?.statusText}`);
         const blob = await response.blob();
         return await new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -31,7 +61,7 @@ export default function ExportScrappedReasonsReport({ data, processed, selectedR
     const exportToExcel = async () => {
         const workbook = new ExcelJS.Workbook();
 
-        // ========== Hoja 1: Resumen Mensual ==========
+        // Hoja 1: Resumen Mensual
         const resumenSheet = workbook.addWorksheet('Resumen Mensual');
 
         const titleStyle: Partial<ExcelJS.Style> = {
@@ -74,7 +104,7 @@ export default function ExportScrappedReasonsReport({ data, processed, selectedR
         headerRow.eachCell((cell) => (cell.style = headerStyle));
 
         processed.forEach((entry) => {
-            const row = [entry.month];
+            const row: (string | number)[] = [entry.month];
             selectedReasons.forEach((motivo) => {
                 row.push(entry[motivo] ?? 0);
                 row.push(entry[`${motivo}_count`] ?? 0);
@@ -85,14 +115,14 @@ export default function ExportScrappedReasonsReport({ data, processed, selectedR
 
         resumenSheet.columns.forEach((col) => (col.width = 20));
 
-        // ========== Hoja 2: Lista de Neumáticos ==========
+        // Hoja 2: Lista de Neumáticos
         const detalleSheet = workbook.addWorksheet('Neumáticos Analizados');
 
         const detalleHeaders = ['Código', 'Dimensión', 'Fecha Retiro', 'Horas', 'Motivo', 'Modelo de Equipo'];
         detalleSheet.addRow(detalleHeaders).eachCell((cell) => (cell.style = headerStyle));
 
         data.forEach((tire) => {
-            tire.procedures.forEach((p: any) => {
+            tire.procedures.forEach((p) => {
                 if (!p.retirementReason?.description) return;
 
                 const date = new Date(p.startDate);
@@ -113,7 +143,7 @@ export default function ExportScrappedReasonsReport({ data, processed, selectedR
 
         detalleSheet.columns.forEach((col) => (col.width = 22));
 
-        // ========== Exportar ==========
+        // Exportar
         const fileName = `Reporte_Baja_Neumaticos_${year}_S${semester}.xlsx`;
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], {

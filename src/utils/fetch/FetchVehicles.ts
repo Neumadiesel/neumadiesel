@@ -1,3 +1,4 @@
+import { VehicleDTO } from "@/types/Vehicle";
 
 export const fetchVehiclesBySite = async ({
     siteId,
@@ -5,7 +6,7 @@ export const fetchVehiclesBySite = async ({
 }: {
     siteId: number;
     authFetch: (url: string) => Promise<Response | null>;
-}): Promise<any[]> => {
+}): Promise<VehicleDTO[]> => {
     try {
         const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/vehicles/site/${siteId}`);
         if (!response) {

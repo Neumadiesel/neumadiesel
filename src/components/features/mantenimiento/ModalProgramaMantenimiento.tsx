@@ -7,7 +7,6 @@ import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAuthFetch } from "@/utils/AuthFetch";
 import { VehicleDTO } from "@/types/Vehicle";
-import Select from "react-select";
 import VehicleSelect from "@/components/common/select/SelectVehicle";
 
 interface ProgramDTO {

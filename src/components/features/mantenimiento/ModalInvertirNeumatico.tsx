@@ -42,7 +42,6 @@ export default function ModalInvertirNuematico({
     const [endDate, setEndDate] = useState(() =>
         dayjs().tz('America/Santiago')
     );
-    const [otCode, setOtCode] = useState<string | null>(null);
 
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
@@ -119,7 +118,6 @@ export default function ModalInvertirNuematico({
             internalTread: 0,
         });
         setActionDate(dayjs().tz('America/Santiago'));
-        setOtCode(null);
         onClose();
     }
 

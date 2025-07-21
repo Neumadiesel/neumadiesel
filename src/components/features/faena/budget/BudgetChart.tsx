@@ -41,18 +41,16 @@ interface BudgetChartProps {
 }
 
 export function BudgetChart({ year }: BudgetChartProps) {
-    const { user, siteId } = useAuth();
+    const { siteId } = useAuth();
     const authFetch = useAuthFetch();
 
-    const isAdmin = user?.role.name.toLowerCase() === "administrador";
     const [budgetByYear, setBudgetByYear] = useState<BudgetDataDTO[]>([]);
-    const [yearSelected, setYearSelected] = useState<number>(year || new Date().getFullYear());
     const [loading, setLoading] = useState<boolean>(false);
 
     const fetchBudgetByYear = async () => {
         try {
             setLoading(true);
-            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteId}/year/${yearSelected}`);
+            const response = await authFetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/montyhle-tire-budget/withTyres/site/${siteId}/year/${year}`);
             if (!response) {
                 console.warn("No se pudo obtener la respuesta (res es null).");
                 return;
@@ -71,7 +69,7 @@ export function BudgetChart({ year }: BudgetChartProps) {
         if (siteId && year) {
             fetchBudgetByYear();
         }
-    }, [siteId, year, yearSelected]);
+    }, [siteId, year]);
 
     const chartData = budgetByYear.map((item) => ({
         month: item.month, // Convert month number to name
@@ -85,7 +83,7 @@ export function BudgetChart({ year }: BudgetChartProps) {
 
         const dataUrl = await toPng(node);
         const link = document.createElement('a');
-        link.download = `grafico_budget_vs_consumo_${yearSelected}.png`;
+        link.download = `grafico_budget_vs_consumo_${year}.png`;
         link.href = dataUrl;
         link.click();
     };
@@ -108,7 +106,7 @@ export function BudgetChart({ year }: BudgetChartProps) {
 
 
                     <div className="flex-1 space-y-1 w-full col-start-2">
-                        <CardTitle className="dark:text-white text-xl">Budget vs Consumo {yearSelected}</CardTitle>
+                        <CardTitle className="dark:text-white text-xl">Budget vs Consumo {year}</CardTitle>
                         <CardDescription className="dark:text-white">
                             Comparación mensual del presupuesto y consumo de neumáticos.
                         </CardDescription>
