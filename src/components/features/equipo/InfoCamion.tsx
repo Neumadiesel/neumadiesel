@@ -15,6 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 import useAxiosWithAuth from "@/hooks/useAxiosWithAuth";
 import axios from "axios";
+import ModalInvertirNuematico from "../mantenimiento/ModalInvertirNeumatico";
 
 export default function ListaMaquinaria() {
     const params = useParams<{ id: string }>();
@@ -67,6 +68,7 @@ export default function ListaMaquinaria() {
     const [mostrarAddKms, setMostrarAddKms] = useState(false);
     const [mostrarAsignarNeumatico, setMostrarAsignarNeumatico] = useState(false);
     const [mostrarDesmontar, setMostrarDesmontar] = useState(false);
+    const [mostrarInvertir, setMostrarInvertir] = useState(false);
     const handleUpdate = () => {
         setHasChanged(true);
     }
@@ -89,7 +91,7 @@ export default function ListaMaquinaria() {
             handleUpdate();
             fetchVehicleModels();
         }
-    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarAddKms, siteId, user]);
+    }, [mostrarEditar, mostrarAsignarNeumatico, mostrarDesmontar, mostrarInvertir, mostrarAddKms, siteId, user]);
 
     return (
         <div className="p-2 h-[100%] w-full bg-white dark:bg-[#212121] relative shadow-md">
@@ -124,12 +126,6 @@ export default function ListaMaquinaria() {
                                     text="Agregar Horas/Kilometros"
                                     onClick={() => { setMostrarAddKms(true) }}
                                 />
-                                {/* Boton de editar */}
-                                {/* <ToolTipCustom content="Editar Equipo">
-                                    <button disabled={loading || id === undefined || error !== null} onClick={() => setMostrarEditar(true)} className={`bg-gray-100  dark:bg-[#313131] border text-lg text-black dark:text-white p-2 rounded-md mb-2 flex items-center justify-center ${loading || id === undefined || error !== null ? "opacity-50 " : "cursor-pointer hover:bg-gray-200 dark:hover:bg-[#141414]"}`}>
-                                        <FaEdit />
-                                    </button>
-                                </ToolTipCustom> */}
 
                             </section>
                             {/* Info del camión */}
@@ -176,6 +172,10 @@ export default function ListaMaquinaria() {
                                         setTireDesmonatado(tireData);
                                         setMostrarDesmontar(true);
                                     }}
+                                    onInvertir={() => {
+                                        setTireDesmonatado(tireData);
+                                        setMostrarInvertir(true);
+                                    }}
                                 />
 
                             ))
@@ -192,6 +192,16 @@ export default function ListaMaquinaria() {
                     onGuardar={() => {
                         setHasChanged(true);
                         setMostrarDesmontar(false);
+                    }}
+                />}
+            {mostrarInvertir &&
+                <ModalInvertirNuematico
+                    visible={mostrarInvertir}
+                    onClose={() => setMostrarInvertir(false)}
+                    tire={tireDesmontado}
+                    onGuardar={() => {
+                        setHasChanged(true);
+                        setMostrarInvertir(false);
                     }}
                 />}
             {mostrarAddKms && <ModalAddKms

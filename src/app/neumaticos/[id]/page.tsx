@@ -87,7 +87,6 @@ export default function TirePage() {
             const inspections = await inspectionsRes.json();
             const procedures = await proceduresRes.json();
             const maintenances = await maintenancesRes.json();
-            console.log("Mantenciones:", inspections);
 
             const normalizedInspections: UnifiedRecord[] = inspections
                 .filter((item: normalizedInspectionDTO) => item.approved === true) // o sin filtro si quieres todas
@@ -130,7 +129,7 @@ export default function TirePage() {
                 ...normalizedProcedures,
                 ...normalizedMaintenances
             ];
-            const sorted = merged.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+            const sorted = merged.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
             setUnifiedRecords(sorted);
 
             const chartData = inspections
@@ -167,11 +166,6 @@ export default function TirePage() {
             console.error("Error fetching tyre models:", error);
         }
     };
-
-    useEffect(() => {
-        fetchUnifiedRecords();
-        fetchTires();
-    }, []);
 
     useEffect(() => {
         fetchUnifiedRecords();

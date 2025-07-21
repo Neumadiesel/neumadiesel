@@ -1,4 +1,4 @@
-import { ArrowLeftRight, CircleDot, Clock, Info, Thermometer, AlertTriangle } from "lucide-react";
+import { ArrowLeftRight, CircleDot, Clock, Info, Thermometer, AlertTriangle, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import ToolTipCustom from "@/components/ui/ToolTipCustom";
 
@@ -13,6 +13,7 @@ interface CardTireProps {
     temperature?: number;
     tireId?: number;
     onDesinstalar?: () => void;
+    onInvertir?: () => void;
     loading: boolean;
 }
 
@@ -28,6 +29,7 @@ export default function CardTire(props: CardTireProps) {
         temperature,
         tireId,
         onDesinstalar,
+        onInvertir,
         loading
     } = props;
 
@@ -85,7 +87,7 @@ export default function CardTire(props: CardTireProps) {
                             </p>
                         </div>
 
-                        <div className="flex flex-col gap-2 justify-end mt-1">
+                        <div className=" grid grid-cols-2 gap-2 justify-end mt-1">
                             <ToolTipCustom content="Ver Detalles">
                                 <Link
                                     href={`/neumaticos/${tireId}`}
@@ -103,6 +105,16 @@ export default function CardTire(props: CardTireProps) {
                                     <ArrowLeftRight className="w-4 h-4" />
                                 </button>
                             </ToolTipCustom>
+                            {/* refresh-cw */}
+                            <ToolTipCustom content="Invertir Neumático">
+                                <button
+                                    onClick={onInvertir}
+                                    className="p-2 text-teal-600 dark:text-teal-400 hover:text-teal-600 bg-teal-50 dark:bg-neutral-800 border border-teal-400 rounded-md flex items-center justify-center"
+                                >
+                                    <RefreshCcw className="w-4 h-4" />
+                                </button>
+                            </ToolTipCustom>
+
                         </div>
                     </div>
                 </>
